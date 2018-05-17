@@ -145,7 +145,34 @@ paths:
               maxPowerSupply:
                 value: 0.3
                 unit: A
-                
+
+  /accessrights:
+    get:
+      tags:
+        - master
+      summary: Read the current access rights
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              deviceConfiguration:
+                type: boolean
+              portConfiguration:
+                type: boolean
+              masterConfiguration:
+                type: boolean
+              writeProcessData:
+                type: boolean
+            example:
+              deviceConfiguration: true
+              writeProcessData: true
+              portConfiguration: false
+              masterConfiguration: false
+              
   /configuration:
     get:
       tags:
@@ -232,6 +259,45 @@ paths:
         200:
           description: Successful operation
           
+  /ports/{portId}/datastorage:
+    get:
+      tags:
+        - ports
+      summary: Read the datastorage data for a device connected to this port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      produces:
+        - multipart/form-data
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: file
+    post:
+      tags:
+        - ports
+      summary: Write the datastorage data for the device connected to this port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: data
+          in: formData
+          description: The data as a binary file
+          type: file
+          required: true
+      consumes:
+        - multipart/form-data
+      responses:
+        200:
+          description: Successful operation
+
   /ports/{portId}/identification:
     get:
       tags:
@@ -446,6 +512,7 @@ paths:
       responses:
         200:
           description: Successful operation
+          
   /ports/{portId}/processdata/value:
     get:
       tags: 
@@ -521,6 +588,7 @@ paths:
                 data: 
                   distance: 345
                   qsignal: true
+                  
   /ports/{portId}/parameters/{index}/value:
     get:
       tags: 
@@ -568,7 +636,7 @@ paths:
             properties:
               type:
                 type: string
-                enum: [Master, Port, Device, IODD]
+                enum: [Master, Port, Device]
               code:
                 type: integer
               message:
@@ -578,9 +646,13 @@ paths:
               type: Port
               code: 0x1000
               message: Master communication error
+            "IODD formatted value request but no IODD available":
+              type: Master
+              code: 0x100
+              message: IODD is missing
             "No device connected to port and port is set to inactive":
               type: Master
-              code: 1
+              code: 0x1
               message: No communication. Port is inactive
             "Use the incident text":
               type: Device
@@ -594,7 +666,7 @@ paths:
               type: Device
               code: 123456
               message: Bla Bla from the IODD
-                
+
   /ports/{portId}/parameters/{index}/{subindex}/value:
     get:
       tags: 
