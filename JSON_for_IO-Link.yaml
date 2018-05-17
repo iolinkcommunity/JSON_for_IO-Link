@@ -477,6 +477,7 @@ paths:
                   pin2Value:
                     type: array
                     items:
+                      description: TEst
                       type: number
                       minimum: 0
                       maximum: 255
@@ -559,8 +560,41 @@ paths:
               data: [123, 222, 23]
             "format=iodd":  
               Pressure: 123
-              Temperature: 10 
-
+              Temperature: 10 0
+        400:
+          description: Failure
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [Master, Port, Device, IODD]
+              code:
+                type: integer
+              message:
+                type: string
+          examples:
+            "Wire broken":
+              type: Port
+              code: 0x1000
+              message: Master communication error
+            "No device connected to port and port is set to inactive":
+              type: Master
+              code: 1
+              message: No communication. Port is inactive
+            "Use the incident text":
+              type: Device
+              code: 0x8011
+              message: Service temporarily not available - local control
+            "IODD defined errors - without the IODD":
+              type: Device
+              code: 123456
+              message: Vendor specific
+            "IODD defined errors - with the IODD":
+              type: Device
+              code: 123456
+              message: Bla Bla from the IODD
+                
   /ports/{portId}/parameters/{index}/{subindex}/value:
     get:
       tags: 
