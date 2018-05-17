@@ -1,0 +1,607 @@
+swagger: '2.0'
+info:
+  description: >-
+    This is a sample IO-Link Master server. You can find out more about IO-Link
+    at [http://www.io-link.com](http://www.io-link.com)
+  version: 0.0.1
+  title: Swagger IO-Link Master
+  contact:
+    email: oliver.lingg@sick.de
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: iolmaster.io-link.com
+basePath: /iol/v1
+tags:
+  - name: master
+    description: Access to parameters of the IO-Link master itself
+  - name: ports
+    description: Access to the IO-Link ports of the IO-Link master
+schemes:
+  - http
+paths:
+  /identification:
+    get:
+      tags:
+        - master
+      summary: Read the identification of the IO-Link master
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            required:
+              - vendorId
+              - masterId
+              - masterType
+              - serialNumber
+              - orderCode
+              - vendorName
+              - hardwareRevision
+              - softwareRevision
+              - website
+              - manual
+            type: object
+            properties:
+              vendorId:
+                type: integer
+              masterId:
+                type: integer
+              masterType:
+                type: string
+                enum: [Unspecific, Master acc. V1.0, Master acc. V1.1, FS_Master, W_Master]
+              serialNumber:
+                type: string
+              orderCode:
+                type: string
+              vendorName:
+                type: string
+              hardwareRevision:
+                type: string
+              softwareRevision:
+                type: string
+              website:
+                type: string
+              manual:
+                type: string
+              applicationSpecificTag:
+                type: string
+              locationTag:
+                type: string
+              functionTag:
+                type: string
+          examples:
+            "":
+              vendorId: 26
+              masterId: 42
+              masterType: Master acc. V1.0
+              serialNumber: IOLM123456
+              orderCode: PROD-123456
+              vendorName: SICK AG
+              hardwareRevision: 3.2.1.444R
+              softwareRevision: 3.2.1.888R
+              website: 'http://www.sick.de/io-link-master'
+              manual: 'http://www.sick.de/io-link-master/documentation.pdf'
+              applicationSpecificTag: Fallback reader at the end of the belt
+              locationTag: Down under
+              functionTag: Code reading
+    post:
+      tags:
+        - master
+      summary: Write application specific identification
+      parameters:
+        - name: identification
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              applicationSpecificTag:
+                type: string
+              locationTag:
+                type: string
+              functionTag:
+                type: string
+            example:
+              applicationSpecificTag: Fallback reader at the end of the belt
+              locationTag: Down under
+              functionTag: Code reading
+      responses:
+        200:
+          description: Successful operation
+          
+  /capabilities:
+    get:
+      tags:
+        - master
+      summary: Read the identification of the master
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            required:
+              - ioddSupported
+              - maxNumberOfPorts
+              - maxPowerSupply
+            type: object
+            properties:
+              ioddSupported:
+                type: boolean
+              maxNumberOfPorts:
+                type: integer
+              maxPowerSupply:
+                type: object
+                properties:
+                  value:
+                    type: number
+                  unit:
+                    type: string
+            example:
+              ioddSupported: true
+              maxNumberOfPorts: 8
+              maxPowerSupply:
+                value: 0.3
+                unit: A
+                
+  /configuration:
+    get:
+      tags:
+        - master
+      summary: Read the configuration of the IO-Link master
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              ethIpv4:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ipAddress:
+                      type: string
+                    subnetMask:
+                      type: string
+                    standardGateway:
+                      type: string
+              ethIpv6:
+                type: array
+                items:
+                  type: object
+            example:
+              ethIpv4:
+                - ipAddress: 192.168.1.13
+                  subnetMask: 255.255.255.0
+                  standardGateway: 192.168.1.1
+    post:
+      tags:
+        - master
+      summary: Update the configuration of the IO-Link master
+      parameters:
+        - name: configuration
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              ethIpv4:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ipAddress:
+                      type: string
+                    subnetMask:
+                      type: string
+                    standardGateway:
+                      type: string
+              ethIpv6:
+                type: array
+                items:
+                  type: object
+            example:
+              ethIpv4:
+                - ipAddress: 192.168.1.13
+                  subnetMask: 255.255.255.0
+                  standardGateway: 192.168.1.1
+      responses:
+        200:
+          description: Successful operation
+          
+  /reset:
+    post:
+      tags:
+        - master
+      summary: Invoke a reset of the IO-Link master
+      responses:
+        200:
+          description: Successful operation
+          
+  /reboot:
+    post:
+      tags:
+        - master
+      summary: Invoke a reboot of the IO-Link master
+      responses:
+        200:
+          description: Successful operation
+          
+  /ports/{portId}/identification:
+    get:
+      tags:
+        - ports
+      summary: Read the identification of the device at the specified port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            required:
+              - vendorId
+              - deviceId
+              - serialNumber
+              - hardwareRevision
+              - firmwareRevision
+            type: object
+            properties:
+              vendorId:
+                type: integer
+              deviceId:
+                type: integer
+              vendorName:
+                type: string
+              vendorText:
+                type: string
+              productName:
+                type: string
+              productId: 
+                type: string
+              productText:
+                type: string
+              serialNumber:
+                type: string
+              hardwareRevision:
+                type: string
+              firmwareRevision:
+                type: string
+              applicationSpecificTag:
+                type: string
+              locationTag:
+                type: string
+              functionTag:
+                type: string
+            example:
+              vendorId: 26
+              deviceId: 42
+              vendorName: SICK AG
+              vendorText: Sensor Intelligence.
+              productName: WTxx16
+              productId: PROD-123456
+              productText: Light switch
+              serialNumber: IOLM123456
+              hardwareRevision: 3.2.1.444R
+              firmwareRevision: 3.2.1.888R
+              applicationSpecificTag: Fallback light switch at the end of the belt
+              locationTag: Down under
+              functionTag: Check end of belt
+    post:
+      tags:
+        - ports
+      summary: Write application specific port identification
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: identification
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              applicationSpecificTag:
+                type: string
+                example: Fallback light switch at the end of the belt
+              locationTag:
+                type: string
+                example: Down under
+              functionTag:
+                type: string
+                example: Check start of belt
+            example:
+              applicationSpecificTag: Fallback light switch at the end of the belt
+              locationTag: Down under
+              functionTag: Check start of belt
+      responses:
+        200:
+          description: Successful operation
+          
+  /ports/{portId}/capabilities:
+    get:
+      tags: 
+        - ports
+      summary: Read the capability information of the specified port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              maxPowerSupply:
+                type: object
+                properties:
+                  value:
+                    type: number
+                  unit:
+                    type: string
+              portType:
+                type: string
+                enum: [CLASS_A, CLASS_A_WITH_PORT_POWER_OFF_ON, CLASS_B, FS_PORT_A_WITHOUT_OSSDE, FS_PORT_A_WITH_OSSDE, FS_PORT_B, W_MASTER]
+            example:
+              maxPowerSupply:
+                value: 0.3
+                unit: A
+              portType: CLASS_A
+            
+  /ports/{portId}/configuration:
+    get:
+      tags: 
+        - ports
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      summary: Read the configuration of the specified port
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              portMode:
+                type: string
+                enum: [DEACTIVATED, IOL_MANUAL, IOL_AUTOSTART, DI, DO]
+              validationAndBackup:
+                type: string
+                enum: [NO_DEVICE_CHECK, TYPE_COMPATIBLE_DEVICE_V1.0, TYPE_COMPATIBLE_DEVICE_V1.1, TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE, TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE]
+              pin2Configuration:
+                type: string
+                enum: [NOT_SUPPORTED, DIGITAL_INPUT, DIGITAL_OUTPUT, ANALOG_INPUT, ANALOG_OUTPUT, POWER_2]
+              cycleTime:
+                description: 0 = as fast as possible. Other (positive) values = time in milliseconds. If a time value is given that does not match to the possible time values given in the IO-Link Interface and System Specification, the IO-Link Master has to take the next lower level (resp. 0)
+                type: number
+              vendorId:
+                type: integer
+              deviceId:
+                type: integer
+            example:
+              portMode: IOL_AUTOSTART
+              validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+              pin2Configuration: ANALOG_INPUT
+              cycleTime: 0
+              vendorId: 26
+              deviceId: 333
+              
+    post:
+      tags:
+        - ports
+      summary: Write the configuration of the specified port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: configuration
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              portMode:
+                type: string
+                enum: [DEACTIVATED, IOL_MANUAL, IOL_AUTOSTART, DI, DO]
+              validationAndBackup:
+                type: string
+                enum: [NO_DEVICE_CHECK, TYPE_COMPATIBLE_DEVICE_V1.0, TYPE_COMPATIBLE_DEVICE_V1.1, TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE, TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE]
+              pin2Configuration:
+                type: string
+                enum: [NOT_SUPPORTED, DIGITAL_INPUT, DIGITAL_OUTPUT, ANALOG_INPUT, ANALOG_OUTPUT, POWER_2]
+              cycleTime:
+                description: 0 = as fast as possible. Other (positive) values = time in milliseconds. If a time value is given that does not match to the possible time values given in the IO-Link Interface and System Specification, the IO-Link Master has to take the next lower level (resp. 0)
+                type: number
+              vendorId:
+                type: integer
+              deviceId:
+                type: integer
+            example:
+              portMode: IOL_AUTOSTART
+              validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+              pin2Configuration: ANALOG_INPUT
+              cycleTime: 0
+              vendorId: 26
+              deviceId: 333
+      responses:
+        200:
+          description: Successful operation
+  /ports/{portId}/processdata/value:
+    get:
+      tags: 
+        - ports
+      summary: Read the process data of the specified port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: format
+          in: query
+          description: Value format in response document
+          type: string
+          enum: [raw, iodd]
+          default: iodd
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              in:
+                type: object
+                properties:
+                  pin2:
+                    type: boolean
+                  pin2Value:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  data:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  valid:
+                    type: boolean
+              out:
+                type: object
+                properties:
+                  pin2:
+                    type: boolean
+                  pin2Value:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  data:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  valid:
+                    type: boolean
+          examples:
+            format=raw:
+              in: 
+                pin2: true
+                pin2Value: [ 237, 66, 22, 98 ]
+                data: [ 255, 0, 3 ]
+            format=iodd:
+              in: 
+                pin2: true
+                pin2Value: [ 237, 66, 22, 98 ]
+                data: 
+                  distance: 345
+                  qsignal: true
+  /ports/{portId}/parameters/{index}/value:
+    get:
+      tags: 
+        - ports
+      summary: Read the parameter with the given index from the specified port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index
+          in: path
+          description: Index of ISDU variable
+          type: integer
+          required: true
+        - name: format
+          in: query
+          description: Value format in response document
+          type: string
+          enum: [raw, iodd]
+          default: iodd
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: number
+                  minimum: 0
+                  maximum: 255
+          examples:
+            "format=raw":  
+              data: [123, 222, 23]
+            "format=iodd":  
+              Pressure: 123
+              Temperature: 10 
+
+  /ports/{portId}/parameters/{index}/{subindex}/value:
+    get:
+      tags: 
+        - ports
+      summary: Read the parameter with the given index and subindex from the specified port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index
+          in: path
+          description: Index of ISDU variable
+          type: integer
+          required: true
+        - name: subindex
+          in: path
+          description: Subndex of ISDU variable with the given index
+          type: integer
+          required: true
+        - name: format
+          in: query
+          description: Value format in response document
+          type: string
+          enum: [raw, iodd]
+          default: iodd
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: number
+                  minimum: 0
+                  maximum: 255
+          examples:
+            "format=raw":  
+              data: [123, 222, 23]
+            "format=iodd":  
+              Pressure: 12322223
