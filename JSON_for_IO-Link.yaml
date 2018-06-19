@@ -10,21 +10,185 @@ info:
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-host: iolmaster.io-link.com
-basePath: /iol/v1
+host: iolmaster
+basePath: /iol
 tags:
-  - name: master
+  - name: User management
+    description: User and session handling (optional)
+  - name: Master
     description: Access to parameters of the IO-Link master itself
-  - name: ports
+  - name: Ports
     description: Access to the IO-Link ports of the IO-Link master
 schemes:
   - http
+  - https
 paths:
-  /identification:
+  /login:
+    post:
+      tags:
+        - User management
+      summary: Login with a specified user
+      parameters:
+        - name: Credentials
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+            example:
+              username: admin
+              password: admin
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            required:
+              - sessionId
+              - rights
+            type: object
+            properties:
+              sessionId:
+                type: string
+              rights:
+                type: string
+            example:
+              sessionId: af6jklaFSFs32Fsf0Sd44up6
+              rights: read
+        401:
+          description: Bad user credentials
+  
+  /logout:
+    post:
+      tags:
+        - User management
+      summary: Logout with a specified user
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie
+          required: true
+          in: header
+          type: string
+        - name: Credentials
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+            example:
+              username: admin
+      responses:
+        200:
+          description: Successful operation
+        400:
+          description: User is not logged in 
+        404:
+          description: Bad user credentials/Invalid session id  
+
+  /users:
+    put:
+      tags:
+        - User management
+      summary: Add user (admin only)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie
+          required: true
+          in: header
+          type: string
+        - name: Credentials
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+              rights:
+                type: string
+            example:
+              username: admin
+              password: admin
+              rights: read
+      responses:
+        200:
+          description: Successful operation
+        401:
+          description: Unauthorized (not admin role)
+    post:
+      tags:
+        - User management
+      summary: Change password
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie
+          required: true
+          in: header
+          type: string
+        - name: Credentials
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              oldPassword:
+                type: string
+              newPassword:
+                type: string
+            example:
+              username: admin
+              oldPassword: admin
+              newPassword: newPassword
+      responses:
+        200:
+          description: Successful operation
+        401:
+          description: Unauthorized (invalid username)
+    delete:
+      tags:
+        - User management
+      summary: Remove user (admin only)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie
+          required: true
+          in: header
+          type: string
+        - name: Credentials
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+            example:
+              username: maintainer
+      responses:
+        200:
+          description: Successful operation
+        401:
+          description: Unauthorized (not admin role)
+
+  /master/identification:
     get:
       tags:
-        - master
+        - Master
       summary: Read the identification of the IO-Link master
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
       produces:
         - application/json
       responses:
@@ -88,9 +252,13 @@ paths:
               functionTag: Code reading
     post:
       tags:
-        - master
+        - Master
       summary: Write application specific identification
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: identification
           required: true
           in: body
@@ -110,12 +278,17 @@ paths:
       responses:
         200:
           description: Successful operation
-          
-  /capabilities:
+
+  /master/capabilities:
     get:
       tags:
-        - master
+        - Master
       summary: Read the identification of the master
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
       produces:
         - application/json
       responses:
@@ -145,12 +318,17 @@ paths:
               maxPowerSupply:
                 value: 0.3
                 unit: A
-                
-  /configuration:
+
+  /master/configuration:
     get:
       tags:
-        - master
+        - Master
       summary: Read the configuration of the IO-Link master
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
       produces:
         - application/json
       responses:
@@ -181,9 +359,13 @@ paths:
                   standardGateway: 192.168.1.1
     post:
       tags:
-        - master
+        - Master
       summary: Update the configuration of the IO-Link master
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: configuration
           required: true
           in: body
@@ -213,31 +395,84 @@ paths:
       responses:
         200:
           description: Successful operation
-          
-  /reset:
+
+  /master/reset:
     post:
       tags:
-        - master
+        - Master
       summary: Invoke a reset of the IO-Link master
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
       responses:
         200:
           description: Successful operation
-          
-  /reboot:
+
+  /master/reboot:
     post:
       tags:
-        - master
+        - Master
       summary: Invoke a reboot of the IO-Link master
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
       responses:
         200:
           description: Successful operation
-          
+
+  /ports/{portId}/status:
+    get:
+      tags:
+        - Ports
+      summary: Read the status of the selected port
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              portStatusInfo:
+                type: string
+                enum: [NO_DEVICE, DEACTIVATED, INCORRECT_DEVICE, PREOPERATE, OPERATE, DI_C/Q, DO_C/Q]
+              revisionId:
+                type: integer
+              transmissionRate:
+                type: string
+                enum: [NOT_DETECTED, COM1, COM2, COM3]
+              masterCycleTime:
+                type: integer
+            example:
+              portStatusInfo: NO_DEVICE
+              revisionId: 10
+              transmissionRate: COM2
+              masterCycleTime: 400
+
   /ports/{portId}/identification:
     get:
       tags:
-        - ports
+        - Ports
       summary: Read the identification of the device at the specified port
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: portId
           in: path
           description: Port ID starting with 1
@@ -299,9 +534,13 @@ paths:
               functionTag: Check end of belt
     post:
       tags:
-        - ports
+        - Ports
       summary: Write application specific port identification
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: portId
           in: path
           description: Port ID starting with 1
@@ -329,13 +568,17 @@ paths:
       responses:
         200:
           description: Successful operation
-          
+
   /ports/{portId}/capabilities:
     get:
       tags: 
-        - ports
+        - Ports
       summary: Read the capability information of the specified port
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: portId
           in: path
           description: Port ID starting with 1
@@ -362,12 +605,16 @@ paths:
                 value: 0.3
                 unit: A
               portType: CLASS_A
-            
+
   /ports/{portId}/configuration:
     get:
       tags: 
-        - ports
+        - Ports
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: portId
           in: path
           description: Port ID starting with 1
@@ -396,6 +643,10 @@ paths:
                 type: integer
               deviceId:
                 type: integer
+              inputDataLength:
+                type: integer
+              outputDataLength:
+                type: integer
             example:
               portMode: IOL_AUTOSTART
               validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
@@ -403,12 +654,17 @@ paths:
               cycleTime: 0
               vendorId: 26
               deviceId: 333
-              
+              inputDataLength: 1
+              outputDataLength: 1
     post:
       tags:
-        - ports
+        - Ports
       summary: Write the configuration of the specified port
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: portId
           in: path
           description: Port ID starting with 1
@@ -446,162 +702,987 @@ paths:
       responses:
         200:
           description: Successful operation
-  /ports/{portId}/processdata/value:
-    get:
-      tags: 
-        - ports
-      summary: Read the process data of the specified port
-      parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          type: integer
-          required: true
-        - name: format
-          in: query
-          description: Value format in response document
-          type: string
-          enum: [raw, iodd]
-          default: iodd
-      responses:
-        200:
-          description: Successful operation
-          schema:
-            type: object
-            properties:
-              in:
-                type: object
-                properties:
-                  pin2:
-                    type: boolean
-                  pin2Value:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  data:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  valid:
-                    type: boolean
-              out:
-                type: object
-                properties:
-                  pin2:
-                    type: boolean
-                  pin2Value:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  data:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  valid:
-                    type: boolean
-          examples:
-            format=raw:
-              in: 
-                pin2: true
-                pin2Value: [ 237, 66, 22, 98 ]
-                data: [ 255, 0, 3 ]
-            format=iodd:
-              in: 
-                pin2: true
-                pin2Value: [ 237, 66, 22, 98 ]
-                data: 
-                  distance: 345
-                  qsignal: true
-  /ports/{portId}/parameters/{index}/value:
-    get:
-      tags: 
-        - ports
-      summary: Read the parameter with the given index from the specified port
-      parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          type: integer
-          required: true
-        - name: index
-          in: path
-          description: Index of ISDU variable
-          type: integer
-          required: true
-        - name: format
-          in: query
-          description: Value format in response document
-          type: string
-          enum: [raw, iodd]
-          default: iodd
-      responses:
-        200:
-          description: Successful operation
-          schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  type: number
-                  minimum: 0
-                  maximum: 255
-          examples:
-            "format=raw":  
-              data: [123, 222, 23]
-            "format=iodd":  
-              Pressure: 123
-              Temperature: 10 
 
-  /ports/{portId}/parameters/{index}/{subindex}/value:
-    get:
+  /ports/{portId}/iodd:
+    post:
       tags: 
-        - ports
-      summary: Read the parameter with the given index and subindex from the specified port
+        - Ports
+      summary: Parse an IODD on the selected port (Only available with IODD parser supported)
       parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
         - name: portId
           in: path
           description: Port ID starting with 1
           type: integer
           required: true
-        - name: index
-          in: path
-          description: Index of ISDU variable
-          type: integer
+        - name: Iodd
           required: true
-        - name: subindex
-          in: path
-          description: Subndex of ISDU variable with the given index
-          type: integer
-          required: true
-        - name: format
-          in: query
-          description: Value format in response document
+          in: body
+          schema:
+            type: object
+            properties:
+              version:
+                type: string
+            example:
+              version: V1.1
+      responses:
+        200:
+          description: Successful operation
+
+  /ports/{portId}/processdata/info:
+    get:
+      tags: 
+        - Ports
+      summary: Read the metadata of process data of the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
           type: string
-          enum: [raw, iodd]
-          default: iodd
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
       responses:
         200:
           description: Successful operation
           schema:
             type: object
             properties:
-              data:
+              processDataInput:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    singleValues:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                    valueRanges:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          minValue:
+                            type: string
+                          maxValue:
+                            type: string
+              processDataOutput:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    singleValues:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                    valueRanges:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          minValue:
+                            type: string
+                          maxValue:
+                            type: string
+            example:
+              processDataInput:
+              - name: DIP switch bit 0 (Boolean)
+                singleValues: []
+                valueRanges: []
+              - name: DIP switch bit 1 (Boolean)
+                singleValues: []
+                valueRanges: []
+              - name: DIP switch bit 2-6 (6-bit integer)
+                singleValues: []
+                valueRanges:
+                - name: Default
+                  minValue: '0'
+                  maxValue: '63'
+              processDataOutput:
+              - name: Decimal point right
+                singleValues:
+                - name: 'off'
+                  value: '0'
+                - name: 'on'
+                  value: '1'
+                valueRanges: []
+              - name: Decimal point left
+                singleValues:
+                - name: 'off'
+                  value: '0'
+                - name: 'on'
+                  value: '1'
+                valueRanges: []
+              - name: Symbol right
+                singleValues:
+                - name: bar bottom
+                  value: '0'
+                - name: bar right
+                  value: '1'
+                - name: bar top
+                  value: '2'
+                - name: bar left
+                  value: '3'
+                valueRanges: []
+              - name: Digit left
+                singleValues: []
+                valueRanges:
+                - name: Default
+                  minValue: '0'
+                  maxValue: '15'
+
+  /ports/{portId}/processdata/value/raw:
+    get:
+      tags: 
+        - Ports
+      summary: Read the raw value of the process data of the selected port
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              processDataInput:
+                type: object
+                properties:
+                  pin2:
+                    type: boolean
+                  pin2Value:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  data:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  validity:
+                    type: boolean
+              processDataOutput:
+                type: object
+                properties:
+                  pin2:
+                    type: boolean
+                  pin2Value:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  data:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  validity:
+                    type: boolean
+            example:
+              processDataInput:
+                pin2: true
+                pin2Value:
+                - 237
+                - 66
+                - 22
+                - 98
+                data:
+                - 255
+                - 0
+                - 3
+                validity: true
+              processDataOutput:
+                pin2: true
+                pin2Value:
+                - 237
+                - 66
+                - 22
+                - 98
+                data:
+                - 255
+                - 0
+                - 3
+                validity: false
+    post:
+      tags: 
+        - Ports
+      summary: Set the process data (raw value) of the selected port
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: Process data output
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                type: array
+                items:
+                  type: number
+              validity:
+                type: boolean
+            example:
+              value:
+                [255]
+              validity: true
+      responses:
+        200:
+          description: Successful operation
+
+  /ports/{portId}/processdata/value/formatted:
+    get:
+      tags: 
+        - Ports
+      summary: Read the formatted value of the process data of the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              processDataInput:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+                    validity:
+                      type: boolean
+              processDataOutput:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+                    validity:
+                      type: boolean
+            example:
+              processDataInput:
+              - name: DIP switch bit 0 (Boolean)
+                value: '1'
+                validity: true
+              - name: DIP switch bit 1 (Boolean)
+                value: '1'
+                validity: true
+              - name: DIP switch bit 2-6 (6-bit integer)
+                value: '48'
+                validity: true
+              processDataOutput:
+              - name: Decimal point right
+                value: '0'
+                validity: false
+              - name: Decimal point left
+                value: '0'
+                validity: false
+              - name: Symbol right
+                value: '0'
+                validity: false
+              - name: Digit left
+                value: '0'
+                validity: false
+    post:
+      tags: 
+        - Ports
+      summary: Set the process data (formatted value) of the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: Process data output
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              processDataOutput:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rowNumber:
+                      type: number
+                    value:
+                      type: string
+              validity:
+                type: boolean
+            example:
+              processDataOutput:
+              - rowNumber: 0
+                value: '1'
+              - rowNumber: 1
+                value: '1'
+              - rowNumber: 2
+                value: '0'
+              - rowNumber: 3
+                value: '10'
+              validity: true
+      responses:
+        200:
+          description: Successful operation
+
+  /ports/{portId}/parameters/indices:
+    get:
+      tags: 
+        - Ports
+      summary: Read the available parameter index and name list of the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              indices:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    index:
+                      type: number
+                    parameterId:
+                      type: string
+            example:
+              indices:
+              - index: 0
+                parameterId: testName_0
+              - index: 1
+                parameterId: testName_1
+              - index: 2
+                parameterId: testName_2
+              - index: 12
+                parameterId: testName_12
+              - index: 16
+                parameterId: testName_16
+              - index: 17
+                parameterId: testName_17
+              - index: 18
+                parameterId: testName_18
+              - index: 19
+                parameterId: testName_19
+              - index: 20
+                parameterId: testName_20
+              - index: 23
+                parameterId: testName_23
+              - index: 24
+                parameterId: testName_24
+              - index: 64
+                parameterId: testName_64
+              - index: 65
+                parameterId: testName_65
+              - index: 66
+                parameterId: testName_66
+              - index: 67
+                parameterId: testName_67
+              - index: 68
+                parameterId: testName_68
+              - index: 69
+                parameterId: testName_69
+              - index: 70
+                parameterId: testName_70
+              - index: 251
+                parameterId: testName_251
+              - index: 252
+                parameterId: testName_252
+              - index: 253
+                parameterId: testName_253
+              - index: 254
+                parameterId: testName_254
+              - index: 16382
+                parameterId: testName_16382
+
+  /ports/{portId}/parameters/{index/parameterId}/info:
+    get:
+      tags: 
+        - Ports
+      summary: Read the metadata of the parameter with the given index from the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              unitCode:
+                type: number
+              acessRights:
+                type: string
+              dataType:
+                type: string
+              bitLength:
+                type: number
+              singleValues:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+              valueRanges:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    minValue:
+                      type: string
+                    maxValue:
+                      type: string
+            example:
+              name: Symbol right
+              unitCode: 0
+              acessRights: RW
+              dataType: uinteger
+              bitLength: 2
+              singleValues:
+              - name: bar bottom
+                value: '0'
+              - name: bar right
+                value: '1'
+              - name: bar top
+                value: '2'
+              - name: bar left
+                value: '3'
+              valueRanges: []
+
+  /ports/{portId}/parameters/{index/parameterId}/value/raw:
+    get:
+      tags: 
+        - Ports
+      summary: Read the raw value of the parameter with the given index from the selected port
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              value:
                 type: array
                 items:
                   type: number
                   minimum: 0
                   maximum: 255
+            example:
+                value: [123, 222, 23]
+    post:
+      tags: 
+        - Ports
+      summary: Set the parameter (raw value) of the selected port
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+        - name: Parameter value
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              value:
+                type: array
+                items:
+                  type: number
+            example:
+              value:
+              - 43
+              - 42
+              - 42
+      responses:
+        200:
+          description: Successful operation
+
+  /ports/{portId}/parameters/{index/parameterId}/value/formatted:
+    get:
+      tags: 
+        - Ports
+      summary: Read the formatted value of the parameter with the given index from the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              value:
+                type: string
+            example:
+              value: TEConcept GmbH
+    post:
+      tags: 
+        - Ports
+      summary: Set the parameter (formatted value) of the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+        - name: Parameter value
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              value:
+                type: string
+            example:
+              value: 1
+      responses:
+        200:
+          description: Successful operation
+
+  /ports/{portId}/parameters/{index/parameterId}/subindices:
+    get:
+      tags: 
+        - Ports
+      summary: Read the available subindex and name list of the selected parameter (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              subindices:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    subindex:
+                      type: number
+                    subindexId:
+                      type: string
+            example:
+              subindices:
+              - subindex: 0
+                subindexId: testName_0
+              - subindex: 1
+                subindexId: testName_1
+              - subindex: 2
+                subindexId: testName_2
+              - subindex: 12
+                subindexId: testName_12
+              - subindex: 16
+                subindexId: testName_16
+              - subindex: 17
+                subindexId: testName_17
+              - subindex: 18
+                subindexId: testName_18
+              - subindex: 19
+                subindexId: testName_19
+              - subindex: 20
+                subindexId: testName_20
+              - subindex: 23
+                subindexId: testName_23
+              - subindex: 24
+                subindexId: testName_24
+              - subindex: 64
+                subindexId: testName_64
+              - subindex: 65
+                subindexId: testName_65
+              - subindex: 66
+                subindexId: testName_66
+              - subindex: 67
+                subindexId: testName_67
+              - subindex: 68
+                subindexId: testName_68
+              - subindex: 69
+                subindexId: testName_69
+              - subindex: 70
+                subindexId: testName_70
+              - subindex: 251
+                subindexId: testName_251
+              - subindex: 252
+                subindexId: testName_252
+              - subindex: 253
+                subindexId: testName_253
+              - subindex: 254
+                subindexId: testName_254
+
+  /ports/{portId}/parameters/{index/parameterId}/subindices/{subindex/subindexId}/info:
+    get:
+      tags: 
+        - Ports
+      summary: Read the metadata of the parameter with the given index and subindex from the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+        - name: subindex/subindexId
+          in: path
+          description: Subindex or formatted name of ISDU variable with the given index.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              unitCode:
+                type: number
+              acessRights:
+                type: string
+              dataType:
+                type: string
+              bitLength:
+                type: number
+              singleValues:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+              valueRanges:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    minValue:
+                      type: string
+                    maxValue:
+                      type: string
+            example:
+              name: Symbol right
+              unitCode: 0
+              acessRights: RW
+              dataType: uinteger
+              bitLength: 2
+              singleValues:
+              - name: bar bottom
+                value: '0'
+              - name: bar right
+                value: '1'
+              - name: bar top
+                value: '2'
+              - name: bar left
+                value: '3'
+              valueRanges: []
+
+  /ports/{portId}/parameters/{index/parameterId}/subindices/{subindex/subindexId}/value/raw:
+    get:
+      tags: 
+        - Ports
+      summary: Read the raw value of the parameter with the given index and subindex from the selected port
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+        - name: subindex/subindexId
+          in: path
+          description: Subindex or formatted name of ISDU variable with the given index.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              value:
+                type: array
+                items:
+                  type: number
+                  minimum: 0
+                  maximum: 255
+            example:
+              value: [123, 222, 23]
+    post:
+      tags: 
+        - Ports
+      summary: Set the raw value of the parameter with the given index and subindex from the selected port
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+        - name: subindex/subindexId
+          in: path
+          description: Subindex or formatted name of ISDU variable with the given index.
+          type: string
+          required: true
+        - name: Subindex value
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              value:
+                type: array
+                items:
+                  type: number
+            example:
+              value:
+              - 43
+              - 42
+              - 42
+      responses:
+        200:
+          description: Successful operation
+ 
+  /ports/{portId}/parameters/{index/parameterId}/subindices/{subindex/subindexId}/value/formatted:
+    get:
+      tags: 
+        - Ports
+      summary: Read the formatted value of the parameter with the given index and subindex from the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+        - name: subindex/subindexId
+          in: path
+          description: Subindex or formatted name of ISDU variable with the given index.
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              value:
+                type: string
           examples:
-            "format=raw":  
-              data: [123, 222, 23]
-            "format=iodd":  
-              Pressure: 12322223
+            value: TEConcept GmbH
+    post:
+      tags: 
+        - Ports
+      summary: Set the formatted value of the parameter with the given index and subindex from the selected port (Only available with IODD parser supported)
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: index/parameterId
+          in: path
+          description: Index or formatted name of ISDU variable.
+          type: string
+          required: true
+        - name: subindex/subindexId
+          in: path
+          description: Subindex or formatted name of ISDU variable with the given index.
+          type: string
+          required: true
+        - name: Subindex value
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              value:
+                type: string
+            example:
+              value: 1
+      responses:
+        200:
+          description: Successful operation
