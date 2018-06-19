@@ -232,6 +232,72 @@ paths:
         200:
           description: Successful operation
           
+  '/master/events':
+    get:
+      tags:
+        - Ports
+      parameters:
+        - name: numberOfEvents
+          in: query
+          description: The number of the events to read from the master. The field "port" is required if the "origin" is PORT or DEVICE.
+          type: integer
+          required: false
+      summary: Read the event log.
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - origin
+                - code
+                - message
+                - severity
+              properties:
+                origin:
+                  type: string
+                  enum:
+                    - MASTER
+                    - PORT
+                    - DEVICE
+                port:
+                  type: integer
+                timestamp:
+                  type: string
+                code:
+                  type: integer
+                message:
+                  type: string
+                severity:
+                  type: string
+                  enum:
+                    - ERROR
+                    - WARNING
+                    - NOTIFICATION
+                mode:
+                  type: string
+                  enum:
+                    - SINGLESHOT
+                    - APPEARS
+                    - DISAPPEARS
+            example:
+                - origin: PORT
+                  port: 5
+                  timestamp: "2018-06-19T10:21:09.989Z"
+                  code: 8011
+                  message: sample message
+                  severity: WARNING
+                  mode: SINGLESHOT
+                - origin: DEVICE
+                  port: 5
+                  timestamp: "2018-06-19T10:21:09.989Z"
+                  code: 8011
+                  message: sample message
+                  severity: WARNING
+                  mode: SINGLESHOT 
+          
   /ports/{portId}/identification:
     get:
       tags:
