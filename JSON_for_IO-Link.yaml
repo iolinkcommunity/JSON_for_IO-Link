@@ -735,7 +735,6 @@ paths:
                   minimum: 0
                   maximum: 255
           examples:
-<<<<<<< HEAD
             "format=raw":  
               data: [123, 222, 23]
             "format=iodd":  
@@ -750,7 +749,6 @@ paths:
       responses:
         200:
           description: Ebbes
-=======
             format=raw:
               data:
                 - 123
@@ -806,4 +804,3 @@ paths:
         #create an IODD
 #  delete:
         #remove an IODD specified by deviceId, vendorId
->>>>>>> e64d30bfd324f3ae642641101c3b887b5a35b890
