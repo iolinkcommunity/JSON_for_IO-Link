@@ -232,6 +232,81 @@ paths:
       responses:
         '200':
           description: Successful operation
+
+  /master/events:
+    get:
+      tags:
+        - master
+      description: >-
+        _Event Log Behaviour_
+        
+        We do not manage the event buffer content in any way, we just read the entries that are there.
+        
+        The field _port_ is required if the _origin_ is PORT or DEVICE.
+         
+        The newest event is the first event in the list, so the list is giving the evetns by date in decending order.
+      parameters:
+        - name: limit
+          in: query
+          description: >-
+            The number of the events that are read from the master always delivering the newest events.
+          type: integer
+          required: false
+      summary: Read the event log.
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - origin
+                - code
+                - message
+                - severity
+              properties:
+                origin:
+                  type: string
+                  enum:
+                    - MASTER
+                    - PORT
+                    - DEVICE
+                port:
+                  type: integer
+                timestamp:
+                  type: string
+                code:
+                  type: integer
+                message:
+                  type: string
+                severity:
+                  type: string
+                  enum:
+                    - ERROR
+                    - WARNING
+                    - NOTIFICATION
+                mode:
+                  type: string
+                  enum:
+                    - SINGLESHOT
+                    - APPEARS
+                    - DISAPPEARS
+            example:
+              - origin: PORT
+                port: 5
+                timestamp: '2018-06-19T10:21:09.989Z'
+                code: 8011
+                message: sample message
+                severity: WARNING
+                mode: SINGLESHOT
+              - origin: DEVICE
+                port: 5
+                timestamp: '2018-06-19T10:21:09.989Z'
+                code: 8011
+                message: sample message
+                severity: WARNING
+                mode: SINGLESHOT
   '/ports/{portId}/identification':
     get:
       tags:
@@ -296,7 +371,9 @@ paths:
               firmwareRevision: 3.2.1.888R
               applicationSpecificTag: Fallback light switch at the end of the belt
               locationTag: Down under
-              functionTag: Check end of belt
+              functionTag: Check end of belt 
+        '400': 
+          description: Bad request, e.g. wrong query parameter value (negative limit).
     post:
       tags:
         - ports
@@ -675,15 +752,15 @@ paths:
                 - 23
             format=iodd:
               Pressure: 12322223
-  /iodd/list:
+  /iodds:
     get:
       tags:
-        - iodd
-      summary: >-
-        List of all IODD (representations) that are available on the gateway.
+        - iodds
+      summary: List of all IODD (representations) that are available on the gateway.
+      description: Only one version of an IODD is stored on the webserver at the same time for one vendorId-deviceId-combination.
       responses:
-        200:
-          description: Ebbes
+        '200':
+          description: Successful operation
           schema:
             type: array
             items:
@@ -700,19 +777,24 @@ paths:
                 ioLinkRevision:
                   type: string
                   enum:
-                    - "1.0"
-                    - "1.1"
+                    - '1.0'
+                    - '1.1'
           examples:
             '':
-              -
-                vendorId: 1234
+              - vendorId: 1234
                 deviceId: 4567
-                version: "4.3"
-                releaseDate: "2018-01-02"
-                ioLinkRevision: "1.1"
-              -
-                vendorid: 4321
+                version: '4.3'
+                releaseDate: '2018-01-02'
+                ioLinkRevision: '1.1'
+              - vendorid: 4321
                 deviceId: 8765
-                version: "2.1"
-                releaseDate: "2015-01-02"
-                ioLinkRevision: "1.1"
+                version: '2.1'
+                releaseDate: '2015-01-02'
+                ioLinkRevision: '1.1'
+
+#  post:
+        #updating an IODD
+#  put:
+        #create an IODD
+#  delete:
+        #remove an IODD specified by deviceId, vendorId
