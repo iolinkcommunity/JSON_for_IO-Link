@@ -28,7 +28,7 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             required:
@@ -50,7 +50,12 @@ paths:
                 type: integer
               masterType:
                 type: string
-                enum: [Unspecific, Master acc. V1.0, Master acc. V1.1, FS_Master, W_Master]
+                enum:
+                  - Unspecific
+                  - Master acc. V1.0
+                  - Master acc. V1.1
+                  - FS_Master
+                  - W_Master
               serialNumber:
                 type: string
               orderCode:
@@ -72,7 +77,7 @@ paths:
               functionTag:
                 type: string
           examples:
-            "":
+            '':
               vendorId: 26
               masterId: 42
               masterType: Master acc. V1.0
@@ -108,9 +113,8 @@ paths:
               locationTag: Down under
               functionTag: Code reading
       responses:
-        200:
+        '200':
           description: Successful operation
-          
   /capabilities:
     get:
       tags:
@@ -119,7 +123,7 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             required:
@@ -145,7 +149,6 @@ paths:
               maxPowerSupply:
                 value: 0.3
                 unit: A
-                
   /configuration:
     get:
       tags:
@@ -154,7 +157,7 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             type: object
@@ -211,35 +214,34 @@ paths:
                   subnetMask: 255.255.255.0
                   standardGateway: 192.168.1.1
       responses:
-        200:
+        '200':
           description: Successful operation
-          
   /reset:
     post:
       tags:
         - master
       summary: Invoke a reset of the IO-Link master
       responses:
-        200:
+        '200':
           description: Successful operation
-          
   /reboot:
     post:
       tags:
         - master
       summary: Invoke a reboot of the IO-Link master
       responses:
-        200:
+        '200':
           description: Successful operation
-          
-  '/master/events':
+  /master/events:
     get:
       tags:
         - Ports
       parameters:
         - name: numberOfEvents
           in: query
-          description: The number of the events to read from the master. The field "port" is required if the "origin" is PORT or DEVICE.
+          description: >-
+            The number of the events to read from the master. The field "port"
+            is required if the "origin" is PORT or DEVICE.
           type: integer
           required: false
       summary: Read the event log.
@@ -283,22 +285,21 @@ paths:
                     - APPEARS
                     - DISAPPEARS
             example:
-                - origin: PORT
-                  port: 5
-                  timestamp: "2018-06-19T10:21:09.989Z"
-                  code: 8011
-                  message: sample message
-                  severity: WARNING
-                  mode: SINGLESHOT
-                - origin: DEVICE
-                  port: 5
-                  timestamp: "2018-06-19T10:21:09.989Z"
-                  code: 8011
-                  message: sample message
-                  severity: WARNING
-                  mode: SINGLESHOT 
-          
-  /ports/{portId}/identification:
+              - origin: PORT
+                port: 5
+                timestamp: '2018-06-19T10:21:09.989Z'
+                code: 8011
+                message: sample message
+                severity: WARNING
+                mode: SINGLESHOT
+              - origin: DEVICE
+                port: 5
+                timestamp: '2018-06-19T10:21:09.989Z'
+                code: 8011
+                message: sample message
+                severity: WARNING
+                mode: SINGLESHOT
+  '/ports/{portId}/identification':
     get:
       tags:
         - ports
@@ -312,7 +313,7 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             required:
@@ -333,7 +334,7 @@ paths:
                 type: string
               productName:
                 type: string
-              productId: 
+              productId:
                 type: string
               productText:
                 type: string
@@ -393,12 +394,11 @@ paths:
               locationTag: Down under
               functionTag: Check start of belt
       responses:
-        200:
+        '200':
           description: Successful operation
-          
-  /ports/{portId}/capabilities:
+  '/ports/{portId}/capabilities':
     get:
-      tags: 
+      tags:
         - ports
       summary: Read the capability information of the specified port
       parameters:
@@ -408,7 +408,7 @@ paths:
           type: integer
           required: true
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             type: object
@@ -422,16 +422,22 @@ paths:
                     type: string
               portType:
                 type: string
-                enum: [CLASS_A, CLASS_A_WITH_PORT_POWER_OFF_ON, CLASS_B, FS_PORT_A_WITHOUT_OSSDE, FS_PORT_A_WITH_OSSDE, FS_PORT_B, W_MASTER]
+                enum:
+                  - CLASS_A
+                  - CLASS_A_WITH_PORT_POWER_OFF_ON
+                  - CLASS_B
+                  - FS_PORT_A_WITHOUT_OSSDE
+                  - FS_PORT_A_WITH_OSSDE
+                  - FS_PORT_B
+                  - W_MASTER
             example:
               maxPowerSupply:
                 value: 0.3
                 unit: A
               portType: CLASS_A
-            
-  /ports/{portId}/configuration:
+  '/ports/{portId}/configuration':
     get:
-      tags: 
+      tags:
         - ports
       parameters:
         - name: portId
@@ -441,22 +447,43 @@ paths:
           required: true
       summary: Read the configuration of the specified port
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             type: object
             properties:
               portMode:
                 type: string
-                enum: [DEACTIVATED, IOL_MANUAL, IOL_AUTOSTART, DI, DO]
+                enum:
+                  - DEACTIVATED
+                  - IOL_MANUAL
+                  - IOL_AUTOSTART
+                  - DI
+                  - DO
               validationAndBackup:
                 type: string
-                enum: [NO_DEVICE_CHECK, TYPE_COMPATIBLE_DEVICE_V1.0, TYPE_COMPATIBLE_DEVICE_V1.1, TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE, TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE]
+                enum:
+                  - NO_DEVICE_CHECK
+                  - TYPE_COMPATIBLE_DEVICE_V1.0
+                  - TYPE_COMPATIBLE_DEVICE_V1.1
+                  - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+                  - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
               pin2Configuration:
                 type: string
-                enum: [NOT_SUPPORTED, DIGITAL_INPUT, DIGITAL_OUTPUT, ANALOG_INPUT, ANALOG_OUTPUT, POWER_2]
+                enum:
+                  - NOT_SUPPORTED
+                  - DIGITAL_INPUT
+                  - DIGITAL_OUTPUT
+                  - ANALOG_INPUT
+                  - ANALOG_OUTPUT
+                  - POWER_2
               cycleTime:
-                description: 0 = as fast as possible. Other (positive) values = time in milliseconds. If a time value is given that does not match to the possible time values given in the IO-Link Interface and System Specification, the IO-Link Master has to take the next lower level (resp. 0)
+                description: >-
+                  0 = as fast as possible. Other (positive) values = time in
+                  milliseconds. If a time value is given that does not match to
+                  the possible time values given in the IO-Link Interface and
+                  System Specification, the IO-Link Master has to take the next
+                  lower level (resp. 0)
                 type: number
               vendorId:
                 type: integer
@@ -469,7 +496,6 @@ paths:
               cycleTime: 0
               vendorId: 26
               deviceId: 333
-              
     post:
       tags:
         - ports
@@ -488,15 +514,36 @@ paths:
             properties:
               portMode:
                 type: string
-                enum: [DEACTIVATED, IOL_MANUAL, IOL_AUTOSTART, DI, DO]
+                enum:
+                  - DEACTIVATED
+                  - IOL_MANUAL
+                  - IOL_AUTOSTART
+                  - DI
+                  - DO
               validationAndBackup:
                 type: string
-                enum: [NO_DEVICE_CHECK, TYPE_COMPATIBLE_DEVICE_V1.0, TYPE_COMPATIBLE_DEVICE_V1.1, TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE, TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE]
+                enum:
+                  - NO_DEVICE_CHECK
+                  - TYPE_COMPATIBLE_DEVICE_V1.0
+                  - TYPE_COMPATIBLE_DEVICE_V1.1
+                  - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+                  - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
               pin2Configuration:
                 type: string
-                enum: [NOT_SUPPORTED, DIGITAL_INPUT, DIGITAL_OUTPUT, ANALOG_INPUT, ANALOG_OUTPUT, POWER_2]
+                enum:
+                  - NOT_SUPPORTED
+                  - DIGITAL_INPUT
+                  - DIGITAL_OUTPUT
+                  - ANALOG_INPUT
+                  - ANALOG_OUTPUT
+                  - POWER_2
               cycleTime:
-                description: 0 = as fast as possible. Other (positive) values = time in milliseconds. If a time value is given that does not match to the possible time values given in the IO-Link Interface and System Specification, the IO-Link Master has to take the next lower level (resp. 0)
+                description: >-
+                  0 = as fast as possible. Other (positive) values = time in
+                  milliseconds. If a time value is given that does not match to
+                  the possible time values given in the IO-Link Interface and
+                  System Specification, the IO-Link Master has to take the next
+                  lower level (resp. 0)
                 type: number
               vendorId:
                 type: integer
@@ -510,11 +557,11 @@ paths:
               vendorId: 26
               deviceId: 333
       responses:
-        200:
+        '200':
           description: Successful operation
-  /ports/{portId}/processdata/value:
+  '/ports/{portId}/processdata/value':
     get:
-      tags: 
+      tags:
         - ports
       summary: Read the process data of the specified port
       parameters:
@@ -527,10 +574,12 @@ paths:
           in: query
           description: Value format in response document
           type: string
-          enum: [raw, iodd]
+          enum:
+            - raw
+            - iodd
           default: iodd
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             type: object
@@ -575,20 +624,31 @@ paths:
                     type: boolean
           examples:
             format=raw:
-              in: 
+              in:
                 pin2: true
-                pin2Value: [ 237, 66, 22, 98 ]
-                data: [ 255, 0, 3 ]
+                pin2Value:
+                  - 237
+                  - 66
+                  - 22
+                  - 98
+                data:
+                  - 255
+                  - 0
+                  - 3
             format=iodd:
-              in: 
+              in:
                 pin2: true
-                pin2Value: [ 237, 66, 22, 98 ]
-                data: 
+                pin2Value:
+                  - 237
+                  - 66
+                  - 22
+                  - 98
+                data:
                   distance: 345
                   qsignal: true
-  /ports/{portId}/parameters/{index}/value:
+  '/ports/{portId}/parameters/{index}/value':
     get:
-      tags: 
+      tags:
         - ports
       summary: Read the parameter with the given index from the specified port
       parameters:
@@ -606,10 +666,12 @@ paths:
           in: query
           description: Value format in response document
           type: string
-          enum: [raw, iodd]
+          enum:
+            - raw
+            - iodd
           default: iodd
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             type: object
@@ -621,17 +683,21 @@ paths:
                   minimum: 0
                   maximum: 255
           examples:
-            "format=raw":  
-              data: [123, 222, 23]
-            "format=iodd":  
+            format=raw:
+              data:
+                - 123
+                - 222
+                - 23
+            format=iodd:
               Pressure: 123
-              Temperature: 10 
-
-  /ports/{portId}/parameters/{index}/{subindex}/value:
+              Temperature: 10
+  '/ports/{portId}/parameters/{index}/{subindex}/value':
     get:
-      tags: 
+      tags:
         - ports
-      summary: Read the parameter with the given index and subindex from the specified port
+      summary: >-
+        Read the parameter with the given index and subindex from the specified
+        port
       parameters:
         - name: portId
           in: path
@@ -652,10 +718,12 @@ paths:
           in: query
           description: Value format in response document
           type: string
-          enum: [raw, iodd]
+          enum:
+            - raw
+            - iodd
           default: iodd
       responses:
-        200:
+        '200':
           description: Successful operation
           schema:
             type: object
@@ -667,6 +735,7 @@ paths:
                   minimum: 0
                   maximum: 255
           examples:
+<<<<<<< HEAD
             "format=raw":  
               data: [123, 222, 23]
             "format=iodd":  
@@ -681,6 +750,24 @@ paths:
       responses:
         200:
           description: Ebbes
+=======
+            format=raw:
+              data:
+                - 123
+                - 222
+                - 23
+            format=iodd:
+              Pressure: 12322223
+  /iodds:
+    get:
+      tags:
+        - iodds
+      summary: List of all IODD (representations) that are available on the gateway.
+      description: Only one version of an IODD is stored on the webserver at the same time for one vendorId-deviceId-combination.
+      responses:
+        '200':
+          description: Successful operation
+>>>>>>> e64d30bfd324f3ae642641101c3b887b5a35b890
           schema:
             type: array
             items:
@@ -697,6 +784,7 @@ paths:
                 ioLinkRevision:
                   type: string
                   enum:
+<<<<<<< HEAD
                     - "1.0"
                     - "1.1"
           examples:
@@ -713,3 +801,25 @@ paths:
                 version: "2.1"
                 releaseDate: "2015-01-02"
                 ioLinkRevision: "1.1"
+=======
+                    - '1.0'
+                    - '1.1'
+          examples:
+            - vendorId: 1234
+              deviceId: 4567
+              version: '4.3'
+              releaseDate: '2018-01-02'
+              ioLinkRevision: '1.1'
+            - vendorid: 4321
+              deviceId: 8765
+              version: '2.1'
+              releaseDate: '2015-01-02'
+              ioLinkRevision: '1.1'
+
+#  post:
+        #updating an IODD
+#  put:
+        #create an IODD
+#  delete:
+        #remove an IODD specified by deviceId, vendorId
+>>>>>>> e64d30bfd324f3ae642641101c3b887b5a35b890
