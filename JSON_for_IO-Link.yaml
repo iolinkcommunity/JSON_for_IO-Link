@@ -702,6 +702,51 @@ paths:
       responses:
         200:
           description: Successful operation
+  
+  /ports/{portId}/events/{count}:
+    get:
+      tags: 
+        - Ports
+      parameters:
+        - name: sessionId
+          description: \"sessionId\" tag from the login answer, can be used as cookie (Required only if the user management is enabled)
+          in: header
+          type: string
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+        - name: count
+          in: path
+          description: The number of the events to read from the master
+          type: integer
+          required: true
+      summary: Read the events of the specified port
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              origin:
+                type: string
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+                enum: [ERROR, WARNING, NOTIFICATION]
+              mode:
+                type: string
+                enum: [SINGLESHOT, APPEARS, DISAPPEARS]
+            example:
+              origin: master
+              code: 8011
+              message: sample message
+              type: WARNING
+              mode: SINGLESHOT
 
   /ports/{portId}/iodd:
     post:
@@ -878,8 +923,6 @@ paths:
               processDataInput:
                 type: object
                 properties:
-                  pin2:
-                    type: boolean
                   pin2Value:
                     type: array
                     items:
@@ -897,8 +940,6 @@ paths:
               processDataOutput:
                 type: object
                 properties:
-                  pin2:
-                    type: boolean
                   pin2Value:
                     type: array
                     items:
@@ -915,24 +956,18 @@ paths:
                     type: boolean
             example:
               processDataInput:
-                pin2: true
                 pin2Value:
                 - 237
                 - 66
-                - 22
-                - 98
                 data:
                 - 255
                 - 0
                 - 3
                 validity: true
               processDataOutput:
-                pin2: true
                 pin2Value:
                 - 237
                 - 66
-                - 22
-                - 98
                 data:
                 - 255
                 - 0
@@ -958,16 +993,33 @@ paths:
           schema:
             type: object
             properties:
-              value:
-                type: array
-                items:
-                  type: number
-              validity:
-                type: boolean
+              processDataOutput:
+                type: object
+                properties:
+                  pin2Value:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  data:
+                    type: array
+                    items:
+                      type: number
+                      minimum: 0
+                      maximum: 255
+                  validity:
+                    type: boolean
             example:
-              value:
-                [255]
-              validity: true
+              processDataOutput:
+                pin2Value:
+                - 237
+                - 66
+                data:
+                - 255
+                - 0
+                - 3
+                validity: false
       responses:
         200:
           description: Successful operation
