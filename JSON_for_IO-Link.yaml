@@ -740,22 +740,6 @@ paths:
             "format=iodd":  
               Pressure: 12322223
 
-  /iodd/list:
-    get:
-      tags:
-        - iodd
-      summary: >-
-        List of all IODD (representations) that are available on the gateway.
-      responses:
-        200:
-          description: Ebbes
-            format=raw:
-              data:
-                - 123
-                - 222
-                - 23
-            format=iodd:
-              Pressure: 12322223
   /iodds:
     get:
       tags:
