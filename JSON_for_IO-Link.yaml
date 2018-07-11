@@ -3,7 +3,7 @@ info:
   description: >-
     This is a sample IO-Link Master server. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
-  version: 0.0.1
+  version: 0.0.2
   title: Swagger IO-Link Master
   contact:
     email: oliver.lingg@sick.de
@@ -17,6 +17,8 @@ tags:
     description: Access to parameters of the IO-Link master itself
   - name: ports
     description: Access to the IO-Link ports of the IO-Link master
+  - name: connections
+    description: 'Access to several connections like MQTT, ...'
 schemes:
   - http
 paths:
@@ -232,10 +234,10 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /master/events:
+  /events:
     get:
       tags:
-        - Ports
+        - master
       parameters:
         - name: numberOfEvents
           in: query
@@ -299,6 +301,31 @@ paths:
                 message: sample message
                 severity: WARNING
                 mode: SINGLESHOT
+  /mqtt/configuration:
+    get:
+      tags:
+        - master
+      summary: Read the MQTT configuration of the master
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/components/mqttConfiguration'
+    post:
+      tags:
+        - master
+      summary: Update the MQTT configuration of the master
+      parameters:
+        - name: configuration
+          required: true
+          in: body
+          schema:
+            $ref: '#/components/mqttConfiguration'
+      responses:
+        '200':
+          description: Successful operation
   '/ports/{portId}/identification':
     get:
       tags:
@@ -735,17 +762,21 @@ paths:
                   minimum: 0
                   maximum: 255
           examples:
-            "format=raw":  
-              data: [123, 222, 23]
-            "format=iodd":  
+            format=raw:
+              data:
+                - 123
+                - 222
+                - 23
+            format=iodd:
               Pressure: 12322223
-
   /iodds:
     get:
       tags:
         - iodds
       summary: List of all IODD (representations) that are available on the gateway.
-      description: Only one version of an IODD is stored on the webserver at the same time for one vendorId-deviceId-combination.
+      description: >-
+        Only one version of an IODD is stored on the webserver at the same time
+        for one vendorId-deviceId-combination.
       responses:
         '200':
           description: Successful operation
@@ -765,26 +796,62 @@ paths:
                 ioLinkRevision:
                   type: string
                   enum:
-                    - "1.0"
-                    - "1.1"
+                    - '1.0'
+                    - '1.1'
           examples:
             '':
-              -
-                vendorId: 1234
+              - vendorId: 1234
                 deviceId: 4567
-                version: "4.3"
-                releaseDate: "2018-01-02"
-                ioLinkRevision: "1.1"
-              -
-                vendorid: 4321
+                version: '4.3'
+                releaseDate: '2018-01-02'
+                ioLinkRevision: '1.1'
+              - vendorid: 4321
                 deviceId: 8765
-                version: "2.1"
-                releaseDate: "2015-01-02"
-                ioLinkRevision: "1.1"
-
-#  post:
-        #updating an IODD
-#  put:
-        #create an IODD
-#  delete:
-        #remove an IODD specified by deviceId, vendorId
+                version: '2.1'
+                releaseDate: '2015-01-02'
+                ioLinkRevision: '1.1'
+components:
+  mqttConfiguration:
+    type: object
+    properties:
+      brokerAddress:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+      lastWill:
+        type: string
+      topics:
+        type: array
+        items:
+          type: object
+          properties:
+            topicName:
+              type: string
+            qos:
+              type: string
+              enum:
+                - At most once
+                - At least once
+                - Exactly once
+            interval:
+              type: integer
+              minimum: 0
+              description: in milliseconds; 0 = as fast as possible
+            onChange:
+              type: boolean
+            port:
+              type: integer
+              minimum: 0
+              description: Port number starting with 1
+            index:
+              type: integer
+              minimum: 0
+            subindex:
+              type: integer
+              minimum: 0
+            name:
+              type: string
+            processData:
+              type: boolean
