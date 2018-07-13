@@ -3,27 +3,6 @@ info:
   description: >-
     This is a sample IO-Link Master server. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
-
-    ***
-
-    2018-07-13:
-
-    # Do we want to change from Swagger 2.0 to OpenApi 3.0?
-
-    **Advantages**
-      - `components` field is much more mighty (including more that schemas, also
-        - `examples`
-        - etc.
-      - specify content-type much more freely
-      - up to date standard
-
-    ***
-
-    # I apologize for beeing against using all HTTP verbs.
-
-    It's much more fun using them all. (And our web server supports them also.)
-
-    ***
   version: 0.0.2
   title: Swagger IO-Link Master
   contact:
