@@ -312,7 +312,7 @@ paths:
         '200':
           description: Successful operation
           schema:
-            $ref: '#/components/mqttConfiguration'
+            $ref: '#/definitions/mqttConfiguration'
     post:
       tags:
         - master
@@ -322,7 +322,7 @@ paths:
           required: true
           in: body
           schema:
-            $ref: '#/components/mqttConfiguration'
+            $ref: '#/definitions/mqttConfiguration'
       responses:
         '200':
           description: Successful operation
@@ -810,7 +810,7 @@ paths:
                 version: '2.1'
                 releaseDate: '2015-01-02'
                 ioLinkRevision: '1.1'
-components:
+definitions:
   mqttConfiguration:
     type: object
     properties:
