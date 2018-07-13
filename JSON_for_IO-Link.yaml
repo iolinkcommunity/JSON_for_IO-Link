@@ -3,6 +3,27 @@ info:
   description: >-
     This is a sample IO-Link Master server. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
+
+    ***
+
+    2018-07-13:
+
+    # Do we want to change from Swagger 2.0 to OpenApi 3.0?
+
+    **Advantages**
+      - `components` field is much more mighty (including more that schemas, also
+        - `examples`
+        - etc.
+      - specify content-type much more freely
+      - up to date standard
+
+    ***
+
+    # I apologize for beeing against using all HTTP verbs.
+
+    It's much more fun using them all. (And our web server supports them also.)
+
+    ***
   version: 0.0.2
   title: Swagger IO-Link Master
   contact:
@@ -783,21 +804,7 @@ paths:
           schema:
             type: array
             items:
-              type: object
-              properties:
-                vendorId:
-                  type: number
-                deviceId:
-                  type: number
-                version:
-                  type: string
-                releaseDate:
-                  type: string
-                ioLinkRevision:
-                  type: string
-                  enum:
-                    - '1.0'
-                    - '1.1'
+              $ref: '#/definitions/ioddIdentification'
           examples:
             '':
               - vendorId: 1234
@@ -810,6 +817,63 @@ paths:
                 version: '2.1'
                 releaseDate: '2015-01-02'
                 ioLinkRevision: '1.1'
+    post:
+      tags:
+        - iodds
+      summary: Update (or upload, this is to be discussed) an existing IODD
+      description: |
+        I do not need to specifiy the identification data for this action as the parser can read this information.
+        ***
+        --> to be discussed: Should we also allow to upload an IODD via `POST`?
+      parameters:
+        - $ref: '#/parameters/vendorId_Path'
+        - $ref: '#/parameters/deviceId_Path'
+      responses:
+        '200':
+          $ref: '#/responses/iodds'
+
+    put:
+      tags:
+        - iodds
+      summary: Upload an IODD
+      description: I do not need to specifiy the identification data for this action as the parser can read this information.
+      parameters:
+        - $ref: '#/parameters/vendorId_Path'
+        - $ref: '#/parameters/deviceId_Path'
+      responses:
+        '200':
+          $ref: '#/responses/iodds'
+
+  '/iodds/{vendorId}/{deviceId}/{ioLinkRevision}':
+    get:
+      tags:
+        - iodds
+      summary: Get a specific IODD (if the server stores the IODDs as files)
+      parameters:
+        - $ref: '#/parameters/vendorId_Path'
+        - $ref: '#/parameters/deviceId_Path'
+        - $ref: '#/parameters/ioLinkRevision_Path'
+      responses:
+        '200':
+          description: An IODD file
+          # in OpenApi 3.0.1 we could write exactly that this is an XML file ...
+          schema:
+            type: file
+    delete:
+      tags:
+        - iodds
+      summary: Delete a specific IODD representation
+      parameters:
+        - $ref: '#/parameters/vendorId_Path'
+        - $ref: '#/parameters/deviceId_Path'
+        - $ref: '#/parameters/ioLinkRevision_Path'
+      responses:
+        '200':
+          $ref: '#/responses/iodds'
+
+
+################### definitions, parameters, responses #########################
+
 definitions:
   mqttConfiguration:
     type: object
@@ -855,3 +919,55 @@ definitions:
               type: string
             processData:
               type: boolean
+  ioddIdentification:
+    type: object
+    properties:
+      vendorId:
+        type: number
+      deviceId:
+        type: number
+      version:
+        type: string
+      releaseDate:
+        type: string
+      ioLinkRevision:
+        type: string
+        enum:
+          - '1.0'
+          - '1.1'
+
+parameters:
+  vendorId_Path:
+    name: vendorId
+    in: path
+    description: IO-Link VendorID
+    type: integer
+    required: true
+  deviceId_Path:
+    name: deviceId
+    in: path
+    description: IO-Link DeviceID
+    type: integer
+    required: true
+  ioLinkRevision_Path:
+    name: ioLinkRevision
+    in: path
+    description: IO-LInk Revision
+    type: string
+    enum:
+      - '1.0'
+      - '1.1'
+    required: true
+
+responses:
+  iodds:
+    description: Successful operation
+    schema:
+      $ref: '#/definitions/ioddIdentification'
+    examples:
+      '':
+        vendorid: 4321
+        deviceId: 8765
+        version: '2.1'
+        releaseDate: '2015-01-02'
+        ioLinkRevision: '1.1'
