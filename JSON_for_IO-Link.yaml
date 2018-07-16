@@ -304,7 +304,7 @@ paths:
   /mqtt/configuration:
     get:
       tags:
-        - master
+        - connections
       summary: Read the MQTT configuration of the master
       produces:
         - application/json
@@ -315,7 +315,7 @@ paths:
             $ref: '#/definitions/mqttConfiguration'
     post:
       tags:
-        - master
+        - connections
       summary: Update the MQTT configuration of the master
       parameters:
         - name: configuration
