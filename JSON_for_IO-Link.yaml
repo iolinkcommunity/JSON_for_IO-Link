@@ -770,6 +770,7 @@ paths:
             format=iodd:
               Pressure: 12322223
   /iodds:
+  # If we have different versions of the IODD, the last uploaded IODD for vendorId/deviceId/ioLinkRevision is stored and used.
     get:
       tags:
         - iodds
@@ -796,38 +797,31 @@ paths:
                 version: '2.1'
                 releaseDate: '2015-01-02'
                 ioLinkRevision: '1.1'
-    post:
-      tags:
-        - iodds
-      summary: Update (or upload, this is to be discussed) an existing IODD
-      description: |
-        I do not need to specifiy the identification data for this action as the parser can read this information.
-        ***
-        --> to be discussed: Should we also allow to upload an IODD via `POST`?
-      parameters:
-        - $ref: '#/parameters/vendorId_Path'
-        - $ref: '#/parameters/deviceId_Path'
-      responses:
-        '200':
-          $ref: '#/responses/iodds'
-
     put:
       tags:
         - iodds
-      summary: Upload an IODD
-      description: I do not need to specifiy the identification data for this action as the parser can read this information.
-      parameters:
-        - $ref: '#/parameters/vendorId_Path'
-        - $ref: '#/parameters/deviceId_Path'
+      summary: 'Update (or create) an existing IODD'
+      description: >
+        I do not need to specifiy the identification data for this action as the parser can read this information.
       responses:
         '200':
           $ref: '#/responses/iodds'
-
+    post:
+      tags:
+        - iodds
+      summary: 'Update (or create) an existing IODD'
+      description: >
+        I do not need to specifiy the identification data for this action as the parser can read this information.
+      responses:
+        '200':
+          $ref: '#/responses/iodds'
   '/iodds/{vendorId}/{deviceId}/{ioLinkRevision}':
     get:
       tags:
         - iodds
-      summary: Get a specific IODD (if the server stores the IODDs as files)
+      summary: Get a specific IODD
+      description: >-
+        [optional] (makes only sense if the server stores the IODDs as files)
       parameters:
         - $ref: '#/parameters/vendorId_Path'
         - $ref: '#/parameters/deviceId_Path'
@@ -835,7 +829,6 @@ paths:
       responses:
         '200':
           description: An IODD file
-          # in OpenApi 3.0.1 we could write exactly that this is an XML file ...
           schema:
             type: file
     delete:
