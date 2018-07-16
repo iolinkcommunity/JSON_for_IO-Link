@@ -403,6 +403,11 @@ paths:
                 type: integer
               deviceId:
                 type: integer
+              ioLinkRevision:
+                type: string
+                enum:
+                  - '1.0'
+                  - '1.1'
               vendorName:
                 type: string
               vendorText:
@@ -428,6 +433,7 @@ paths:
             example:
               vendorId: 26
               deviceId: 42
+              ioLinkRevision: '1.1'
               vendorName: SICK AG
               vendorText: Sensor Intelligence.
               productName: WTxx16
