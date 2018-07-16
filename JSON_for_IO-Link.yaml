@@ -379,6 +379,8 @@ paths:
       tags:
         - ports
       summary: Read the identification of the device at the specified port
+      description: >-
+        *Implementation hint*: You have to request the ISDU values of applicationSpecificTag, locationTag and functionTag (if they are supported by the device).
       parameters:
         - name: portId
           in: path
