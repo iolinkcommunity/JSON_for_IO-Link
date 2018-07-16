@@ -770,6 +770,7 @@ paths:
             format=iodd:
               Pressure: 12322223
   /iodds:
+  # If we have different versions of the IODD, the last uploaded IODD for vendorId/deviceId/ioLinkRevision is stored and used.
     get:
       tags:
         - iodds
@@ -783,21 +784,7 @@ paths:
           schema:
             type: array
             items:
-              type: object
-              properties:
-                vendorId:
-                  type: number
-                deviceId:
-                  type: number
-                version:
-                  type: string
-                releaseDate:
-                  type: string
-                ioLinkRevision:
-                  type: string
-                  enum:
-                    - '1.0'
-                    - '1.1'
+              $ref: '#/definitions/ioddIdentification'
           examples:
             '':
               - vendorId: 1234
@@ -810,6 +797,55 @@ paths:
                 version: '2.1'
                 releaseDate: '2015-01-02'
                 ioLinkRevision: '1.1'
+    put:
+      tags:
+        - iodds
+      summary: 'Update (or create) an existing IODD'
+      description: >
+        I do not need to specifiy the identification data for this action as the parser can read this information.
+      responses:
+        '200':
+          $ref: '#/responses/iodds'
+    post:
+      tags:
+        - iodds
+      summary: 'Update (or create) an existing IODD'
+      description: >
+        I do not need to specifiy the identification data for this action as the parser can read this information.
+      responses:
+        '200':
+          $ref: '#/responses/iodds'
+  '/iodds/{vendorId}/{deviceId}/{ioLinkRevision}':
+    get:
+      tags:
+        - iodds
+      summary: Get a specific IODD
+      description: >-
+        [optional] (makes only sense if the server stores the IODDs as files)
+      parameters:
+        - $ref: '#/parameters/vendorId_Path'
+        - $ref: '#/parameters/deviceId_Path'
+        - $ref: '#/parameters/ioLinkRevision_Path'
+      responses:
+        '200':
+          description: An IODD file
+          schema:
+            type: file
+    delete:
+      tags:
+        - iodds
+      summary: Delete a specific IODD representation
+      parameters:
+        - $ref: '#/parameters/vendorId_Path'
+        - $ref: '#/parameters/deviceId_Path'
+        - $ref: '#/parameters/ioLinkRevision_Path'
+      responses:
+        '200':
+          $ref: '#/responses/iodds'
+
+
+################### definitions, parameters, responses #########################
+
 definitions:
   mqttConfiguration:
     type: object
@@ -855,3 +891,55 @@ definitions:
               type: string
             processData:
               type: boolean
+  ioddIdentification:
+    type: object
+    properties:
+      vendorId:
+        type: number
+      deviceId:
+        type: number
+      version:
+        type: string
+      releaseDate:
+        type: string
+      ioLinkRevision:
+        type: string
+        enum:
+          - '1.0'
+          - '1.1'
+
+parameters:
+  vendorId_Path:
+    name: vendorId
+    in: path
+    description: IO-Link VendorID
+    type: integer
+    required: true
+  deviceId_Path:
+    name: deviceId
+    in: path
+    description: IO-Link DeviceID
+    type: integer
+    required: true
+  ioLinkRevision_Path:
+    name: ioLinkRevision
+    in: path
+    description: IO-LInk Revision
+    type: string
+    enum:
+      - '1.0'
+      - '1.1'
+    required: true
+
+responses:
+  iodds:
+    description: Successful operation
+    schema:
+      $ref: '#/definitions/ioddIdentification'
+    examples:
+      '':
+        vendorid: 4321
+        deviceId: 8765
+        version: '2.1'
+        releaseDate: '2015-01-02'
+        ioLinkRevision: '1.1'
