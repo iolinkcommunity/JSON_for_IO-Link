@@ -326,6 +326,54 @@ paths:
       responses:
         '200':
           description: Successful operation
+  '/ports/{portId}/status':
+    get:
+      tags:
+        - ports
+      summary: Read the status of the selected port
+      parameters:
+        - name: portId
+          in: path
+          description: Port ID starting with 1
+          type: integer
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              portStatusInfo:
+                type: string
+                enum:
+                  - NO_DEVICE
+                  - DEACTIVATED
+                  - INCORRECT_DEVICE
+                  - PREOPERATE
+                  - OPERATE
+                  - DI_C/Q
+                  - DO_C/Q
+              ioLinkRevision:
+                type: string
+                enum:
+                  - '1.0'
+                  - '1.1'
+              transmissionRate:
+                type: string
+                enum:
+                  - NOT_DETECTED
+                  - COM1
+                  - COM2
+                  - COM3
+              masterCycleTime:
+                type: integer
+            example:
+              portStatusInfo: NO_DEVICE
+              ioLinkRevision: '1.0'
+              transmissionRate: COM2
+              masterCycleTime: 400
   '/ports/{portId}/identification':
     get:
       tags:
@@ -770,7 +818,6 @@ paths:
             format=iodd:
               Pressure: 12322223
   /iodds:
-  # If we have different versions of the IODD, the last uploaded IODD for vendorId/deviceId/ioLinkRevision is stored and used.
     get:
       tags:
         - iodds
@@ -800,18 +847,20 @@ paths:
     put:
       tags:
         - iodds
-      summary: 'Update (or create) an existing IODD'
+      summary: Update (or create) an existing IODD
       description: >
-        I do not need to specifiy the identification data for this action as the parser can read this information.
+        I do not need to specifiy the identification data for this action as the
+        parser can read this information.
       responses:
         '200':
           $ref: '#/responses/iodds'
     post:
       tags:
         - iodds
-      summary: 'Update (or create) an existing IODD'
+      summary: Update (or create) an existing IODD
       description: >
-        I do not need to specifiy the identification data for this action as the parser can read this information.
+        I do not need to specifiy the identification data for this action as the
+        parser can read this information.
       responses:
         '200':
           $ref: '#/responses/iodds'
@@ -820,8 +869,7 @@ paths:
       tags:
         - iodds
       summary: Get a specific IODD
-      description: >-
-        [optional] (makes only sense if the server stores the IODDs as files)
+      description: '[optional] (makes only sense if the server stores the IODDs as files)'
       parameters:
         - $ref: '#/parameters/vendorId_Path'
         - $ref: '#/parameters/deviceId_Path'
@@ -842,10 +890,6 @@ paths:
       responses:
         '200':
           $ref: '#/responses/iodds'
-
-
-################### definitions, parameters, responses #########################
-
 definitions:
   mqttConfiguration:
     type: object
@@ -907,7 +951,6 @@ definitions:
         enum:
           - '1.0'
           - '1.1'
-
 parameters:
   vendorId_Path:
     name: vendorId
@@ -924,13 +967,12 @@ parameters:
   ioLinkRevision_Path:
     name: ioLinkRevision
     in: path
-    description: IO-LInk Revision
+    description: IO-Link Revision
     type: string
     enum:
       - '1.0'
       - '1.1'
     required: true
-
 responses:
   iodds:
     description: Successful operation
