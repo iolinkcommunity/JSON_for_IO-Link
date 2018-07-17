@@ -1,17 +1,21 @@
-swagger: '2.0'
+openapi: '3.0.1'
+
 info:
   description: >-
     This is a sample IO-Link Master server. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
-  version: 0.0.2
+  version: 0.0.3
   title: Swagger IO-Link Master
   contact:
     email: oliver.lingg@sick.de
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-host: iolmaster.io-link.com
-basePath: /iol/v1
+servers:
+  - url: http://iolmaster.io-link.com
+    variables:
+      basePath:
+        default: /iol/v1
 tags:
   - name: master
     description: Access to parameters of the IO-Link master itself
@@ -19,101 +23,30 @@ tags:
     description: Access to the IO-Link ports of the IO-Link master
   - name: connections
     description: 'Access to several connections like MQTT, ...'
-schemes:
-  - http
+
 paths:
   /identification:
     get:
       tags:
         - master
       summary: Read the identification of the IO-Link master
-      produces:
-        - application/json
       responses:
         '200':
           description: Successful operation
-          schema:
-            required:
-              - vendorId
-              - masterId
-              - masterType
-              - serialNumber
-              - orderCode
-              - vendorName
-              - hardwareRevision
-              - softwareRevision
-              - website
-              - manual
-            type: object
-            properties:
-              vendorId:
-                type: integer
-              masterId:
-                type: integer
-              masterType:
-                type: string
-                enum:
-                  - Unspecific
-                  - Master acc. V1.0
-                  - Master acc. V1.1
-                  - FS_Master
-                  - W_Master
-              serialNumber:
-                type: string
-              orderCode:
-                type: string
-              vendorName:
-                type: string
-              hardwareRevision:
-                type: string
-              softwareRevision:
-                type: string
-              website:
-                type: string
-              manual:
-                type: string
-              applicationSpecificTag:
-                type: string
-              locationTag:
-                type: string
-              functionTag:
-                type: string
-          examples:
-            '':
-              vendorId: 26
-              masterId: 42
-              masterType: Master acc. V1.0
-              serialNumber: IOLM123456
-              orderCode: PROD-123456
-              vendorName: SICK AG
-              hardwareRevision: 3.2.1.444R
-              softwareRevision: 3.2.1.888R
-              website: 'http://www.sick.de/io-link-master'
-              manual: 'http://www.sick.de/io-link-master/documentation.pdf'
-              applicationSpecificTag: Fallback reader at the end of the belt
-              locationTag: Down under
-              functionTag: Code reading
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identificationGet'
     post:
       tags:
         - master
       summary: Write application specific identification
-      parameters:
-        - name: identification
-          required: true
-          in: body
-          schema:
-            type: object
-            properties:
-              applicationSpecificTag:
-                type: string
-              locationTag:
-                type: string
-              functionTag:
-                type: string
-            example:
-              applicationSpecificTag: Fallback reader at the end of the belt
-              locationTag: Down under
-              functionTag: Code reading
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identificationPost'
       responses:
         '200':
           description: Successful operation
@@ -121,100 +54,37 @@ paths:
     get:
       tags:
         - master
-      summary: Read the identification of the master
-      produces:
-        - application/json
+      summary: Read the capabilities of the master
       responses:
         '200':
           description: Successful operation
-          schema:
-            required:
-              - ioddSupported
-              - maxNumberOfPorts
-              - maxPowerSupply
-            type: object
-            properties:
-              ioddSupported:
-                type: boolean
-              maxNumberOfPorts:
-                type: integer
-              maxPowerSupply:
-                type: object
-                properties:
-                  value:
-                    type: number
-                  unit:
-                    type: string
-            example:
-              ioddSupported: true
-              maxNumberOfPorts: 8
-              maxPowerSupply:
-                value: 0.3
-                unit: A
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capabilitiesGet'
   /configuration:
     get:
       tags:
         - master
       summary: Read the configuration of the IO-Link master
-      produces:
-        - application/json
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: object
-            properties:
-              ethIpv4:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    ipAddress:
-                      type: string
-                    subnetMask:
-                      type: string
-                    standardGateway:
-                      type: string
-              ethIpv6:
-                type: array
-                items:
-                  type: object
-            example:
-              ethIpv4:
-                - ipAddress: 192.168.1.13
-                  subnetMask: 255.255.255.0
-                  standardGateway: 192.168.1.1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/configurationGetPost'
+
     post:
       tags:
         - master
       summary: Update the configuration of the IO-Link master
-      parameters:
-        - name: configuration
-          required: true
-          in: body
-          schema:
-            type: object
-            properties:
-              ethIpv4:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    ipAddress:
-                      type: string
-                    subnetMask:
-                      type: string
-                    standardGateway:
-                      type: string
-              ethIpv6:
-                type: array
-                items:
-                  type: object
-            example:
-              ethIpv4:
-                - ipAddress: 192.168.1.13
-                  subnetMask: 255.255.255.0
-                  standardGateway: 192.168.1.1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/configurationGetPost'
       responses:
         '200':
           description: Successful operation
@@ -244,89 +114,44 @@ paths:
           description: >-
             The number of the events to read from the master. The field "port"
             is required if the "origin" is PORT or DEVICE.
-          type: integer
-          required: false
+          schema:
+            type: integer
       summary: Read the event log.
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: array
-            items:
-              type: object
-              required:
-                - origin
-                - code
-                - message
-                - severity
-              properties:
-                origin:
-                  type: string
-                  enum:
-                    - MASTER
-                    - PORT
-                    - DEVICE
-                port:
-                  type: integer
-                timestamp:
-                  type: string
-                code:
-                  type: integer
-                message:
-                  type: string
-                severity:
-                  type: string
-                  enum:
-                    - ERROR
-                    - WARNING
-                    - NOTIFICATION
-                mode:
-                  type: string
-                  enum:
-                    - SINGLESHOT
-                    - APPEARS
-                    - DISAPPEARS
-            example:
-              - origin: PORT
-                port: 5
-                timestamp: '2018-06-19T10:21:09.989Z'
-                code: 8011
-                message: sample message
-                severity: WARNING
-                mode: SINGLESHOT
-              - origin: DEVICE
-                port: 5
-                timestamp: '2018-06-19T10:21:09.989Z'
-                code: 8011
-                message: sample message
-                severity: WARNING
-                mode: SINGLESHOT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventsGet'
+                
   /mqtt/configuration:
     get:
       tags:
         - connections
       summary: Read the MQTT configuration of the master
-      produces:
-        - application/json
       responses:
         '200':
           description: Successful operation
-          schema:
-            $ref: '#/definitions/mqttConfiguration'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mqttConfigurationGetPost'
     post:
       tags:
         - connections
       summary: Update the MQTT configuration of the master
-      parameters:
-        - name: configuration
-          required: true
-          in: body
-          schema:
-            $ref: '#/definitions/mqttConfiguration'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mqttConfigurationGetPost'
       responses:
         '200':
           description: Successful operation
-  '/ports/{portId}/status':
+          
+  /ports/{portId}/status:
     get:
       tags:
         - ports
@@ -335,118 +160,39 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
+          schema:
+            type: integer
           required: true
-      produces:
-        - application/json
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: object
-            properties:
-              portStatusInfo:
-                type: string
-                enum:
-                  - NO_DEVICE
-                  - DEACTIVATED
-                  - INCORRECT_DEVICE
-                  - PREOPERATE
-                  - OPERATE
-                  - DI_C/Q
-                  - DO_C/Q
-              ioLinkRevision:
-                type: string
-                enum:
-                  - '1.0'
-                  - '1.1'
-              transmissionRate:
-                type: string
-                enum:
-                  - NOT_DETECTED
-                  - COM1
-                  - COM2
-                  - COM3
-              masterCycleTime:
-                type: integer
-            example:
-              portStatusInfo: NO_DEVICE
-              ioLinkRevision: '1.0'
-              transmissionRate: COM2
-              masterCycleTime: 400
-  '/ports/{portId}/identification':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portStatusGet'
+  /ports/{portId}/identification:
     get:
       tags:
         - ports
       summary: Read the identification of the device at the specified port
       description: >-
-        *Implementation hint*: You have to request the ISDU values of applicationSpecificTag, locationTag and functionTag (if they are supported by the device).
+        *Implementation hint*: You have to request the ISDU values of
+        applicationSpecificTag, locationTag and functionTag (if they are
+        supported by the device).
       parameters:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
+          schema:
+            type: integer
           required: true
-      produces:
-        - application/json
       responses:
         '200':
           description: Successful operation
-          schema:
-            required:
-              - vendorId
-              - deviceId
-              - serialNumber
-              - hardwareRevision
-              - firmwareRevision
-            type: object
-            properties:
-              vendorId:
-                type: integer
-              deviceId:
-                type: integer
-              ioLinkRevision:
-                type: string
-                enum:
-                  - '1.0'
-                  - '1.1'
-              vendorName:
-                type: string
-              vendorText:
-                type: string
-              productName:
-                type: string
-              productId:
-                type: string
-              productText:
-                type: string
-              serialNumber:
-                type: string
-              hardwareRevision:
-                type: string
-              firmwareRevision:
-                type: string
-              applicationSpecificTag:
-                type: string
-              locationTag:
-                type: string
-              functionTag:
-                type: string
-            example:
-              vendorId: 26
-              deviceId: 42
-              ioLinkRevision: '1.1'
-              vendorName: SICK AG
-              vendorText: Sensor Intelligence.
-              productName: WTxx16
-              productId: PROD-123456
-              productText: Light switch
-              serialNumber: IOLM123456
-              hardwareRevision: 3.2.1.444R
-              firmwareRevision: 3.2.1.888R
-              applicationSpecificTag: Fallback light switch at the end of the belt
-              locationTag: Down under
-              functionTag: Check end of belt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portIdentificationGet'
     post:
       tags:
         - ports
@@ -455,31 +201,19 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
-          required: true
-        - name: identification
-          required: true
-          in: body
           schema:
-            type: object
-            properties:
-              applicationSpecificTag:
-                type: string
-                example: Fallback light switch at the end of the belt
-              locationTag:
-                type: string
-                example: Down under
-              functionTag:
-                type: string
-                example: Check start of belt
-            example:
-              applicationSpecificTag: Fallback light switch at the end of the belt
-              locationTag: Down under
-              functionTag: Check start of belt
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/portIdentificationPost'
       responses:
         '200':
           description: Successful operation
-  '/ports/{portId}/capabilities':
+  /ports/{portId}/capabilities:
     get:
       tags:
         - ports
@@ -488,37 +222,17 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
+          schema:
+            type: integer
           required: true
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: object
-            properties:
-              maxPowerSupply:
-                type: object
-                properties:
-                  value:
-                    type: number
-                  unit:
-                    type: string
-              portType:
-                type: string
-                enum:
-                  - CLASS_A
-                  - CLASS_A_WITH_PORT_POWER_OFF_ON
-                  - CLASS_B
-                  - FS_PORT_A_WITHOUT_OSSDE
-                  - FS_PORT_A_WITH_OSSDE
-                  - FS_PORT_B
-                  - W_MASTER
-            example:
-              maxPowerSupply:
-                value: 0.3
-                unit: A
-              portType: CLASS_A
-  '/ports/{portId}/configuration':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portCapabilitiesGet'
+  /ports/{portId}/configuration:
     get:
       tags:
         - ports
@@ -526,59 +240,17 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
+          schema:
+            type: integer
           required: true
       summary: Read the configuration of the specified port
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: object
-            properties:
-              portMode:
-                type: string
-                enum:
-                  - DEACTIVATED
-                  - IOL_MANUAL
-                  - IOL_AUTOSTART
-                  - DI
-                  - DO
-              validationAndBackup:
-                type: string
-                enum:
-                  - NO_DEVICE_CHECK
-                  - TYPE_COMPATIBLE_DEVICE_V1.0
-                  - TYPE_COMPATIBLE_DEVICE_V1.1
-                  - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-                  - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-              pin2Configuration:
-                type: string
-                enum:
-                  - NOT_SUPPORTED
-                  - DIGITAL_INPUT
-                  - DIGITAL_OUTPUT
-                  - ANALOG_INPUT
-                  - ANALOG_OUTPUT
-                  - POWER_2
-              cycleTime:
-                description: >-
-                  0 = as fast as possible. Other (positive) values = time in
-                  milliseconds. If a time value is given that does not match to
-                  the possible time values given in the IO-Link Interface and
-                  System Specification, the IO-Link Master has to take the next
-                  lower level (resp. 0)
-                type: number
-              vendorId:
-                type: integer
-              deviceId:
-                type: integer
-            example:
-              portMode: IOL_AUTOSTART
-              validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-              pin2Configuration: ANALOG_INPUT
-              cycleTime: 0
-              vendorId: 26
-              deviceId: 333
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portConfigurationGet'
     post:
       tags:
         - ports
@@ -587,62 +259,19 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
-          required: true
-        - name: configuration
-          required: true
-          in: body
           schema:
-            type: object
-            properties:
-              portMode:
-                type: string
-                enum:
-                  - DEACTIVATED
-                  - IOL_MANUAL
-                  - IOL_AUTOSTART
-                  - DI
-                  - DO
-              validationAndBackup:
-                type: string
-                enum:
-                  - NO_DEVICE_CHECK
-                  - TYPE_COMPATIBLE_DEVICE_V1.0
-                  - TYPE_COMPATIBLE_DEVICE_V1.1
-                  - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-                  - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-              pin2Configuration:
-                type: string
-                enum:
-                  - NOT_SUPPORTED
-                  - DIGITAL_INPUT
-                  - DIGITAL_OUTPUT
-                  - ANALOG_INPUT
-                  - ANALOG_OUTPUT
-                  - POWER_2
-              cycleTime:
-                description: >-
-                  0 = as fast as possible. Other (positive) values = time in
-                  milliseconds. If a time value is given that does not match to
-                  the possible time values given in the IO-Link Interface and
-                  System Specification, the IO-Link Master has to take the next
-                  lower level (resp. 0)
-                type: number
-              vendorId:
-                type: integer
-              deviceId:
-                type: integer
-            example:
-              portMode: IOL_AUTOSTART
-              validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-              pin2Configuration: ANALOG_INPUT
-              cycleTime: 0
-              vendorId: 26
-              deviceId: 333
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/portConfigurationPost'
       responses:
         '200':
           description: Successful operation
-  '/ports/{portId}/processdata/value':
+  /ports/{portId}/processdata/value:
     get:
       tags:
         - ports
@@ -651,85 +280,22 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
+          schema:
+            type: integer
           required: true
         - name: format
           in: query
           description: Value format in response document
-          type: string
-          enum:
-            - raw
-            - iodd
-          default: iodd
+          schema:
+            $ref: '#/components/schemas/portParameterValueFormat'
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: object
-            properties:
-              in:
-                type: object
-                properties:
-                  pin2:
-                    type: boolean
-                  pin2Value:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  data:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  valid:
-                    type: boolean
-              out:
-                type: object
-                properties:
-                  pin2:
-                    type: boolean
-                  pin2Value:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  data:
-                    type: array
-                    items:
-                      type: number
-                      minimum: 0
-                      maximum: 255
-                  valid:
-                    type: boolean
-          examples:
-            format=raw:
-              in:
-                pin2: true
-                pin2Value:
-                  - 237
-                  - 66
-                  - 22
-                  - 98
-                data:
-                  - 255
-                  - 0
-                  - 3
-            format=iodd:
-              in:
-                pin2: true
-                pin2Value:
-                  - 237
-                  - 66
-                  - 22
-                  - 98
-                data:
-                  distance: 345
-                  qsignal: true
-  '/ports/{portId}/parameters/{index}/value':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portProcessDataValueGet'
+  /ports/{portId}/parameters/{index}/value:
     get:
       tags:
         - ports
@@ -738,43 +304,28 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
+          schema:
+            type: integer
           required: true
         - name: index
           in: path
           description: Index of ISDU variable
-          type: integer
+          schema:
+            type: integer
           required: true
         - name: format
           in: query
           description: Value format in response document
-          type: string
-          enum:
-            - raw
-            - iodd
-          default: iodd
+          schema:
+            $ref: '#/components/schemas/portParameterValueFormat'
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  type: number
-                  minimum: 0
-                  maximum: 255
-          examples:
-            format=raw:
-              data:
-                - 123
-                - 222
-                - 23
-            format=iodd:
-              Pressure: 123
-              Temperature: 10
-  '/ports/{portId}/parameters/{index}/{subindex}/value':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portParameterIndexValueGet'
+  /ports/{portId}/parameters/{index}/{subindex}/value:
     get:
       tags:
         - ports
@@ -785,46 +336,33 @@ paths:
         - name: portId
           in: path
           description: Port ID starting with 1
-          type: integer
+          schema:
+            type: integer
           required: true
         - name: index
           in: path
           description: Index of ISDU variable
-          type: integer
+          schema:
+            type: integer
           required: true
         - name: subindex
           in: path
-          description: Subndex of ISDU variable with the given index
-          type: integer
+          description: Subindex of ISDU variable with the given index
+          schema:
+            type: integer
           required: true
         - name: format
           in: query
           description: Value format in response document
-          type: string
-          enum:
-            - raw
-            - iodd
-          default: iodd
+          schema:
+            $ref: '#/components/schemas/portParameterValueFormat'
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  type: number
-                  minimum: 0
-                  maximum: 255
-          examples:
-            format=raw:
-              data:
-                - 123
-                - 222
-                - 23
-            format=iodd:
-              Pressure: 12322223
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portParameterSubindexValueGet'
   /iodds:
     get:
       tags:
@@ -836,160 +374,648 @@ paths:
       responses:
         '200':
           description: Successful operation
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ioddIdentification'
-          examples:
-            '':
-              - vendorId: 1234
-                deviceId: 4567
-                version: '4.3'
-                releaseDate: '2018-01-02'
-                ioLinkRevision: '1.1'
-              - vendorid: 4321
-                deviceId: 8765
-                version: '2.1'
-                releaseDate: '2015-01-02'
-                ioLinkRevision: '1.1'
-    put:
-      tags:
-        - iodds
-      summary: Update (or create) an existing IODD
-      description: >
-        I do not need to specifiy the identification data for this action as the
-        parser can read this information.
-      responses:
-        '200':
-          $ref: '#/responses/iodds'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ioddsGet'
     post:
       tags:
         - iodds
-      summary: Update (or create) an existing IODD
+      summary: Update or create an IODD
       description: >
         I do not need to specifiy the identification data for this action as the
         parser can read this information.
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/ioddFile'
       responses:
         '200':
-          $ref: '#/responses/iodds'
-  '/iodds/{vendorId}/{deviceId}/{ioLinkRevision}':
+          description: Successful operation
+  /iodds/{vendorId}/{deviceId}/{ioLinkRevision}:
     get:
       tags:
         - iodds
       summary: Get a specific IODD
       description: '[optional] (makes only sense if the server stores the IODDs as files)'
       parameters:
-        - $ref: '#/parameters/vendorId_Path'
-        - $ref: '#/parameters/deviceId_Path'
-        - $ref: '#/parameters/ioLinkRevision_Path'
+        - $ref: '#/components/parameters/vendorId'
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          description: An IODD file
-          schema:
-            type: file
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ioddFile'
     delete:
       tags:
         - iodds
       summary: Delete a specific IODD representation
       parameters:
-        - $ref: '#/parameters/vendorId_Path'
-        - $ref: '#/parameters/deviceId_Path'
-        - $ref: '#/parameters/ioLinkRevision_Path'
+        - $ref: '#/components/parameters/vendorId'
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          $ref: '#/responses/iodds'
-definitions:
-  mqttConfiguration:
-    type: object
-    properties:
-      brokerAddress:
-        type: string
-      username:
-        type: string
-      password:
-        type: string
-      lastWill:
-        type: string
-      topics:
-        type: array
-        items:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ioddsGet'
+
+components:
+  schemas:
+    identificationGet:
+      required:
+        - vendorId
+        - masterId
+        - masterType
+        - serialNumber
+        - orderCode
+        - vendorName
+        - hardwareRevision
+        - softwareRevision
+        - website
+        - manual
+      type: object
+      properties:
+        vendorId:
+          type: integer
+        masterId:
+          type: integer
+        masterType:
+          type: string
+          enum:
+            - Unspecific
+            - Master acc. V1.0
+            - Master acc. V1.1
+            - FS_Master
+            - W_Master
+        serialNumber:
+          type: string
+        orderCode:
+          type: string
+        vendorName:
+          type: string
+        hardwareRevision:
+          type: string
+        softwareRevision:
+          type: string
+        website:
+          type: string
+        manual:
+          type: string
+        applicationSpecificTag:
+          type: string
+        locationTag:
+          type: string
+        functionTag:
+          type: string
+      example:
+        vendorId: 26
+        masterId: 42
+        masterType: Master acc. V1.0
+        serialNumber: IOLM123456
+        orderCode: PROD-123456
+        vendorName: SICK AG
+        hardwareRevision: 3.2.1.444R
+        softwareRevision: 3.2.1.888R
+        website: 'http://www.sick.de/io-link-master'
+        manual: 'http://www.sick.de/io-link-master/documentation.pdf'
+        applicationSpecificTag: Fallback reader at the end of the belt
+        locationTag: Down under
+        functionTag: Code reading
+    identificationPost:
+      type: object
+      properties:
+        applicationSpecificTag:
+          type: string
+        locationTag:
+          type: string
+        functionTag:
+          type: string
+      example:
+        applicationSpecificTag: Fallback reader at the end of the belt
+        locationTag: Down under
+        functionTag: Code reading
+
+    capabilitiesGet:
+      required:
+        - ioddSupported
+        - maxNumberOfPorts
+        - maxPowerSupply
+      type: object
+      properties:
+        ioddSupported:
+          type: boolean
+        maxNumberOfPorts:
+          type: integer
+        maxPowerSupply:
           type: object
           properties:
-            topicName:
+            value:
+              type: number
+            unit:
               type: string
-            qos:
+      example:
+        ioddSupported: true
+        maxNumberOfPorts: 8
+        maxPowerSupply:
+          value: 0.3
+          unit: A
+
+    configurationGetPost:
+      type: object
+      properties:
+        ethIpv4:
+          type: array
+          items:
+            type: object
+            properties:
+              ipAddress:
+                type: string
+              subnetMask:
+                type: string
+              standardGateway:
+                type: string
+        ethIpv6:
+          type: array
+          items:
+            type: object
+      example:
+        ethIpv4:
+          - ipAddress: 192.168.1.13
+            subnetMask: 255.255.255.0
+            standardGateway: 192.168.1.1
+            
+    eventsGet:
+      type: array
+      items:
+        type: object
+        required:
+          - origin
+          - code
+          - message
+          - severity
+        properties:
+          origin:
+            type: string
+            enum:
+              - MASTER
+              - PORT
+              - DEVICE
+          port:
+            type: integer
+          timestamp:
+            type: string
+          code:
+            type: integer
+          message:
+            type: string
+          severity:
+            type: string
+            enum:
+              - ERROR
+              - WARNING
+              - NOTIFICATION
+          mode:
+            type: string
+            enum:
+              - SINGLESHOT
+              - APPEARS
+              - DISAPPEARS
+      example:
+        - origin: PORT
+          port: 5
+          timestamp: '2018-06-19T10:21:09.989Z'
+          code: 8011
+          message: sample message
+          severity: WARNING
+          mode: SINGLESHOT
+        - origin: DEVICE
+          port: 5
+          timestamp: '2018-06-19T10:21:09.989Z'
+          code: 8011
+          message: sample message
+          severity: WARNING
+          mode: SINGLESHOT
+    
+    mqttConfigurationGetPost:
+      type: object
+      properties:
+        brokerAddress:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        lastWill:
+          type: string
+        topics:
+          type: array
+          items:
+            type: object
+            properties:
+              topicName:
+                type: string
+              qos:
+                type: string
+                enum:
+                  - At most once
+                  - At least once
+                  - Exactly once
+              interval:
+                type: integer
+                minimum: 0
+                description: in milliseconds; 0 = as fast as possible
+              onChange:
+                type: boolean
+              port:
+                type: integer
+                minimum: 0
+                description: Port number starting with 1
+              index:
+                type: integer
+                minimum: 0
+              subindex:
+                type: integer
+                minimum: 0
+              name:
+                type: string
+              processData:
+                type: boolean
+
+    portStatusGet:
+      type: object
+      properties:
+        portStatusInfo:
+          type: string
+          enum:
+            - NO_DEVICE
+            - DEACTIVATED
+            - INCORRECT_DEVICE
+            - PREOPERATE
+            - OPERATE
+            - DI_C/Q
+            - DO_C/Q
+        ioLinkRevision:
+          type: string
+          enum:
+            - '1.0'
+            - '1.1'
+        transmissionRate:
+          type: string
+          enum:
+            - NOT_DETECTED
+            - COM1
+            - COM2
+            - COM3
+        masterCycleTime:
+          type: integer
+      example:
+        portStatusInfo: NO_DEVICE
+        ioLinkRevision: '1.0'
+        transmissionRate: COM2
+        masterCycleTime: 400
+
+    portIdentificationGet:
+      required:
+        - vendorId
+        - deviceId
+        - serialNumber
+        - hardwareRevision
+        - firmwareRevision
+      type: object
+      properties:
+        vendorId:
+          type: integer
+        deviceId:
+          type: integer
+        ioLinkRevision:
+          type: string
+          enum:
+            - '1.0'
+            - '1.1'
+        vendorName:
+          type: string
+        vendorText:
+          type: string
+        productName:
+          type: string
+        productId:
+          type: string
+        productText:
+          type: string
+        serialNumber:
+          type: string
+        hardwareRevision:
+          type: string
+        firmwareRevision:
+          type: string
+        applicationSpecificTag:
+          type: string
+        locationTag:
+          type: string
+        functionTag:
+          type: string
+      example:
+        vendorId: 26
+        deviceId: 42
+        ioLinkRevision: '1.1'
+        vendorName: SICK AG
+        vendorText: Sensor Intelligence.
+        productName: WTxx16
+        productId: PROD-123456
+        productText: Light switch
+        serialNumber: IOLM123456
+        hardwareRevision: 3.2.1.444R
+        firmwareRevision: 3.2.1.888R
+        applicationSpecificTag: Fallback light switch at the end of the belt
+        locationTag: Down under
+        functionTag: Check end of belt
+    portIdentificationPost:
+      type: object
+      properties:
+        applicationSpecificTag:
+          type: string
+          example: Fallback light switch at the end of the belt
+        locationTag:
+          type: string
+          example: Down under
+        functionTag:
+          type: string
+          example: Check start of belt
+      example:
+        applicationSpecificTag: Fallback light switch at the end of the belt
+        locationTag: Down under
+        functionTag: Check start of belt
+
+    portCapabilitiesGet:
+      type: object
+      properties:
+        maxPowerSupply:
+          type: object
+          properties:
+            value:
+              type: number
+            unit:
               type: string
-              enum:
-                - At most once
-                - At least once
-                - Exactly once
-            interval:
-              type: integer
-              minimum: 0
-              description: in milliseconds; 0 = as fast as possible
-            onChange:
+        portType:
+          type: string
+          enum:
+            - CLASS_A
+            - CLASS_A_WITH_PORT_POWER_OFF_ON
+            - CLASS_B
+            - FS_PORT_A_WITHOUT_OSSDE
+            - FS_PORT_A_WITH_OSSDE
+            - FS_PORT_B
+            - W_MASTER
+      example:
+        maxPowerSupply:
+          value: 0.3
+          unit: A
+        portType: CLASS_A
+    
+    portConfigurationGet:
+      type: object
+      properties:
+        portMode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - IOL_MANUAL
+            - IOL_AUTOSTART
+            - DI
+            - DO
+        validationAndBackup:
+          type: string
+          enum:
+            - NO_DEVICE_CHECK
+            - TYPE_COMPATIBLE_DEVICE_V1.0
+            - TYPE_COMPATIBLE_DEVICE_V1.1
+            - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+            - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        pin2Configuration:
+          type: string
+          enum:
+            - NOT_SUPPORTED
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+            - ANALOG_INPUT
+            - ANALOG_OUTPUT
+            - POWER_2
+        cycleTime:
+          description: >-
+            0 = as fast as possible. Other (positive) values = time in
+            milliseconds. If a time value is given that does not match to
+            the possible time values given in the IO-Link Interface and
+            System Specification, the IO-Link Master has to take the next
+            lower level (resp. 0)
+          type: number
+        vendorId:
+          type: integer
+        deviceId:
+          type: integer
+      example:
+        portMode: IOL_AUTOSTART
+        validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+        pin2Configuration: ANALOG_INPUT
+        cycleTime: 0
+        vendorId: 26
+        deviceId: 333
+    portConfigurationPost:
+      type: object
+      properties:
+        portMode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - IOL_MANUAL
+            - IOL_AUTOSTART
+            - DI
+            - DO
+        validationAndBackup:
+          type: string
+          enum:
+            - NO_DEVICE_CHECK
+            - TYPE_COMPATIBLE_DEVICE_V1.0
+            - TYPE_COMPATIBLE_DEVICE_V1.1
+            - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+            - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        pin2Configuration:
+          type: string
+          enum:
+            - NOT_SUPPORTED
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+            - ANALOG_INPUT
+            - ANALOG_OUTPUT
+            - POWER_2
+        cycleTime:
+          description: >-
+            0 = as fast as possible. Other (positive) values = time in
+            milliseconds. If a time value is given that does not match to
+            the possible time values given in the IO-Link Interface and
+            System Specification, the IO-Link Master has to take the next
+            lower level (resp. 0)
+          type: number
+        vendorId:
+          type: integer
+        deviceId:
+          type: integer
+      example:
+        portMode: IOL_AUTOSTART
+        validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+        pin2Configuration: ANALOG_INPUT
+        cycleTime: 0
+        vendorId: 26
+        deviceId: 333
+
+    portProcessDataValueGet:
+      type: object
+      properties:
+        in:
+          type: object
+          properties:
+            pin2:
               type: boolean
-            port:
-              type: integer
-              minimum: 0
-              description: Port number starting with 1
-            index:
-              type: integer
-              minimum: 0
-            subindex:
-              type: integer
-              minimum: 0
-            name:
-              type: string
-            processData:
+            pin2Value:
+              type: array
+              items:
+                type: number
+                minimum: 0
+                maximum: 255
+            data:
+              type: array
+              items:
+                type: number
+                minimum: 0
+                maximum: 255
+            valid:
               type: boolean
-  ioddIdentification:
-    type: object
-    properties:
-      vendorId:
-        type: number
-      deviceId:
-        type: number
-      version:
-        type: string
-      releaseDate:
-        type: string
-      ioLinkRevision:
+        out:
+          type: object
+          properties:
+            pin2:
+              type: boolean
+            pin2Value:
+              type: array
+              items:
+                type: number
+                minimum: 0
+                maximum: 255
+            data:
+              type: array
+              items:
+                type: number
+                minimum: 0
+                maximum: 255
+            valid:
+              type: boolean
+      example:
+          in:
+            pin2: true
+            pin2Value:
+              - 237
+              - 66
+              - 22
+              - 98
+            data:
+              distance: 345
+              qsignal: true
+
+    portParameterValueFormat:
+      type: string
+      enum:
+        - raw
+        - iodd
+      default: iodd
+    portParameterIndexValueGet:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: number
+            minimum: 0
+            maximum: 255
+      example:
+        Pressure: 123
+        Temperature: 10
+    portParameterSubindexValueGet:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: number
+            minimum: 0
+            maximum: 255
+      example:
+        format=iodd:
+          Pressure: 12322223
+
+    ioddIdentification:
+      type: object
+      properties:
+        vendorId:
+          type: number
+        deviceId:
+          type: number
+        version:
+          type: string
+        releaseDate:
+          type: string
+        ioLinkRevision:
+          type: string
+          enum:
+            - '1.0'
+            - '1.1'
+    ioddFile:
+      type: string
+      format: base64
+    ioddsGet:
+      type: array
+      items:
+        $ref: '#/components/schemas/ioddIdentification'
+      example:
+        - vendorId: 1234
+          deviceId: 4567
+          version: '4.3'
+          releaseDate: '2018-01-02'
+          ioLinkRevision: '1.1'
+        - vendorid: 4321
+          deviceId: 8765
+          version: '2.1'
+          releaseDate: '2015-01-02'
+          ioLinkRevision: '1.1'
+          
+  parameters:
+    vendorId:
+      name: vendorId
+      in: path
+      description: IO-Link VendorID
+      required: true
+      schema:
+        type: integer
+    deviceId:
+      name: deviceId
+      in: path
+      description: IO-Link DeviceID
+      required: true
+      schema:
+        type: integer
+    ioLinkRevision:
+      name: ioLinkRevision
+      in: path
+      description: IO-Link Revision
+      required: true
+      schema:
         type: string
         enum:
           - '1.0'
           - '1.1'
-parameters:
-  vendorId_Path:
-    name: vendorId
-    in: path
-    description: IO-Link VendorID
-    type: integer
-    required: true
-  deviceId_Path:
-    name: deviceId
-    in: path
-    description: IO-Link DeviceID
-    type: integer
-    required: true
-  ioLinkRevision_Path:
-    name: ioLinkRevision
-    in: path
-    description: IO-Link Revision
-    type: string
-    enum:
-      - '1.0'
-      - '1.1'
-    required: true
-responses:
-  iodds:
-    description: Successful operation
-    schema:
-      $ref: '#/definitions/ioddIdentification'
-    examples:
-      '':
-        vendorid: 4321
-        deviceId: 8765
-        version: '2.1'
-        releaseDate: '2015-01-02'
-        ioLinkRevision: '1.1'
