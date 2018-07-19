@@ -23,7 +23,7 @@ tags:
   - name: connections
     description: 'Access to several connections like MQTT, ...'
 paths:
-  '/identification':
+  /identification:
     get:
       tags:
         - master
@@ -48,7 +48,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/capabilities':
+  /capabilities:
     get:
       tags:
         - master
@@ -60,7 +60,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/capabilitiesGet'
-  '/configuration':
+  /configuration:
     get:
       tags:
         - master
@@ -85,7 +85,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/reset':
+  /reset:
     post:
       tags:
         - master
@@ -93,7 +93,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/reboot':
+  /reboot:
     post:
       tags:
         - master
@@ -101,7 +101,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/events':
+  /events:
     get:
       tags:
         - master
@@ -121,7 +121,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/eventsGet'
-  '/mqtt/configuration':
+  /mqtt/configuration:
     get:
       tags:
         - connections
@@ -146,7 +146,9 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/mqtt/configuration/topics':
+        '400':
+          $ref: '#/components/responses/errorResponse'
+  /mqtt/configuration/topics:
     get:
       tags:
         - connections
@@ -159,7 +161,26 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/mqttConfigurationTopicGetPost'      
+                  $ref: '#/components/schemas/mqttConfigurationTopicGet'
+    post:
+      tags:
+        - connections
+      summary: Create a new MQTT topic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mqttConfigurationTopicPost'
+      responses:
+        '200':
+          description: Successful operation returning the topic ID
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/errorResponse'
   '/mqtt/configuration/topics/{topicId}':
     get:
       tags:
@@ -173,7 +194,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/mqttConfigurationTopicGetPost'
+                $ref: '#/components/schemas/mqttConfigurationTopicGet'
+        '400':
+          $ref: '#/components/responses/errorResponse'
     delete:
       tags:
         - connections
@@ -183,6 +206,8 @@ paths:
       responses:
         '200':
           description: Successful operation
+        '400':
+          $ref: '#/components/responses/errorResponse'
   '/ports/{portId}/status':
     get:
       tags:
@@ -323,7 +348,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portParameterSubindexValueGet'
-  '/iodds':
+  /iodds:
     get:
       tags:
         - iodds
@@ -388,6 +413,36 @@ paths:
                 $ref: '#/components/schemas/ioddsGet'
 components:
   schemas:
+    index:
+      type: object
+      properties:
+        index:
+          type: integer
+          minimum: 0
+    subindex:
+      allOf:
+        - $ref: '#/components/schemas/index'
+        - type: object
+          properties:
+            subindex:
+              type: integer
+              minimum: 0
+    name:
+      type: object
+      properties:
+        name:
+          type: string
+    processData:
+      type: object
+      properties:
+        processData:
+          type: boolean
+    format:
+      type: string
+      enum:
+        - raw
+        - iodd
+      default: iodd
     identificationGet:
       required:
         - vendorId
@@ -570,37 +625,42 @@ components:
           type: string
         lastWill:
           type: string
-    mqttConfigurationTopicGetPost:
-      type: object
-      properties:
-        topicName:
-          type: string
-        qos:
-          type: string
-          enum:
-            - At most once
-            - At least once
-            - Exactly once
-        interval:
-          type: integer
-          minimum: 0
-          description: in milliseconds; 0 = as fast as possible
-        onChange:
-          type: boolean
-        port:
-          type: integer
-          minimum: 0
-          description: Port number starting with 1
-        index:
-          type: integer
-          minimum: 0
-        subindex:
-          type: integer
-          minimum: 0
-        name:
-          type: string
-        processData:
-          type: boolean
+    mqttConfigurationTopicPost:
+      allOf:
+        - type: object
+          properties:
+            topicName:
+              type: string
+            qos:
+              type: string
+              enum:
+                - At most once
+                - At least once
+                - Exactly once
+            interval:
+              type: integer
+              minimum: 0
+              description: in milliseconds; 0 = as fast as possible
+            onChange:
+              type: boolean
+            port:
+              type: integer
+              minimum: 0
+              description: Port number starting with 1
+            format:
+              $ref: '#/components/schemas/format'
+        - oneOf:
+          - $ref: '#/components/schemas/index'
+          - $ref: '#/components/schemas/subindex'
+          - $ref: '#/components/schemas/name'
+          - $ref: '#/components/schemas/processData'
+    mqttConfigurationTopicGet:
+      allOf:
+        - type: object
+          properties:
+            topicId:
+              type: integer
+        - $ref: '#/components/schemas/mqttConfigurationTopicPost'
     portStatusGet:
       type: object
       properties:
@@ -961,7 +1021,9 @@ components:
     mqttTopicId:
       name: topicId
       in: path
-      description: ID of a configured MQTT topic. This the position of the topic in the topics list.
+      description: >-
+        ID of a configured MQTT topic. This the position of the topic in the
+        topics list.
       required: true
       schema:
         type: integer
@@ -977,11 +1039,7 @@ components:
       in: query
       description: Value format in response document
       schema:
-        type: string
-        enum:
-          - raw
-          - iodd
-        default: iodd
+        $ref: '#/components/schemas/format'
     index:
       name: index
       in: path
@@ -996,3 +1054,20 @@ components:
       schema:
         type: integer
       required: true
+  responses:
+    errorResponse:
+      description: Error
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - msgCode
+              - message
+            properties:
+              msgCode:
+                type: integer
+              message:
+                type: string
+              iolError:
+                type: integer
