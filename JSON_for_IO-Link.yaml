@@ -1,5 +1,4 @@
-openapi: '3.0.1'
-
+openapi: 3.0.1
 info:
   description: >-
     This is a sample IO-Link Master server. You can find out more about IO-Link
@@ -12,7 +11,7 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: http://iolmaster.io-link.com
+  - url: 'http://iolmaster.io-link.com'
     variables:
       basePath:
         default: /iol/v1
@@ -23,9 +22,8 @@ tags:
     description: Access to the IO-Link ports of the IO-Link master
   - name: connections
     description: 'Access to several connections like MQTT, ...'
-
 paths:
-  /identification:
+  '/identification':
     get:
       tags:
         - master
@@ -50,7 +48,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /capabilities:
+  '/capabilities':
     get:
       tags:
         - master
@@ -62,7 +60,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/capabilitiesGet'
-  /configuration:
+  '/configuration':
     get:
       tags:
         - master
@@ -74,7 +72,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/configurationGetPost'
-
     post:
       tags:
         - master
@@ -88,7 +85,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /reset:
+  '/reset':
     post:
       tags:
         - master
@@ -96,7 +93,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /reboot:
+  '/reboot':
     post:
       tags:
         - master
@@ -104,7 +101,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /events:
+  '/events':
     get:
       tags:
         - master
@@ -124,8 +121,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/eventsGet'
-                
-  /mqtt/configuration:
+  '/mqtt/configuration':
     get:
       tags:
         - connections
@@ -150,19 +146,50 @@ paths:
       responses:
         '200':
           description: Successful operation
-          
-  /ports/{portId}/status:
+  '/mqtt/configuration/topics':
+    get:
+      tags:
+        - connections
+      summary: Get the list of MQTT topics
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/mqttConfigurationTopicGetPost'      
+  '/mqtt/configuration/topics/{topicId}':
+    get:
+      tags:
+        - connections
+      summary: Get one MQTT topic
+      parameters:
+        - $ref: '#/components/parameters/mqttTopicId'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mqttConfigurationTopicGetPost'
+    delete:
+      tags:
+        - connections
+      summary: Delete the specified MQTT topic
+      parameters:
+        - $ref: '#/components/parameters/mqttTopicId'
+      responses:
+        '200':
+          description: Successful operation
+  '/ports/{portId}/status':
     get:
       tags:
         - ports
       summary: Read the status of the selected port
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
+        - $ref: '#/components/parameters/portId'
       responses:
         '200':
           description: Successful operation
@@ -170,7 +197,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portStatusGet'
-  /ports/{portId}/identification:
+  '/ports/{portId}/identification':
     get:
       tags:
         - ports
@@ -180,12 +207,7 @@ paths:
         applicationSpecificTag, locationTag and functionTag (if they are
         supported by the device).
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
+        - $ref: '#/components/parameters/portId'
       responses:
         '200':
           description: Successful operation
@@ -198,12 +220,7 @@ paths:
         - ports
       summary: Write application specific port identification
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
+        - $ref: '#/components/parameters/portId'
       requestBody:
         required: true
         content:
@@ -213,18 +230,13 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /ports/{portId}/capabilities:
+  '/ports/{portId}/capabilities':
     get:
       tags:
         - ports
       summary: Read the capability information of the specified port
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
+        - $ref: '#/components/parameters/portId'
       responses:
         '200':
           description: Successful operation
@@ -232,17 +244,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portCapabilitiesGet'
-  /ports/{portId}/configuration:
+  '/ports/{portId}/configuration':
     get:
       tags:
         - ports
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
+        - $ref: '#/components/parameters/portId'
       summary: Read the configuration of the specified port
       responses:
         '200':
@@ -256,12 +263,7 @@ paths:
         - ports
       summary: Write the configuration of the specified port
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
+        - $ref: '#/components/parameters/portId'
       requestBody:
         required: true
         content:
@@ -271,23 +273,14 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /ports/{portId}/processdata/value:
+  '/ports/{portId}/processdata/value':
     get:
       tags:
         - ports
       summary: Read the process data of the specified port
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
-        - name: format
-          in: query
-          description: Value format in response document
-          schema:
-            $ref: '#/components/schemas/portParameterValueFormat'
+        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/format'
       responses:
         '200':
           description: Successful operation
@@ -295,29 +288,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portProcessDataValueGet'
-  /ports/{portId}/parameters/{index}/value:
+  '/ports/{portId}/parameters/{index}/value':
     get:
       tags:
         - ports
       summary: Read the parameter with the given index from the specified port
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
-        - name: index
-          in: path
-          description: Index of ISDU variable
-          schema:
-            type: integer
-          required: true
-        - name: format
-          in: query
-          description: Value format in response document
-          schema:
-            $ref: '#/components/schemas/portParameterValueFormat'
+        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/index'
+        - $ref: '#/components/parameters/format'
       responses:
         '200':
           description: Successful operation
@@ -325,7 +304,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portParameterIndexValueGet'
-  /ports/{portId}/parameters/{index}/{subindex}/value:
+  '/ports/{portId}/parameters/{index}/{subindex}/value':
     get:
       tags:
         - ports
@@ -333,29 +312,10 @@ paths:
         Read the parameter with the given index and subindex from the specified
         port
       parameters:
-        - name: portId
-          in: path
-          description: Port ID starting with 1
-          schema:
-            type: integer
-          required: true
-        - name: index
-          in: path
-          description: Index of ISDU variable
-          schema:
-            type: integer
-          required: true
-        - name: subindex
-          in: path
-          description: Subindex of ISDU variable with the given index
-          schema:
-            type: integer
-          required: true
-        - name: format
-          in: query
-          description: Value format in response document
-          schema:
-            $ref: '#/components/schemas/portParameterValueFormat'
+        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/index'
+        - $ref: '#/components/parameters/subindex'
+        - $ref: '#/components/parameters/format'
       responses:
         '200':
           description: Successful operation
@@ -363,7 +323,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portParameterSubindexValueGet'
-  /iodds:
+  '/iodds':
     get:
       tags:
         - iodds
@@ -394,7 +354,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /iodds/{vendorId}/{deviceId}/{ioLinkRevision}:
+  '/iodds/{vendorId}/{deviceId}/{ioLinkRevision}':
     get:
       tags:
         - iodds
@@ -426,7 +386,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ioddsGet'
-
 components:
   schemas:
     identificationGet:
@@ -502,7 +461,6 @@ components:
         applicationSpecificTag: Fallback reader at the end of the belt
         locationTag: Down under
         functionTag: Code reading
-
     capabilitiesGet:
       required:
         - ioddSupported
@@ -527,7 +485,6 @@ components:
         maxPowerSupply:
           value: 0.3
           unit: A
-
     configurationGetPost:
       type: object
       properties:
@@ -551,7 +508,6 @@ components:
           - ipAddress: 192.168.1.13
             subnetMask: 255.255.255.0
             standardGateway: 192.168.1.1
-            
     eventsGet:
       type: array
       items:
@@ -603,7 +559,6 @@ components:
           message: sample message
           severity: WARNING
           mode: SINGLESHOT
-    
     mqttConfigurationGetPost:
       type: object
       properties:
@@ -615,40 +570,37 @@ components:
           type: string
         lastWill:
           type: string
-        topics:
-          type: array
-          items:
-            type: object
-            properties:
-              topicName:
-                type: string
-              qos:
-                type: string
-                enum:
-                  - At most once
-                  - At least once
-                  - Exactly once
-              interval:
-                type: integer
-                minimum: 0
-                description: in milliseconds; 0 = as fast as possible
-              onChange:
-                type: boolean
-              port:
-                type: integer
-                minimum: 0
-                description: Port number starting with 1
-              index:
-                type: integer
-                minimum: 0
-              subindex:
-                type: integer
-                minimum: 0
-              name:
-                type: string
-              processData:
-                type: boolean
-
+    mqttConfigurationTopicGetPost:
+      type: object
+      properties:
+        topicName:
+          type: string
+        qos:
+          type: string
+          enum:
+            - At most once
+            - At least once
+            - Exactly once
+        interval:
+          type: integer
+          minimum: 0
+          description: in milliseconds; 0 = as fast as possible
+        onChange:
+          type: boolean
+        port:
+          type: integer
+          minimum: 0
+          description: Port number starting with 1
+        index:
+          type: integer
+          minimum: 0
+        subindex:
+          type: integer
+          minimum: 0
+        name:
+          type: string
+        processData:
+          type: boolean
     portStatusGet:
       type: object
       properties:
@@ -681,7 +633,6 @@ components:
         ioLinkRevision: '1.0'
         transmissionRate: COM2
         masterCycleTime: 400
-
     portIdentificationGet:
       required:
         - vendorId
@@ -753,7 +704,6 @@ components:
         applicationSpecificTag: Fallback light switch at the end of the belt
         locationTag: Down under
         functionTag: Check start of belt
-
     portCapabilitiesGet:
       type: object
       properties:
@@ -779,7 +729,6 @@ components:
           value: 0.3
           unit: A
         portType: CLASS_A
-    
     portConfigurationGet:
       type: object
       properties:
@@ -811,10 +760,10 @@ components:
         cycleTime:
           description: >-
             0 = as fast as possible. Other (positive) values = time in
-            milliseconds. If a time value is given that does not match to
-            the possible time values given in the IO-Link Interface and
-            System Specification, the IO-Link Master has to take the next
-            lower level (resp. 0)
+            milliseconds. If a time value is given that does not match to the
+            possible time values given in the IO-Link Interface and System
+            Specification, the IO-Link Master has to take the next lower level
+            (resp. 0)
           type: number
         vendorId:
           type: integer
@@ -858,10 +807,10 @@ components:
         cycleTime:
           description: >-
             0 = as fast as possible. Other (positive) values = time in
-            milliseconds. If a time value is given that does not match to
-            the possible time values given in the IO-Link Interface and
-            System Specification, the IO-Link Master has to take the next
-            lower level (resp. 0)
+            milliseconds. If a time value is given that does not match to the
+            possible time values given in the IO-Link Interface and System
+            Specification, the IO-Link Master has to take the next lower level
+            (resp. 0)
           type: number
         vendorId:
           type: integer
@@ -874,7 +823,6 @@ components:
         cycleTime: 0
         vendorId: 26
         deviceId: 333
-
     portProcessDataValueGet:
       type: object
       properties:
@@ -917,23 +865,16 @@ components:
             valid:
               type: boolean
       example:
-          in:
-            pin2: true
-            pin2Value:
-              - 237
-              - 66
-              - 22
-              - 98
-            data:
-              distance: 345
-              qsignal: true
-
-    portParameterValueFormat:
-      type: string
-      enum:
-        - raw
-        - iodd
-      default: iodd
+        in:
+          pin2: true
+          pin2Value:
+            - 237
+            - 66
+            - 22
+            - 98
+          data:
+            distance: 345
+            qsignal: true
     portParameterIndexValueGet:
       type: object
       properties:
@@ -958,7 +899,6 @@ components:
       example:
         format=iodd:
           Pressure: 12322223
-
     ioddIdentification:
       type: object
       properties:
@@ -993,7 +933,6 @@ components:
           version: '2.1'
           releaseDate: '2015-01-02'
           ioLinkRevision: '1.1'
-          
   parameters:
     vendorId:
       name: vendorId
@@ -1019,3 +958,41 @@ components:
         enum:
           - '1.0'
           - '1.1'
+    mqttTopicId:
+      name: topicId
+      in: path
+      description: ID of a configured MQTT topic. This the position of the topic in the topics list.
+      required: true
+      schema:
+        type: integer
+    portId:
+      name: portId
+      in: path
+      description: Port ID starting with 1
+      schema:
+        type: integer
+      required: true
+    format:
+      name: format
+      in: query
+      description: Value format in response document
+      schema:
+        type: string
+        enum:
+          - raw
+          - iodd
+        default: iodd
+    index:
+      name: index
+      in: path
+      description: Index of ISDU variable
+      schema:
+        type: integer
+      required: true
+    subindex:
+      name: subindex
+      in: path
+      description: Subindex of ISDU variable with the given index
+      schema:
+        type: integer
+      required: true
