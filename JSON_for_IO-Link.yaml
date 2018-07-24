@@ -3,6 +3,26 @@ info:
   description: >-
     This is a sample IO-Link Master server. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
+
+    # Description
+
+    [Here you can put a general description of the API.]
+
+    ## Error messages
+
+    * Unable to upload IODD XML file. Insufficient memory space.
+
+    * Uploaded file is no valid IODD XML. Upload rejected.
+      - Remark: We could check the file content superficially to ensure that the IODD is an XML and an IODD (e.g. vendorId, deviceId, VendorName, ProductName and other mandatory elements or attributes).
+    * Uploaded file is no valid IODD XML. CRC check failed. Upload rejected.
+
+    * Uploaded file is no valid IODD XML. Parsing failed. Upload rejected.
+      - Remark: All those systems that do not want to store the IODD have to parse it immediately.
+
+    ## Questions:
+
+    * Should we somehow send an indication if we have already an IODD representation (identified by same vendorId, deviceId and ioLinkRevision)?
+
   version: 0.0.3
   title: Swagger IO-Link Master
   contact:
@@ -650,10 +670,10 @@ components:
             format:
               $ref: '#/components/schemas/format'
         - oneOf:
-          - $ref: '#/components/schemas/index'
-          - $ref: '#/components/schemas/subindex'
-          - $ref: '#/components/schemas/name'
-          - $ref: '#/components/schemas/processData'
+            - $ref: '#/components/schemas/index'
+            - $ref: '#/components/schemas/subindex'
+            - $ref: '#/components/schemas/name'
+            - $ref: '#/components/schemas/processData'
     mqttConfigurationTopicGet:
       allOf:
         - type: object
