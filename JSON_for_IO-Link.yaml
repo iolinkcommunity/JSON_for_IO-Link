@@ -3,6 +3,22 @@ info:
   description: >-
     This is a sample IO-Link Master server. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
+
+    # Description
+
+    [Here you can put a general description of the API.]
+
+    ## Error messages
+
+    * [1] Unable to upload IODD XML file. Insufficient memory space.
+
+    * [2] Uploaded file is no valid IODD XML. Upload rejected.
+      - Remark: We could check the file content superficially to ensure that the IODD is an XML and an IODD (e.g. vendorId, deviceId, VendorName, ProductName and other mandatory elements or attributes).
+    * [3] Uploaded file is no valid IODD XML. CRC check failed. Upload rejected.
+
+    * [4] Uploaded file is no valid IODD XML. Parsing failed. Upload rejected.
+      - Remark: All those systems that do not want to store the IODD have to parse it immediately.
+
   version: 0.0.3
   title: Swagger IO-Link Master
   contact:
@@ -358,7 +374,7 @@ paths:
         for one vendorId-deviceId-combination.
       responses:
         '200':
-          description: Successful operation
+          description: An IODD XML file
           content:
             application/json:
               schema:
@@ -373,7 +389,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/octet-stream:
+          application/xml:
             schema:
               $ref: '#/components/schemas/ioddFile'
       responses:
@@ -391,9 +407,9 @@ paths:
         - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          description: Successful operation
+          description: An IODD XML file
           content:
-            application/json:
+            application/xml:
               schema:
                 $ref: '#/components/schemas/ioddFile'
     delete:
@@ -650,10 +666,10 @@ components:
             format:
               $ref: '#/components/schemas/format'
         - oneOf:
-          - $ref: '#/components/schemas/index'
-          - $ref: '#/components/schemas/subindex'
-          - $ref: '#/components/schemas/name'
-          - $ref: '#/components/schemas/processData'
+            - $ref: '#/components/schemas/index'
+            - $ref: '#/components/schemas/subindex'
+            - $ref: '#/components/schemas/name'
+            - $ref: '#/components/schemas/processData'
     mqttConfigurationTopicGet:
       allOf:
         - type: object
@@ -977,7 +993,7 @@ components:
             - '1.1'
     ioddFile:
       type: string
-      format: base64
+      format: binary
     ioddsGet:
       type: array
       items:
