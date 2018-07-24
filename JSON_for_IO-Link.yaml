@@ -358,7 +358,7 @@ paths:
         for one vendorId-deviceId-combination.
       responses:
         '200':
-          description: Successful operation
+          description: An IODD XML file
           content:
             application/json:
               schema:
@@ -373,7 +373,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/octet-stream:
+          application/xml:
             schema:
               $ref: '#/components/schemas/ioddFile'
       responses:
@@ -391,9 +391,9 @@ paths:
         - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          description: Successful operation
+          description: An IODD XML file
           content:
-            application/json:
+            application/xml:
               schema:
                 $ref: '#/components/schemas/ioddFile'
     delete:
@@ -977,7 +977,7 @@ components:
             - '1.1'
     ioddFile:
       type: string
-      format: base64
+      format: binary
     ioddsGet:
       type: array
       items:
