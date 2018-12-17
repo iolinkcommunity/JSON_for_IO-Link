@@ -23,11 +23,9 @@ info:
 
     ### Process Data handling
 
-    * [5] Writing processdata to Pin 2 is not possible. Pin 2 is not configured
-    as DIGITAL_OUTPUT.
+    * [5] Writing processdata to Pin 2 is not possible. Pin 2 is not configured as DIGITAL_OUTPUT.
 
-    * [6] Writing processdata to Pin 4 is not possible. Pin 4 is not configured
-    as DIGITAL_OUTPUT.
+    * [6] Writing processdata to Pin 4 is not possible. Pin 4 is not configured as DIGITAL_OUTPUT.
 
     * [7] Attached IO-Link device has no output process data.
 
@@ -37,8 +35,7 @@ info:
 
     ### Data Storage
 
-    * [9] HTTP Status 400: Mismatch between configured device and data storage
-    meta data.
+    * [9] HTTP Status 400: Mismatch between configured device and data storage meta data.
 
     ### General
 
@@ -48,10 +45,9 @@ info:
 
     ### Implementation hint:
 
-    Specific error messages have to be provided only if the corresponding
-    operation is supported. So you do not need to give specific errors for bad
-    IODDs, just indicate error 10.
-  version: 0.0.4
+    Specific error messages have to be provided only if the corresponding operation is supported. So you do not need to give specific errors for bad IODDs, just indicate error 10.
+
+  version: 0.0.3
   title: Swagger IO-Link Master
   contact:
     email: oliver.lingg@sick.de
