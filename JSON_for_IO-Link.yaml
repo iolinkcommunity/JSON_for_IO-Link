@@ -23,9 +23,11 @@ info:
 
     ### Process Data handling
 
-    * [5] Writing processdata to Pin 2 is not possible. Pin 2 is not configured as DIGITAL_OUTPUT.
+    * [5] Writing processdata to Pin 2 is not possible. Pin 2 is not configured
+    as DIGITAL_OUTPUT.
 
-    * [6] Writing processdata to Pin 4 is not possible. Pin 4 is not configured as DIGITAL_OUTPUT.
+    * [6] Writing processdata to Pin 4 is not possible. Pin 4 is not configured
+    as DIGITAL_OUTPUT.
 
     * [7] Attached IO-Link device has no output process data.
 
@@ -35,7 +37,8 @@ info:
 
     ### Data Storage
 
-    * [9] HTTP Status 400: Mismatch between configured device and data storage meta data.
+    * [9] HTTP Status 400: Mismatch between configured device and data storage
+    meta data.
 
     ### General
 
@@ -45,8 +48,9 @@ info:
 
     ### Implementation hint:
 
-    Specific error messages have to be provided only if the corresponding operation is supported. So you do not need to give specific errors for bad IODDs, just indicate error 10.
-
+    Specific error messages have to be provided only if the corresponding
+    operation is supported. So you do not need to give specific errors for bad
+    IODDs, just indicate error 10.
   version: 0.0.3
   title: Swagger IO-Link Master
   contact:
@@ -60,6 +64,8 @@ servers:
       basePath:
         default: /iol/v1
 tags:
+  - name: gateway
+    description: Access to parameters of the JSON gateway
   - name: master
     description: Access to parameters of the IO-Link master itself
   - name: ports
@@ -69,11 +75,55 @@ tags:
   - name: connections
     description: 'Access to several connections like MQTT, ...'
 paths:
-  /identification:
+  '/gateway/configuration':
+    get:
+      tags:
+        - gateway
+      summary: Read the configuration of the JSON gateway
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/configurationGetPost'
+    post:
+      tags:
+        - gateway
+      summary: Update the configuration of the JSON gateway
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/configurationGetPost'
+      responses:
+        '200':
+          description: Successful operation
+  '/masters':
+    get:
+      tags:
+        - master
+      summary: Read all the available masterId keys.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - 1
+                  - 2
+  '/masters/{masterId}/identification':
     get:
       tags:
         - master
       summary: Read the identification of the IO-Link master
+      parameters:
+        - $ref: '#/components/parameters/masterId'
       responses:
         '200':
           description: Successful operation
@@ -85,6 +135,8 @@ paths:
       tags:
         - master
       summary: Write application specific identification
+      parameters:
+        - $ref: '#/components/parameters/masterId'
       requestBody:
         required: true
         content:
@@ -94,11 +146,13 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /capabilities:
+  '/masters/{masterId}/capabilities':
     get:
       tags:
         - master
       summary: Read the capabilities of the master
+      parameters:
+        - $ref: '#/components/parameters/masterId'
       responses:
         '200':
           description: Successful operation
@@ -106,48 +160,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/capabilitiesGet'
-  /configuration:
-    get:
-      tags:
-        - master
-      summary: Read the configuration of the IO-Link master
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/configurationGetPost'
-    post:
-      tags:
-        - master
-      summary: Update the configuration of the IO-Link master
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/configurationGetPost'
-      responses:
-        '200':
-          description: Successful operation
-  /reset:
+  '/masters/{masterId}/reset':
     post:
       tags:
         - master
       summary: Invoke a reset of the IO-Link master
+      parameters:
+        - $ref: '#/components/parameters/masterId'
       responses:
         '200':
           description: Successful operation
-  /reboot:
+  '/masters/{masterId}/reboot':
     post:
       tags:
         - master
       summary: Invoke a reboot of the IO-Link master
+      parameters:
+        - $ref: '#/components/parameters/masterId'
       responses:
         '200':
           description: Successful operation
-  /mqtt/configuration:
+  '/mqtt/configuration':
     get:
       tags:
         - connections
@@ -174,7 +207,7 @@ paths:
           description: Successful operation
         '400':
           $ref: '#/components/responses/errorResponse'
-  /mqtt/configuration/topics:
+  '/mqtt/configuration/topics':
     get:
       tags:
         - connections
@@ -234,12 +267,34 @@ paths:
           description: Successful operation
         '400':
           $ref: '#/components/responses/errorResponse'
-  '/ports/{portId}/status':
+  '/masters/{masterId}/ports':
+    get:
+      tags:
+        - ports
+      summary: Read all the available portId keys
+      parameters:
+        - $ref: '#/components/parameters/masterId'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            applicaion/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+  '/masters/{masterId}/ports/{portId}/status':
     get:
       tags:
         - ports
       summary: Read the status of the selected port
       parameters:
+        - $ref: '#/components/parameters/masterId'
         - $ref: '#/components/parameters/portId'
       responses:
         '200':
@@ -248,12 +303,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portStatusGet'
-  '/ports/{portId}/capabilities':
+  '/masters/{masterId}/ports/{portId}/capabilities':
     get:
       tags:
         - ports
       summary: Read the capability information of the specified port
       parameters:
+        - $ref: '#/components/parameters/masterId'
         - $ref: '#/components/parameters/portId'
       responses:
         '200':
@@ -262,11 +318,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portCapabilitiesGet'
-  '/ports/{portId}/configuration':
+  '/masters/{masterId}/ports/{portId}/configuration':
     get:
       tags:
         - ports
       parameters:
+        - $ref: '#/components/parameters/masterId'
         - $ref: '#/components/parameters/portId'
       summary: Read the configuration of the specified port
       responses:
@@ -281,6 +338,7 @@ paths:
         - ports
       summary: Write the configuration of the specified port
       parameters:
+        - $ref: '#/components/parameters/masterId'
         - $ref: '#/components/parameters/portId'
       requestBody:
         required: true
@@ -291,11 +349,12 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/ports/{portId}/datastorage':
+  '/masters/{masterId}/ports/{portId}/datastorage':
     get:
       tags:
         - ports
       parameters:
+        - $ref: '#/components/parameters/masterId'
         - $ref: '#/components/parameters/portId'
       summary: Read the Data Storage of the specified port
       responses:
@@ -309,6 +368,7 @@ paths:
       tags:
         - ports
       parameters:
+        - $ref: '#/components/parameters/masterId'
         - $ref: '#/components/parameters/portId'
       summary: Write the Data Storage of the specified port
       requestBody:
@@ -320,11 +380,12 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/ports/{portId}/events':
+  '/masters/{masterId}/ports/{portId}/events':
     get:
       tags:
         - ports
       parameters:
+        - $ref: '#/components/parameters/masterId'
         - $ref: '#/components/parameters/portId'
         - name: count
           in: query
@@ -517,7 +578,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/iolinkEventsGet'
-  /iodds:
+  '/iodds':
     get:
       tags:
         - iodds
@@ -613,7 +674,17 @@ components:
     processData:
       type: object
       properties:
-        processData:
+        direction:
+          type: string
+          enum:
+            - in
+            - out
+            - both
+        interval:
+          type: integer
+          minimum: 0
+          description: in milliseconds; 0 = as fast as possible
+        onChange:
           type: boolean
     format:
       type: string
@@ -1149,7 +1220,7 @@ components:
       maxProperties: 255
       description: The value (with complex type) in iodd format.
       additionalProperties:
-        $ref: '#/components/schemas/deviceSimpleTypeValue'    
+        $ref: '#/components/schemas/deviceSimpleTypeValue'
     deviceParameterValueGetPost:
       oneOf:
         - $ref: '#/components/schemas/deviceRawTypeValue'
@@ -1161,10 +1232,10 @@ components:
           - 156
           - 125
           - 25
-        format=iodd, simpleType:
+        'format=iodd, simpleType':
           value: 15
           unit: mm
-        format=iodd, complexType:
+        'format=iodd, complexType':
           Distance:
             value: 15
             unit: mm
@@ -1251,6 +1322,13 @@ components:
       required: true
       schema:
         type: integer
+    masterId:
+      name: masterId
+      in: path
+      description: Master ID starting with 1
+      schema:
+        type: integer
+      required: true
     portId:
       name: portId
       in: path
