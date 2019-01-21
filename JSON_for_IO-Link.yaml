@@ -635,6 +635,7 @@ components:
         - masterType
         - serialNumber
         - orderCode
+        - productName
         - vendorName
         - hardwareRevision
         - softwareRevision
@@ -658,6 +659,8 @@ components:
           type: string
         orderCode:
           type: string
+        productName:
+           type: string
         vendorName:
           type: string
         hardwareRevision:
