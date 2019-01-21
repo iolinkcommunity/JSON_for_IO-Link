@@ -660,7 +660,7 @@ components:
         orderCode:
           type: string
         productName:
-           type: string
+          type: string
         vendorName:
           type: string
         hardwareRevision:
