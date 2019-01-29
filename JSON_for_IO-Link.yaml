@@ -65,7 +65,7 @@ tags:
   - name: ports
     description: Access to the IO-Link ports of the IO-Link master
   - name: devices
-    description: Access to the IO-Link Devices connected ot the Master
+    description: Access to the IO-Link Devices connected to the Master
   - name: connections
     description: 'Access to several connections like MQTT, ...'
 paths:
@@ -983,8 +983,8 @@ components:
             - DEACTIVATED
             - IOL_MANUAL
             - IOL_AUTOSTART
-            - DI
-            - DO
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
         validationAndBackup:
           type: string
           enum:
