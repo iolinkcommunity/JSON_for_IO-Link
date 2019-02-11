@@ -51,10 +51,10 @@ info:
     Specific error messages have to be provided only if the corresponding
     operation is supported. So you do not need to give specific errors for bad
     IODDs, just indicate error 10.
-  version: 0.0.3
+  version: 0.0.4
   title: Swagger IO-Link Master
   contact:
-    email: oliver.lingg@sick.de
+    email: lorand.molnar@teconcept.de
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
@@ -75,7 +75,7 @@ tags:
   - name: connections
     description: 'Access to several connections like MQTT, ...'
 paths:
-  '/gateway/configuration':
+  /gateway/configuration:
     get:
       tags:
         - gateway
@@ -100,30 +100,43 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/masters':
+  /gateway/reset:
+    post:
+      tags:
+        - gateway
+      summary: Invoke a reset of the Gateway application
+      responses:
+        '200':
+          description: Successful operation
+  /gateway/reboot:
+    post:
+      tags:
+        - gateway
+      summary: Invoke a reboot of the Gateway application
+      responses:
+        '200':
+          description: Successful operation
+  /masters:
     get:
       tags:
         - master
-      summary: Read all the available masterId keys.
+      summary: >-
+        Read all the available masterNumber keys with the corresponding
+        identification information.
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
-                example:
-                  - 1
-                  - 2
-  '/masters/{masterId}/identification':
+                $ref: '#/components/schemas/identificationMasters'
+  '/masters/{masterNumber}/identification':
     get:
       tags:
         - master
       summary: Read the identification of the IO-Link master
       parameters:
-        - $ref: '#/components/parameters/masterId'
+        - $ref: '#/components/parameters/masterNumber'
       responses:
         '200':
           description: Successful operation
@@ -136,7 +149,7 @@ paths:
         - master
       summary: Write application specific identification
       parameters:
-        - $ref: '#/components/parameters/masterId'
+        - $ref: '#/components/parameters/masterNumber'
       requestBody:
         required: true
         content:
@@ -146,13 +159,13 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/masters/{masterId}/capabilities':
+  '/masters/{masterNumber}/capabilities':
     get:
       tags:
         - master
       summary: Read the capabilities of the master
       parameters:
-        - $ref: '#/components/parameters/masterId'
+        - $ref: '#/components/parameters/masterNumber'
       responses:
         '200':
           description: Successful operation
@@ -160,33 +173,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/capabilitiesGet'
-  '/masters/{masterId}/reset':
-    post:
+  /gateway/events:
+    get:
       tags:
-        - master
-      summary: Invoke a reset of the IO-Link master
+        - gateway
+      summary: Read the event queue
       parameters:
-        - $ref: '#/components/parameters/masterId'
+        - $ref: '#/components/parameters/eventOrigin'
+        - $ref: '#/components/parameters/eventMasterNumber'
+        - $ref: '#/components/parameters/eventPortNumber'
+        - $ref: '#/components/parameters/eventDeviceName'
+        - $ref: '#/components/parameters/eventTop'
+        - $ref: '#/components/parameters/eventBottom'
       responses:
         '200':
           description: Successful operation
-  '/masters/{masterId}/reboot':
-    post:
-      tags:
-        - master
-      summary: Invoke a reboot of the IO-Link master
-      parameters:
-        - $ref: '#/components/parameters/masterId'
-      responses:
-        '200':
-          description: Successful operation
-  '/masters/{masterId}/ports':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gatewayEventsGet'
+  '/masters/{masterNumber}/ports':
     get:
       tags:
         - ports
       summary: Read all the available portId keys
       parameters:
-        - $ref: '#/components/parameters/masterId'
+        - $ref: '#/components/parameters/masterNumber'
       responses:
         '200':
           description: Successful operation
@@ -195,20 +207,25 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  type: object
+                  required:
+                    - portNumber
+                  properties:
+                    portNumber:
+                      type: number
                 example:
-                  - 1
-                  - 2
-                  - 3
-                  - 4
-  '/masters/{masterId}/ports/{portId}/status':
+                  - portNumber: 1
+                  - portNumber: 2
+                  - portnumber: 3
+                  - portnumber: 4
+  '/masters/{masterNumber}/ports/{portNumber}/status':
     get:
       tags:
         - ports
       summary: Read the status of the selected port
       parameters:
-        - $ref: '#/components/parameters/masterId'
-        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
       responses:
         '200':
           description: Successful operation
@@ -216,14 +233,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portStatusGet'
-  '/masters/{masterId}/ports/{portId}/capabilities':
+  '/masters/{masterNumber}/ports/{portNumber}/capabilities':
     get:
       tags:
         - ports
       summary: Read the capability information of the specified port
       parameters:
-        - $ref: '#/components/parameters/masterId'
-        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
       responses:
         '200':
           description: Successful operation
@@ -231,13 +248,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portCapabilitiesGet'
-  '/masters/{masterId}/ports/{portId}/configuration':
+  '/masters/{masterNumber}/ports/{portNumber}/configuration':
     get:
       tags:
         - ports
       parameters:
-        - $ref: '#/components/parameters/masterId'
-        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
       summary: Read the configuration of the specified port
       responses:
         '200':
@@ -245,30 +262,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/portConfigurationGetPost'
+                $ref: '#/components/schemas/portConfigurationGet'
     post:
       tags:
         - ports
       summary: Write the configuration of the specified port
       parameters:
-        - $ref: '#/components/parameters/masterId'
-        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/portConfigurationGetPost'
+              $ref: '#/components/schemas/portConfigurationPost'
       responses:
         '200':
           description: Successful operation
-  '/masters/{masterId}/ports/{portId}/datastorage':
+  '/masters/{masterNumber}/ports/{portNumber}/datastorage':
     get:
       tags:
         - ports
       parameters:
-        - $ref: '#/components/parameters/masterId'
-        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
       summary: Read the Data Storage of the specified port
       responses:
         '200':
@@ -281,8 +298,8 @@ paths:
       tags:
         - ports
       parameters:
-        - $ref: '#/components/parameters/masterId'
-        - $ref: '#/components/parameters/portId'
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
       summary: Write the Data Storage of the specified port
       requestBody:
         required: true
@@ -293,27 +310,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  '/masters/{masterId}/ports/{portId}/events':
-    get:
-      tags:
-        - ports
-      parameters:
-        - $ref: '#/components/parameters/masterId'
-        - $ref: '#/components/parameters/portId'
-        - name: count
-          in: query
-          description: The number of the events to read from the master.
-          schema:
-            type: integer
-      summary: Read the Port event log.
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/iolinkEventsGet'
-  '/devices':
+  /devices:
     get:
       tags:
         - devices
@@ -326,11 +323,16 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  type: object
+                  required:
+                    - deviceName
+                  properties:
+                    deviceName:
+                      type: string
                 example:
-                  - DT35
-                  - TAD081
-                  - BNI_IOL
+                  - deviceName: DT35
+                  - deviceName: TAD081
+                  - deviceName: BNI_IOL
   '/devices/{deviceName}/identification':
     get:
       tags:
@@ -400,6 +402,22 @@ paths:
       responses:
         '200':
           description: Successful operation
+  '/devices/{deviceName}/parameters':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read the available parameter indices and parameter names. Requires the
+        IODD support.
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParametersGet'
   '/devices/{deviceName}/parameters/{index}/value':
     get:
       tags:
@@ -433,6 +451,77 @@ paths:
       responses:
         '200':
           description: Successful operation
+  '/devices/{deviceName}/parameters/{parameterName}/value':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read the parameter with the given index from the specified port.
+        Requires IODD support.
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/parameterName'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParameterValueGetPost'
+    post:
+      tags:
+        - devices
+      summary: >-
+        Write the parameter with the given index from the specified port.
+        Requires IODD support.
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/parameterName'
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceParameterValueGetPost'
+      responses:
+        '200':
+          description: Successful operation
+  '/devices/{deviceName}/parameters/{index}/subindices':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read the available parameter sub-indices, sub-parameter names. Requires
+        IODD support.
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceSubParametersGet'
+  '/devices/{deviceName}/parameters/{parameterName}/subindices':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read the available parameter sub-indices, sub-parameter names. Requires
+        IODD support.
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/parameterName'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceSubParametersGet'
   '/devices/{deviceName}/parameters/{index}/subindices/{subindex}/value':
     get:
       tags:
@@ -472,17 +561,53 @@ paths:
       responses:
         '200':
           description: Successful operation
+  '/devices/{deviceName}/parameters/{parameterName}/subindices/{subParameterName}/value':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read the parameter with the given index and subindex from the specified.
+        Requires IODD support. port
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/parameterName'
+        - $ref: '#/components/parameters/subParameterName'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+    post:
+      tags:
+        - devices
+      summary: >-
+        Write the parameter with the given index and subindex from the
+        specified. Requires IODD support. port
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/parameterName'
+        - $ref: '#/components/parameters/subParameterName'
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+      responses:
+        '200':
+          description: Successful operation
   '/devices/{deviceName}/events':
     get:
       tags:
         - devices
       parameters:
         - $ref: '#/components/parameters/deviceName'
-        - name: count
-          in: query
-          description: The number of the events to read from the master.
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/eventTop'
+        - $ref: '#/components/parameters/eventBottom'
       summary: Read the Device event log.
       responses:
         '200':
@@ -490,8 +615,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/iolinkEventsGet'
-  '/mqtt/configuration':
+                $ref: '#/components/schemas/deviceEventsGet'
+  /mqtt/configuration:
     get:
       tags:
         - connections
@@ -518,7 +643,7 @@ paths:
           description: Successful operation
         '400':
           $ref: '#/components/responses/errorResponse'
-  '/mqtt/configuration/topics':
+  /mqtt/configuration/topics:
     get:
       tags:
         - connections
@@ -533,29 +658,29 @@ paths:
                 items:
                   $ref: '#/components/schemas/mqttConfigurationTopicGet'
               example:
-                  - topicId: 1
-                    topicName: PD input
-                    qos: At leas once
-                    deviceName: DT35
-                    processData:
-                      direction: in
-                      format: iodd
-                      interval:
-                        value: 10
-                        unit: ms
-                  - topicId: 2
-                    topicName: Event
-                    qos: At most once
-                    deviceName: TAD081
-                    event:
-                  - topicId: 3
-                    topicName: PD
-                    qos: At leas once
-                    deviceName: BNI_IOL
-                    processData:
-                      direction: both
-                      format: iodd
-                      onChange: true
+                - topicId: 1
+                  topicName: PD input
+                  qos: At leas once
+                  deviceName: DT35
+                  processData:
+                    direction: in
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+                - topicId: 2
+                  topicName: Event
+                  qos: At most once
+                  deviceName: TAD081
+                  event: null
+                - topicId: 3
+                  topicName: PD
+                  qos: At leas once
+                  deviceName: BNI_IOL
+                  processData:
+                    direction: both
+                    format: iodd
+                    onChange: true
     post:
       tags:
         - connections
@@ -602,7 +727,7 @@ paths:
           description: Successful operation
         '400':
           $ref: '#/components/responses/errorResponse'
-  '/iodds':
+  /iodds:
     get:
       tags:
         - iodds
@@ -669,6 +794,9 @@ components:
   schemas:
     cycleTime:
       type: object
+      required:
+        - value
+        - unit
       properties:
         value:
           type: number
@@ -688,10 +816,14 @@ components:
               $ref: '#/components/schemas/format'
       oneOf:
         - type: object
+          required:
+            - interval
           properties:
             interval:
               $ref: '#/components/schemas/cycleTime'
         - type: object
+          required:
+            - onChange
           properties:
             onChange:
               type: boolean
@@ -708,6 +840,44 @@ components:
         - out
         - both
       default: in
+    eventOrigin:
+      type: string
+      enum:
+        - ALL
+        - MASTER
+        - PORT
+        - DEVICE
+      default: ALL
+    eventMasterNumber:
+      type: number
+    eventPortNumber:
+      type: integer
+    eventDeviceName:
+      type: string
+    eventTop:
+      type: number
+    eventBottom:
+      type: number
+    identificationMasters:
+      type: array
+      items:
+        type: object
+        required:
+          - masterNumber
+        properties:
+          masterNumber:
+            type: number
+          serialNumber:
+            type: string
+          locationTag:
+            type: string
+      example:
+        - masterNumber: 1
+          serialNumber: lsdfkjke93922
+          locationTag: slot 5
+        - masterNumber: 2
+          serialNumber: dsadasda25632
+          locationTag: slot 6
     identificationGet:
       required:
         - vendorId
@@ -794,6 +964,9 @@ components:
           type: integer
         maxPowerSupply:
           type: object
+          required:
+            - value
+            - unit
           properties:
             value:
               type: number
@@ -805,6 +978,108 @@ components:
         maxPowerSupply:
           value: 0.3
           unit: A
+    eventRelativeTime:
+      description: >-
+        This is a relative time in milliseconds without any explicit starting
+        time
+      type: string
+    eventTimeStamp:
+      description: See Time Format 4.4.5 in the IO-Link to JSON  mapping specification
+      type: string
+    eventSeverity:
+      type: string
+      enum:
+        - NOTIFICATION
+        - WARNING
+        - ERROR
+    gatewayEventsGet:
+      type: array
+      items:
+        type: object
+        required:
+          - severity
+          - masterNumber
+        properties:
+          relativeTime:
+            $ref: '#/components/schemas/eventRelativeTime'
+          timeStamp:
+            $ref: '#/components/schemas/eventTimeStamp'
+          severity:
+            $ref: '#/components/schemas/eventSeverity'
+          masterNumber:
+            type: number
+          portNumber:
+            description: >-
+              This value is mandatory for port events and should not be used for
+              other log entries.
+            type: number
+          deviceName:
+            description: >-
+              This value is mandatory for IO-Link Device events and should not
+              be used for other log entries.
+            type: string
+          code:
+            description: >-
+              This value is required if the log entry is an IO-Link Port event
+              or an IO-Link Device event.
+            type: number
+          mode:
+            description: >-
+              This value is required if the log entry is an IO-Link Port event
+              or an IO-Link Device event.
+            type: string
+            enum:
+              - SINGLESHOT
+              - APPEARED
+              - DISAPPEARED
+          message:
+            description: >-
+              This value is required if there is a text available. For messages
+              based on the IODD the (prim. lang.) shall be used.
+            type: string
+      example:
+        - relativeTime: 500
+          timeStamp: '2018-05-18T07:31:54.123Z'
+          severity: WARNING
+          deviceName: Temp_sensor_1
+          code: 16912
+          mode: APPEARED
+          message: Device temperature over-run – Clear source of heat
+        - relativeTime: 623
+          timeStamp: '2018-05-18T07:35:54.123Z'
+          severity: NOTIFICATION
+          portNumber: 2
+          code: 65314
+          mode: SINGLESHOT
+          message: Device communication lost
+    deviceEventsGet:
+      type: array
+      items:
+        type: object
+        required:
+          - severity
+          - code
+          - mode
+        properties:
+          relativeTime:
+            $ref: '#/components/schemas/eventRelativeTime'
+          timeStamp:
+            $ref: '#/components/schemas/eventTimeStamp'
+          severity:
+            $ref: '#/components/schemas/eventSeverity'
+          code:
+            type: number
+          mode:
+            type: string
+            enum:
+              - SINGLESHOT
+              - APPEARED
+              - DISAPPEARED
+          message:
+            description: >-
+              This value is required if there is a text available. For messages
+              based on the IODD the (prim. lang.) shall be used.
+            type: string
     configurationGetPost:
       type: object
       properties:
@@ -812,6 +1087,10 @@ components:
           type: array
           items:
             type: object
+            required:
+              - ipAddress
+              - subnetMask
+              - standardGateway
             properties:
               ipAddress:
                 type: string
@@ -828,46 +1107,11 @@ components:
           - ipAddress: 192.168.1.13
             subnetMask: 255.255.255.0
             standardGateway: 192.168.1.1
-    iolinkEventsGet:
-      type: array
-      items:
-        type: object
-        required:
-          - code
-          - message
-          - severity
-        properties:
-          timestamp:
-            type: string
-          code:
-            type: integer
-          message:
-            type: string
-          severity:
-            type: string
-            enum:
-              - ERROR
-              - WARNING
-              - NOTIFICATION
-          mode:
-            type: string
-            enum:
-              - SINGLESHOT
-              - APPEARS
-              - DISAPPEARS
-      example:
-        - timestamp: '2018-06-19T10:21:09.989Z'
-          code: 8011
-          message: sample message
-          severity: WARNING
-          mode: SINGLESHOT
-        - timestamp: '2018-06-19T10:21:09.989Z'
-          code: 8011
-          message: sample message
-          severity: WARNING
-          mode: SINGLESHOT
     mqttConfigurationGetPost:
       type: object
+      required:
+        - brokerAddress
+        - keepAliveTime
       properties:
         brokerAddress:
           type: string
@@ -877,6 +1121,11 @@ components:
           type: string
         lastWill:
           type: object
+          required:
+            - topic
+            - message
+            - qoS
+            - retain
           properties:
             topic:
               type: string
@@ -891,6 +1140,10 @@ components:
     mqttConfigurationTopic:
       allOf:
         - type: object
+          required:
+            - topicName
+            - qos
+            - deviceName
           properties:
             topicName:
               type: string
@@ -905,6 +1158,9 @@ components:
               description: Unique deviceName.
         - oneOf:
             - type: object
+              required:
+                - event
+                - processData
               properties:
                 event:
                   $ref: '#/components/schemas/event'
@@ -926,6 +1182,8 @@ components:
     mqttConfigurationTopicGet:
       allOf:
         - type: object
+          required:
+            - topicId
           properties:
             topicId:
               type: integer
@@ -943,6 +1201,8 @@ components:
             unit: ms
     portStatusGet:
       type: object
+      required:
+        - portStatusInfo
       properties:
         portStatusInfo:
           type: string
@@ -955,11 +1215,17 @@ components:
             - DI_C/Q
             - DO_C/Q
         ioLinkRevision:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE.
           type: string
           enum:
             - '1.0'
             - '1.1'
         transmissionRate:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE.
           type: string
           enum:
             - NOT_DETECTED
@@ -967,10 +1233,15 @@ components:
             - COM2
             - COM3
         masterCycleTime:
-          $ref: '#/components/schemas/cycleTime'
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/cycleTime'
       example:
-        portStatusInfo: NO_DEVICE
-        ioLinkRevision: '1.0'
+        portStatusInfo: OPERATE
+        ioLinkRevision: '1.1'
         transmissionRate: COM2
         masterCycleTime:
           value: 2.3
@@ -979,9 +1250,7 @@ components:
       required:
         - vendorId
         - deviceId
-        - serialNumber
-        - hardwareRevision
-        - firmwareRevision
+        - ioLinkRevision
       type: object
       properties:
         vendorId:
@@ -994,10 +1263,12 @@ components:
             - '1.0'
             - '1.1'
         vendorName:
+          description: Mandatory if the Device suports the ISDU.
           type: string
         vendorText:
           type: string
         productName:
+          description: Mandatory if the Device suports the ISDU.
           type: string
         productId:
           type: string
@@ -1048,9 +1319,15 @@ components:
         functionTag: Check start of belt
     portCapabilitiesGet:
       type: object
+      required:
+        - maxPowerSupply
+        - portType
       properties:
         maxPowerSupply:
           type: object
+          required:
+            - value
+            - unit
           properties:
             value:
               type: number
@@ -1071,8 +1348,16 @@ components:
           value: 0.3
           unit: A
         portType: CLASS_A
-    portConfigurationGetPost:
+    portConfigurationGet:
       type: object
+      required:
+        - portMode
+        - validationAndBackup
+        - cycleTime
+        - vendorId
+        - deviceId
+        - pin2Configuration
+        - deviceName
       properties:
         portMode:
           type: string
@@ -1083,6 +1368,7 @@ components:
             - DI
             - DO
         validationAndBackup:
+          description: Used by the IO-Link Master just when portMode is IOL_MANUAL.
           type: string
           enum:
             - NO_DEVICE_CHECK
@@ -1090,6 +1376,24 @@ components:
             - TYPE_COMPATIBLE_DEVICE_V1.1
             - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
             - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        cycleTime:
+          description: >-
+            Used by the IO-Link Master just when portMode is IOL_MANUAL or
+            IOL_AUTOSTART. Default value is 0 ms which means as fast as
+            possible.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/cycleTime'
+        vendorId:
+          description: >-
+            Used by the IO-Link Master just when portMode is IOL_MANUAL and
+            validationAndBackup is not NO_DEVICE_CHECK.
+          type: integer
+        deviceId:
+          description: >-
+            Used by the IO-Link Master just when portMode is IOL_MANUAL and
+            validationAndBackup is not NO_DEVICE_CHECK.
+          type: integer
         pin2Configuration:
           type: string
           enum:
@@ -1099,12 +1403,70 @@ components:
             - ANALOG_INPUT
             - ANALOG_OUTPUT
             - POWER_2
+        deviceName:
+          type: string
+      example:
+        portMode: IOL_AUTOSTART
+        validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+        pin2Configuration: ANALOG_INPUT
         cycleTime:
-          $ref: '#/components/schemas/cycleTime'
+          value: 2.3
+          unit: ms
+        vendorId: 26
+        deviceId: 333
+        deviceName: Distance_sensor_1
+    portConfigurationPost:
+      type: object
+      required:
+        - portMode
+        - pin2Configuration
+      properties:
+        portMode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - IOL_MANUAL
+            - IOL_AUTOSTART
+            - DI
+            - DO
+        validationAndBackup:
+          description: >-
+            Mandatory if portMode is IOL_MANUAL. Must not be used with portMode
+            other than IOL_MANUAL.
+          type: string
+          enum:
+            - NO_DEVICE_CHECK
+            - TYPE_COMPATIBLE_DEVICE_V1.0
+            - TYPE_COMPATIBLE_DEVICE_V1.1
+            - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+            - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        cycleTime:
+          description: >-
+            If no cycleTime configured with portMode IOL_MANUAL or
+            IOL_AUTOSTART, the possible fastest cycle time is used by the
+            IO-Link Master.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/cycleTime'
         vendorId:
+          description: >-
+            Mandatory if portMode is IOL_MANUAL and validationAndBackup is not
+            NO_DEVICE_CHECK.
           type: integer
         deviceId:
+          description: >-
+            Mandatory if portMode is IOL_MANUAL and validationAndBackup is not
+            NO_DEVICE_CHECK.
           type: integer
+        pin2Configuration:
+          type: string
+          enum:
+            - NOT_SUPPORTED
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+            - ANALOG_INPUT
+            - ANALOG_OUTPUT
+            - POWER_2
         deviceName:
           type: string
       example:
@@ -1119,9 +1481,16 @@ components:
         deviceName: Distance_sensor_1
     dataStorageGetPost:
       type: object
+      required:
+        - header
+        - content
       properties:
         header:
           type: object
+          required:
+            - vendorId
+            - deviceId
+            - ioLinkRevision
           properties:
             vendorId:
               type: integer
@@ -1155,6 +1524,9 @@ components:
         (SIO mode). (false - 0 V, true - 24 V)
     processDataValue:
       type: object
+      required:
+        - valid
+        - value
       properties:
         valid:
           type: boolean
@@ -1235,7 +1607,9 @@ components:
       description: The value (with simple type) in iodd format.
       properties:
         value:
-          type: string
+          oneOf:
+            - type: string
+            - type: number
         unit:
           type: string
       required:
@@ -1247,6 +1621,44 @@ components:
       description: The value (with complex type) in iodd format.
       additionalProperties:
         $ref: '#/components/schemas/deviceSimpleTypeValue'
+    deviceParametersGet:
+      type: array
+      items:
+        type: object
+        required:
+          - index
+          - parameterName
+        properties:
+          index:
+            type: number
+          parameterName:
+            type: string
+      example:
+        - index: 0
+          parameterName: Direct Parameter Page 1
+        - index: 1
+          parameterName: Direct Parameter Page 2
+        - index: 2
+          parmaeterName: System Command
+    deviceSubParametersGet:
+      type: array
+      items:
+        type: object
+        required:
+          - subIndex
+          - subParameterName
+        properties:
+          subIndex:
+            type: number
+          subParameterName:
+            type: string
+      example:
+        - subIndex: 1
+          subParameterName: Master Command
+        - subIndex: 2
+          subParameterName: Master Cycle Time
+        - subIndex: 3
+          subParameterName: Minimum cycle Time
     deviceParameterValueGetPost:
       oneOf:
         - $ref: '#/components/schemas/deviceRawTypeValue'
@@ -1282,6 +1694,12 @@ components:
           unit: mm
     ioddIdentification:
       type: object
+      required:
+        - vendorId
+        - deviceId
+        - version
+        - releaseDate
+        - ioLinkRevision
       properties:
         vendorId:
           type: number
@@ -1348,27 +1766,70 @@ components:
       required: true
       schema:
         type: integer
-    masterId:
-      name: masterId
+    masterNumber:
+      name: masterNumber
       in: path
-      description: Master ID starting with 1
+      description: Master identification number starting with 1
       schema:
         type: integer
       required: true
-    portId:
-      name: portId
+    portNumber:
+      name: portNumber
       in: path
-      description: Port ID starting with 1
+      description: Port identification number starting with 1
       schema:
         type: integer
       required: true
     deviceName:
       name: deviceName
       in: path
-      description: Device Name configured with the port/configuration URL
+      description: >-
+        Device Name configured with the port/configuration URL. Default Device
+        Name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+        the portNumber.
       schema:
         type: string
       required: true
+    eventOrigin:
+      name: origin
+      in: query
+      description: The event source to filter
+      schema:
+        $ref: '#/components/schemas/eventOrigin'
+    eventMasterNumber:
+      name: masterNumber
+      in: query
+      description: masterId is only allowed with origin=MASTER
+      schema:
+        $ref: '#/components/schemas/eventMasterNumber'
+    eventPortNumber:
+      name: portNumber
+      in: query
+      description: portId is only allowed with origin=PORT
+      schema:
+        $ref: '#/components/schemas/eventPortNumber'
+    eventDeviceName:
+      name: deviceName
+      in: query
+      description: deviceName is only allowed with origin=DEVICE
+      schema:
+        $ref: '#/components/schemas/eventDeviceName'
+    eventTop:
+      name: top
+      in: query
+      description: >-
+        Delivers the oldest n events of the event buffer. top is mutually
+        exclusive to bottom.
+      schema:
+        $ref: '#/components/schemas/eventTop'
+    eventBottom:
+      name: bottom
+      in: query
+      description: >-
+        Delivers the youngest n events of the event buffer. bottom is mutually
+        exclusive to top.
+      schema:
+        $ref: '#/components/schemas/eventBottom'
     format:
       name: format
       in: query
@@ -1394,6 +1855,24 @@ components:
       description: Subindex of ISDU variable with the given index
       schema:
         type: integer
+      required: true
+    parameterName:
+      name: parameterName
+      in: path
+      description: >-
+        Parameter name. Comes from the IODD but might be reformatted according
+        to the JSON mapping specification.
+      schema:
+        type: string
+      required: true
+    subParameterName:
+      name: subParameterName
+      in: path
+      description: >-
+        Sub-parameter name. Comes from the IODD but might be reformatted
+        according to the JSON mapping specification.
+      schema:
+        type: string
       required: true
   responses:
     errorResponse:
