@@ -51,7 +51,7 @@ info:
     Specific error messages have to be provided only if the corresponding
     operation is supported. So you do not need to give specific errors for bad
     IODDs, just indicate error 10.
-  version: 0.0.4
+  version: 0.0.5
   title: Swagger IO-Link Master
   contact:
     email: lorand.molnar@teconcept.de
@@ -72,14 +72,24 @@ tags:
     description: Access to the IO-Link ports of the IO-Link master
   - name: devices
     description: Access to the IO-Link Devices connected ot the Master
-  - name: connections
-    description: 'Access to several connections like MQTT, ...'
 paths:
-  /gateway/configuration:
+  '/gateway/capabilites':
     get:
       tags:
         - gateway
-      summary: Read the configuration of the JSON gateway
+      summary: Read the capabilities of the gateway
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gatewayCapabilitiesGet'
+  '/gateway/configuration':
+    get:
+      tags:
+        - gateway
+      summary: Read the configuration of the REST API Gateway Application
       responses:
         '200':
           description: Successful operation
@@ -90,7 +100,7 @@ paths:
     post:
       tags:
         - gateway
-      summary: Update the configuration of the JSON gateway
+      summary: Update the configuration of the REST API Gateway Application
       requestBody:
         required: true
         content:
@@ -100,7 +110,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /gateway/reset:
+  '/gateway/reset':
     post:
       tags:
         - gateway
@@ -108,7 +118,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /gateway/reboot:
+  '/gateway/reboot':
     post:
       tags:
         - gateway
@@ -116,7 +126,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /masters:
+  '/masters':
     get:
       tags:
         - master
@@ -172,8 +182,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/capabilitiesGet'
-  /gateway/events:
+                $ref: '#/components/schemas/masterCapabilitiesGet'
+  '/gateway/events':
     get:
       tags:
         - gateway
@@ -192,6 +202,180 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gatewayEventsGet'
+  '/gateway/mqtt/configuration':
+    get:
+      tags:
+        - gateway
+      summary: Read the MQTT configuration of the master
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mqttConfigurationGetPost'
+    post:
+      tags:
+        - gateway
+      summary: Update the MQTT configuration of the master
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mqttConfigurationGetPost'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          $ref: '#/components/responses/errorResponse'
+  '/gateway/mqtt/configuration/topics':
+    get:
+      tags:
+        - gateway
+      summary: Get the list of MQTT topics
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/mqttConfigurationTopicGet'
+              example:
+                - topicId: 1
+                  topicName: PD input
+                  qos: At leas once
+                  deviceName: DT35
+                  processData:
+                    direction: in
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+                - topicId: 2
+                  topicName: Event
+                  qos: At most once
+                  deviceName: TAD081
+                  event: null
+                - topicId: 3
+                  topicName: PD
+                  qos: At leas once
+                  deviceName: BNI_IOL
+                  processData:
+                    direction: both
+                    format: iodd
+                    onChange: true
+    post:
+      tags:
+        - gateway
+      summary: Create a new MQTT topic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mqttConfigurationTopicPost'
+      responses:
+        '200':
+          description: Successful operation returning the topic ID
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/errorResponse'
+  '/gateway/mqtt/configuration/topics/{topicId}':
+    get:
+      tags:
+        - gateway
+      summary: Get one MQTT topic
+      parameters:
+        - $ref: '#/components/parameters/mqttTopicId'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mqttConfigurationTopicGet'
+        '400':
+          $ref: '#/components/responses/errorResponse'
+    delete:
+      tags:
+        - gateway
+      summary: Delete the specified MQTT topic
+      parameters:
+        - $ref: '#/components/parameters/mqttTopicId'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          $ref: '#/components/responses/errorResponse'
+  '/gateway/iodds':
+    get:
+      tags:
+        - gateway
+      summary: List of all IODD (representations) that are available on the gateway.
+      description: >-
+        Only one version of an IODD is stored on the webserver at the same time
+        for one vendorId-deviceId-combination.
+      responses:
+        '200':
+          description: An IODD XML file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ioddsGet'
+    post:
+      tags:
+        - gateway
+      summary: Update or create an IODD
+      description: >
+        I do not need to specifiy the identification data for this action as the
+        parser can read this information.
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ioddFile'
+      responses:
+        '200':
+          description: Successful operation
+  '/gateway/iodds/vendors/{vendorId}/devices/{deviceId}/revisions/{ioLinkRevision}':
+    get:
+      tags:
+        - gateway
+      summary: Get a specific IODD
+      description: '[optional] (makes only sense if the server stores the IODDs as files)'
+      parameters:
+        - $ref: '#/components/parameters/vendorId'
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/ioLinkRevision'
+      responses:
+        '200':
+          description: An IODD XML file
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ioddFile'
+    delete:
+      tags:
+        - gateway
+      summary: Delete a specific IODD representation
+      parameters:
+        - $ref: '#/components/parameters/vendorId'
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/ioLinkRevision'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ioddsGet'
   '/masters/{masterNumber}/ports':
     get:
       tags:
@@ -310,7 +494,7 @@ paths:
       responses:
         '200':
           description: Successful operation
-  /devices:
+  '/devices':
     get:
       tags:
         - devices
@@ -616,180 +800,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/deviceEventsGet'
-  /mqtt/configuration:
-    get:
-      tags:
-        - connections
-      summary: Read the MQTT configuration of the master
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/mqttConfigurationGetPost'
-    post:
-      tags:
-        - connections
-      summary: Update the MQTT configuration of the master
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/mqttConfigurationGetPost'
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          $ref: '#/components/responses/errorResponse'
-  /mqtt/configuration/topics:
-    get:
-      tags:
-        - connections
-      summary: Get the list of MQTT topics
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/mqttConfigurationTopicGet'
-              example:
-                - topicId: 1
-                  topicName: PD input
-                  qos: At leas once
-                  deviceName: DT35
-                  processData:
-                    direction: in
-                    format: iodd
-                    interval:
-                      value: 10
-                      unit: ms
-                - topicId: 2
-                  topicName: Event
-                  qos: At most once
-                  deviceName: TAD081
-                  event: null
-                - topicId: 3
-                  topicName: PD
-                  qos: At leas once
-                  deviceName: BNI_IOL
-                  processData:
-                    direction: both
-                    format: iodd
-                    onChange: true
-    post:
-      tags:
-        - connections
-      summary: Create a new MQTT topic
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/mqttConfigurationTopicPost'
-      responses:
-        '200':
-          description: Successful operation returning the topic ID
-          content:
-            application/json:
-              schema:
-                type: integer
-        '400':
-          $ref: '#/components/responses/errorResponse'
-  '/mqtt/configuration/topics/{topicId}':
-    get:
-      tags:
-        - connections
-      summary: Get one MQTT topic
-      parameters:
-        - $ref: '#/components/parameters/mqttTopicId'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/mqttConfigurationTopicGet'
-        '400':
-          $ref: '#/components/responses/errorResponse'
-    delete:
-      tags:
-        - connections
-      summary: Delete the specified MQTT topic
-      parameters:
-        - $ref: '#/components/parameters/mqttTopicId'
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          $ref: '#/components/responses/errorResponse'
-  /iodds:
-    get:
-      tags:
-        - iodds
-      summary: List of all IODD (representations) that are available on the gateway.
-      description: >-
-        Only one version of an IODD is stored on the webserver at the same time
-        for one vendorId-deviceId-combination.
-      responses:
-        '200':
-          description: An IODD XML file
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ioddsGet'
-    post:
-      tags:
-        - iodds
-      summary: Update or create an IODD
-      description: >
-        I do not need to specifiy the identification data for this action as the
-        parser can read this information.
-      requestBody:
-        required: true
-        content:
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/ioddFile'
-      responses:
-        '200':
-          description: Successful operation
-  '/iodds/vendors/{vendorId}/devices/{deviceId}/revisions/{ioLinkRevision}':
-    get:
-      tags:
-        - iodds
-      summary: Get a specific IODD
-      description: '[optional] (makes only sense if the server stores the IODDs as files)'
-      parameters:
-        - $ref: '#/components/parameters/vendorId'
-        - $ref: '#/components/parameters/deviceId'
-        - $ref: '#/components/parameters/ioLinkRevision'
-      responses:
-        '200':
-          description: An IODD XML file
-          content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ioddFile'
-    delete:
-      tags:
-        - iodds
-      summary: Delete a specific IODD representation
-      parameters:
-        - $ref: '#/components/parameters/vendorId'
-        - $ref: '#/components/parameters/deviceId'
-        - $ref: '#/components/parameters/ioLinkRevision'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ioddsGet'
 components:
   schemas:
     cycleTime:
@@ -880,18 +890,14 @@ components:
           locationTag: slot 6
     identificationGet:
       required:
+        - vendorName
         - vendorId
         - masterId
         - masterType
-        - serialNumber
-        - orderCode
-        - vendorName
-        - hardwareRevision
-        - softwareRevision
-        - website
-        - manual
       type: object
       properties:
+        vendorName:
+          type: string
         vendorId:
           type: integer
         masterId:
@@ -908,7 +914,7 @@ components:
           type: string
         orderCode:
           type: string
-        vendorName:
+        productName:
           type: string
         hardwareRevision:
           type: string
@@ -925,12 +931,13 @@ components:
         functionTag:
           type: string
       example:
+        vendorName: SICK AG
         vendorId: 26
         masterId: 42
         masterType: Master acc. V1.0
         serialNumber: IOLM123456
         orderCode: PROD-123456
-        vendorName: SICK AG
+        productName: IO-Link Master
         hardwareRevision: 3.2.1.444R
         softwareRevision: 3.2.1.888R
         website: 'http://www.sick.de/io-link-master'
@@ -951,15 +958,21 @@ components:
         applicationSpecificTag: Fallback reader at the end of the belt
         locationTag: Down under
         functionTag: Code reading
-    capabilitiesGet:
+    gatewayCapabilitiesGet:
       required:
         - ioddSupported
+      type: object
+      properties:
+        ioddSupported:
+            type: boolean
+      example:
+        ioddSupported: true
+    masterCapabilitiesGet:
+      required:
         - maxNumberOfPorts
         - maxPowerSupply
       type: object
       properties:
-        ioddSupported:
-          type: boolean
         maxNumberOfPorts:
           type: integer
         maxPowerSupply:
@@ -973,113 +986,130 @@ components:
             unit:
               type: string
       example:
-        ioddSupported: true
         maxNumberOfPorts: 8
         maxPowerSupply:
           value: 0.3
           unit: A
-    eventRelativeTime:
-      description: >-
-        This is a relative time in milliseconds without any explicit starting
-        time
-      type: string
-    eventTimeStamp:
-      description: See Time Format 4.4.5 in the IO-Link to JSON  mapping specification
+    eventTime:
+      description: Timestamp (format defined in DIN ISO 8601). This field can give an absolute time or a relative time. Both formats are defined in DIN ISO 8601.
       type: string
     eventSeverity:
+      description: Indicates the severity of the message. The IO-Link EventType NOTIFICATION maps to NOTICE, WARNING to WARNING and ERROR to ERROR.
       type: string
       enum:
-        - NOTIFICATION
-        - WARNING
+        - EMERGENCY
+        - ALERT
+        - CRITICAL
         - ERROR
+        - WARNING
+        - NOTICE
+        - INFO
+        - DEBUG
+    eventOriginObject:
+      type: object
+      properties:
+        gateway:
+          type: string
+        master:
+          description: This property is mandatory for IO-Link Master Events, IO-Link Port Events IO-Link Device Events and should not be used for other log entries.
+          type: number
+        port:
+          description: This property is mandatory for IO-Link Port Events and IO-Link Device Events and should not be used for other log entries.
+          type: number
+        device:
+          description: This property is mandatory for IO-Link Device Events and should not be  used for other log entries.
+          type: string
+    eventMessageObject:
+      type: object
+      properties:
+        code:
+          description: IO-Link Port EventCode or IO-Link Device EventCode. This property is mandatory for IO-Link Port Events or IO-Link Device Events.
+          type: number
+        mode:
+          description: IO-Link Port Event Mode or IO-Link Device EventMode. This property is mandatory for IO-Link Port Events or IO-Link Device Events.
+          type: string
+          enum:
+            - SINGLE_SHOT
+            - APPEARS
+            - DISAPPEARS
+        text:
+          type: string
     gatewayEventsGet:
       type: array
       items:
         type: object
         required:
+          - time
           - severity
-          - masterNumber
+          - origin
+          - message
         properties:
-          relativeTime:
-            $ref: '#/components/schemas/eventRelativeTime'
-          timeStamp:
-            $ref: '#/components/schemas/eventTimeStamp'
+          time:
+            $ref: '#/components/schemas/eventTime'
           severity:
             $ref: '#/components/schemas/eventSeverity'
-          masterNumber:
-            type: number
-          portNumber:
-            description: >-
-              This value is mandatory for port events and should not be used for
-              other log entries.
-            type: number
-          deviceName:
-            description: >-
-              This value is mandatory for IO-Link Device events and should not
-              be used for other log entries.
-            type: string
-          code:
-            description: >-
-              This value is required if the log entry is an IO-Link Port event
-              or an IO-Link Device event.
-            type: number
-          mode:
-            description: >-
-              This value is required if the log entry is an IO-Link Port event
-              or an IO-Link Device event.
-            type: string
-            enum:
-              - SINGLESHOT
-              - APPEARED
-              - DISAPPEARED
+          origin:
+            $ref: '#/components/schemas/eventOriginObject'
           message:
-            description: >-
-              This value is required if there is a text available. For messages
-              based on the IODD the (prim. lang.) shall be used.
-            type: string
+            $ref: '#/components/schemas/eventMessageObject'
       example:
-        - relativeTime: 500
-          timeStamp: '2018-05-18T07:31:54.123Z'
+        - time: '2018-05-18T07:31:54.123Z'
           severity: WARNING
-          deviceName: Temp_sensor_1
-          code: 16912
-          mode: APPEARED
-          message: Device temperature over-run – Clear source of heat
-        - relativeTime: 623
-          timeStamp: '2018-05-18T07:35:54.123Z'
+          origin:
+            master: 1
+            port: 1
+            device: Temp_sensor_1
+          message:
+            code: 16912
+            mode: APPEARED
+            text: Device temperature over-run – Clear source of heat
+        - time: '2018-05-18T07:35:54.123Z'
           severity: NOTIFICATION
-          portNumber: 2
-          code: 65314
-          mode: SINGLESHOT
-          message: Device communication lost
+          origin:
+            master: 1
+            port: 2
+          message:
+            code: 65314
+            mode: SINGLESHOT
+            text: Device communication lost
     deviceEventsGet:
       type: array
       items:
         type: object
         required:
+          - time
           - severity
-          - code
-          - mode
+          - origin
+          - message
         properties:
-          relativeTime:
-            $ref: '#/components/schemas/eventRelativeTime'
-          timeStamp:
-            $ref: '#/components/schemas/eventTimeStamp'
+          time:
+            $ref: '#/components/schemas/eventTime'
           severity:
             $ref: '#/components/schemas/eventSeverity'
-          code:
-            type: number
-          mode:
-            type: string
-            enum:
-              - SINGLESHOT
-              - APPEARED
-              - DISAPPEARED
+          origin:
+            required:
+              - master
+              - port
+              - device
+            allOf:
+              - $ref: '#/components/schemas/eventOriginObject'
           message:
-            description: >-
-              This value is required if there is a text available. For messages
-              based on the IODD the (prim. lang.) shall be used.
-            type: string
+            required:
+              - code
+              - mode
+            allOf:
+              - $ref: '#/components/schemas/eventMessageObject'
+      example:
+        - time: '2018-05-18T07:31:54.123Z'
+          severity: WARNING
+          origin:
+            master: 1
+            port: 1
+            device: "Temperature_sensor_1"
+          message:
+            code: 16912
+            mode: APPEARED
+            text: Device temperature over-run – Clear source of heat
     configurationGetPost:
       type: object
       properties:
@@ -1352,10 +1382,6 @@ components:
       type: object
       required:
         - portMode
-        - validationAndBackup
-        - cycleTime
-        - vendorId
-        - deviceId
         - pin2Configuration
         - deviceName
       properties:
@@ -1363,12 +1389,12 @@ components:
           type: string
           enum:
             - DEACTIVATED
-            - IOL_MANUAL
-            - IOL_AUTOSTART
-            - DI
-            - DO
+            - IOLINK_MANUAL
+            - IOLINK_AUTOSTART
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
         validationAndBackup:
-          description: Used by the IO-Link Master just when portMode is IOL_MANUAL.
+          description: Used by the IO-Link Master just when portMode is IOLINK_MANUAL.
           type: string
           enum:
             - NO_DEVICE_CHECK
@@ -1378,20 +1404,20 @@ components:
             - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
         cycleTime:
           description: >-
-            Used by the IO-Link Master just when portMode is IOL_MANUAL or
-            IOL_AUTOSTART. Default value is 0 ms which means as fast as
+            Used by the IO-Link Master just when portMode is IOLINK_MANUAL or
+            IOLINK_AUTOSTART. Default value is 0 ms which means as fast as
             possible.
           type: object
           allOf:
             - $ref: '#/components/schemas/cycleTime'
         vendorId:
           description: >-
-            Used by the IO-Link Master just when portMode is IOL_MANUAL and
+            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
         deviceId:
           description: >-
-            Used by the IO-Link Master just when portMode is IOL_MANUAL and
+            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
         pin2Configuration:
@@ -1406,7 +1432,7 @@ components:
         deviceName:
           type: string
       example:
-        portMode: IOL_AUTOSTART
+        portMode: IOLINK_AUTOSTART
         validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
         pin2Configuration: ANALOG_INPUT
         cycleTime:
@@ -1425,13 +1451,13 @@ components:
           type: string
           enum:
             - DEACTIVATED
-            - IOL_MANUAL
-            - IOL_AUTOSTART
-            - DI
-            - DO
+            - IOLINK_MANUAL
+            - IOLINK_AUTOSTART
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
         validationAndBackup:
           description: >-
-            Mandatory if portMode is IOL_MANUAL. Must not be used with portMode
+            Mandatory if portMode is IOLINK_MANUAL. Must not be used with portMode
             other than IOL_MANUAL.
           type: string
           enum:
@@ -1442,20 +1468,20 @@ components:
             - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
         cycleTime:
           description: >-
-            If no cycleTime configured with portMode IOL_MANUAL or
-            IOL_AUTOSTART, the possible fastest cycle time is used by the
+            If no cycleTime configured with portMode IOLINK_MANUAL or
+            IOLINK_AUTOSTART, the possible fastest cycle time is used by the
             IO-Link Master.
           type: object
           allOf:
             - $ref: '#/components/schemas/cycleTime'
         vendorId:
           description: >-
-            Mandatory if portMode is IOL_MANUAL and validationAndBackup is not
+            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is not
             NO_DEVICE_CHECK.
           type: integer
         deviceId:
           description: >-
-            Mandatory if portMode is IOL_MANUAL and validationAndBackup is not
+            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is not
             NO_DEVICE_CHECK.
           type: integer
         pin2Configuration:
@@ -1470,7 +1496,7 @@ components:
         deviceName:
           type: string
       example:
-        portMode: IOL_AUTOSTART
+        portMode: IOLINK_AUTOSTART
         validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
         pin2Configuration: ANALOG_INPUT
         cycleTime:
@@ -1562,7 +1588,6 @@ components:
             value:
               Distance:
                 value: 55
-                unit: mm
               Quality:
                 value: 12
         sio mode:
@@ -1635,11 +1660,11 @@ components:
             type: string
       example:
         - index: 0
-          parameterName: Direct Parameter Page 1
+          parameterName: Direct_Parameter_Page_1
         - index: 1
-          parameterName: Direct Parameter Page 2
+          parameterName: Direct_Parameter_Page_2
         - index: 2
-          parmaeterName: System Command
+          parameterName: System_Command
     deviceSubParametersGet:
       type: array
       items:
@@ -1672,11 +1697,9 @@ components:
           - 25
         'format=iodd, simpleType':
           value: 15
-          unit: mm
         'format=iodd, complexType':
           Distance:
             value: 15
-            unit: mm
           Quality:
             value: 12
     deviceParameterSubindexValueGetPost:
