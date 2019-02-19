@@ -59,10 +59,10 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: 'http://iolmaster.io-link.com'
+  - url: 'http://iolmaster.io-link.com/{basePath}'
     variables:
       basePath:
-        default: /iol/v1
+        default: iol/v1
 tags:
   - name: gateway
     description: Access to parameters of the JSON gateway
