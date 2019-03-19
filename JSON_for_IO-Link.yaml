@@ -71,7 +71,7 @@ info:
 
     ### Process Data handling
 
-    * [501] HTTP Status 400: Writing processdata to Pin 2 is not possible. Pin 2 
+    * [501] HTTP Status 400: Writing processdata to Pin 2 is not possible. Pin 2
     is not configured as DIGITAL_OUTPUT
 
     * [502] HTTP Status 400: Writing processdata to Pin 4 is not possible. Pin 4
@@ -88,37 +88,36 @@ info:
     space
 
     * [603] HTTP Status 400: Uploaded file is no valid IODD XML. Upload rejected
-      - Remark: We could check the file content superficially to ensure that the 
-      IODD is an XML and an IODD (e.g. vendorId, deviceId, VendorName, ProductName 
+      - Remark: We could check the file content superficially to ensure that the
+      IODD is an XML and an IODD (e.g. vendorId, deviceId, VendorName, ProductName
       and other mandatory elements or attributes)
-      
+
     * [604] HTTP Status 400: Uploaded file is no valid IODD XML. CRC check
-    failed Upload rejected
+    failed. Upload rejected
 
     * [605] HTTP Status 400: Uploaded file is no valid IODD XML. Parsing
-    failedUpload rejected
-      - Remark: All those systems that do not want to store the IODD have to parse 
+    failed. Upload rejected
+      - Remark: All those systems that do not want to store the IODD have to parse
       it immediately
 
 
-    ### Implementation hint:
+    ### Implementation hints:
 
-    Specific error messages have to be provided only if the corresponding
-    operation is supported. So you do not need to give specific errors for bad
-    IODDs, just indicate error [102].
-
-    If there is more than one error in the request, the parsing is stopped and 
+    * If there is more than one error in the request, the parsing is stopped and
     just the first detected error is returned.
 
-    The errors [101], [150], [305] can be returned to every URL request.
+    * Errors [101], [150], [305] can be returned to every request.
 
-    The error [102] can be returned to every URL request which is not included
+    * Error [102] can be returned to every request which is not included
     in the base facet.
+    * Specific error messages have to be provided only if the corresponding
+    operation is supported. So you do not need to give specific errors for bad
+    IODDs if you do not support the IODD Facet, just indicate error [102].
 
-    The error [301] can be returned to every URL request where there is a
+    * Error [301] can be returned to every request where there is a
     variable in the URL.
 
-    If the request was successful and no body is specified, the response 
+    * If the request was successful and no body is specified, the response
     contains nothing in the body.
   version: 0.0.6
   title: Swagger IO-Link Master
@@ -2016,7 +2015,7 @@ paths:
                   - msgCode: 304
                     message: deviceName not found
                   - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error) 
+                    message: IO-Link Device is not accessible (not connected or communication error)
                   - msgCode: 309
                     message: IO-Link parameter not found
         '500':
