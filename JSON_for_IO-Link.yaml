@@ -61,6 +61,8 @@ info:
     communication error)
 
     * [309] HTTP Status 404: IO-Link parameter not found
+    
+    * [310] HTTP Status 404: IO-Link parameter access not supported by the Device
 
 
     ### Data Storage errors
@@ -71,7 +73,7 @@ info:
 
     ### Process Data handling
 
-    * [501] HTTP Status 400: Writing processdata to Pin 2 is not possible. Pin 2 
+    * [501] HTTP Status 400: Writing processdata to Pin 2 is not possible. Pin 2
     is not configured as DIGITAL_OUTPUT
 
     * [502] HTTP Status 400: Writing processdata to Pin 4 is not possible. Pin 4
@@ -88,37 +90,36 @@ info:
     space
 
     * [603] HTTP Status 400: Uploaded file is no valid IODD XML. Upload rejected
-      - Remark: We could check the file content superficially to ensure that the 
-      IODD is an XML and an IODD (e.g. vendorId, deviceId, VendorName, ProductName 
+      - Remark: We could check the file content superficially to ensure that the
+      IODD is an XML and an IODD (e.g. vendorId, deviceId, VendorName, ProductName
       and other mandatory elements or attributes)
-      
+
     * [604] HTTP Status 400: Uploaded file is no valid IODD XML. CRC check
-    failed Upload rejected
+    failed. Upload rejected
 
     * [605] HTTP Status 400: Uploaded file is no valid IODD XML. Parsing
-    failedUpload rejected
-      - Remark: All those systems that do not want to store the IODD have to parse 
+    failed. Upload rejected
+      - Remark: All those systems that do not want to store the IODD have to parse
       it immediately
 
 
-    ### Implementation hint:
+    ### Implementation hints:
 
-    Specific error messages have to be provided only if the corresponding
-    operation is supported. So you do not need to give specific errors for bad
-    IODDs, just indicate error [102].
-
-    If there is more than one error in the request, the parsing is stopped and 
+    * If there is more than one error in the request, the parsing is stopped and
     just the first detected error is returned.
 
-    The errors [101], [150], [305] can be returned to every URL request.
+    * Errors [101], [150], [305] can be returned to every request.
 
-    The error [102] can be returned to every URL request which is not included
+    * Error [102] can be returned to every request which is not included
     in the base facet.
+    * Specific error messages have to be provided only if the corresponding
+    operation is supported. So you do not need to give specific errors for bad
+    IODDs if you do not support the IODD Facet, just indicate error [102].
 
-    The error [301] can be returned to every URL request where there is a
+    * Error [301] can be returned to every request where there is a
     variable in the URL.
 
-    If the request was successful and no body is specified, the response 
+    * If the request was successful and no body is specified, the response
     contains nothing in the body.
   version: 0.0.6
   title: Swagger IO-Link Master
@@ -131,7 +132,7 @@ servers:
   - url: 'http://iolmaster.io-link.com/{basePath}'
     variables:
       basePath:
-        default: iol/v1
+        default: iolink/v1
 tags:
   - name: gateway
     description: Access to parameters of the JSON gateway
@@ -286,6 +287,13 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/expectedTime'
+              example:
+                - value: 10
+                  unit: s
         '400':
           description: Bad request
           content:
@@ -323,6 +331,13 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/expectedTime'
+              example:
+                - value: 10
+                  unit: s
         '400':
           description: Bad request
           content:
@@ -530,7 +545,7 @@ paths:
               example:
                 - topicId: 1
                   topicName: PD input
-                  qos: At leas once
+                  qos: 1_AT_LEAST_ONCE
                   deviceName: DT35
                   processData:
                     direction: in
@@ -540,12 +555,12 @@ paths:
                       unit: ms
                 - topicId: 2
                   topicName: Event
-                  qos: At most once
+                  qos: 1_AT_LEAST_ONCE
                   deviceName: TAD081
                   event: null
                 - topicId: 3
                   topicName: PD
-                  qos: At leas once
+                  qos: 0_ONLY_ONCE
                   deviceName: BNI_IOL
                   processData:
                     direction: both
@@ -821,6 +836,8 @@ paths:
           application/xml:
             schema:
               $ref: '#/components/schemas/ioddFile'
+            example:
+              - IODD XML file
       responses:
         '200':
           description: Successful operation
@@ -882,11 +899,13 @@ paths:
         - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          description: An IODD XML file
+          description: Successfull operation
           content:
             application/xml:
               schema:
                 $ref: '#/components/schemas/ioddFile'
+              example:
+                - IODD XML file
         '400':
           description: Bad request
           content:
@@ -1607,13 +1626,28 @@ paths:
                   type: object
                   required:
                     - deviceName
+                    - masterNumber
+                    - portNumber
                   properties:
                     deviceName:
                       type: string
+                    masterNumber:
+                      type: string
+                    portNumber:
+                      type: string
                 example:
                   - deviceName: DT35
+                    masterNumber: 1
+                    portNumber: 1
                   - deviceName: TAD081
+                    masterNumber: 1
+                    portNumber: 2
                   - deviceName: BNI_IOL
+                    masterNumber: 1
+                    portNumber: 3
+                  - deviceName: master1port4
+                    masterNumber: 1
+                    portNumber: 4
         '400':
           description: Bad request
           content:
@@ -1755,6 +1789,10 @@ paths:
                     message: deviceName not found
                   - msgCode: 308
                     message: IO-Link Device is not accessible (not connected or communication error)
+                  - msgCode: 309
+                    message: IO-Link parameter not found
+                  - msgCode: 310
+                    message: IO-Link parameter access not supported by the Device
         '500':
           description: Internal server error
           content:
@@ -2016,7 +2054,7 @@ paths:
                   - msgCode: 304
                     message: deviceName not found
                   - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error) 
+                    message: IO-Link Device is not accessible (not connected or communication error)
                   - msgCode: 309
                     message: IO-Link parameter not found
         '500':
@@ -2730,6 +2768,18 @@ paths:
                     message: Internal server error
 components:
   schemas:
+    expectedTime:
+      type: object
+      required:
+        - value
+        - unit
+      properties:
+        value:
+          type: number
+        unit:
+          type: string
+          enum:
+            - s
     cycleTime:
       type: object
       required:
@@ -2836,8 +2886,8 @@ components:
             - Unspecific
             - Master acc. V1.0
             - Master acc. V1.1
-            - FS_Master
-            - W_Master
+            - Failsafe_Master
+            - Wireless_Master
         serialNumber:
           type: string
         orderCode:
@@ -3107,10 +3157,24 @@ components:
               type: string
             qoS:
               type: string
+              enum:
+                - 0_ONLY_ONCE
+                - 1_AT_LEAST_ONCE
+                - 2_EXACTLY_ONCE
             retain:
-              type: string
+              type: boolean
         keepAliveTime:
           type: integer
+      example:
+        - brokerAddress: 192.168.2.1/mqttbroker
+          username: iolink_json
+          password: "1234"
+          lastwill:
+            - topic: process_data
+              message: Process data transfer stopped.
+              qos: 0_ONLY_ONCE
+              retain: true
+          keepAliceTime: 10
     mqttConfigurationTopic:
       allOf:
         - type: object
@@ -3124,9 +3188,9 @@ components:
             qos:
               type: string
               enum:
-                - At most once
-                - At least once
-                - Exactly once
+                - 0_ONLY_ONCE
+                - 1_AT_LEAST_ONCE
+                - 2_EXACTLY_ONCE
             deviceName:
               type: string
               description: Unique deviceName.
@@ -3145,7 +3209,7 @@ components:
         - $ref: '#/components/schemas/mqttConfigurationTopic'
       example:
         topicName: PD input
-        qos: At leas once
+        qos: 1_AT_LEAST_ONCE
         deviceName: DT35
         processData:
           direction: in
@@ -3165,7 +3229,7 @@ components:
       example:
         topicId: 1
         topicName: PD input
-        qos: At leas once
+        qos: 1_AT_LEAST_ONCE
         deviceName: DT35
         processData:
           direction: in
@@ -3181,13 +3245,13 @@ components:
         portStatusInfo:
           type: string
           enum:
-            - NO_DEVICE
+            - COMMUNICATION_LOST
             - DEACTIVATED
             - INCORRECT_DEVICE
-            - PREOPERATE
-            - OPERATE
-            - DI_C/Q
-            - DO_C/Q
+            - DEVICE_STARTING
+            - DEVICE_ONLINE
+            - DIGITAL_INPUT_PIN4
+            - DIGITAL_OUTPUT_PIN4
         ioLinkRevision:
           description: >-
             Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
@@ -3214,7 +3278,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/cycleTime'
       example:
-        portStatusInfo: OPERATE
+        portStatusInfo: DEVICE_ONLINE
         ioLinkRevision: '1.1'
         transmissionRate: COM2
         masterCycleTime:
@@ -3311,12 +3375,12 @@ components:
           type: string
           enum:
             - CLASS_A
-            - CLASS_A_WITH_PORT_POWER_OFF_ON
             - CLASS_B
-            - FS_PORT_A_WITHOUT_OSSDE
-            - FS_PORT_A_WITH_OSSDE
-            - FS_PORT_B
-            - W_MASTER
+            - CLASS_A_WITH_PORT_POWER_OFF_ON
+            - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
+            - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
+            - FAILSAFE_PORT_B
+            - WIRELESS_MASTER
       example:
         maxPowerSupply:
           value: 0.3
@@ -3326,6 +3390,10 @@ components:
       type: object
       required:
         - portMode
+        - validationAndBackup
+        - cycleTime
+        - vendorId
+        - deviceId
         - pin2Configuration
         - deviceName
       properties:
@@ -3387,9 +3455,6 @@ components:
         deviceName: Distance_sensor_1
     portConfigurationPost:
       type: object
-      required:
-        - portMode
-        - pin2Configuration
       properties:
         portMode:
           type: string
@@ -3685,6 +3750,7 @@ components:
             - '1.0'
             - '1.1'
     ioddFile:
+      description: The IODD XML file.
       type: string
       format: binary
     ioddsGet:
