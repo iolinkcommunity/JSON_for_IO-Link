@@ -954,11 +954,7 @@ paths:
         - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ioddsGet'
+          description: Successful operation          
         '400':
           description: Bad request
           content:
