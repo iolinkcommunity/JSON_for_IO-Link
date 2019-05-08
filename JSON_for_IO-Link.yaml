@@ -38,6 +38,8 @@ info:
 
     * [206] HTTP Status 400: Out of bounds (an array/string was accessed
     exceeding its maximum length)
+    
+    * [207] HTTP Status 400: Duplicated Device Name
 
 
     ### Resource access errors
@@ -63,6 +65,10 @@ info:
     * [309] HTTP Status 404: IO-Link parameter not found
     
     * [310] HTTP Status 404: IO-Link parameter access not supported by the Device
+    
+    * [311] HTTP Status 400: IO-Link parameter access error 
+      - Remark: The additional  iolinkErrorCode and iolinkErrorMessage fields contain 
+      the IO-Link error code and the incident text from the ErrorTypes table
 
 
     ### Data Storage errors
@@ -101,6 +107,7 @@ info:
     failed. Upload rejected
       - Remark: All those systems that do not want to store the IODD have to parse
       it immediately
+      
 
 
     ### Implementation hints:
@@ -121,7 +128,7 @@ info:
 
     * If the request was successful and no body is specified, the response
     contains nothing in the body.
-  version: 0.0.6
+  version: 0.0.7
   title: Swagger IO-Link Master
   contact:
     email: lorand.molnar@teconcept.de
@@ -238,6 +245,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -478,6 +489,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -563,7 +578,7 @@ paths:
                   qos: 0_ONLY_ONCE
                   deviceName: BNI_IOL
                   processData:
-                    direction: both
+                    direction: inout
                     format: iodd
                     onChange: true
         '400':
@@ -730,6 +745,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -841,6 +860,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1104,6 +1127,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1437,6 +1464,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1456,6 +1487,8 @@ paths:
                   message: Unknown enumeration value
                 - msgCode: 205
                   message: Value out of range (exceeds the minimum or maximum value)
+                - msgCode: 207
+                  message: Duplicated Device Name
                 - msgCode: 305
                   message: Incorrect query parameter name
         '403':
@@ -1556,6 +1589,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1748,6 +1785,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1870,7 +1911,6 @@ paths:
         the specific port
       parameters:
         - $ref: '#/components/parameters/deviceName'
-        - $ref: '#/components/parameters/format'
       requestBody:
         required: true
         content:
@@ -1880,6 +1920,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2031,6 +2075,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2073,7 +2119,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/index'
-        - $ref: '#/components/parameters/format'
       requestBody:
         required: true
         content:
@@ -2083,6 +2128,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2112,6 +2161,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2176,6 +2227,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2220,7 +2273,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/parameterName'
-        - $ref: '#/components/parameters/format'
       requestBody:
         required: true
         content:
@@ -2230,6 +2282,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2257,6 +2313,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2442,6 +2500,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2487,7 +2547,6 @@ paths:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/index'
         - $ref: '#/components/parameters/subindex'
-        - $ref: '#/components/parameters/format'
       requestBody:
         required: true
         content:
@@ -2497,6 +2556,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2524,6 +2587,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2591,6 +2656,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2636,7 +2703,6 @@ paths:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/parameterName'
         - $ref: '#/components/parameters/subParameterName'
-        - $ref: '#/components/parameters/format'
       requestBody:
         required: true
         content:
@@ -2646,6 +2712,10 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2675,6 +2745,8 @@ paths:
                     message: Incorrect query parameter value
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2710,6 +2782,177 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+  '/devices/{deviceName}/blockparameterization':
+    post:
+      tags:
+        - devices
+      summary: >-
+        Read or write one or more parameters by using the block parameterization method.
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - direction
+                - parameters
+              properties:
+                direction:
+                  type: string
+                  enum: [read, write]
+                parameters:
+                  $ref: '#/components/schemas/blockParameterizationPostParametersRequest'
+              example:
+                'read, format=raw':
+                  direction: read 
+                  parameters:
+                    - address:
+                        index: 15
+                    - address:
+                        index: 65
+                        subIndex: 2
+                'read, format=iodd':
+                  direction: read
+                  parameters:
+                    - address:
+                        parameterName: "Application_tag"
+                    - address:
+                        parameterName: "Distance"
+                        subParameterName: "Quality"
+                'write, format=raw':
+                  direction: write
+                  parameters:
+                    - address:
+                        index: 123
+                      value:
+                        - 15
+                        - 232
+                        - 22
+                    - address:
+                        index: 233
+                        subIndex: 2
+                      value:
+                        - 23
+                        - 149
+                        - 206
+                'write, format=iodd':
+                  direction: write
+                  parameters:
+                    - address:
+                        parameterName: "Application_tag"
+                      value:
+                        value: "Level 2, row 3"
+                    - address:
+                        parameterName: "Hysteresis"
+                        subParameterName: "Channel_B"
+                      value:
+                        value: 123
+                        
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                  - $ref: '#/components/schemas/blockParameterizationPostParametersAnswer'
+                  - $ref: '#/components/schemas/emptyObject' 
+                example:
+                  'write': 
+                    { }
+                  'read, format=raw':
+                    - address:
+                        index: 123
+                      value:
+                        - 15
+                        - 232
+                        - 22
+                    - address:
+                        index: 233
+                        subIndex: 2
+                      value:
+                        - 23
+                        - 149
+                        - 206
+                  'read, format=iodd':
+                    - address:
+                        parameterName: "Application_tag"
+                      value:
+                        value: "Level 2, row 3"
+                    - address:
+                        parameterName: "Hysteresis"
+                        subParameterName: "Channel_B"
+                      value:
+                        value: 123
+        '400':
+          description: Bad request
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/errorObject'
+                example:
+                  - msgCode: 103
+                    message: Action locked by another client (e.g. fieldbus controller)
+                  - msgCode: 201
+                    message: Parsing failed (error while parsing the incoming JSON value)
+                  - msgCode: 202
+                    message: Invalid data (given for the value, e.g. malformed IP address)
+                  - msgCode: 203
+                    message: Invalid JSON data type (e.g. string instead of numbers)
+                  - msgCode: 204
+                    message: Unknown enumeration value
+                  - msgCode: 205
+                    message: Value out of range (exceeds the minimum or maximum value)
+                  - msgCode: 206
+                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                  - msgCode: 305
+                    message: Incorrect query parameter name
+                  - msgCode: 306
+                    message: Incorrect query parameter value
+                  - msgCode: 307
+                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                  - msgCode: 311
+                    message: IO-Link parameter access error 
+                  - msgCode: 601
+                    message: IODD is not available
+        '403':
+          description: Forbidden
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/errorObject'
+                example:
+                  - msgCode: 150
+                    message: Permission denied (e.g. user management)
+        '404':
+          description: Not found
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/errorObject'
+                example:
+                  - msgCode: 102
+                    message: Operation not supported
+                  - msgCode: 304
+                    message: deviceName not found
+                  - msgCode: 308
+                    message: IO-Link Device is not accessible (not connected or communication error)
+                  - msgCode: 309
+                    message: IO-Link parameter not found
+        '500':
+          description: Internal server error
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/errorObject'
+                example:
+                  - msgCode: 101
+                    message: Internal server error          
   '/devices/{deviceName}/events':
     get:
       tags:
@@ -2718,7 +2961,8 @@ paths:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/eventTop'
         - $ref: '#/components/parameters/eventBottom'
-      summary: Read the Device event log.
+      summary: Read the Device event log. This is a prefiltered copy of the gateway 
+              level event log due to convenience reasons.
       responses:
         '200':
           description: >-
@@ -2826,7 +3070,7 @@ components:
       enum:
         - in
         - out
-        - both
+        - inout
       default: in
     eventOrigin:
       type: string
@@ -3066,6 +3310,61 @@ components:
             code: 65314
             mode: SINGLESHOT
             text: Device communication lost
+    blockParameterizationPostParametersRequest:
+      type: array
+      items:
+        type: object
+        required:
+          - address
+        properties:
+          address:
+            oneOf:
+              - type: object
+                required:
+                  - index
+                properties:
+                  index:
+                    type: number
+                  subIndex:
+                    type: number
+              - type: object
+                required:
+                  - parameterName
+                properties:
+                  parameterName: 
+                    type: string
+                  subParameterName: 
+                    type: string
+          value:
+            $ref: '#/components/schemas/deviceParameterValueGetPost'
+    blockParameterizationPostParametersAnswer:
+      type: array
+      items:
+        type: object
+        required:
+          - address
+          - value
+        properties:
+          address:
+            oneOf:
+              - type: object
+                required:
+                  - index
+                properties:
+                  index:
+                    type: number
+                  subIndex:
+                    type: number
+              - type: object
+                required:
+                  - parameterName
+                properties:
+                  parameterName: 
+                    type: string
+                  subParameterName: 
+                    type: string
+          value:
+            $ref: '#/components/schemas/deviceParameterValueGetPost'
     deviceEventsGet:
       type: array
       items:
@@ -3585,7 +3884,7 @@ components:
         out:
           $ref: '#/components/schemas/processDataValue'
       example:
-        format=raw:
+        format=raw, direction=in:
           pin2Value: true
           in:
             valid: true
@@ -3593,7 +3892,7 @@ components:
               - 12
               - 22
               - 216
-        format=iodd:
+        format=iodd, direction=in:
           pin2Value: true
           in:
             valid: true
@@ -3602,6 +3901,16 @@ components:
                 value: 55
               Quality:
                 value: 12
+        format=iodd, direction=inout:
+          pin2Value: false
+          in:
+            valid: true
+            value:
+              Pressure: 1.2
+          out:
+            valid: true
+            value:
+              Temperature: 50
         sio mode:
           pin2Value: true
           pin4Value: false
@@ -3645,10 +3954,9 @@ components:
       properties:
         value:
           oneOf:
+            - type: boolean
             - type: string
             - type: number
-        unit:
-          type: string
       required:
         - value
     deviceComplexTypeValue:
@@ -3691,11 +3999,11 @@ components:
             type: string
       example:
         - subIndex: 1
-          subParameterName: Master Command
+          subParameterName: Master_command
         - subIndex: 2
-          subParameterName: Master Cycle Time
+          subParameterName: Master_cycle_time
         - subIndex: 3
-          subParameterName: Minimum cycle Time
+          subParameterName: Minimum_cycle_time
     deviceParameterValueGetPost:
       oneOf:
         - $ref: '#/components/schemas/deviceRawTypeValue'
@@ -3768,6 +4076,8 @@ components:
           version: '2.1'
           releaseDate: '2015-01-02'
           ioLinkRevision: '1.1'
+    emptyObject:
+      type: object
     errorObject:
       type: object
       required:
