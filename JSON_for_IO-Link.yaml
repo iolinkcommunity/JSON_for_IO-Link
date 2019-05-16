@@ -154,7 +154,7 @@ tags:
   - name: devices
     description: Access to the IO-Link Devices connected ot the Master
 paths:
-  '/gateway/capabilites':
+  '/gateway/capabilities':
     get:
       tags:
         - gateway
