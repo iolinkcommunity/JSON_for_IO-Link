@@ -39,7 +39,7 @@ info:
     * [206] HTTP Status 400: Out of bounds (an array/string was accessed
     exceeding its maximum length)
     
-    * [207] HTTP Status 400: Duplicated Device Name
+    * [207] HTTP Status 400: Duplicated deviceName
 
 
     ### Resource access errors
