@@ -128,7 +128,7 @@ info:
 
     * If the request was successful and no body is specified, the response
     contains nothing in the body.
-  version: 0.0.7
+  version: 0.0.8
   title: Swagger IO-Link Master
   contact:
     email: lorand.molnar@teconcept.de
@@ -3849,98 +3849,103 @@ components:
           deviceId: 65253
           ioLinkRevision: '1.1'
         content: dasdASDasddaSdASdASdasDasdASdasDASdasasd
-    pin2Value:
-      type: boolean
-      description: >
-        IO-Link cable pin2 level if it is used as digital input or output.
-        (false - 0 V, true - 24 V)
-    pin4Value:
-      type: boolean
-      description: >
-        IO-Link cable pin4 (C/Q) level if it is used as digital input or output
-        (SIO mode). (false - 0 V, true - 24 V)
     processDataValue:
       type: object
-      required:
-        - valid
-        - value
       properties:
-        valid:
+        ioLink:
+          type: object
+          description: >
+            Process data in IO-Link mode
+          required:
+            - valid
+            - value
+          properties:
+            valid:
+              type: boolean
+              description: >
+                Process data validity
+            value:
+              oneOf:
+                - $ref: '#/components/schemas/deviceRawTypeValue'
+                - $ref: '#/components/schemas/deviceSimpleTypeValue'
+                - $ref: '#/components/schemas/deviceComplexTypeValue'
+              description: >
+                Process data value
+        pin4Value:
           type: boolean
-        value:
-          oneOf:
-            - $ref: '#/components/schemas/deviceRawTypeValue'
-            - $ref: '#/components/schemas/deviceSimpleTypeValue'
-            - $ref: '#/components/schemas/deviceComplexTypeValue'
+          description: >
+            IO-Link cable pin4 (C/Q) level if it is used as digital input or output
+            (SIO mode). (false - 0 V, true - 24 V)
+        pin2Value:
+          type: boolean
+          description: >
+            IO-Link cable pin2 level if it is used as digital input or output.
+            (false - 0 V, true - 24 V)
+      example:
+        'format=raw, pin4=IO-Link, pin2=sio':
+          ioLink:
+            valid: true
+            value:
+              - 15
+              - 123
+              - 126
+              - 236
+          pin2Value: true
+        'format=iodd, pin4=IO-Link, pin2=deactivated/not available':
+          iolink:
+            valid: true
+            value:
+              Valve_1: true
+              Valve_2: false
+        'format=raw/iodd, pin4=sio, pin2=deactivated/not available':
+          pin4Value: false
     deviceProcessDataValueGet:
       type: object
+      description: >
+        The pin4Value is present in the 'in' object if the pin4 is configured as digital input.
+        The pin4Value is present in the 'out' object if the pin4 is configured as digital output.
+        The ioLink is present either in the 'in' or 'out' or both objects if the pin4 is configured to IO-Link mode.
+        The pin2Value is present in the 'in' object if the pin2 is configured as digital input.
+        The pin2value is present in the 'out' object if the pin4 is configured as digital output.
       properties:
-        pin2Value:
-          $ref: '#/components/schemas/pin2Value'
-        pin4Value:
-          $ref: '#/components/schemas/pin4Value'
         in:
           $ref: '#/components/schemas/processDataValue'
         out:
           $ref: '#/components/schemas/processDataValue'
       example:
-        format=raw, direction=in:
-          pin2Value: true
+        'format=raw, direction=in, pin4=IO-Link, pin2=sio(input)':
           in:
-            valid: true
-            value:
-              - 12
-              - 22
-              - 216
-        format=iodd, direction=in:
-          pin2Value: true
+            ioLink:
+              valid: true
+              value:
+                - 12
+                - 22
+                - 216
+            pin2Value: true
+        'format=iodd, direction=in, pin4=IO-Link, pin2=sio(input)':
           in:
-            valid: true
-            value:
-              Distance:
-                value: 55
-              Quality:
-                value: 12
-        format=iodd, direction=inout:
-          pin2Value: false
+            ioLink:
+              valid: true
+              value:
+                Distance: 55
+                Quality: 12
+            pin2Value: true
+        'format=iodd, direction=inout, pin4=IO-Link, pin2=sio(output)':
           in:
-            valid: true
-            value:
-              Pressure: 1.2
+            ioLink:
+              valid: true
+              value: 1.2
           out:
-            valid: true
-            value:
-              Temperature: 50
-        sio mode:
-          pin2Value: true
-          pin4Value: false
+            ioLink:
+              valid: true
+              value: 50
+            pin2Value: false
+        'format=iodd/raw, direction=inout, pin4=sio(output), pin2=sio(output)':
+          out:
+            pin2Value: true
+            pin4Value: false
     deviceProcessDataValuePost:
-      type: object
-      properties:
-        pin2Value:
-          $ref: '#/components/schemas/pin2Value'
-        pin4Value:
-          $ref: '#/components/schemas/pin4Value'
-        out:
-          $ref: '#/components/schemas/processDataValue'
-      example:
-        format=raw:
-          pin2Value:
-            - 0
-          out:
-            valid: true
-            value:
-              - 12
-              - 22
-              - 216
-        format=iodd:
-          pin2Value:
-            - 0
-          out:
-            valid: true
-            value:
-              Distance: 55
-              Quality: 12
+      $ref: '#/components/schemas/processDataValue'
     deviceRawTypeValue:
       type: array
       description: The value in raw format.
@@ -3949,16 +3954,11 @@ components:
         minimum: 0
         maximum: 255
     deviceSimpleTypeValue:
-      type: object
+      oneOf:
+        - type: boolean
+        - type: string
+        - type: number
       description: The value (with simple type) in iodd format.
-      properties:
-        value:
-          oneOf:
-            - type: boolean
-            - type: string
-            - type: number
-      required:
-        - value
     deviceComplexTypeValue:
       type: object
       minProperties: 1
@@ -4010,31 +4010,28 @@ components:
         - $ref: '#/components/schemas/deviceSimpleTypeValue'
         - $ref: '#/components/schemas/deviceComplexTypeValue'
       example:
-        format=raw:
+        'format=raw':
           - 0
           - 156
           - 125
           - 25
         'format=iodd, simpleType':
-          value: 15
+          15.2
         'format=iodd, complexType':
-          Distance:
-            value: 15
-          Quality:
-            value: 12
+          Distance: 15
+          Quality: 12
     deviceParameterSubindexValueGetPost:
       oneOf:
         - $ref: '#/components/schemas/deviceRawTypeValue'
         - $ref: '#/components/schemas/deviceSimpleTypeValue'
       example:
-        format=raw:
+        'format=raw':
           - 0
           - 156
           - 125
           - 25
-        format=iodd:
-          value: 152
-          unit: mm
+        'format=iodd':
+          167.2
     ioddIdentification:
       type: object
       required:
