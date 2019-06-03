@@ -69,6 +69,9 @@ info:
     * [311] HTTP Status 400: IO-Link parameter access error 
       - Remark: The additional  iolinkErrorCode and iolinkErrorMessage fields contain 
       the IO-Link error code and the incident text from the ErrorTypes table
+      
+    * [312] HTTP Status 404: IO-Link parameter name is not unique. Please use the
+      [name]_[index] format.
 
 
     ### Data Storage errors
@@ -204,7 +207,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/configurationGetPost'
+                $ref: '#/components/schemas/configurationGet'
         '400':
           description: Bad request
           content:
@@ -241,7 +244,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/configurationGetPost'
+              $ref: '#/components/schemas/configurationPost'
       responses:
         '200':
           description: Successful operation
@@ -301,10 +304,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/expectedTime'
-              example:
-                - value: 10
-                  unit: s
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -345,10 +345,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/expectedTime'
-              example:
-                - value: 10
-                  unit: s
+                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2255,6 +2252,8 @@ paths:
                     message: IO-Link Device is not accessible (not connected or communication error)
                   - msgCode: 309
                     message: IO-Link parameter not found
+                  - msgCode: 312
+                    message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
@@ -2314,7 +2313,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2341,6 +2340,8 @@ paths:
                     message: IO-Link Device is not accessible (not connected or communication error)
                   - msgCode: 309
                     message: IO-Link parameter not found
+                  - msgCode: 312
+                    message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
@@ -2459,6 +2460,8 @@ paths:
                     message: deviceName not found
                   - msgCode: 309
                     message: IO-Link parameter not found
+                  - msgCode: 312
+                    message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
@@ -2657,7 +2660,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2684,6 +2687,8 @@ paths:
                     message: IO-Link Device is not accessible (not connected or communication error)
                   - msgCode: 309
                     message: IO-Link parameter not found
+                  - msgCode: 312
+                    message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
@@ -2746,7 +2751,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2773,6 +2778,8 @@ paths:
                     message: IO-Link Device is not accessible (not connected or communication error)
                   - msgCode: 309
                     message: IO-Link parameter not found
+                  - msgCode: 312
+                    message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
@@ -3012,18 +3019,6 @@ paths:
                     message: Internal server error
 components:
   schemas:
-    expectedTime:
-      type: object
-      required:
-        - value
-        - unit
-      properties:
-        value:
-          type: number
-        unit:
-          type: string
-          enum:
-            - s
     cycleTime:
       type: object
       required:
@@ -3183,12 +3178,16 @@ components:
     gatewayCapabilitiesGet:
       required:
         - ioddSupported
+        - mqttSupported
       type: object
       properties:
         ioddSupported:
           type: boolean
+        mqttSupported:
+          type: boolean
       example:
         ioddSupported: true
+        mqttSupported: true
     masterCapabilitiesGet:
       required:
         - maxNumberOfPorts
@@ -3403,7 +3402,7 @@ components:
             code: 16912
             mode: APPEARED
             text: Device temperature over-run – Clear source of heat
-    configurationGetPost:
+    configurationGet:
       type: object
       properties:
         ethIpv4:
@@ -3421,10 +3420,25 @@ components:
                 type: string
               standardGateway:
                 type: string
-        ethIpv6:
+      example:
+        ethIpv4:
+          - ipAddress: 192.168.1.13
+            subnetMask: 255.255.255.0
+            standardGateway: 192.168.1.1
+    configurationPost:
+      type: object
+      properties:
+        ethIpv4:
           type: array
           items:
             type: object
+            properties:
+              ipAddress:
+                type: string
+              subnetMask:
+                type: string
+              standardGateway:
+                type: string
       example:
         ethIpv4:
           - ipAddress: 192.168.1.13
@@ -3895,8 +3909,8 @@ components:
           iolink:
             valid: true
             value:
-              Valve_1: true
-              Valve_2: false
+              Valve_1: { value: true }
+              Valve_2: { value: false }
         'format=raw/iodd, pin4=sio, pin2=deactivated/not available':
           pin4Value: false
     deviceProcessDataValueGet:
@@ -3927,18 +3941,18 @@ components:
             ioLink:
               valid: true
               value:
-                Distance: 55
-                Quality: 12
+                Distance: { value: 55 }
+                Quality: { value: 12 }
             pin2Value: true
         'format=iodd, direction=inout, pin4=IO-Link, pin2=sio(output)':
           in:
             ioLink:
               valid: true
-              value: 1.2
+              value: { value: 1.2 }
           out:
             ioLink:
               valid: true
-              value: 50
+              value: { vaue: 50 }
             pin2Value: false
         'format=iodd/raw, direction=inout, pin4=sio(output), pin2=sio(output)':
           out:
@@ -3954,11 +3968,16 @@ components:
         minimum: 0
         maximum: 255
     deviceSimpleTypeValue:
-      oneOf:
-        - type: boolean
-        - type: string
-        - type: number
-      description: The value (with simple type) in iodd format.
+      type: object
+      properties:
+        value:
+          oneOf:
+            - type: boolean
+            - type: string
+            - type: number
+          description: The value (with simple type) in iodd format.
+      required:
+        - value
     deviceComplexTypeValue:
       type: object
       minProperties: 1
@@ -4016,10 +4035,10 @@ components:
           - 125
           - 25
         'format=iodd, simpleType':
-          15.2
+          value: 15.2
         'format=iodd, complexType':
-          Distance: 15
-          Quality: 12
+          Distance: { value: 15 }
+          Quality: { value: 12 }
     deviceParameterSubindexValueGetPost:
       oneOf:
         - $ref: '#/components/schemas/deviceRawTypeValue'
@@ -4031,7 +4050,7 @@ components:
           - 125
           - 25
         'format=iodd':
-          167.2
+          value: 167.2
     ioddIdentification:
       type: object
       required:
