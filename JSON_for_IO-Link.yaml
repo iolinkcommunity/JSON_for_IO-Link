@@ -11,10 +11,12 @@ info:
     ### General errors
 
     * [101] HTTP Status 500: Internal server error
+    
+    * [102] HTTP Status 500: Internal communication error
 
-    * [102] HTTP Status 404: Operation not supported
+    * [103] HTTP Status 404: Operation not supported
 
-    * [103] HTTP Status 400: Action locked by another client (e.g. fieldbus
+    * [104] HTTP Status 400: Action locked by another client (e.g. fieldbus
     controller)
 
     * [150] HTTP Status 403: Permission denied (e.g. user management)
@@ -111,6 +113,15 @@ info:
       - Remark: All those systems that do not want to store the IODD have to parse
       it immediately
       
+      
+    ### Data content errors
+    
+    * [701] HTTP Status 400: Incomplete data set
+    
+    * [702] HTTP Status 400: Data set not applicable (not supported), the whole data set is rejected
+            
+    * [703] HTTP Status 400: Incompatible data set combination, the whole data set is rejected
+      
 
 
     ### Implementation hints:
@@ -120,18 +131,18 @@ info:
 
     * Errors [101], [150], [305] can be returned to every request.
 
-    * Error [102] can be returned to every request which is not included
+    * Error [103] can be returned to every request which is not included
     in the base facet.
     * Specific error messages have to be provided only if the corresponding
     operation is supported. So you do not need to give specific errors for bad
-    IODDs if you do not support the IODD Facet, just indicate error [102].
+    IODDs if you do not support the IODD Facet, just indicate error [103].
 
     * Error [301] can be returned to every request where there is a
     variable in the URL.
 
     * If the request was successful and no body is specified, the response
     contains nothing in the body.
-  version: 0.0.8
+  version: 0.0.9
   title: Swagger IO-Link Master
   contact:
     email: lorand.molnar@teconcept.de
@@ -157,6 +168,45 @@ tags:
   - name: devices
     description: Access to the IO-Link Devices connected ot the Master
 paths:
+  '/gateway/identification':
+    get:
+      tags:
+        - gateway
+      summary: Read the indentification of the REST API Gateway.
+      responses:
+        '200':
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gatewayIdentificationGet'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
+                - msgCode: 305
+                  message: Incorrect query parameter name
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
+                - msgCode: 150
+                  message: Permission denied (e.g. user management)
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
+                - msgCode: 101
+                  message: Internal server error
   '/gateway/capabilities':
     get:
       tags:
@@ -207,7 +257,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/configurationGet'
+                $ref: '#/components/schemas/gatewayConfigurationGet'
         '400':
           description: Bad request
           content:
@@ -244,14 +294,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/configurationPost'
+              $ref: '#/components/schemas/gatewayConfigurationPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -259,7 +305,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client (e.g. fieldbuscontroller)
                 - msgCode: 201
                   message: Parsing failed (error while parsing the incoming JSON value)
@@ -275,6 +321,8 @@ paths:
                   message: Out of bounds (an array/string was accessed exceeding its maximum length)
                 - msgCode: 305
                   message: Incorrect query parameter name
+                - msgCode: 701
+                  message: Incomplete data set
         '403':
           description: Forbidden
           content:
@@ -299,12 +347,8 @@ paths:
         - gateway
       summary: Invoke a reset of the Gateway application
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -312,7 +356,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client (e.g. fieldbuscontroller)
                 - msgCode: 305
                   message: Incorrect query parameter name
@@ -340,12 +384,8 @@ paths:
         - gateway
       summary: Invoke a reboot of the Gateway application
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -353,7 +393,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client (e.g. fieldbuscontroller)
                 - msgCode: 305
                   message: Incorrect query parameter name
@@ -460,7 +500,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
         '500':
           description: Internal server error
@@ -484,12 +524,8 @@ paths:
             schema:
               $ref: '#/components/schemas/mqttConfigurationGetPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -497,7 +533,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client (e.g. fieldbus controller)
                 - msgCode: 201
                   message: Parsing failed (error while parsing the incoming JSON value)
@@ -513,6 +549,8 @@ paths:
                   message: Out of bounds (an array/string was accessed exceeding its maximum length)
                 - msgCode: 305
                   message: Incorrect query parameter name
+                - msgCode: 701
+                  message: Incomplete data set
         '403':
           description: Forbidden
           content:
@@ -529,7 +567,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
         '500':
           description: Internal server error
@@ -603,7 +641,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
         '500':
           description: Internal server error
@@ -638,7 +676,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client
                 - msgCode: 201
                   message: Parsing failed (error while parsing the incoming JSON value)
@@ -654,6 +692,8 @@ paths:
                   message: Out of bounds (an array/string was accessed exceeding its maximum length)
                 - msgCode: 305
                   message: Incorrect query parameter name
+                - msgCode: 701
+                  message: Incomplete data set
         '403':
           description: Forbidden
           content:
@@ -670,7 +710,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
         '500':
           description: Internal server error
@@ -720,7 +760,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
                 - msgCode: 301
                   message: Resource not found (e.g. wrong URL)
@@ -740,12 +780,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/mqttTopicId'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -753,7 +789,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client
                 - msgCode: 305
                   message: Incorrect query parameter name
@@ -773,7 +809,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
                 - msgCode: 301
                   message: Resource not found (e.g. wrong URL)
@@ -828,7 +864,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
         '500':
           description: Internal server error
@@ -855,12 +891,8 @@ paths:
             example:
               - IODD XML file
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -868,7 +900,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client
                 - msgCode: 305
                   message: Incorrect query parameter name
@@ -894,7 +926,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
         '500':
           description: Internal server error
@@ -951,7 +983,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
                 - msgCode: 301
                   message: Resource not found (e.g. wrong URL)
@@ -986,7 +1018,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client
                 - msgCode: 305
                   message: Incorrect query parameter name
@@ -1006,7 +1038,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 102
+                - msgCode: 103
                   message: Operation not supported
                 - msgCode: 301
                   message: Resource not found (e.g. wrong URL)
@@ -1060,6 +1092,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
   '/masters/{masterNumber}/identification':
     get:
       tags:
@@ -1109,6 +1143,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
     post:
       tags:
         - master
@@ -1122,12 +1158,8 @@ paths:
             schema:
               $ref: '#/components/schemas/identificationPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1135,7 +1167,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client (e.g. fieldbus controller)
                 - msgCode: 201
                   message: Parsing failed (error while parsing the incoming JSON value)
@@ -1174,6 +1206,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
   '/masters/{masterNumber}/capabilities':
     get:
       tags:
@@ -1224,6 +1258,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
   '/masters/{masterNumber}/ports':
     get:
       tags:
@@ -1286,59 +1322,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
-  '/masters/{masterNumber}/ports/{portNumber}/status':
-    get:
-      tags:
-        - ports
-      summary: Read the status of the selected port
-      parameters:
-        - $ref: '#/components/parameters/masterNumber'
-        - $ref: '#/components/parameters/portNumber'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/portStatusGet'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
-                - msgCode: 303
-                  message: portNumber not found
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/capabilities':
     get:
       tags:
@@ -1392,6 +1377,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/configuration':
     get:
       tags:
@@ -1445,6 +1432,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
     post:
       tags:
         - ports
@@ -1459,12 +1448,8 @@ paths:
             schema:
               $ref: '#/components/schemas/portConfigurationPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1472,7 +1457,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client (e.g. fieldbus controller)
                 - msgCode: 201
                   message: Parsing failed (error while parsing the incoming JSON value)
@@ -1486,6 +1471,65 @@ paths:
                   message: Value out of range (exceeds the minimum or maximum value)
                 - msgCode: 207
                   message: Duplicated Device Name
+                - msgCode: 305
+                  message: Incorrect query parameter name
+                - msgCode: 702
+                  message: Data set not applicable (not supported), the whole data set is rejected
+                - msgCode: 703
+                  message: Incompatible data set combination, the whole data set is rejected
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
+                - msgCode: 150
+                  message: Permission denied (e.g. user management)
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
+                - msgCode: 302
+                  message: masterNumber not found
+                - msgCode: 303
+                  message: portNumber not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
+                - msgCode: 101
+                  message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
+  '/masters/{masterNumber}/ports/{portNumber}/status':
+    get:
+      tags:
+        - ports
+      summary: Read the status of the selected port
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portStatusGet'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
                 - msgCode: 305
                   message: Incorrect query parameter name
         '403':
@@ -1517,6 +1561,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/datastorage':
     get:
       tags:
@@ -1570,6 +1616,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
     post:
       tags:
         - ports
@@ -1584,12 +1632,8 @@ paths:
             schema:
               $ref: '#/components/schemas/dataStorageGetPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1597,7 +1641,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 103
+                - msgCode: 104
                   message: Action locked by another client (e.g. fieldbus controller)
                 - msgCode: 201
                   message: Parsing failed (error while parsing the incoming JSON value)
@@ -1615,6 +1659,8 @@ paths:
                   message: Incorrect query parameter name
                 - msgcode: 401
                   message: Mismatch between configured device and data storage meta data
+                - msgCode: 701
+                  message: Incomplete data set
         '403':
           description: Forbidden
           content:
@@ -1644,6 +1690,8 @@ paths:
               example:
                 - msgCode: 101
                   message: Internal server error
+                - msgCode: 102
+                  message: Internal communication error
   '/devices':
     get:
       tags:
@@ -1709,6 +1757,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/identification':
     get:
       tags:
@@ -1726,7 +1776,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/portIdentificationGet'
+                $ref: '#/components/schemas/deviceIdentificationGet'
         '400':
           description: Bad request
           content:
@@ -1767,6 +1817,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - devices
@@ -1780,12 +1832,8 @@ paths:
             schema:
               $ref: '#/components/schemas/portIdentificationPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1793,7 +1841,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 103
+                  - msgCode: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                   - msgCode: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
@@ -1840,6 +1888,59 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
+  '/devices/{deviceName}/capabilities':
+    get:
+      tags:
+        - devices
+      summary: Read the capabililties of the devic
+      parameters:
+        - $ref: '#/components/parameters/deviceName'
+      responses:
+        '200':
+          description: Successful opearation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceCapabilitiesGet'
+              example:
+                - minimumCycleTime:
+                    value: 2.3
+                    unit: ms
+        '400':
+          description: Bad request
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/errorObject'
+                example:
+                  - msgCode: 305
+                    message: Incorrect query parameter name
+                  - msgCode: 307
+                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              example:
+                - msgCode: 304
+                  message: deviceName not found
+                - msgCode: 308
+                  message: IO-Link Device is not accessible (not connected or communication error)
+        '500':
+          description: Internal server error
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/errorObject'
+                example:
+                  - msgCode: 101
+                    message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/processdata/value':
     get:
       tags:
@@ -1850,7 +1951,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/format'
-        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/content'
       responses:
         '200':
           description: Successful operation
@@ -1887,7 +1988,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -1900,6 +2001,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - devices
@@ -1915,12 +2018,8 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceProcessDataValuePost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -1928,7 +2027,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 103
+                  - msgCode: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                   - msgCode: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
@@ -1956,6 +2055,8 @@ paths:
                     message: Attached IO-Link device has no output process data
                   - msgCode: 601
                     message: IODD is not available
+                  - msgCode: 703
+                    message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
@@ -1972,7 +2073,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -1987,6 +2088,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/parameters':
     get:
       tags:
@@ -2030,7 +2133,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2043,6 +2146,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/parameters/{index}/value':
     get:
       tags:
@@ -2092,7 +2197,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2109,6 +2214,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - devices
@@ -2123,12 +2230,8 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2136,9 +2239,9 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
-                    message: Operation not supported
                   - msgCode: 103
+                    message: Operation not supported
+                  - msgCode: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                   - msgCode: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
@@ -2162,6 +2265,8 @@ paths:
                     message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
+                  - msgCode: 703
+                    message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
@@ -2193,6 +2298,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/parameters/{parameterName}/value':
     get:
       tags:
@@ -2244,7 +2351,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2263,6 +2370,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - devices
@@ -2279,12 +2388,8 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2292,7 +2397,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 103
+                  - msgCode: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                   - msgCode: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
@@ -2316,6 +2421,8 @@ paths:
                     message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
+                  - msgCode: 703
+                    message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
@@ -2332,7 +2439,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2351,6 +2458,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/parameters/{index}/subindices':
     get:
       tags:
@@ -2395,7 +2504,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2410,6 +2519,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/parameters/{parameterName}/subindices':
     get:
       tags:
@@ -2454,7 +2565,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2471,6 +2582,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/parameters/{index}/subindices/{subindex}/value':
     get:
       tags:
@@ -2523,7 +2636,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2540,6 +2653,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - devices
@@ -2557,12 +2672,8 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2570,7 +2681,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 103
+                  - msgCode: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                   - msgCode: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
@@ -2593,7 +2704,9 @@ paths:
                   - msgCode: 311
                     message: IO-Link parameter access error 
                   - msgCode: 601
-                    message: IODD is not available
+                    message: IODD is not availabl
+                  - msgCode: 703
+                    message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
@@ -2610,7 +2723,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2627,6 +2740,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/parameters/{parameterName}/subindices/{subParameterName}/value':
     get:
       tags:
@@ -2679,7 +2794,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2698,6 +2813,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - devices
@@ -2715,12 +2832,8 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/emptyObject'
         '400':
           description: Bad request
           content:
@@ -2728,9 +2841,9 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
-                    message: Operation not supported
                   - msgCode: 103
+                    message: Operation not supported
+                  - msgCode: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                   - msgCode: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
@@ -2754,6 +2867,8 @@ paths:
                     message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
+                  - msgCode: 703
+                    message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
@@ -2770,7 +2885,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2789,6 +2904,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/blockparameterization':
     post:
       tags:
@@ -2865,37 +2982,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                oneOf:
-                  - $ref: '#/components/schemas/blockParameterizationPostParametersAnswer'
-                  - $ref: '#/components/schemas/emptyObject' 
-                example:
-                  'write': 
-                    { }
-                  'read, format=raw':
-                    - address:
-                        index: 123
-                      value:
-                        - 15
-                        - 232
-                        - 22
-                    - address:
-                        index: 233
-                        subIndex: 2
-                      value:
-                        - 23
-                        - 149
-                        - 206
-                  'read, format=iodd':
-                    - address:
-                        parameterName: "Application_tag"
-                      value:
-                        value: "Level 2, row 3"
-                    - address:
-                        parameterName: "Hysteresis"
-                        subParameterName: "Channel_B"
-                      value:
-                        value: 123
+                $ref: '#/components/schemas/blockParameterizationPostParametersAnswer'
+        '202':
+          description: Successful operation
         '400':
           description: Bad request
           content:
@@ -2903,7 +2992,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 103
+                  - msgCode: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                   - msgCode: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
@@ -2927,6 +3016,10 @@ paths:
                     message: IO-Link parameter access error 
                   - msgCode: 601
                     message: IODD is not available
+                  - msgCode: 701
+                    message: Incomplete data set
+                  - msgCode: 703
+                    message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
@@ -2943,7 +3036,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 102
+                  - msgCode: 103
                     message: Operation not supported
                   - msgCode: 304
                     message: deviceName not found
@@ -2959,7 +3052,9 @@ paths:
                   $ref: '#/components/schemas/errorObject'
                 example:
                   - msgCode: 101
-                    message: Internal server error          
+                    message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
   '/devices/{deviceName}/events':
     get:
       tags:
@@ -3017,6 +3112,8 @@ paths:
                 example:
                   - msgCode: 101
                     message: Internal server error
+                  - msgCode: 102
+                    message: Internal communication error
 components:
   schemas:
     cycleTime:
@@ -3033,12 +3130,17 @@ components:
             - ms
     event:
       type: object
+    ipConfiguration:
+      type: string
+      enum:
+        - MANUAL
+        - DHCP
     processData:
       allOf:
         - type: object
           properties:
             direction:
-              $ref: '#/components/schemas/direction'
+              $ref: '#/components/schemas/content'
             format:
               $ref: '#/components/schemas/format'
       oneOf:
@@ -3060,13 +3162,13 @@ components:
         - raw
         - iodd
       default: raw
-    direction:
+    content:
       type: string
       enum:
-        - in
-        - out
-        - inout
-      default: in
+        - measure
+        - control
+        - measurecontrol
+      default: measure
     eventOrigin:
       type: string
       enum:
@@ -3364,6 +3466,33 @@ components:
                     type: string
           value:
             $ref: '#/components/schemas/deviceParameterValueGetPost'
+      example:
+        'write': 
+          { }
+        'read, format=raw':
+          - address:
+              index: 123
+            value:
+              - 15
+              - 232
+              - 22
+          - address:
+              index: 233
+              subIndex: 2
+            value:
+              - 23
+              - 149
+              - 206
+        'read, format=iodd':
+          - address:
+              parameterName: "Application_tag"
+            value:
+              value: "Level 2, row 3"
+          - address:
+              parameterName: "Hysteresis"
+              subParameterName: "Channel_B"
+            value:
+              value: 123
     deviceEventsGet:
       type: array
       items:
@@ -3402,7 +3531,16 @@ components:
             code: 16912
             mode: APPEARED
             text: Device temperature over-run – Clear source of heat
-    configurationGet:
+    gatewayIdentificationGet:
+      type: object
+      required:
+        - macAddress
+      properties:
+        macAddress:
+          type: string
+      example:
+        macAddress: "00-02-72-CE-A6-49" 
+    gatewayConfigurationGet:
       type: object
       properties:
         ethIpv4:
@@ -3410,10 +3548,13 @@ components:
           items:
             type: object
             required:
+              - ipConfiguration
               - ipAddress
               - subnetMask
               - standardGateway
             properties:
+              ipConfiguration:
+                $ref: '#/components/schemas/ipConfiguration'
               ipAddress:
                 type: string
               subnetMask:
@@ -3422,28 +3563,47 @@ components:
                 type: string
       example:
         ethIpv4:
-          - ipAddress: 192.168.1.13
+          - ipConfiguration: MANUAL
+            ipAddress: 192.168.1.13
             subnetMask: 255.255.255.0
             standardGateway: 192.168.1.1
-    configurationPost:
+    gatewayConfigurationPost:
       type: object
       properties:
         ethIpv4:
           type: array
           items:
-            type: object
-            properties:
-              ipAddress:
-                type: string
-              subnetMask:
-                type: string
-              standardGateway:
-                type: string
+            oneOf:
+              - type: object
+                description: Shall be used with ipConfiguration = MANUAL 
+                required:
+                  - ipConfiguration
+                  - ipAddress
+                  - subnetMask
+                  - standardGateway
+                properties:
+                  ipConfiguration:
+                    $ref: '#/components/schemas/ipConfiguration'
+                  ipAddress:
+                    type: string
+                  subnetMask:
+                    type: string
+                  standardGateway:
+                    type: string
+              - type: object
+                description: Shall be used with ipConfiguration = DHCP 
+                required:
+                  - ipConfiguration
+                properties:
+                  ipConfiguration:
+                    type : string
       example:
         ethIpv4:
-          - ipAddress: 192.168.1.13
+          - ipConfiguration: MANUAL
+            ipAddress: 192.168.1.13
             subnetMask: 255.255.255.0
             standardGateway: 192.168.1.1
+          - ipConfiguration: DHCP
     mqttConfigurationGetPost:
       type: object
       required:
@@ -3560,7 +3720,7 @@ components:
           enum:
             - COMMUNICATION_LOST
             - DEACTIVATED
-            - INCORRECT_DEVICE
+            - PORT_FAILED
             - DEVICE_STARTING
             - DEVICE_ONLINE
             - DIGITAL_INPUT_PIN4
@@ -3597,7 +3757,14 @@ components:
         masterCycleTime:
           value: 2.3
           unit: ms
-    portIdentificationGet:
+    deviceCapabilitiesGet:
+      required:
+        - minimumCycleTime
+      type: object
+      properties:
+        minimumCycleTime:
+          $ref: '#/components/schemas/cycleTime'
+    deviceIdentificationGet:
       required:
         - vendorId
         - deviceId
@@ -3922,13 +4089,13 @@ components:
         The pin2Value is present in the 'in' object if the pin2 is configured as digital input.
         The pin2value is present in the 'out' object if the pin4 is configured as digital output.
       properties:
-        in:
+        measure:
           $ref: '#/components/schemas/processDataValue'
-        out:
+        control:
           $ref: '#/components/schemas/processDataValue'
       example:
-        'format=raw, direction=in, pin4=IO-Link, pin2=sio(input)':
-          in:
+        'format=raw, content=measure, pin4=IO-Link, pin2=sio(input)':
+          measure:
             ioLink:
               valid: true
               value:
@@ -3936,26 +4103,26 @@ components:
                 - 22
                 - 216
             pin2Value: true
-        'format=iodd, direction=in, pin4=IO-Link, pin2=sio(input)':
-          in:
+        'format=iodd, content=measure, pin4=IO-Link, pin2=sio(input)':
+          measure:
             ioLink:
               valid: true
               value:
                 Distance: { value: 55 }
                 Quality: { value: 12 }
             pin2Value: true
-        'format=iodd, direction=inout, pin4=IO-Link, pin2=sio(output)':
-          in:
+        'format=iodd, content=measurecontrol, pin4=IO-Link, pin2=sio(output)':
+          measure:
             ioLink:
               valid: true
               value: { value: 1.2 }
-          out:
+          control:
             ioLink:
               valid: true
               value: { vaue: 50 }
             pin2Value: false
-        'format=iodd/raw, direction=inout, pin4=sio(output), pin2=sio(output)':
-          out:
+        'format=iodd/raw, content=control, pin4=sio(output), pin2=sio(output)':
+          control:
             pin2Value: true
             pin4Value: false
     deviceProcessDataValuePost:
@@ -4092,8 +4259,6 @@ components:
           version: '2.1'
           releaseDate: '2015-01-02'
           ioLinkRevision: '1.1'
-    emptyObject:
-      type: object
     errorObject:
       type: object
       required:
@@ -4208,12 +4373,12 @@ components:
       description: Value format in response document
       schema:
         $ref: '#/components/schemas/format'
-    direction:
-      name: direction
+    content:
+      name: content
       in: query
       description: Process data element(s) in respose document
       schema:
-        $ref: '#/components/schemas/direction'
+        $ref: '#/components/schemas/content'
     index:
       name: index
       in: path
