@@ -172,7 +172,7 @@ paths:
     get:
       tags:
         - gateway
-      summary: Read the indentification of the REST API Gateway.
+      summary: Read the identification of the REST API Gateway.
       responses:
         '200':
           description: Successfull operation
@@ -1894,7 +1894,7 @@ paths:
     get:
       tags:
         - devices
-      summary: Read the capabililties of the devic
+      summary: Read the capabililties of the device
       parameters:
         - $ref: '#/components/parameters/deviceName'
       responses:
