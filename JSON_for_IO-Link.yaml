@@ -1894,7 +1894,7 @@ paths:
     get:
       tags:
         - devices
-      summary: Read the capabililties of the devic
+      summary: Read the capabilities of the device
       parameters:
         - $ref: '#/components/parameters/deviceName'
       responses:
