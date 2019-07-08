@@ -296,7 +296,7 @@ paths:
             schema:
               $ref: '#/components/schemas/gatewayConfigurationPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -347,7 +347,7 @@ paths:
         - gateway
       summary: Invoke a reset of the Gateway application
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -384,7 +384,7 @@ paths:
         - gateway
       summary: Invoke a reboot of the Gateway application
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -524,7 +524,7 @@ paths:
             schema:
               $ref: '#/components/schemas/mqttConfigurationGetPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -780,7 +780,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/mqttTopicId'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -891,7 +891,7 @@ paths:
             example:
               - IODD XML file
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1158,7 +1158,7 @@ paths:
             schema:
               $ref: '#/components/schemas/identificationPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1448,7 +1448,7 @@ paths:
             schema:
               $ref: '#/components/schemas/portConfigurationPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1632,7 +1632,7 @@ paths:
             schema:
               $ref: '#/components/schemas/dataStorageGetPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1832,7 +1832,7 @@ paths:
             schema:
               $ref: '#/components/schemas/portIdentificationPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2018,7 +2018,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceProcessDataValuePost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2230,7 +2230,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2388,7 +2388,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2672,7 +2672,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2832,7 +2832,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2983,7 +2983,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/blockParameterizationPostParametersAnswer'
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
