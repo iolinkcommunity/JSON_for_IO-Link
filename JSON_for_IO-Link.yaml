@@ -175,7 +175,7 @@ paths:
       summary: Read the indentification of the REST API Gateway.
       responses:
         '200':
-          description: Successfull operation
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -951,7 +951,7 @@ paths:
         - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          description: Successfull operation
+          description: Successful operation
           content:
             application/xml:
               schema:
