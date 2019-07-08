@@ -831,7 +831,7 @@ paths:
         Mandatory if IODD is supported.
       description: >-
         Only one version of an IODD is stored on the webserver at the same time
-        for one vendorId-deviceId-combination.
+        for one vendorId-deviceId-ioLinkRevision-combination.
       responses:
         '200':
           description: Successful operation
