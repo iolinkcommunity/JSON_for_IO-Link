@@ -3378,7 +3378,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write the parameter with the given index and subindex. Requires IODD support.
+        Write the parameter with the given index and subindex. Requires IODD support. port
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/parameterName'
