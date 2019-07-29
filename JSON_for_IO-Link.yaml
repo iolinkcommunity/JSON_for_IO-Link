@@ -11,7 +11,7 @@ info:
     ### General errors
 
     * [101] HTTP Status 500: Internal server error
-    
+
     * [102] HTTP Status 500: Internal communication error
 
     * [103] HTTP Status 404: Operation not supported
@@ -40,7 +40,7 @@ info:
 
     * [206] HTTP Status 400: Out of bounds (an array/string was accessed
     exceeding its maximum length)
-    
+
     * [207] HTTP Status 400: Duplicated deviceName
 
 
@@ -65,13 +65,13 @@ info:
     communication error)
 
     * [309] HTTP Status 404: IO-Link parameter not found
-    
+
     * [310] HTTP Status 404: IO-Link parameter access not supported by the Device
-    
-    * [311] HTTP Status 400: IO-Link parameter access error 
-      - Remark: The additional  iolinkErrorCode and iolinkErrorMessage fields contain 
+
+    * [311] HTTP Status 400: IO-Link parameter access error
+      - Remark: The additional  iolinkErrorCode and iolinkErrorMessage fields contain
       the IO-Link error code and the incident text from the ErrorTypes table
-      
+
     * [312] HTTP Status 404: IO-Link parameter name is not unique. Please use the
       [name]_[index] format.
 
@@ -112,16 +112,16 @@ info:
     failed. Upload rejected
       - Remark: All those systems that do not want to store the IODD have to parse
       it immediately
-      
-      
+
+
     ### Data content errors
-    
+
     * [701] HTTP Status 400: Incomplete data set
-    
+
     * [702] HTTP Status 400: Data set not applicable (not supported), the whole data set is rejected
-            
+
     * [703] HTTP Status 400: Incompatible data set combination, the whole data set is rejected
-      
+
 
 
     ### Implementation hints:
@@ -161,7 +161,7 @@ tags:
     description: Access to the parameters of the MQTT
   - name: iodds
     description: Access to the IODDs
-  - name: master
+  - name: masters
     description: Access to parameters of the IO-Link master itself
   - name: ports
     description: Access to the IO-Link ports of the IO-Link master
@@ -175,7 +175,7 @@ paths:
       summary: Read the identification of the REST API Gateway.
       responses:
         '200':
-          description: Successfull operation
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -258,6 +258,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gatewayConfigurationGet'
+              examples:
+                Manual:
+                  value:
+                    ethIpv4: [
+                      { 
+                        ipConfiguration: MANUAL,
+                        ipAddress: 192.168.1.13,
+                        subnetMask: 255.255.255.0,
+                        standardGateway: 192.168.1.1   
+                      }
+                    ]
+                DHCP:
+                  value:
+                    ethIpv4: [
+                      {
+                        ipConfiguration: DHCP,
+                        ipAddress: 192.168.100.5,
+                        subnetMask: 255.255.255.0,
+                        standardGateway: 192.168.100.1  
+                      }
+                    ]
+                Multiple ethernet interfaces:
+                  value:
+                    ethIpv4: [
+                      {
+                        ipConfiguration: MANUAL,
+                        ipAddress: 192.168.1.13,
+                        subnetMask: 255.255.255.0,
+                        standardGateway: 192.168.1.1   
+                      },
+                      {
+                        ipConfiguration: MANUAL,
+                        ipAddress: 192.168.2.10,
+                        subnetMask: 255.255.255.0,
+                        standardGateway: 192.168.2.1  
+                      },
+                      {
+                        ipConfiguration: DHCP,
+                        ipAddress: 192.168.200.7,
+                        subnetMask: 255.255.255.0,
+                        standardGateway: 192.168.200.1  
+                      }
+                    ]
         '400':
           description: Bad request
           content:
@@ -295,8 +338,45 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/gatewayConfigurationPost'
+            examples:
+              Manual:
+                value:
+                  ethIpv4: [
+                    { 
+                      ipConfiguration: MANUAL,
+                      ipAddress: 192.168.1.13,
+                      subnetMask: 255.255.255.0,
+                      standardGateway: 192.168.1.1   
+                    }
+                  ]
+              DHCP:
+                value:
+                  ethIpv4: [
+                    {
+                      ipConfiguration: DHCP
+                    }
+                  ]
+              Multiple ethernet interfaces:
+                value:
+                  ethIpv4: [
+                    {
+                      ipConfiguration: MANUAL,
+                      ipAddress: 192.168.1.13,
+                      subnetMask: 255.255.255.0,
+                      standardGateway: 192.168.1.1   
+                    },
+                    {
+                      ipConfiguration: MANUAL,
+                      ipAddress: 192.168.2.10,
+                      subnetMask: 255.255.255.0,
+                      standardGateway: 192.168.2.1  
+                    },
+                    {
+                      ipConfiguration: DHCP
+                    }
+                  ]
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -347,7 +427,7 @@ paths:
         - gateway
       summary: Invoke a reset of the Gateway application
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -384,7 +464,7 @@ paths:
         - gateway
       summary: Invoke a reboot of the Gateway application
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -434,6 +514,133 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gatewayEventsGet'
+              examples:
+                origin=ALL:
+                  value: [
+                    {
+                      "time": "2018-05-18T07:31:54.123Z",
+                      "severity": "WARNING",
+                      "origin": {
+                          "masterNumber": 1,
+                      },
+                      "message": {
+                        "text": "IO-Link Master has restarted"
+                      }
+                    },
+                    {
+                      "time": "2018-05-18T07:32:42.023Z",
+                      "severity": "ERROR",
+                      "origin": {
+                        "masterNumber": 1,
+                        "portNumber": 1,
+                      },
+                      "message": {
+                        "code": 6163,
+                        "mode": "APPEARS",
+                        "text": "Overcurrent at C/Q (if digital output) - check load"
+                      }
+                    },
+                    {
+                      "time": "2018-05-18T07:31:54.123Z",
+                      "severity": "WARNING",
+                      "origin": {
+                        "masterNumber": 1,
+                        "portNumber": 1,
+                        "device": "Temp_sensor_1"
+                      },
+                      "message": {
+                        "code": 16912,
+                        "mode": "APPEARS",
+                        "text": "Device temperature over-run – Clear source of heat"
+                      }
+                    }
+                  ]
+                origin=MASTERS:
+                  value: [
+                    {
+                      "time": "2018-05-18T07:31:54.123Z",
+                      "severity": "WARNING",
+                      "origin": {
+                          "masterNumber": 1,
+                      },
+                      "message": {
+                        "text": "IO-Link Master has restarted"
+                      }
+                    }
+                    ]
+                origin=PORTS:
+                  value: [
+                    {
+                      "time": "2018-05-18T07:32:42.023Z",
+                      "severity": "ERROR",
+                      "origin": {
+                        "masterNumber": 1,
+                        "port": 1,
+                      },
+                      "message": {
+                        "code": 6163,
+                        "mode": "APPEARS",
+                        "text": "Overcurrent at C/Q (if digital output) - check load"
+                      }
+                    },
+                    {
+                      "time": "2018-05-18T07:33:42.023Z",
+                      "severity": "ERROR",
+                      "origin": {
+                        "masterNumber": 1,
+                        "portNumber": 1,
+                      },
+                      "message": {
+                        "code": 6163,
+                        "mode": "DISAPPEARS",
+                        "text": "Overcurrent at C/Q (if digital output) - check load"
+                      }
+                    },
+                    {
+                      "time": "2018-05-18T07:35:54.123Z",
+                      "severity": "NOTICE",
+                      "origin": {
+                        "masterNumber": 1,
+                        "portNumber": 2
+                      },
+                      "message": {
+                        "code": 65313,
+                        "mode": "SINGLE_SHOT",
+                        "text": "New slave"
+                      }
+                    }
+                    ]
+                origin=DEVICES:
+                  value: [
+                    {
+                      "time": "2018-05-18T07:31:54.123Z",
+                      "severity": "WARNING",
+                      "origin": {
+                        "masterNumber": 1,
+                        "portNumber": 1,
+                        "deviceName": "Temp_sensor_1"
+                      },
+                      "message": {
+                        "code": 16912,
+                        "mode": "APPEARS",
+                        "text": "Device temperature over-run – Clear source of heat"
+                      }
+                    },
+                    {
+                      "time": "2018-05-18T08:31:54.123Z",
+                      "severity": "ERROR",
+                      "origin": {
+                        "masterNumber": 1,
+                        "portNumber": 3,
+                        "deviceName": "Distance_Laser_3"
+                      },
+                      "message": {
+                        "code": 20480,
+                        "mode": "APPEARS",
+                        "text": "Device hardware fault – Device exchange"
+                      }
+                    },
+                  ]
         '400':
           description: Bad request
           content:
@@ -475,6 +682,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/mqttConfigurationGetPost'
+              examples:
+                Single Broker:
+                  value: [
+                      {
+                        "brokerAddress": "192.168.2.1/mqttbroker",
+                        "username": "iolink_json",
+                        "password": "1234",
+                        "lastwill": [
+                          {
+                            "topic": "process_data",
+                            "message": "Process data transfer stopped.",
+                            "qos": "0_ONLY_ONCE",
+                            "retain": true
+                          }
+                        ],
+                        "keepAliceTime": 10
+                      }
+                  ]
         '400':
           description: Bad request
           content:
@@ -523,8 +748,26 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/mqttConfigurationGetPost'
+            examples:
+              Single Broker:
+                value: [
+                    {
+                      "brokerAddress": "192.168.2.1/mqttbroker",
+                      "username": "iolink_json",
+                      "password": "1234",
+                      "lastwill": [
+                        {
+                          "topic": "process_data",
+                          "message": "Process data transfer stopped.",
+                          "qos": "0_ONLY_ONCE",
+                          "retain": true
+                        }
+                      ],
+                      "keepAliceTime": 10
+                    }
+                ]
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -662,6 +905,28 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/mqttConfigurationTopicPost'
+            examples:
+              Process Data:
+                value: {
+                  "topicName": "PD input",
+                  "qos": "1_AT_LEAST_ONCE",
+                  "deviceName": "DT35",
+                  "processData": {
+                    "direction": "in",
+                    "format": "iodd",
+                    "interval": {
+                      "value": 10,
+                      "unit": "ms"
+                    }
+                  }
+                }
+              Event:
+                value: {
+                  "topicName": "Event",
+                  "qos": "1_AT_LEAST_ONCE",
+                  "deviceName": "TAD081",
+                  "event": {}
+                }
       responses:
         '200':
           description: Successful operation returning the topic ID
@@ -735,6 +1000,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/mqttConfigurationTopicGet'
+              examples:
+                Process Data:
+                  value: {
+                    "topicId": 1,
+                    "topicName": "PD input",
+                    "qos": "1_AT_LEAST_ONCE",
+                    "deviceName": "DT35",
+                    "processData": {
+                      "direction": "in",
+                      "format": "iodd",
+                      "interval": {
+                        "value": 10,
+                        "unit": "ms"
+                      }
+                    }
+                  }
+                Event:
+                  value: {
+                    "topicId": 2,
+                    "topicName": "Event",
+                    "qos": "1_AT_LEAST_ONCE",
+                    "deviceName": "TAD081",
+                    "event": {}
+                  }
         '400':
           description: Bad request
           content:
@@ -780,7 +1069,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/mqttTopicId'
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -831,7 +1120,7 @@ paths:
         Mandatory if IODD is supported.
       description: >-
         Only one version of an IODD is stored on the webserver at the same time
-        for one vendorId-deviceId-combination.
+        for one vendorId-deviceId-ioLinkRevision-combination.
       responses:
         '200':
           description: Successful operation
@@ -891,7 +1180,7 @@ paths:
             example:
               - IODD XML file
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -951,7 +1240,7 @@ paths:
         - $ref: '#/components/parameters/ioLinkRevision'
       responses:
         '200':
-          description: Successfull operation
+          description: Successful operation
           content:
             application/xml:
               schema:
@@ -1054,7 +1343,7 @@ paths:
   '/masters':
     get:
       tags:
-        - master
+        - masters
       summary: >-
         Read all the available masterNumber keys with the corresponding
         identification information.
@@ -1097,7 +1386,7 @@ paths:
   '/masters/{masterNumber}/identification':
     get:
       tags:
-        - master
+        - masters
       summary: Read the identification of the IO-Link master
       parameters:
         - $ref: '#/components/parameters/masterNumber'
@@ -1147,7 +1436,7 @@ paths:
                   message: Internal communication error
     post:
       tags:
-        - master
+        - masters
       summary: Write application specific identification
       parameters:
         - $ref: '#/components/parameters/masterNumber'
@@ -1157,8 +1446,15 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/identificationPost'
+            examples:
+              All optional fiels:
+                value: {
+                  "applicationSpecificTag": "Fallback reader at the end of the belt",
+                  "locationTag": "Down under",
+                  "functionTag": "Code reading"
+                }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1211,7 +1507,7 @@ paths:
   '/masters/{masterNumber}/capabilities':
     get:
       tags:
-        - master
+        - masters
       summary: Read the capabilities of the master
       parameters:
         - $ref: '#/components/parameters/masterNumber'
@@ -1280,7 +1576,8 @@ paths:
                     - portNumber
                   properties:
                     portNumber:
-                      type: number
+                      type: integer
+                      minimum: 1
                 example:
                   - portNumber: 1
                   - portNumber: 2
@@ -1447,8 +1744,22 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/portConfigurationPost'
+            examples:
+              Complete configuration:
+                value: {
+                  "mode": "IOLINK_AUTOSTART",
+                  "validationAndBackup": "TYPE_COMPATIBLE_DEVICE_V1.1",
+                  "cycleTime": {
+                    "value": 2.3,
+                    "unit": "ms"
+                  },
+                  "vendorId": 26,
+                  "deviceId": 333,
+                  "pin2Configuration": "DIGITAL_INPUT",
+                  "deviceName": "Distance_sensor_1"
+                }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1512,7 +1823,7 @@ paths:
     get:
       tags:
         - ports
-      summary: Read the status of the selected port
+      summary: Read the status of the specified port
       parameters:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
@@ -1578,6 +1889,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/dataStorageGetPost'
+              examples:
+                Data Storage with valid content:
+                  value: {
+                    "header": {
+                      "vendorId": 15,
+                      "deviceId": 65253,
+                      "ioLinkRevision": "1.1"
+                    },
+                    "content": "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl"
+                  }
+                Empty Data Storage:
+                  value: {
+                    "header": {},
+                    "content": ""
+                  }
         '400':
           description: Bad request
           content:
@@ -1631,8 +1957,23 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/dataStorageGetPost'
+            examples:
+              Data Storage with valid content:
+                value: {
+                  "header": {
+                    "vendorId": 15,
+                    "deviceId": 65253,
+                    "ioLinkRevision": "1.1"
+                  },
+                  "content": "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl"
+                }
+              Empty Data Storage:
+                value: {
+                  "header": {},
+                  "content": ""
+                }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1714,9 +2055,11 @@ paths:
                     deviceName:
                       type: string
                     masterNumber:
-                      type: string
+                      type: integer
+                      minimum: 1
                     portNumber:
-                      type: string
+                      type: integer
+                      minimum: 1
                 example:
                   - deviceName: DT35
                     masterNumber: 1
@@ -1763,7 +2106,7 @@ paths:
     get:
       tags:
         - devices
-      summary: Read the identification of the device at the specified port
+      summary: Read the identification of the Device.
       description: >-
         *Implementation hint*: You have to request the ISDU values of
         applicationSpecificTag, locationTag and functionTag (if they are
@@ -1822,7 +2165,7 @@ paths:
     post:
       tags:
         - devices
-      summary: Write application specific port identification
+      summary: Write application specific port identification.
       parameters:
         - $ref: '#/components/parameters/deviceName'
       requestBody:
@@ -1831,8 +2174,15 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/portIdentificationPost'
+            examples:
+              All optional fields:
+                value: {
+                  "applicationSpecificTag": "Fallback light switch at the end of the belt",
+                  "locationTag": "Down under",
+                  "functionTag": "Check start of belt"
+                }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -1894,7 +2244,7 @@ paths:
     get:
       tags:
         - devices
-      summary: Read the capabililties of the device
+      summary: Read the capabililties of the Device.
       parameters:
         - $ref: '#/components/parameters/deviceName'
       responses:
@@ -1905,9 +2255,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceCapabilitiesGet'
               example:
-                - minimumCycleTime:
-                    value: 2.3
-                    unit: ms
+                minimumCycleTime:
+                  value: 2.3
+                  unit: ms
         '400':
           description: Bad request
           content:
@@ -1947,7 +2297,7 @@ paths:
         - devices
       summary: >-
         Read the process data (input and optionally the output) and the pin2
-        value (if it is used) of the specified port
+        value (if it is used).
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/format'
@@ -1959,6 +2309,65 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/deviceProcessDataValueGet'
+              examples:
+                Format=raw, content=measure, pin4 in IO-Link, pin2 in digital input:
+                  value: {
+                    "measure": {
+                      "ioLink": {
+                        "valid": true,
+                        "value": [
+                          12,
+                          22,
+                          216
+                        ]
+                      },
+                      "pin2Value": true
+                    }
+                  }
+                Format=iodd, content=measure, pin4 in IO-Link, pin2 in digital input:
+                  value: {
+                    "measure": {
+                      "ioLink": {
+                        "valid": true,
+                        "value": {
+                          "Distance": {
+                            "value": 55
+                          },
+                          "Quality": {
+                            "value": 12
+                          }
+                        }
+                      },
+                      "pin2Value": true
+                    }
+                  }
+                Format=iodd, content=measurecontrol, pin4 in IO-Link, pin2 in digital input:
+                  value: {
+                    "measure": {
+                      "ioLink": {
+                        "valid": true,
+                        "value": {
+                          "value": 1.2
+                        }
+                      }
+                    },
+                    "control": {
+                      "ioLink": {
+                        "valid": true,
+                        "value": {
+                          "vaue": 50
+                        }
+                      },
+                      "pin2Value": false
+                    }
+                  }
+                Format=raw/iodd, content=control, pin4 in digital output, pin2 in digital input:
+                  value: {
+                    "control": {
+                      "pin2Value": true,
+                      "pin4Value": false
+                    }
+                  }
         '400':
           description: Bad request
           content:
@@ -2007,8 +2416,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write the process data (output) and the pin 2 value (if it is used) of
-        the specific port
+        Write the process data (output) and the pin 2 value (if it is used).
       parameters:
         - $ref: '#/components/parameters/deviceName'
       requestBody:
@@ -2017,8 +2425,40 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/deviceProcessDataValuePost'
+            examples:
+              format=raw, pin4 in IO-Link, pin2 in digital output:
+                value: {
+                  "ioLink": {
+                    "valid": true,
+                    "value": [
+                      15,
+                      123,
+                      126,
+                      236
+                    ]
+                  },
+                  "pin2Value": true
+                }
+              format=iodd, pin4 in IO-Link, pin2 not available:
+                value: {
+                  "iolink": {
+                    "valid": true,
+                    "value": {
+                      "Valve_1": {
+                        "value": true
+                      },
+                      "Valve_2": {
+                        "value": false
+                      }
+                    }
+                  }
+                }
+              format=raw/iodd, pin4 in digital output, pin2 not available:
+                value: {
+                  "pin4Value": false
+                }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2152,7 +2592,7 @@ paths:
     get:
       tags:
         - devices
-      summary: Read the parameter with the given index from the specified port
+      summary: Read the parameter with the given index.
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/index'
@@ -2164,6 +2604,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
+              examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd, simple type:
+                  value: {
+                    "value": 15.2
+                  }
+                format=iodd, complex type:
+                  value: {
+                    "Distance": {
+                      "value": 15
+                    },
+                    "Quality": {
+                      "value": 12
+                    }
+                  }
+                  
         '400':
           description: Bad request
           content:
@@ -2178,7 +2640,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2219,7 +2681,7 @@ paths:
     post:
       tags:
         - devices
-      summary: Write the parameter with the given index from the specified port
+      summary: Write the parameter with the given index.
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/index'
@@ -2229,8 +2691,29 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
+            examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd, simple type:
+                  value: {
+                    "value": 15.2
+                  }
+                format=iodd, complex type:
+                  value: {
+                    "Distance": {
+                      "value": 15
+                    },
+                    "Quality": {
+                      "value": 12
+                    }
+                  }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2262,7 +2745,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
                   - msgCode: 703
@@ -2305,7 +2788,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Read the parameter with the given index from the specified port.
+        Read the parameter with the given index.
         Requires IODD support.
       parameters:
         - $ref: '#/components/parameters/deviceName'
@@ -2318,6 +2801,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
+              examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd, simple type:
+                  value: {
+                    "value": 15.2
+                  }
+                format=iodd, complex type:
+                  value: {
+                    "Distance": {
+                      "value": 15
+                    },
+                    "Quality": {
+                      "value": 12
+                    }
+                  }
         '400':
           description: Bad request
           content:
@@ -2332,7 +2836,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2376,7 +2880,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write the parameter with the given index from the specified port.
+        Write the parameter with the given index.
         Requires IODD support.
       parameters:
         - $ref: '#/components/parameters/deviceName'
@@ -2387,8 +2891,29 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
+            examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd, simple type:
+                  value: {
+                    "value": 15.2
+                  }
+                format=iodd, complex type:
+                  value: {
+                    "Distance": {
+                      "value": 15
+                    },
+                    "Quality": {
+                      "value": 12
+                    }
+                  }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2589,8 +3114,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Read the parameter with the given index and subindex from the specified
-        port
+        Read the parameter with the given index and subindex.
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/index'
@@ -2603,6 +3127,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+              examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd:
+                  value: {
+                    "value": 15.2
+                  }
         '400':
           description: Bad request
           content:
@@ -2617,7 +3153,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
         '403':
@@ -2659,8 +3195,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write the parameter with the given index and subindex from the specified
-        port
+        Write the parameter with the given index and subindex.
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/index'
@@ -2671,8 +3206,20 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+            examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd:
+                  value: {
+                    "value": 15.2
+                  }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2702,7 +3249,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not availabl
                   - msgCode: 703
@@ -2747,8 +3294,8 @@ paths:
       tags:
         - devices
       summary: >-
-        Read the parameter with the given index and subindex from the specified.
-        Requires IODD support. port
+        Read the parameter with the given index and subindex.
+        Requires IODD support.
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/parameterName'
@@ -2761,6 +3308,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+              examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd:
+                  value: {
+                    "value": 15.2
+                  }
         '400':
           description: Bad request
           content:
@@ -2819,8 +3378,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write the parameter with the given index and subindex from the
-        specified. Requires IODD support. port
+        Write the parameter with the given index and subindex. Requires IODD support. port
       parameters:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/parameterName'
@@ -2831,8 +3389,20 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+            examples:
+                format=raw:
+                  value: [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                format=iodd:
+                  value: {
+                    "value": 15.2
+                  }
       responses:
-        '202':
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -2920,70 +3490,145 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - direction
-                - parameters
-              properties:
-                direction:
-                  type: string
-                  enum: [read, write]
-                parameters:
-                  $ref: '#/components/schemas/blockParameterizationPostParametersRequest'
-              example:
-                'read, format=raw':
-                  direction: read 
-                  parameters:
-                    - address:
-                        index: 15
-                    - address:
-                        index: 65
-                        subIndex: 2
-                'read, format=iodd':
-                  direction: read
-                  parameters:
-                    - address:
-                        parameterName: "Application_tag"
-                    - address:
-                        parameterName: "Distance"
-                        subParameterName: "Quality"
-                'write, format=raw':
-                  direction: write
-                  parameters:
-                    - address:
-                        index: 123
-                      value:
-                        - 15
-                        - 232
-                        - 22
-                    - address:
-                        index: 233
-                        subIndex: 2
-                      value:
-                        - 23
-                        - 149
-                        - 206
-                'write, format=iodd':
-                  direction: write
-                  parameters:
-                    - address:
-                        parameterName: "Application_tag"
-                      value:
-                        value: "Level 2, row 3"
-                    - address:
-                        parameterName: "Hysteresis"
-                        subParameterName: "Channel_B"
-                      value:
-                        value: 123
-                        
+              $ref: '#/components/schemas/deviceBlockParameterizationPost' 
+            examples:
+              read, format=raw:
+                value: {
+                  "direction": "read",
+                  "parameters": [
+                    {
+                      "address": {
+                        "index": 15
+                      }
+                    },
+                    {
+                      "address": {
+                        "index": 65,
+                        "subIndex": 2
+                      }
+                    }
+                  ]
+                }
+              read, format=iodd:
+                value: {
+                  "direction": "read",
+                  "parameters": [
+                    {
+                      "address": {
+                        "parameterName": "Application_tag"
+                      }
+                    },
+                    {
+                      "address": {
+                        "parameterName": "Distance",
+                        "subParameterName": "Quality"
+                      }
+                    }
+                  ]
+                }
+              write, format=raw:
+                value: {
+                  "direction": "write",
+                  "parameters": [
+                    {
+                      "address": {
+                        "index": 123
+                      },
+                      "value": [
+                        15,
+                        232,
+                        22
+                      ]
+                    },
+                    {
+                      "address": {
+                        "index": 233,
+                        "subIndex": 2
+                      },
+                      "value": [
+                        23,
+                        149,
+                        206
+                      ]
+                    }
+                  ]
+                }
+              write, format=iodd:
+                value: {
+                  "direction": "write",
+                  "parameters": [
+                    {
+                      "address": {
+                        "parameterName": "Application_tag"
+                      },
+                      "value": {
+                        "value": "Level 2, row 3"
+                      }
+                    },
+                    {
+                      "address": {
+                        "parameterName": "Hysteresis",
+                        "subParameterName": "Channel_B"
+                      },
+                      "value": {
+                        "value": 123
+                      }
+                    }
+                  ]
+                }
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/blockParameterizationPostParametersAnswer'
-        '202':
+                $ref: '#/components/schemas/deviceBlockParameterizationPostParametersAnswer'
+              examples:
+                read, format=raw:
+                  value: [
+                    {
+                      "address": {
+                        "index": 123
+                      },
+                      "value": [
+                        15,
+                        232,
+                        22
+                      ]
+                    },
+                    {
+                      "address": {
+                        "index": 233,
+                        "subIndex": 2
+                      },
+                      "value": [
+                        23,
+                        149,
+                        206
+                      ]
+                    }
+                  ]
+                read, format=iodd:
+                  value: [
+                    {
+                      "address": {
+                        "parameterName": "Application_tag"
+                      },
+                      "value": {
+                        "value": "Level 2, row 3"
+                      }
+                    },
+                    {
+                      "address": {
+                        "parameterName": "Hysteresis",
+                        "subParameterName": "Channel_B"
+                      },
+                      "value": {
+                        "value": 123
+                      }
+                    }
+                  ]
+        '204':
           description: Successful operation
         '400':
           description: Bad request
@@ -3013,7 +3658,7 @@ paths:
                   - msgCode: 307
                     message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                   - msgCode: 311
-                    message: IO-Link parameter access error 
+                    message: IO-Link parameter access error
                   - msgCode: 601
                     message: IODD is not available
                   - msgCode: 701
@@ -3063,7 +3708,7 @@ paths:
         - $ref: '#/components/parameters/deviceName'
         - $ref: '#/components/parameters/eventTop'
         - $ref: '#/components/parameters/eventBottom'
-      summary: Read the Device event log. This is a prefiltered copy of the gateway 
+      summary: Read the Device event log. This is a prefiltered copy of the gateway
               level event log due to convenience reasons.
       responses:
         '200':
@@ -3173,14 +3818,16 @@ components:
       type: string
       enum:
         - ALL
-        - MASTER
-        - PORT
-        - DEVICE
+        - MASTERS
+        - PORTS
+        - DEVICES
       default: ALL
     eventMasterNumber:
       type: number
+      minimum: 1
     eventPortNumber:
       type: integer
+      minimum: 1
     eventDeviceName:
       type: string
     eventTop:
@@ -3196,6 +3843,7 @@ components:
         properties:
           masterNumber:
             type: number
+            minimum: 1
           serialNumber:
             type: string
           locationTag:
@@ -3219,8 +3867,12 @@ components:
           type: string
         vendorId:
           type: integer
+          minimum: 1
+          maximum: 65535
         masterId:
           type: integer
+          minimum: 1
+          maximum: 4294967295
         masterType:
           type: string
           enum:
@@ -3273,10 +3925,6 @@ components:
           type: string
         functionTag:
           type: string
-      example:
-        applicationSpecificTag: Fallback reader at the end of the belt
-        locationTag: Down under
-        functionTag: Code reading
     gatewayCapabilitiesGet:
       required:
         - ioddSupported
@@ -3292,12 +3940,13 @@ components:
         mqttSupported: true
     masterCapabilitiesGet:
       required:
-        - maxNumberOfPorts
+        - numberOfPorts
         - maxPowerSupply
       type: object
       properties:
-        maxNumberOfPorts:
+        numberOfPorts:
           type: integer
+          minimum: 1
         maxPowerSupply:
           type: object
           required:
@@ -3309,7 +3958,7 @@ components:
             unit:
               type: string
       example:
-        maxNumberOfPorts: 8
+        numberOfPorts: 8
         maxPowerSupply:
           value: 0.3
           unit: A
@@ -3338,20 +3987,22 @@ components:
       properties:
         gateway:
           type: string
-        master:
+        masterNumber:
           description: >-
             This property is mandatory for IO-Link Master Events, IO-Link Port
-            Events IO-Link Device Events and should not be used for other log
+            Events and IO-Link Device Events. Should not be used for other log
             entries.
-          type: number
-        port:
+          type: integer
+          minimum: 1
+        portNumber:
           description: >-
             This property is mandatory for IO-Link Port Events and IO-Link
-            Device Events and should not be used for other log entries.
-          type: number
-        device:
+            Device Events. Should not be used for other log entries.
+          type: integer
+          minimum: 1
+        deviceName:
           description: >-
-            This property is mandatory for IO-Link Device Events and should not
+            This property is mandatory for IO-Link Device Events. Should not
             be  used for other log entries.
           type: string
     eventMessageObject:
@@ -3391,26 +4042,6 @@ components:
             $ref: '#/components/schemas/eventOriginObject'
           message:
             $ref: '#/components/schemas/eventMessageObject'
-      example:
-        - time: '2018-05-18T07:31:54.123Z'
-          severity: WARNING
-          origin:
-            master: 1
-            port: 1
-            device: Temp_sensor_1
-          message:
-            code: 16912
-            mode: APPEARED
-            text: Device temperature over-run – Clear source of heat
-        - time: '2018-05-18T07:35:54.123Z'
-          severity: NOTIFICATION
-          origin:
-            master: 1
-            port: 2
-          message:
-            code: 65314
-            mode: SINGLESHOT
-            text: Device communication lost
     blockParameterizationPostParametersRequest:
       type: array
       items:
@@ -3432,13 +4063,13 @@ components:
                 required:
                   - parameterName
                 properties:
-                  parameterName: 
+                  parameterName:
                     type: string
-                  subParameterName: 
+                  subParameterName:
                     type: string
           value:
             $ref: '#/components/schemas/deviceParameterValueGetPost'
-    blockParameterizationPostParametersAnswer:
+    deviceBlockParameterizationPostParametersAnswer:
       type: array
       items:
         type: object
@@ -3460,39 +4091,12 @@ components:
                 required:
                   - parameterName
                 properties:
-                  parameterName: 
+                  parameterName:
                     type: string
-                  subParameterName: 
+                  subParameterName:
                     type: string
           value:
             $ref: '#/components/schemas/deviceParameterValueGetPost'
-      example:
-        'write': 
-          { }
-        'read, format=raw':
-          - address:
-              index: 123
-            value:
-              - 15
-              - 232
-              - 22
-          - address:
-              index: 233
-              subIndex: 2
-            value:
-              - 23
-              - 149
-              - 206
-        'read, format=iodd':
-          - address:
-              parameterName: "Application_tag"
-            value:
-              value: "Level 2, row 3"
-          - address:
-              parameterName: "Hysteresis"
-              subParameterName: "Channel_B"
-            value:
-              value: 123
     deviceEventsGet:
       type: array
       items:
@@ -3539,7 +4143,7 @@ components:
         macAddress:
           type: string
       example:
-        macAddress: "00-02-72-CE-A6-49" 
+        macAddress: "00:02:72:CE:A6:49"
     gatewayConfigurationGet:
       type: object
       properties:
@@ -3575,7 +4179,7 @@ components:
           items:
             oneOf:
               - type: object
-                description: Shall be used with ipConfiguration = MANUAL 
+                description: Shall be used with ipConfiguration = MANUAL
                 required:
                   - ipConfiguration
                   - ipAddress
@@ -3591,19 +4195,12 @@ components:
                   standardGateway:
                     type: string
               - type: object
-                description: Shall be used with ipConfiguration = DHCP 
+                description: Shall be used with ipConfiguration = DHCP
                 required:
                   - ipConfiguration
                 properties:
                   ipConfiguration:
                     type : string
-      example:
-        ethIpv4:
-          - ipConfiguration: MANUAL
-            ipAddress: 192.168.1.13
-            subnetMask: 255.255.255.0
-            standardGateway: 192.168.1.1
-          - ipConfiguration: DHCP
     mqttConfigurationGetPost:
       type: object
       required:
@@ -3638,16 +4235,6 @@ components:
               type: boolean
         keepAliveTime:
           type: integer
-      example:
-        - brokerAddress: 192.168.2.1/mqttbroker
-          username: iolink_json
-          password: "1234"
-          lastwill:
-            - topic: process_data
-              message: Process data transfer stopped.
-              qos: 0_ONLY_ONCE
-              retain: true
-          keepAliceTime: 10
     mqttConfigurationTopic:
       allOf:
         - type: object
@@ -3680,16 +4267,6 @@ components:
     mqttConfigurationTopicPost:
       allOf:
         - $ref: '#/components/schemas/mqttConfigurationTopic'
-      example:
-        topicName: PD input
-        qos: 1_AT_LEAST_ONCE
-        deviceName: DT35
-        processData:
-          direction: in
-          format: iodd
-          interval:
-            value: 10
-            unit: ms
     mqttConfigurationTopicGet:
       allOf:
         - type: object
@@ -3713,9 +4290,9 @@ components:
     portStatusGet:
       type: object
       required:
-        - portStatusInfo
+        - statusInfo
       properties:
-        portStatusInfo:
+        statusInfo:
           type: string
           enum:
             - COMMUNICATION_LOST
@@ -3751,7 +4328,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/cycleTime'
       example:
-        portStatusInfo: DEVICE_ONLINE
+        statusInfo: DEVICE_ONLINE
         ioLinkRevision: '1.1'
         transmissionRate: COM2
         masterCycleTime:
@@ -3773,8 +4350,12 @@ components:
       properties:
         vendorId:
           type: integer
+          minimum: 1
+          maximum: 65535
         deviceId:
           type: integer
+          minimum: 1
+          maximum: 16777215
         ioLinkRevision:
           type: string
           enum:
@@ -3831,10 +4412,6 @@ components:
         functionTag:
           type: string
           example: Check start of belt
-      example:
-        applicationSpecificTag: Fallback light switch at the end of the belt
-        locationTag: Down under
-        functionTag: Check start of belt
     portCapabilitiesGet:
       type: object
       required:
@@ -3869,7 +4446,7 @@ components:
     portConfigurationGet:
       type: object
       required:
-        - portMode
+        - mode
         - validationAndBackup
         - cycleTime
         - vendorId
@@ -3877,7 +4454,7 @@ components:
         - pin2Configuration
         - deviceName
       properties:
-        portMode:
+        mode:
           type: string
           enum:
             - DEACTIVATED
@@ -3907,11 +4484,15 @@ components:
             Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
+          minimum: 1
+          maximum: 65535
         deviceId:
           description: >-
             Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
+          minimum: 1
+          maximum: 16777215
         pin2Configuration:
           type: string
           enum:
@@ -3924,7 +4505,7 @@ components:
         deviceName:
           type: string
       example:
-        portMode: IOLINK_AUTOSTART
+        mode: IOLINK_AUTOSTART
         validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
         pin2Configuration: ANALOG_INPUT
         cycleTime:
@@ -3936,7 +4517,7 @@ components:
     portConfigurationPost:
       type: object
       properties:
-        portMode:
+        mode:
           type: string
           enum:
             - DEACTIVATED
@@ -3968,11 +4549,15 @@ components:
             Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
+          minimum: 1
+          maximum: 65535
         deviceId:
           description: >-
             Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
+          minimum: 1
+          maximum: 16777215
         pin2Configuration:
           type: string
           enum:
@@ -3984,16 +4569,6 @@ components:
             - POWER_2
         deviceName:
           type: string
-      example:
-        portMode: IOLINK_AUTOSTART
-        validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-        pin2Configuration: ANALOG_INPUT
-        cycleTime:
-          value: 2.3
-          unit: ms
-        vendorId: 26
-        deviceId: 333
-        deviceName: Distance_sensor_1
     dataStorageGetPost:
       description: >-
         In case the Data Storage is empty, the header object is empty and the
@@ -4013,8 +4588,12 @@ components:
               properties:
                 vendorId:
                   type: integer
+                  minimum: 1
+                  maximum: 65535
                 deviceId:
                   type: integer
+                  minimum: 1
+                  maximum: 16777215
                 ioLinkRevision:
                   type: string
                   enum:
@@ -4024,12 +4603,6 @@ components:
         content:
           description: Base64 coded DS data Ojects. Max size = 2KB*1.33.
           type: string
-      example:
-        header:
-          vendorId: 15
-          deviceId: 65253
-          ioLinkRevision: '1.1'
-        content: dasdASDasddaSdASdASdasDasdASdasDASdasasd
     processDataValue:
       type: object
       properties:
@@ -4093,38 +4666,6 @@ components:
           $ref: '#/components/schemas/processDataValue'
         control:
           $ref: '#/components/schemas/processDataValue'
-      example:
-        'format=raw, content=measure, pin4=IO-Link, pin2=sio(input)':
-          measure:
-            ioLink:
-              valid: true
-              value:
-                - 12
-                - 22
-                - 216
-            pin2Value: true
-        'format=iodd, content=measure, pin4=IO-Link, pin2=sio(input)':
-          measure:
-            ioLink:
-              valid: true
-              value:
-                Distance: { value: 55 }
-                Quality: { value: 12 }
-            pin2Value: true
-        'format=iodd, content=measurecontrol, pin4=IO-Link, pin2=sio(output)':
-          measure:
-            ioLink:
-              valid: true
-              value: { value: 1.2 }
-          control:
-            ioLink:
-              valid: true
-              value: { vaue: 50 }
-            pin2Value: false
-        'format=iodd/raw, content=control, pin4=sio(output), pin2=sio(output)':
-          control:
-            pin2Value: true
-            pin4Value: false
     deviceProcessDataValuePost:
       $ref: '#/components/schemas/processDataValue'
     deviceRawTypeValue:
@@ -4195,29 +4736,21 @@ components:
         - $ref: '#/components/schemas/deviceRawTypeValue'
         - $ref: '#/components/schemas/deviceSimpleTypeValue'
         - $ref: '#/components/schemas/deviceComplexTypeValue'
-      example:
-        'format=raw':
-          - 0
-          - 156
-          - 125
-          - 25
-        'format=iodd, simpleType':
-          value: 15.2
-        'format=iodd, complexType':
-          Distance: { value: 15 }
-          Quality: { value: 12 }
     deviceParameterSubindexValueGetPost:
       oneOf:
         - $ref: '#/components/schemas/deviceRawTypeValue'
         - $ref: '#/components/schemas/deviceSimpleTypeValue'
-      example:
-        'format=raw':
-          - 0
-          - 156
-          - 125
-          - 25
-        'format=iodd':
-          value: 167.2
+    deviceBlockParameterizationPost:
+      type: object
+      required:
+        - direction
+        - parameters
+      properties:
+        direction:
+          type: string
+          enum: [read, write]
+        parameters:
+          $ref: '#/components/schemas/blockParameterizationPostParametersRequest'
     ioddIdentification:
       type: object
       required:
@@ -4309,6 +4842,7 @@ components:
       description: Master identification number starting with 1
       schema:
         type: integer
+        minimum: 1
       required: true
     portNumber:
       name: portNumber
@@ -4316,6 +4850,7 @@ components:
       description: Port identification number starting with 1
       schema:
         type: integer
+        minimum: 1
       required: true
     deviceName:
       name: deviceName
@@ -4336,19 +4871,19 @@ components:
     eventMasterNumber:
       name: masterNumber
       in: query
-      description: masterId is only allowed with origin=MASTER
+      description: masterNumber is only applicable with origin=MASTERS and origin=PORTS
       schema:
         $ref: '#/components/schemas/eventMasterNumber'
     eventPortNumber:
       name: portNumber
       in: query
-      description: portId is only allowed with origin=PORT
+      description: portnumber is only applicable with origin=PORTS
       schema:
         $ref: '#/components/schemas/eventPortNumber'
     eventDeviceName:
       name: deviceName
       in: query
-      description: deviceName is only allowed with origin=DEVICE
+      description: deviceName is only applicable with origin=DEVICES
       schema:
         $ref: '#/components/schemas/eventDeviceName'
     eventTop:
