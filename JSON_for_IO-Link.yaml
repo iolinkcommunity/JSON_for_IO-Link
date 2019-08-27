@@ -3902,7 +3902,7 @@ components:
         functionTag:
           type: string
       example:
-        vendorName: SICK AG
+        vendorName: Vendor GmbH
         vendorId: 26
         masterId: 42
         masterType: Master acc. V1.0
@@ -3911,8 +3911,8 @@ components:
         productName: IO-Link Master
         hardwareRevision: 3.2.1.444R
         softwareRevision: 3.2.1.888R
-        website: 'http://www.sick.de/io-link-master'
-        manual: 'http://www.sick.de/io-link-master/documentation.pdf'
+        website: 'http://www.io-link.com/io-link-master'
+        manual: 'http://www.io-link.com/io-link-master/documentation.pdf'
         applicationSpecificTag: Fallback reader at the end of the belt
         locationTag: Down under
         functionTag: Code reading
@@ -4003,7 +4003,7 @@ components:
         deviceName:
           description: >-
             This property is mandatory for IO-Link Device Events. Should not
-            be  used for other log entries.
+            be used for other log entries.
           type: string
     eventMessageObject:
       type: object
