@@ -2310,7 +2310,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceProcessDataValueGet'
               examples:
-                Format=raw, content=measure, pin4 in IO-Link, pin2 in digital input:
+                Format=byteArray, content=measure, pin4 in IO-Link, pin2 in digital input:
                   value: {
                     "measure": {
                       "ioLink": {
@@ -2361,7 +2361,7 @@ paths:
                       "pin2Value": false
                     }
                   }
-                Format=raw/iodd, content=control, pin4 in digital output, pin2 in digital input:
+                Format=byteArray/iodd, content=control, pin4 in digital output, pin2 in digital input:
                   value: {
                     "control": {
                       "pin2Value": true,
@@ -2426,7 +2426,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceProcessDataValuePost'
             examples:
-              format=raw, pin4 in IO-Link, pin2 in digital output:
+              format=byteArray, pin4 in IO-Link, pin2 in digital output:
                 value: {
                   "ioLink": {
                     "valid": true,
@@ -2453,7 +2453,7 @@ paths:
                     }
                   }
                 }
-              format=raw/iodd, pin4 in digital output, pin2 not available:
+              format=byteArray/iodd, pin4 in digital output, pin2 not available:
                 value: {
                   "pin4Value": false
                 }
@@ -2605,7 +2605,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -2692,7 +2692,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -2802,7 +2802,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -2892,7 +2892,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -3128,7 +3128,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
               examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -3207,7 +3207,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
             examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -3309,7 +3309,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
               examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -3390,7 +3390,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
             examples:
-                format=raw:
+                format=byteArray:
                   value: [
                       0,
                       156,
@@ -3492,7 +3492,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceBlockParameterizationPost' 
             examples:
-              read, format=raw:
+              read, format=byteArray:
                 value: {
                   "direction": "read",
                   "parameters": [
@@ -3526,7 +3526,7 @@ paths:
                     }
                   ]
                 }
-              write, format=raw:
+              write, format=byteArray:
                 value: {
                   "direction": "write",
                   "parameters": [
@@ -3584,7 +3584,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceBlockParameterizationPostParametersAnswer'
               examples:
-                read, format=raw:
+                read, format=byteArray:
                   value: [
                     {
                       "address": {
@@ -3804,9 +3804,9 @@ components:
     format:
       type: string
       enum:
-        - raw
+        - byteArray
         - iodd
-      default: raw
+      default: byteArray
     content:
       type: string
       enum:
@@ -4620,7 +4620,7 @@ components:
                 Process data validity
             value:
               oneOf:
-                - $ref: '#/components/schemas/deviceRawTypeValue'
+                - $ref: '#/components/schemas/deviceByteArrayTypeValue'
                 - $ref: '#/components/schemas/deviceSimpleTypeValue'
                 - $ref: '#/components/schemas/deviceComplexTypeValue'
               description: >
@@ -4636,7 +4636,7 @@ components:
             IO-Link cable pin2 level if it is used as digital input or output.
             (false - 0 V, true - 24 V)
       example:
-        'format=raw, pin4=IO-Link, pin2=sio':
+        'format=byteArray, pin4=IO-Link, pin2=sio':
           ioLink:
             valid: true
             value:
@@ -4651,7 +4651,7 @@ components:
             value:
               Valve_1: { value: true }
               Valve_2: { value: false }
-        'format=raw/iodd, pin4=sio, pin2=deactivated/not available':
+        'format=byteArray/iodd, pin4=sio, pin2=deactivated/not available':
           pin4Value: false
     deviceProcessDataValueGet:
       type: object
@@ -4668,9 +4668,9 @@ components:
           $ref: '#/components/schemas/processDataValue'
     deviceProcessDataValuePost:
       $ref: '#/components/schemas/processDataValue'
-    deviceRawTypeValue:
+    deviceByteArrayTypeValue:
       type: array
-      description: The value in raw format.
+      description: The value in byteArray format.
       items:
         type: number
         minimum: 0
@@ -4733,12 +4733,12 @@ components:
           subParameterName: Minimum_cycle_time
     deviceParameterValueGetPost:
       oneOf:
-        - $ref: '#/components/schemas/deviceRawTypeValue'
+        - $ref: '#/components/schemas/deviceByteArrayTypeValue'
         - $ref: '#/components/schemas/deviceSimpleTypeValue'
         - $ref: '#/components/schemas/deviceComplexTypeValue'
     deviceParameterSubindexValueGetPost:
       oneOf:
-        - $ref: '#/components/schemas/deviceRawTypeValue'
+        - $ref: '#/components/schemas/deviceByteArrayTypeValue'
         - $ref: '#/components/schemas/deviceSimpleTypeValue'
     deviceBlockParameterizationPost:
       type: object
