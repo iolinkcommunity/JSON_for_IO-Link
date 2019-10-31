@@ -142,7 +142,7 @@ info:
 
     * If the request was successful and no body is specified, the response
     contains nothing in the body.
-  version: 0.0.9
+  version: 0.0.10
   title: Swagger IO-Link Master
   contact:
     email: lorand.molnar@teconcept.de
@@ -186,27 +186,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/gateway/capabilities':
     get:
       tags:
@@ -225,27 +231,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/gateway/configuration':
     get:
       tags:
@@ -307,27 +319,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
     post:
       tags:
         - gateway
@@ -384,43 +402,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client (e.g. fieldbuscontroller)
-                - msgCode: 201
-                  message: Parsing failed (error while parsing the incoming JSON value)
-                - msgCode: 202
-                  message: Invalid data (given for the value, e.g. malformed IP address)
-                - msgCode: 203
-                  message: Invalid JSON data type (e.g. string instead of numbers)
-                - msgCode: 204
-                  message: Unknown enumeration value
-                - msgCode: 205
-                  message: Value out of range (exceeds the minimum or maximum value)
-                - msgCode: 206
-                  message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                - msgCode: 305
-                  message: Incorrect query parameter name
-                - msgCode: 701
-                  message: Incomplete data set
+              examples:
+                104:
+                  value: 
+                    msgCode: 104
+                    message: Action locked by another client (e.g. fieldbuscontroller)
+                201:
+                  value:
+                    msgCode: 201
+                    message: Parsing failed (error while parsing the incoming JSON value)
+
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/gateway/reset':
     post:
       tags:
@@ -435,29 +448,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client (e.g. fieldbuscontroller)
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client (e.g. fieldbuscontroller)
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/gateway/reboot':
     post:
       tags:
@@ -472,29 +493,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client (e.g. fieldbuscontroller)
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client (e.g. fieldbuscontroller)
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/gateway/events':
     get:
       tags:
@@ -647,27 +676,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/mqtt/configuration':
     get:
       tags:
@@ -706,36 +741,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
     post:
       tags:
         - mqtt
@@ -800,27 +843,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/mqtt/topics':
     get:
       tags:
@@ -865,36 +914,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
     post:
       tags:
         - mqtt
@@ -940,52 +997,76 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client
-                - msgCode: 201
-                  message: Parsing failed (error while parsing the incoming JSON value)
-                - msgCode: 202
-                  message: Invalid data (given for the value, e.g. malformed IP address)
-                - msgCode: 203
-                  message: Invalid JSON data type (e.g. string instead of numbers)
-                - msgCode: 204
-                  message: Unknown enumeration value
-                - msgCode: 205
-                  message: Value out of range (exceeds the minimum or maximum value)
-                - msgCode: 206
-                  message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                - msgCode: 305
-                  message: Incorrect query parameter name
-                - msgCode: 701
-                  message: Incomplete data set
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client
+                201:
+                  value:
+                    msgCode: 201
+                    message: Parsing failed (error while parsing the incoming JSON value)
+                202:
+                  value:
+                    msgCode: 202
+                    message: Invalid data (given for the value, e.g. malformed IP address)
+                203:
+                  value:
+                    msgCode: 203
+                    message: Invalid JSON data type (e.g. string instead of numbers)
+                204:
+                  value:
+                    msgCode: 204
+                    message: Unknown enumeration value
+                205:
+                  value:
+                    msgCode: 205
+                    message: Value out of range (exceeds the minimum or maximum value)
+                206:
+                  value:
+                    msgCode: 206
+                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
+                701:
+                  value:
+                    msgCode: 701
+                    message: Incomplete data set
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/mqtt/topics/{topicId}':
     get:
       tags:
@@ -1030,38 +1111,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
-                - msgCode: 301
-                  message: Resource not found (e.g. wrong URL)
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
+                301:
+                  value:
+                    msgCode: 301
+                    message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
     delete:
       tags:
         - mqtt
@@ -1077,40 +1168,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
-                - msgCode: 301
-                  message: Resource not found (e.g. wrong URL)
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
+                301:
+                  value:
+                    msgCode: 301
+                    message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/iodds':
     get:
       tags:
@@ -1134,36 +1237,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
     post:
       tags:
         - iodds
@@ -1188,46 +1299,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client
-                - msgCode: 305
-                  message: Incorrect query parameter name
-                - msgCode: 603
-                  message: Uploaded file is no valid IODD XML. Upload rejected
-                - msgCode: 604
-                  message: Uploaded file is no valid IODD XML. CRC check failed
-                - msgCode: 605
-                  message: Uploaded file is no valid IODD XML. Parsing failed
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
+                603:
+                  value:
+                    msgCode: 603
+                    message: Uploaded file is no valid IODD XML. Upload rejected
+                604:
+                  value:
+                    msgCode: 604
+                    message: Uploaded file is no valid IODD XML. CRC check failed
+                605:
+                  value:
+                    msgCode: 605
+                    message: Uploaded file is no valid IODD XML. Parsing failed
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 602
-                  message: Unable to upload IODD XML file. Insufficient memory space
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                602:
+                  value:
+                    msgCode: 602
+                    message: Unable to upload IODD XML file. Insufficient memory space
   '/iodds/vendors/{vendorId}/devices/{deviceId}/revisions/{ioLinkRevision}':
     get:
       tags:
@@ -1253,38 +1382,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
-                - msgCode: 301
-                  message: Resource not found (e.g. wrong URL)
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
+                301:
+                  value:
+                    msgCode: 301
+                    message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
     delete:
       tags:
         - iodds
@@ -1294,52 +1433,60 @@ paths:
         - $ref: '#/components/parameters/deviceId'
         - $ref: '#/components/parameters/ioLinkRevision'
       responses:
-        '200':
+        '204':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ioddsGet'
         '400':
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 103
-                  message: Operation not supported
-                - msgCode: 301
-                  message: Resource not found (e.g. wrong URL)
+              examples:
+                103:
+                  value:
+                    msgCode: 103
+                    message: Operation not supported
+                301:
+                  value:
+                    msgCode: 301
+                    message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
   '/masters':
     get:
       tags:
@@ -1360,29 +1507,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
   '/masters/{masterNumber}/identification':
     get:
       tags:
@@ -1403,37 +1558,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
+              examples:
+                305:
+                  value:
+                    msgCode: 305
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 9999
-                  message: Error codes 302
+              examples:
+                9999:
+                  value:
+                    msgCode: 9999
+                    message: Error codes 302
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - masters
@@ -1462,48 +1627,68 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client (e.g. fieldbus controller)
-                - msgCode: 201
-                  message: Parsing failed (error while parsing the incoming JSON value)
-                - msgCode: 202
-                  message: Invalid data (given for the value, e.g. malformed IP address)
-                - msgCode: 203
-                  message: Invalid JSON data type (e.g. string instead of numbers)
-                - msgCode: 206
-                  message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client (e.g. fieldbus controller)
+                201:
+                  value:
+                    msgCode: 201
+                    message: Parsing failed (error while parsing the incoming JSON value)
+                202:
+                  value:
+                    msgCode: 202
+                    message: Invalid data (given for the value, e.g. malformed IP address)
+                203:
+                  value:
+                    msgCode: 203
+                    message: Invalid JSON data type (e.g. string instead of numbers)
+                206:
+                  value:
+                    msgCode: 206
+                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
   '/masters/{masterNumber}/capabilities':
     get:
       tags:
@@ -1524,38 +1709,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                   value:
+                    msgCode: 102
+                    message: Internal communication error
   '/masters/{masterNumber}/ports':
     get:
       tags:
@@ -1589,38 +1784,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/capabilities':
     get:
       tags:
@@ -1642,40 +1847,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
-                - msgCode: 303
-                  message: portNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
+                303:
+                  value:
+                    msgCode: 303
+                    message: portNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/configuration':
     get:
       tags:
@@ -1697,40 +1914,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
-                - msgCode: 303
-                  message: portNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
+                303:
+                  value:
+                    msgCode: 303
+                    message: portNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - ports
@@ -1767,58 +1996,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client (e.g. fieldbus controller)
-                - msgCode: 201
-                  message: Parsing failed (error while parsing the incoming JSON value)
-                - msgCode: 202
-                  message: Invalid data (given for the value, e.g. malformed IP address)
-                - msgCode: 203
-                  message: Invalid JSON data type (e.g. string instead of numbers)
-                - msgCode: 204
-                  message: Unknown enumeration value
-                - msgCode: 205
-                  message: Value out of range (exceeds the minimum or maximum value)
-                - msgCode: 207
-                  message: Duplicated Device Name
-                - msgCode: 305
-                  message: Incorrect query parameter name
-                - msgCode: 702
-                  message: Data set not applicable (not supported), the whole data set is rejected
-                - msgCode: 703
-                  message: Incompatible data set combination, the whole data set is rejected
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client (e.g. fieldbus controller)
+                201:
+                  value:
+                    msgCode: 201
+                    message: Parsing failed (error while parsing the incoming JSON value)
+                202:
+                  value:
+                    msgCode: 202
+                    message: Invalid data (given for the value, e.g. malformed IP address)
+                203:
+                  value:
+                    msgCode: 203
+                    message: Invalid JSON data type (e.g. string instead of numbers)
+                204:
+                  value:
+                    msgCode: 204
+                    message: Unknown enumeration value
+                205:
+                  value:
+                    msgCode: 205
+                    message: Value out of range (exceeds the minimum or maximum value)
+                207:
+                  value:
+                    msgCode: 207
+                    message: Duplicated Device Name
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
+                702:
+                  value:
+                    msgCode: 702
+                    message: Data set not applicable (not supported), the whole data set is rejected
+                703:
+                  value:
+                    msgCode: 703
+                    message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
-                - msgCode: 303
-                  message: portNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
+                303:
+                  value:
+                    msgCode: 303
+                    message: portNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/status':
     get:
       tags:
@@ -1840,40 +2099,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
-                - msgCode: 303
-                  message: portNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
+                303:
+                  value:
+                    msgCode: 303
+                    message: portNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/datastorage':
     get:
       tags:
@@ -1910,40 +2181,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 305
-                  message: Incorrect query parameter name
+              examples:
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
-                - msgCode: 303
-                  message: portNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
+                303:
+                  value:
+                    msgCode: 303
+                    message: portNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
     post:
       tags:
         - ports
@@ -1981,58 +2264,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 104
-                  message: Action locked by another client (e.g. fieldbus controller)
-                - msgCode: 201
-                  message: Parsing failed (error while parsing the incoming JSON value)
-                - msgCode: 202
-                  message: Invalid data (given for the value, e.g. malformed IP address)
-                - msgCode: 203
-                  message: Invalid JSON data type (e.g. string instead of numbers)
-                - msgCode: 204
-                  message: Unknown enumeration value
-                - msgCode: 205
-                  message: Value out of range (exceeds the minimum or maximum value)
-                - msgCode: 206
-                  message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                - msgCode: 305
-                  message: Incorrect query parameter name
-                - msgcode: 401
-                  message: Mismatch between configured device and data storage meta data
-                - msgCode: 701
-                  message: Incomplete data set
+              examples:
+                104:
+                  value:
+                    msgCode: 104
+                    message: Action locked by another client (e.g. fieldbus controller)
+                201:
+                  value:
+                    msgCode: 201
+                    message: Parsing failed (error while parsing the incoming JSON value)
+                202:
+                  value:
+                    msgCode: 202
+                    message: Invalid data (given for the value, e.g. malformed IP address)
+                203:
+                  value:
+                    msgCode: 203
+                    message: Invalid JSON data type (e.g. string instead of numbers)
+                204:
+                  value:
+                    msgCode: 204
+                    message: Unknown enumeration value
+                205:
+                  value:
+                    msgCode: 205
+                    message: Value out of range (exceeds the minimum or maximum value)
+                206:
+                  value:
+                    msgCode: 206
+                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                305:
+                  value:
+                    msgCode: 305
+                    message: Incorrect query parameter name
+                401:
+                  value:
+                    msgcode: 401
+                    message: Mismatch between configured device and data storage meta data
+                701:
+                  value:
+                    msgCode: 701
+                    message: Incomplete data set
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 150
-                  message: Permission denied (e.g. user management)
+              examples:
+                150:
+                  value:
+                    msgCode: 150
+                    message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 302
-                  message: masterNumber not found
-                - msgCode: 303
-                  message: portNumber not found
+              examples:
+                302:
+                  value:
+                    msgCode: 302
+                    message: masterNumber not found
+                303:
+                  value:
+                    msgCode: 303
+                    message: portNumber not found
         '500':
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 101
-                  message: Internal server error
-                - msgCode: 102
-                  message: Internal communication error
+              examples:
+                101:
+                  value:
+                    msgCode: 101
+                    message: Internal server error
+                102:
+                  value:
+                    msgCode: 102
+                    message: Internal communication error
   '/devices':
     get:
       tags:
@@ -2079,29 +2392,37 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/identification':
     get:
       tags:
@@ -2126,42 +2447,56 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 304
-                  message: deviceName not found
-                - msgCode: 308
-                  message: IO-Link Device is not accessible (not connected or communication error)
+              examples:
+                304:
+                  value:
+                    msgCode: 304
+                    message: deviceName not found
+                308:
+                  value:
+                    msgCode: 308
+                    message: IO-Link Device is not accessible (not connected or communication error)
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
     post:
       tags:
         - devices
@@ -2190,56 +2525,84 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
-                  - msgCode: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
-                  - msgCode: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
-                  - msgCode: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
-                  - msgCode: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                examples:
+                    104:
+                      value:
+                        msgCode: 104
+                        message: Action locked by another client (e.g. fieldbus controller)
+                    201:
+                      value:
+                        msgCode: 201
+                        message: Parsing failed (error while parsing the incoming JSON value)
+                    202:
+                      value:
+                        msgCode: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                    203:
+                      value:
+                        msgCode: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                    206:
+                      value:
+                        msgCode: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
-                  - msgCode: 310
-                    message: IO-Link parameter access not supported by the Device
+                examples:
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
+                    310:
+                      value:
+                        msgCode: 310
+                        message: IO-Link parameter access not supported by the Device
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/capabilities':
     get:
       tags:
@@ -2264,33 +2627,45 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
         '404':
           description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - msgCode: 304
-                  message: deviceName not found
-                - msgCode: 308
-                  message: IO-Link Device is not accessible (not connected or communication error)
+              examples:
+                304:
+                  value:
+                    msgCode: 304
+                    message: deviceName not found
+                308:
+                  value:
+                    msgCode: 308
+                    message: IO-Link Device is not accessible (not connected or communication error)
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/processdata/value':
     get:
       tags:
@@ -2374,44 +2749,60 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
     post:
       tags:
         - devices
@@ -2466,37 +2857,67 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
-                  - msgCode: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
-                  - msgCode: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
-                  - msgCode: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
-                  - msgCode: 204
-                    message: Unknown enumeration value
-                  - msgCode: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
-                  - msgCode: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgcode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 501
-                    message: Writing processdata to Pin 2 is not possible. Pin 2 is not configured as DIGITAL_OUTPUT
-                  - msgCode: 502
-                    message: Writing processdata to Pin 4 is not possible. Pin 4 is not configured as DIGITAL_OUTPUT
-                  - msgCode: 503
-                    message: Attached IO-Link device has no output process data
-                  - msgCode: 601
-                    message: IODD is not available
-                  - msgCode: 703
-                    message: Incompatible data set combination, the whole data set is rejected
+                examples:
+                    104:
+                      value:
+                        msgCode: 104
+                        message: Action locked by another client (e.g. fieldbus controller)
+                    201:
+                      value:
+                        msgCode: 201
+                        message: Parsing failed (error while parsing the incoming JSON value)
+                    202:
+                      value:
+                        msgCode: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                    203:
+                      value:
+                        msgCode: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                    204:
+                      value:
+                        msgCode: 204
+                        message: Unknown enumeration value
+                    205:
+                      value:
+                        msgCode: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                    206:
+                      value:
+                        msgCode: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgcode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    501:
+                      value:
+                        msgCode: 501
+                        message: Writing processdata to Pin 2 is not possible. Pin 2 is not configured as DIGITAL_OUTPUT
+                    502:
+                      value:
+                        msgCode: 502
+                        message: Writing processdata to Pin 4 is not possible. Pin 4 is not configured as DIGITAL_OUTPUT
+                    503:
+                      value:
+                        msgCode: 503
+                        message: Attached IO-Link device has no output process data
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
+                    703:
+                      value:
+                        msgCode: 703
+                        message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
@@ -2512,24 +2933,34 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                  101:
+                    value:
+                      msgCode: 101
+                      message: Internal server error
+                  102:
+                    value:
+                      msgCode: 102
+                      message: Internal communication error
   '/devices/{deviceName}/parameters':
     get:
       tags:
@@ -2552,42 +2983,56 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/parameters/{index}/value':
     get:
       tags:
@@ -2632,52 +3077,76 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
     post:
       tags:
         - devices
@@ -2721,68 +3190,108 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
-                  - msgCode: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
-                  - msgCode: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
-                  - msgCode: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
-                  - msgCode: 204
-                    message: Unknown enumeration value
-                  - msgCode: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
-                  - msgCode: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
-                  - msgCode: 703
-                    message: Incompatible data set combination, the whole data set is rejected
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    104:
+                      value:
+                        msgCode: 104
+                        message: Action locked by another client (e.g. fieldbus controller)
+                    201:
+                      value:
+                        msgCode: 201
+                        message: Parsing failed (error while parsing the incoming JSON value)
+                    202:
+                      value:
+                        msgCode: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                    203:
+                      value:
+                        msgCode: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                    204:
+                      value:
+                        msgCode: 204
+                        message: Unknown enumeration value
+                    205:
+                      value:
+                        msgCode: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                    206:
+                      value:
+                        msgCode: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
+                    703:
+                      value:
+                        msgCode: 703
+                        message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
+                examples:
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/parameters/{parameterName}/value':
     get:
       tags:
@@ -2828,54 +3337,80 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
-                  - msgCode: 312
-                    message: IO-Link parameter name is not unique
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
+                    312:
+                      value:
+                        msgCode: 312
+                        message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
     post:
       tags:
         - devices
@@ -2921,70 +3456,112 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
-                  - msgCode: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
-                  - msgCode: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
-                  - msgCode: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
-                  - msgCode: 204
-                    message: Unknown enumeration value
-                  - msgCode: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
-                  - msgCode: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
-                  - msgCode: 703
-                    message: Incompatible data set combination, the whole data set is rejected
+                examples:
+                    104:
+                      value:
+                        msgCode: 104
+                        message: Action locked by another client (e.g. fieldbus controller)
+                    201:
+                      value:
+                        msgCode: 201
+                        message: Parsing failed (error while parsing the incoming JSON value)
+                    202:
+                      value:
+                        msgCode: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                    203:
+                      value:
+                        msgCode: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                    204:
+                      value:
+                        msgCode: 204
+                        message: Unknown enumeration value
+                    205:
+                      value:
+                        msgCode: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                    206:
+                      value:
+                        msgCode: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
+                    703:
+                      value:
+                        msgCode: 703
+                        message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
-                  - msgCode: 312
-                    message: IO-Link parameter name is not unique
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
+                    312:
+                      value:
+                        msgCode: 312
+                        message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/parameters/{index}/subindices':
     get:
       tags:
@@ -3008,44 +3585,60 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 309
-                    message: IO-Link parameter not found
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/parameters/{parameterName}/subindices':
     get:
       tags:
@@ -3069,46 +3662,64 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 309
-                    message: IO-Link parameter not found
-                  - msgCode: 312
-                    message: IO-Link parameter name is not unique
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
+                    312:
+                      value:
+                        msgCode: 312
+                        message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/parameters/{index}/subindices/{subindex}/value':
     get:
       tags:
@@ -3145,52 +3756,76 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
     post:
       tags:
         - devices
@@ -3227,68 +3862,108 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
-                  - msgCode: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
-                  - msgCode: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
-                  - msgCode: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
-                  - msgCode: 204
-                    message: Unknown enumeration value
-                  - msgCode: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
-                  - msgCode: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not availabl
-                  - msgCode: 703
-                    message: Incompatible data set combination, the whole data set is rejected
+                examples:
+                    104:
+                      value:
+                        msgCode: 104
+                        message: Action locked by another client (e.g. fieldbus controller)
+                    201:
+                      value:
+                        msgCode: 201
+                        message: Parsing failed (error while parsing the incoming JSON value)
+                    202:
+                      value:
+                        msgCode: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                    203:
+                      value:
+                        msgCode: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                    204:
+                      value:
+                        msgCode: 204
+                        message: Unknown enumeration value
+                    205:
+                      value:
+                        msgCode: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                    206:
+                      value:
+                        msgCode: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not availabl
+                    703:
+                      value:
+                        msgCode: 703
+                        message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/parameters/{parameterName}/subindices/{subParameterName}/value':
     get:
       tags:
@@ -3326,54 +4001,80 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
-                  - msgCode: 312
-                    message: IO-Link parameter name is not unique
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
+                    312:
+                      value:
+                        msgCode: 312
+                        message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
     post:
       tags:
         - devices
@@ -3410,72 +4111,116 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
-                  - msgCode: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
-                  - msgCode: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
-                  - msgCode: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
-                  - msgCode: 204
-                    message: Unknown enumeration value
-                  - msgCode: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
-                  - msgCode: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
-                  - msgCode: 703
-                    message: Incompatible data set combination, the whole data set is rejected
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    104:
+                      value:
+                        msgCode: 104
+                        message: Action locked by another client (e.g. fieldbus controller)
+                    201:
+                      value:
+                        msgCode: 201
+                        message: Parsing failed (error while parsing the incoming JSON value)
+                    202:
+                      value:
+                        msgCode: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                    203:
+                      value:
+                        msgCode: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                    204:
+                      value:
+                        msgCode: 204
+                        message: Unknown enumeration value
+                    205:
+                      value:
+                        msgCode: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                    206:
+                      value:
+                        msgCode: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
+                    703:
+                      value:
+                        msgCode: 703
+                        message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
-                  - msgCode: 312
-                    message: IO-Link parameter name is not unique
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
+                    312:
+                      value:
+                        msgCode: 312
+                        message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/blockparameterization':
     post:
       tags:
@@ -3494,7 +4239,7 @@ paths:
             examples:
               read, format=byteArray:
                 value: {
-                  "direction": "read",
+                  "direction": "READ",
                   "parameters": [
                     {
                       "address": {
@@ -3511,7 +4256,7 @@ paths:
                 }
               read, format=iodd:
                 value: {
-                  "direction": "read",
+                  "direction": "READ",
                   "parameters": [
                     {
                       "address": {
@@ -3528,7 +4273,7 @@ paths:
                 }
               write, format=byteArray:
                 value: {
-                  "direction": "write",
+                  "direction": "WRITE",
                   "parameters": [
                     {
                       "address": {
@@ -3555,7 +4300,7 @@ paths:
                 }
               write, format=iodd:
                 value: {
-                  "direction": "write",
+                  "direction": "WRITE",
                   "parameters": [
                     {
                       "address": {
@@ -3590,22 +4335,28 @@ paths:
                       "address": {
                         "index": 123
                       },
-                      "value": [
-                        15,
-                        232,
-                        22
-                      ]
+                      "result": {
+                        "parameterExchangeResult": "READ_SUCCESS",
+                        "value": [
+                          15,
+                          232,
+                          22
+                        ]
+                      }
                     },
                     {
                       "address": {
                         "index": 233,
                         "subIndex": 2
                       },
-                      "value": [
-                        23,
-                        149,
-                        206
-                      ]
+                      "result": {
+                        "parameterExchangeResult": "READ_SUCCESS",
+                        "value": [
+                          23,
+                          149,
+                          206
+                        ]
+                      }
                     }
                   ]
                 read, format=iodd:
@@ -3614,8 +4365,11 @@ paths:
                       "address": {
                         "parameterName": "Application_tag"
                       },
-                      "value": {
-                        "value": "Level 2, row 3"
+                      "result": {
+                        "parameterExchangeResult": "READ_SUCCESS",
+                        "value": {
+                          "value": "Level 2, row 3"
+                        }
                       }
                     },
                     {
@@ -3623,83 +4377,219 @@ paths:
                         "parameterName": "Hysteresis",
                         "subParameterName": "Channel_B"
                       },
-                      "value": {
-                        "value": 123
+                      "result": {
+                        "parameterExchangeResult": "READ_SUCCESS",
+                        "value": {
+                          "value": 123
+                        }
                       }
                     }
                   ]
-        '204':
-          description: Successful operation
+                read, format=byteArray with error:
+                  value: [
+                    {
+                      "address": {
+                        "index": 123
+                      },
+                      "result": {
+                        "parameterExchangeResult": "ERROR",
+                        "iolinkError": {
+                          "code": 32802,
+                          "message": "Service temporarily not available – Device control"
+                        }
+                      }
+                    },
+                    {
+                      "address": {
+                        "index": 233
+                      },
+                      "result": {
+                        "parameterExchangeResult": "ERROR",
+                        "iolinkError": {
+                          "code": 32803,
+                          "message": "Access denied"
+                        }
+                      }
+                    }
+                  ]
+                write, format=byteArray:
+                  value: [
+                    {
+                      "address": {
+                        "index": 123
+                      },
+                      "result": {
+                        "parameterExchangeResult": "WRITE_SUCCESS",
+                      }
+                    },
+                    {
+                      "address": {
+                        "index": 233
+                      },
+                      "result": {
+                        "parameterExchangeResult": "WRITE_SUCCESS",
+                      }
+                    }
+                  ]
+                write, format=iodd:
+                  value: [
+                    {
+                      "address": {
+                        "parameterName": "Application_tag"
+                      },
+                      "result": {
+                        "parameterExchangeResult": "WRITE_SUCCESS",
+                      }
+                    },
+                    {
+                      "address": {
+                        "parameterName": "Hysteresis",
+                        "subParameterName": "Channel_B"
+                      },
+                      "result": {
+                        "parameterExchangeResult": "WRITE_SUCCESS"
+                      }
+                    }
+                  ]
+                write, format=byteArray, with error:
+                  value: [
+                    {
+                      "address": {
+                        "index": 123
+                      },
+                      "result": {
+                        "parameterExchangeResult": "ERROR",
+                        "iolinkError": {
+                          "code": 32816,
+                          "message": "Parameter value out of range"
+                        }
+                      }
+                    },
+                    {
+                      "address": {
+                        "index": 233
+                      },
+                      "result": {
+                        "parameterExchangeResult": "ERROR",
+                        "iolinkError": {
+                          "code": 32817,
+                          "message": "Parameter value above limit"
+                        }
+                      }
+                    }
+                  ]
         '400':
           description: Bad request
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
-                  - msgCode: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
-                  - msgCode: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
-                  - msgCode: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
-                  - msgCode: 204
-                    message: Unknown enumeration value
-                  - msgCode: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
-                  - msgCode: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
-                  - msgCode: 307
-                    message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
-                  - msgCode: 311
-                    message: IO-Link parameter access error
-                  - msgCode: 601
-                    message: IODD is not available
-                  - msgCode: 701
-                    message: Incomplete data set
-                  - msgCode: 703
-                    message: Incompatible data set combination, the whole data set is rejected
+                examples:
+                    104:
+                      value:
+                        msgCode: 104
+                        message: Action locked by another client (e.g. fieldbus controller)
+                    201:
+                      value:
+                        msgCode: 201
+                        message: Parsing failed (error while parsing the incoming JSON value)
+                    202:
+                      value:
+                        msgCode: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                    203:
+                      value:
+                        msgCode: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                    204:
+                      value:
+                        msgCode: 204
+                        message: Unknown enumeration value
+                    205:
+                      value:
+                        msgCode: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                    206:
+                      value:
+                        msgCode: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
+                    307:
+                      value:
+                        msgCode: 307
+                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                    311:
+                      value:
+                        msgCode: 311
+                        message: IO-Link parameter access error
+                    601:
+                      value:
+                        msgCode: 601
+                        message: IODD is not available
+                    701:
+                      value:
+                        msgCode: 701
+                        message: Incomplete data set
+                    703:
+                      value:
+                        msgCode: 703
+                        message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 103
-                    message: Operation not supported
-                  - msgCode: 304
-                    message: deviceName not found
-                  - msgCode: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
-                  - msgCode: 309
-                    message: IO-Link parameter not found
+                examples:
+                    103:
+                      value:
+                        msgCode: 103
+                        message: Operation not supported
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
+                    308:
+                      value:
+                        msgCode: 308
+                        message: IO-Link Device is not accessible (not connected or communication error)
+                    309:
+                      value:
+                        msgCode: 309
+                        message: IO-Link parameter not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
   '/devices/{deviceName}/events':
     get:
       tags:
@@ -3725,40 +4615,52 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 305
-                    message: Incorrect query parameter name
-                  - msgCode: 306
-                    message: Incorrect query parameter value
+                examples:
+                    305:
+                      value:
+                        msgCode: 305
+                        message: Incorrect query parameter name
+                    306:
+                      value:
+                        msgCode: 306
+                        message: Incorrect query parameter value
         '403':
           description: Forbidden
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 150
-                    message: Permission denied (e.g. user management)
+                examples:
+                    150:
+                      value:
+                        msgCode: 150
+                        message: Permission denied (e.g. user management)
         '404':
           description: Not found
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 304
-                    message: deviceName not found
+                examples:
+                    304:
+                      value:
+                        msgCode: 304
+                        message: deviceName not found
         '500':
           description: Internal server error
           content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - msgCode: 101
-                    message: Internal server error
-                  - msgCode: 102
-                    message: Internal communication error
+                examples:
+                    101:
+                      value:
+                        msgCode: 101
+                        message: Internal server error
+                    102:
+                      value:
+                        msgCode: 102
+                        message: Internal communication error
 components:
   schemas:
     cycleTime:
@@ -3818,6 +4720,7 @@ components:
       type: string
       enum:
         - ALL
+        - GATEWAY
         - MASTERS
         - PORTS
         - DEVICES
@@ -4075,7 +4978,7 @@ components:
         type: object
         required:
           - address
-          - value
+          - result
         properties:
           address:
             oneOf:
@@ -4095,8 +4998,21 @@ components:
                     type: string
                   subParameterName:
                     type: string
-          value:
-            $ref: '#/components/schemas/deviceParameterValueGetPost'
+          result:
+            type: object
+            required:
+              - parameterExchangeResult
+            properties:
+              parameterExchangeResult:
+                type: string
+                enum:
+                  - WRITE_SUCCESS
+                  - READ_SUCCESS
+                  - ERROR
+              value:
+                $ref: '#/components/schemas/deviceParameterValueGetPost'
+              iolinkError:
+                $ref: '#/components/schemas/iolinkErrorObject'
     deviceEventsGet:
       type: array
       items:
@@ -4218,14 +5134,14 @@ components:
           required:
             - topic
             - message
-            - qoS
+            - qos
             - retain
           properties:
             topic:
               type: string
             message:
               type: string
-            qoS:
+            qos:
               type: string
               enum:
                 - 0_ONLY_ONCE
@@ -4297,7 +5213,7 @@ components:
           enum:
             - COMMUNICATION_LOST
             - DEACTIVATED
-            - PORT_FAILED
+            - INCORRECT_DEVICE
             - DEVICE_STARTING
             - DEVICE_ONLINE
             - DIGITAL_INPUT_PIN4
@@ -4316,7 +5232,6 @@ components:
             OPERATE.
           type: string
           enum:
-            - NOT_DETECTED
             - COM1
             - COM2
             - COM3
@@ -4499,8 +5414,6 @@ components:
             - NOT_SUPPORTED
             - DIGITAL_INPUT
             - DIGITAL_OUTPUT
-            - ANALOG_INPUT
-            - ANALOG_OUTPUT
             - POWER_2
         deviceName:
           type: string
@@ -4669,12 +5582,17 @@ components:
     deviceProcessDataValuePost:
       $ref: '#/components/schemas/processDataValue'
     deviceByteArrayTypeValue:
-      type: array
-      description: The value in byteArray format.
-      items:
-        type: number
-        minimum: 0
-        maximum: 255
+      type: object
+      required:
+        - value
+      properties:
+        value:
+          type: array
+          description: The value in byteArray format.
+          items:
+            type: number
+            minimum: 0
+            maximum: 255
     deviceSimpleTypeValue:
       type: object
       properties:
@@ -4748,7 +5666,7 @@ components:
       properties:
         direction:
           type: string
-          enum: [read, write]
+          enum: [WRITE, READ]
         parameters:
           $ref: '#/components/schemas/blockParameterizationPostParametersRequest'
     ioddIdentification:
@@ -4792,6 +5710,16 @@ components:
           version: '2.1'
           releaseDate: '2015-01-02'
           ioLinkRevision: '1.1'
+    iolinkErrorObject:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     errorObject:
       type: object
       required:
@@ -4802,6 +5730,8 @@ components:
           type: integer
         message:
           type: string
+        iolinkError:
+          $ref: '#/components/schemas/iolinkErrorObject'
   parameters:
     vendorId:
       name: vendorId
