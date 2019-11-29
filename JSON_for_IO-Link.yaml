@@ -536,13 +536,16 @@ paths:
         - $ref: '#/components/parameters/eventDeviceName'
         - $ref: '#/components/parameters/eventTop'
         - $ref: '#/components/parameters/eventBottom'
+        - $ref: '#/components/parameters/semantics'
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/gatewayEventsGet'
+                oneOf:
+                  - $ref: '#/components/schemas/gatewayEventsGet'
+                  - $ref: '#/components/schemas/gatewayEventsGetSemanticsExtracted'
               examples:
                 origin=ALL:
                   value: [
@@ -670,6 +673,40 @@ paths:
                       }
                     },
                   ]
+                semantics=extracted:
+                  value:
+                    semantics:
+                      logEntries:
+                        - time
+                        - severity
+                        - origin
+                        - message
+                      origin:
+                        - masterNumber
+                        - portNumber
+                        - deviceName
+                      message:
+                        - code
+                        - mode
+                        - text
+                    logEntries:
+                      -
+                        - '2019-05-17 02:19:44'
+                        - WARNING
+                        -
+                          - 1
+                          - 3
+                          - mySensor
+                        -
+                          - 6163
+                          - APPEARS
+                          - Overcurrent at C/Q (if digital output) - check load
+                      -
+                        - '2019-09-01 01:45:46'
+                        - ERRROR
+                        - myOtherApp
+                        - a nice error description
+
         '400':
           description: Bad request
           content:
@@ -4737,6 +4774,13 @@ components:
       type: number
     eventBottom:
       type: number
+    semantics:
+      type: string
+      enum:
+        - extracted
+        - inline
+      default:
+        - inline
     identificationMasters:
       type: array
       items:
@@ -4908,6 +4952,29 @@ components:
             This property is mandatory for IO-Link Device Events. Should not
             be used for other log entries.
           type: string
+    eventOriginObjectExtractedSemantics:
+      oneOf:
+        - type: object
+          properties:
+            masterNumber:
+              description: >-
+                This property is mandatory for IO-Link Master Events, IO-Link Port
+                Events and IO-Link Device Events. Should not be used for other log
+                entries.
+              type: integer
+              minimum: 1
+            portNumber:
+              description: >-
+                This property is mandatory for IO-Link Port Events and IO-Link
+                Device Events. Should not be used for other log entries.
+              type: integer
+              minimum: 1
+            deviceName:
+              description: >-
+                This property is mandatory for IO-Link Device Events. Should not
+                be used for other log entries.
+              type: string
+        -  type: string
     eventMessageObject:
       type: object
       properties:
@@ -4927,6 +4994,27 @@ components:
             - DISAPPEARS
         text:
           type: string
+    eventMessageObjectExtractedSemantics:
+      oneOf:
+        - type: object
+          properties:
+            code:
+              description: >-
+                IO-Link Port EventCode or IO-Link Device EventCode. This property is
+                mandatory for IO-Link Port Events or IO-Link Device Events.
+              type: number
+            mode:
+              description: >-
+                IO-Link Port Event Mode or IO-Link Device EventMode. This property
+                is mandatory for IO-Link Port Events or IO-Link Device Events.
+              type: string
+              enum:
+                - SINGLE_SHOT
+                - APPEARS
+                - DISAPPEARS
+            text:
+              type: string
+        - type: string
     gatewayEventsGet:
       type: array
       items:
@@ -4945,6 +5033,37 @@ components:
             $ref: '#/components/schemas/eventOriginObject'
           message:
             $ref: '#/components/schemas/eventMessageObject'
+    gatewayEventsGetSemanticsExtracted:
+      type: object
+      required:
+        - semantics
+        - logEntries
+      properties:
+        semantics:
+          type: object
+          required:
+            - logEntries
+          properties:
+            logEntries:
+              $ref: '#/components/schemas/semanticsDefinition'
+            origin:
+              $ref: '#/components/schemas/semanticsDefinition'
+            message:
+              $ref: '#/components/schemas/semanticsDefinition'
+        logEntries:
+          $ref: '#/components/schemas/logEntriesSemanticsExtracted'
+    logEntriesSemanticsExtracted:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/eventTime'
+          - $ref: '#/components/schemas/eventSeverity'
+          - $ref: '#/components/schemas/eventOriginObjectExtractedSemantics'
+          - $ref: '#/components/schemas/eventMessageObjectExtractedSemantics'
+    semanticsDefinition:
+      type: array
+      items:
+        type: string
     blockParameterizationPostParametersRequest:
       type: array
       items:
@@ -5832,6 +5951,20 @@ components:
         exclusive to top.
       schema:
         $ref: '#/components/schemas/eventBottom'
+    semantics:
+      name: semantics
+      in: query
+      description: >-
+        Select whether the log entries are delivered with extracted semantics
+        (which will decrease the message overhead with more than three messages)
+        or with inline semantics (which is more human readable).
+        <br><br>
+        Hint: The `anyOf` operator in the *Schema* for `semantics=extraced` does
+        mean, that all those variable types have to occur in the array (which is
+        an unnamed list in this case) in the order that is specified in the
+        `semantics` Object.
+      schema:
+        $ref: '#/components/schemas/semantics'
     format:
       name: format
       in: query
