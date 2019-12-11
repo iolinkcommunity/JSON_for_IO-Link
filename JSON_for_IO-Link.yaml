@@ -41,7 +41,7 @@ info:
     * [206] HTTP Status 400: Out of bounds (an array/string was accessed
     exceeding its maximum length)
 
-    * [207] HTTP Status 400: Duplicated deviceName
+    * [207] HTTP Status 400: Duplicated deviceAlias
 
 
     ### Resource access errors
@@ -52,7 +52,7 @@ info:
 
     * [303] HTTP Status 404: portNumber not found
 
-    * [304] HTTP Status 404: deviceName not found
+    * [304] HTTP Status 404: deviceAlias not found
 
     * [305] HTTP Status 400: Incorrect query parameter name
 
@@ -189,7 +189,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -200,7 +200,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -211,7 +211,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/gateway/capabilities':
     get:
@@ -234,7 +234,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -245,7 +245,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -256,7 +256,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/gateway/configuration':
     get:
@@ -322,7 +322,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -333,7 +333,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -344,7 +344,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
     post:
       tags:
@@ -405,11 +405,11 @@ paths:
               examples:
                 104:
                   value: 
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client (e.g. fieldbuscontroller)
                 201:
                   value:
-                    msgCode: 201
+                    code: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
 
         '403':
@@ -421,7 +421,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -432,7 +432,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/gateway/reset':
     post:
@@ -451,11 +451,11 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client (e.g. fieldbuscontroller)
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -466,7 +466,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -477,7 +477,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/gateway/reboot':
     post:
@@ -496,11 +496,11 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client (e.g. fieldbuscontroller)
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -511,7 +511,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -522,7 +522,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/gateway/events':
     get:
@@ -647,7 +647,7 @@ paths:
                       "origin": {
                         "masterNumber": 1,
                         "portNumber": 1,
-                        "deviceName": "Temp_sensor_1"
+                        "deviceAlias": "Temp_sensor_1"
                       },
                       "message": {
                         "code": 16912,
@@ -661,7 +661,7 @@ paths:
                       "origin": {
                         "masterNumber": 1,
                         "portNumber": 3,
-                        "deviceName": "Distance_Laser_3"
+                        "deviceAlias": "Distance_Laser_3"
                       },
                       "message": {
                         "code": 20480,
@@ -679,7 +679,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -690,7 +690,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -701,7 +701,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/mqtt/configuration':
     get:
@@ -744,7 +744,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -755,7 +755,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -766,7 +766,7 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
         '500':
           description: Internal server error
@@ -777,7 +777,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
     post:
       tags:
@@ -819,23 +819,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               example:
-                - msgCode: 104
+                - code: 104
                   message: Action locked by another client (e.g. fieldbus controller)
-                - msgCode: 201
+                - code: 201
                   message: Parsing failed (error while parsing the incoming JSON value)
-                - msgCode: 202
+                - code: 202
                   message: Invalid data (given for the value, e.g. malformed IP address)
-                - msgCode: 203
+                - code: 203
                   message: Invalid JSON data type (e.g. string instead of numbers)
-                - msgCode: 204
+                - code: 204
                   message: Unknown enumeration value
-                - msgCode: 205
+                - code: 205
                   message: Value out of range (exceeds the minimum or maximum value)
-                - msgCode: 206
+                - code: 206
                   message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                - msgCode: 305
+                - code: 305
                   message: Incorrect query parameter name
-                - msgCode: 701
+                - code: 701
                   message: Incomplete data set
         '403':
           description: Forbidden
@@ -846,7 +846,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -857,7 +857,7 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
         '500':
           description: Internal server error
@@ -868,7 +868,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/mqtt/topics':
     get:
@@ -888,7 +888,7 @@ paths:
                 - topicId: 1
                   topicName: PD input
                   qos: 1_AT_LEAST_ONCE
-                  deviceName: DT35
+                  deviceAlias: DT35
                   processData:
                     direction: in
                     format: iodd
@@ -898,12 +898,12 @@ paths:
                 - topicId: 2
                   topicName: Event
                   qos: 1_AT_LEAST_ONCE
-                  deviceName: TAD081
+                  deviceAlias: TAD081
                   event: null
                 - topicId: 3
                   topicName: PD
                   qos: 0_ONLY_ONCE
-                  deviceName: BNI_IOL
+                  deviceAlias: BNI_IOL
                   processData:
                     direction: inout
                     format: iodd
@@ -917,7 +917,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -928,7 +928,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -939,7 +939,7 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
         '500':
           description: Internal server error
@@ -950,7 +950,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
     post:
       tags:
@@ -967,7 +967,7 @@ paths:
                 value: {
                   "topicName": "PD input",
                   "qos": "1_AT_LEAST_ONCE",
-                  "deviceName": "DT35",
+                  "deviceAlias": "DT35",
                   "processData": {
                     "direction": "in",
                     "format": "iodd",
@@ -981,7 +981,7 @@ paths:
                 value: {
                   "topicName": "Event",
                   "qos": "1_AT_LEAST_ONCE",
-                  "deviceName": "TAD081",
+                  "deviceAlias": "TAD081",
                   "event": {}
                 }
       responses:
@@ -1000,39 +1000,39 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client
                 201:
                   value:
-                    msgCode: 201
+                    code: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
                 202:
                   value:
-                    msgCode: 202
+                    code: 202
                     message: Invalid data (given for the value, e.g. malformed IP address)
                 203:
                   value:
-                    msgCode: 203
+                    code: 203
                     message: Invalid JSON data type (e.g. string instead of numbers)
                 204:
                   value:
-                    msgCode: 204
+                    code: 204
                     message: Unknown enumeration value
                 205:
                   value:
-                    msgCode: 205
+                    code: 205
                     message: Value out of range (exceeds the minimum or maximum value)
                 206:
                   value:
-                    msgCode: 206
+                    code: 206
                     message: Out of bounds (an array/string was accessed exceeding its maximum length)
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
                 701:
                   value:
-                    msgCode: 701
+                    code: 701
                     message: Incomplete data set
         '403':
           description: Forbidden
@@ -1043,7 +1043,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1054,7 +1054,7 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
         '500':
           description: Internal server error
@@ -1065,7 +1065,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/mqtt/topics/{topicId}':
     get:
@@ -1087,7 +1087,7 @@ paths:
                     "topicId": 1,
                     "topicName": "PD input",
                     "qos": "1_AT_LEAST_ONCE",
-                    "deviceName": "DT35",
+                    "deviceAlias": "DT35",
                     "processData": {
                       "direction": "in",
                       "format": "iodd",
@@ -1102,7 +1102,7 @@ paths:
                     "topicId": 2,
                     "topicName": "Event",
                     "qos": "1_AT_LEAST_ONCE",
-                    "deviceName": "TAD081",
+                    "deviceAlias": "TAD081",
                     "event": {}
                   }
         '400':
@@ -1114,7 +1114,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1125,7 +1125,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1136,11 +1136,11 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
                 301:
                   value:
-                    msgCode: 301
+                    code: 301
                     message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
@@ -1151,7 +1151,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
     delete:
       tags:
@@ -1171,11 +1171,11 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1186,7 +1186,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1197,11 +1197,11 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
                 301:
                   value:
-                    msgCode: 301
+                    code: 301
                     message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
@@ -1212,7 +1212,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/iodds':
     get:
@@ -1240,7 +1240,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1251,7 +1251,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1262,7 +1262,7 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
         '500':
           description: Internal server error
@@ -1273,7 +1273,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
     post:
       tags:
@@ -1302,23 +1302,23 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
                 603:
                   value:
-                    msgCode: 603
+                    code: 603
                     message: Uploaded file is no valid IODD XML. Upload rejected
                 604:
                   value:
-                    msgCode: 604
+                    code: 604
                     message: Uploaded file is no valid IODD XML. CRC check failed
                 605:
                   value:
-                    msgCode: 605
+                    code: 605
                     message: Uploaded file is no valid IODD XML. Parsing failed
         '403':
           description: Forbidden
@@ -1329,7 +1329,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1340,7 +1340,7 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
         '500':
           description: Internal server error
@@ -1351,11 +1351,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 602:
                   value:
-                    msgCode: 602
+                    code: 602
                     message: Unable to upload IODD XML file. Insufficient memory space
   '/iodds/vendors/{vendorId}/devices/{deviceId}/revisions/{ioLinkRevision}':
     get:
@@ -1385,7 +1385,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1396,7 +1396,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1407,11 +1407,11 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
                 301:
                   value:
-                    msgCode: 301
+                    code: 301
                     message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
@@ -1422,7 +1422,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
     delete:
       tags:
@@ -1444,11 +1444,11 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1459,7 +1459,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1470,11 +1470,11 @@ paths:
               examples:
                 103:
                   value:
-                    msgCode: 103
+                    code: 103
                     message: Operation not supported
                 301:
                   value:
-                    msgCode: 301
+                    code: 301
                     message: Resource not found (e.g. wrong URL)
         '500':
           description: Internal server error
@@ -1485,7 +1485,7 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
   '/masters':
     get:
@@ -1510,7 +1510,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1521,7 +1521,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -1532,11 +1532,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/masters/{masterNumber}/identification':
     get:
@@ -1561,7 +1561,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
         '403':
           description: Forbidden
           content:
@@ -1571,7 +1571,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Bad request
@@ -1582,7 +1582,7 @@ paths:
               examples:
                 9999:
                   value:
-                    msgCode: 9999
+                    code: 9999
                     message: Error codes 302
         '500':
           description: Internal server error
@@ -1593,11 +1593,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
     post:
       tags:
@@ -1630,27 +1630,27 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                 201:
                   value:
-                    msgCode: 201
+                    code: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
                 202:
                   value:
-                    msgCode: 202
+                    code: 202
                     message: Invalid data (given for the value, e.g. malformed IP address)
                 203:
                   value:
-                    msgCode: 203
+                    code: 203
                     message: Invalid JSON data type (e.g. string instead of numbers)
                 206:
                   value:
-                    msgCode: 206
+                    code: 206
                     message: Out of bounds (an array/string was accessed exceeding its maximum length)
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1661,7 +1661,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1672,7 +1672,7 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
         '500':
           description: Internal server error
@@ -1683,11 +1683,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/masters/{masterNumber}/capabilities':
     get:
@@ -1712,7 +1712,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1723,7 +1723,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1734,7 +1734,7 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
         '500':
           description: Internal server error
@@ -1745,11 +1745,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                    value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/masters/{masterNumber}/ports':
     get:
@@ -1787,7 +1787,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1798,7 +1798,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1809,7 +1809,7 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
         '500':
           description: Internal server error
@@ -1820,11 +1820,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/capabilities':
     get:
@@ -1850,7 +1850,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1861,7 +1861,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1872,11 +1872,11 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
                 303:
                   value:
-                    msgCode: 303
+                    code: 303
                     message: portNumber not found
         '500':
           description: Internal server error
@@ -1887,11 +1887,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/configuration':
     get:
@@ -1917,7 +1917,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -1928,7 +1928,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -1939,11 +1939,11 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
                 303:
                   value:
-                    msgCode: 303
+                    code: 303
                     message: portNumber not found
         '500':
           description: Internal server error
@@ -1954,11 +1954,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
     post:
       tags:
@@ -1984,8 +1984,8 @@ paths:
                   },
                   "vendorId": 26,
                   "deviceId": 333,
-                  "pin2Configuration": "DIGITAL_INPUT",
-                  "deviceName": "Distance_sensor_1"
+                  "iqConfiguration": "DIGITAL_INPUT",
+                  "deviceAlias": "Distance_sensor_1"
                 }
       responses:
         '204':
@@ -1999,43 +1999,43 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                 201:
                   value:
-                    msgCode: 201
+                    code: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
                 202:
                   value:
-                    msgCode: 202
+                    code: 202
                     message: Invalid data (given for the value, e.g. malformed IP address)
                 203:
                   value:
-                    msgCode: 203
+                    code: 203
                     message: Invalid JSON data type (e.g. string instead of numbers)
                 204:
                   value:
-                    msgCode: 204
+                    code: 204
                     message: Unknown enumeration value
                 205:
                   value:
-                    msgCode: 205
+                    code: 205
                     message: Value out of range (exceeds the minimum or maximum value)
                 207:
                   value:
-                    msgCode: 207
+                    code: 207
                     message: Duplicated Device Name
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
                 702:
                   value:
-                    msgCode: 702
+                    code: 702
                     message: Data set not applicable (not supported), the whole data set is rejected
                 703:
                   value:
-                    msgCode: 703
+                    code: 703
                     message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
@@ -2046,7 +2046,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2057,11 +2057,11 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
                 303:
                   value:
-                    msgCode: 303
+                    code: 303
                     message: portNumber not found
         '500':
           description: Internal server error
@@ -2072,11 +2072,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/status':
     get:
@@ -2102,7 +2102,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -2113,7 +2113,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2124,11 +2124,11 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
                 303:
                   value:
-                    msgCode: 303
+                    code: 303
                     message: portNumber not found
         '500':
           description: Internal server error
@@ -2139,11 +2139,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/masters/{masterNumber}/ports/{portNumber}/datastorage':
     get:
@@ -2184,7 +2184,7 @@ paths:
               examples:
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -2195,7 +2195,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2206,11 +2206,11 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
                 303:
                   value:
-                    msgCode: 303
+                    code: 303
                     message: portNumber not found
         '500':
           description: Internal server error
@@ -2221,11 +2221,11 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
     post:
       tags:
@@ -2267,35 +2267,35 @@ paths:
               examples:
                 104:
                   value:
-                    msgCode: 104
+                    code: 104
                     message: Action locked by another client (e.g. fieldbus controller)
                 201:
                   value:
-                    msgCode: 201
+                    code: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
                 202:
                   value:
-                    msgCode: 202
+                    code: 202
                     message: Invalid data (given for the value, e.g. malformed IP address)
                 203:
                   value:
-                    msgCode: 203
+                    code: 203
                     message: Invalid JSON data type (e.g. string instead of numbers)
                 204:
                   value:
-                    msgCode: 204
+                    code: 204
                     message: Unknown enumeration value
                 205:
                   value:
-                    msgCode: 205
+                    code: 205
                     message: Value out of range (exceeds the minimum or maximum value)
                 206:
                   value:
-                    msgCode: 206
+                    code: 206
                     message: Out of bounds (an array/string was accessed exceeding its maximum length)
                 305:
                   value:
-                    msgCode: 305
+                    code: 305
                     message: Incorrect query parameter name
                 401:
                   value:
@@ -2303,7 +2303,7 @@ paths:
                     message: Mismatch between configured device and data storage meta data
                 701:
                   value:
-                    msgCode: 701
+                    code: 701
                     message: Incomplete data set
         '403':
           description: Forbidden
@@ -2314,7 +2314,7 @@ paths:
               examples:
                 150:
                   value:
-                    msgCode: 150
+                    code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2325,11 +2325,11 @@ paths:
               examples:
                 302:
                   value:
-                    msgCode: 302
+                    code: 302
                     message: masterNumber not found
                 303:
                   value:
-                    msgCode: 303
+                    code: 303
                     message: portNumber not found
         '500':
           description: Internal server error
@@ -2340,17 +2340,17 @@ paths:
               examples:
                 101:
                   value:
-                    msgCode: 101
+                    code: 101
                     message: Internal server error
                 102:
                   value:
-                    msgCode: 102
+                    code: 102
                     message: Internal communication error
   '/devices':
     get:
       tags:
         - devices
-      summary: Read all the available deviceName keys.
+      summary: Read all the available deviceAlias keys.
       responses:
         '200':
           description: Successful operation
@@ -2361,11 +2361,11 @@ paths:
                 items:
                   type: object
                   required:
-                    - deviceName
+                    - deviceAlias
                     - masterNumber
                     - portNumber
                   properties:
-                    deviceName:
+                    deviceAlias:
                       type: string
                     masterNumber:
                       type: integer
@@ -2374,16 +2374,16 @@ paths:
                       type: integer
                       minimum: 1
                 example:
-                  - deviceName: DT35
+                  - deviceAlias: DT35
                     masterNumber: 1
                     portNumber: 1
-                  - deviceName: TAD081
+                  - deviceAlias: TAD081
                     masterNumber: 1
                     portNumber: 2
-                  - deviceName: BNI_IOL
+                  - deviceAlias: BNI_IOL
                     masterNumber: 1
                     portNumber: 3
-                  - deviceName: master1port4
+                  - deviceAlias: master1port4
                     masterNumber: 1
                     portNumber: 4
         '400':
@@ -2395,7 +2395,7 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
         '403':
           description: Forbidden
@@ -2406,7 +2406,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '500':
           description: Internal server error
@@ -2417,13 +2417,13 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/identification':
+  '/devices/{deviceAlias}/identification':
     get:
       tags:
         - devices
@@ -2433,7 +2433,7 @@ paths:
         applicationSpecificTag, locationTag and functionTag (if they are
         supported by the device).
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
       responses:
         '200':
           description: Successful operation
@@ -2450,11 +2450,11 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
         '403':
           description: Forbidden
@@ -2465,7 +2465,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2476,11 +2476,11 @@ paths:
               examples:
                 304:
                   value:
-                    msgCode: 304
-                    message: deviceName not found
+                    code: 304
+                    message: deviceAlias not found
                 308:
                   value:
-                    msgCode: 308
+                    code: 308
                     message: IO-Link Device is not accessible (not connected or communication error)
         '500':
           description: Internal server error
@@ -2491,18 +2491,18 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
     post:
       tags:
         - devices
       summary: Write application specific port identification.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
       requestBody:
         required: true
         content:
@@ -2528,31 +2528,31 @@ paths:
                 examples:
                     104:
                       value:
-                        msgCode: 104
+                        code: 104
                         message: Action locked by another client (e.g. fieldbus controller)
                     201:
                       value:
-                        msgCode: 201
+                        code: 201
                         message: Parsing failed (error while parsing the incoming JSON value)
                     202:
                       value:
-                        msgCode: 202
+                        code: 202
                         message: Invalid data (given for the value, e.g. malformed IP address)
                     203:
                       value:
-                        msgCode: 203
+                        code: 203
                         message: Invalid JSON data type (e.g. string instead of numbers)
                     206:
                       value:
-                        msgCode: 206
+                        code: 206
                         message: Out of bounds (an array/string was accessed exceeding its maximum length)
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
         '403':
           description: Forbidden
@@ -2563,7 +2563,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2574,19 +2574,19 @@ paths:
                 examples:
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
                     310:
                       value:
-                        msgCode: 310
+                        code: 310
                         message: IO-Link parameter access not supported by the Device
         '500':
           description: Internal server error
@@ -2597,19 +2597,19 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/capabilities':
+  '/devices/{deviceAlias}/capabilities':
     get:
       tags:
         - devices
       summary: Read the capabililties of the Device.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
       responses:
         '200':
           description: Successful opearation
@@ -2630,11 +2630,11 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
         '404':
           description: Not found
@@ -2645,11 +2645,11 @@ paths:
               examples:
                 304:
                   value:
-                    msgCode: 304
-                    message: deviceName not found
+                    code: 304
+                    message: deviceAlias not found
                 308:
                   value:
-                    msgCode: 308
+                    code: 308
                     message: IO-Link Device is not accessible (not connected or communication error)
         '500':
           description: Internal server error
@@ -2660,21 +2660,21 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/processdata/value':
+  '/devices/{deviceAlias}/processdata/value':
     get:
       tags:
         - devices
       summary: >-
-        Read the process data (input and optionally the output) and the pin2
+        Read the process data (input and optionally the output) and the iq
         value (if it is used).
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/format'
         - $ref: '#/components/parameters/content'
       responses:
@@ -2685,7 +2685,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/deviceProcessDataValueGet'
               examples:
-                Format=byteArray, content=measure, pin4 in IO-Link, pin2 in digital input:
+                Format=byteArray, content=measure, cq in IO-Link, iq in digital input:
                   value: {
                     "measure": {
                       "ioLink": {
@@ -2696,10 +2696,10 @@ paths:
                           216
                         ]
                       },
-                      "pin2Value": true
+                      "iqValue": true
                     }
                   }
-                Format=iodd, content=measure, pin4 in IO-Link, pin2 in digital input:
+                Format=iodd, content=measure, cq in IO-Link, iq in digital input:
                   value: {
                     "measure": {
                       "ioLink": {
@@ -2713,10 +2713,10 @@ paths:
                           }
                         }
                       },
-                      "pin2Value": true
+                      "iqValue": true
                     }
                   }
-                Format=iodd, content=measurecontrol, pin4 in IO-Link, pin2 in digital input:
+                Format=iodd, content=measurecontrol, cq in IO-Link, iq in digital input:
                   value: {
                     "measure": {
                       "ioLink": {
@@ -2733,14 +2733,14 @@ paths:
                           "vaue": 50
                         }
                       },
-                      "pin2Value": false
+                      "iqValue": false
                     }
                   }
-                Format=byteArray/iodd, content=control, pin4 in digital output, pin2 in digital input:
+                Format=byteArray/iodd, content=control, cq in digital output, iq in digital input:
                   value: {
                     "control": {
-                      "pin2Value": true,
-                      "pin4Value": false
+                      "iqValue": true,
+                      "cqValue": false
                     }
                   }
         '400':
@@ -2752,15 +2752,15 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -2771,7 +2771,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2782,12 +2782,12 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
         '500':
           description: Internal server error
           content:
@@ -2797,11 +2797,11 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
     post:
       tags:
@@ -2809,7 +2809,7 @@ paths:
       summary: >-
         Write the process data (output) and the pin 2 value (if it is used).
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
       requestBody:
         required: true
         content:
@@ -2817,7 +2817,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceProcessDataValuePost'
             examples:
-              format=byteArray, pin4 in IO-Link, pin2 in digital output:
+              format=byteArray, cq in IO-Link, iq in digital output:
                 value: {
                   "ioLink": {
                     "valid": true,
@@ -2828,9 +2828,9 @@ paths:
                       236
                     ]
                   },
-                  "pin2Value": true
+                  "iqValue": true
                 }
-              format=iodd, pin4 in IO-Link, pin2 not available:
+              format=iodd, cq in IO-Link, iq not available:
                 value: {
                   "iolink": {
                     "valid": true,
@@ -2844,9 +2844,9 @@ paths:
                     }
                   }
                 }
-              format=byteArray/iodd, pin4 in digital output, pin2 not available:
+              format=byteArray/iodd, cq in digital output, iq not available:
                 value: {
-                  "pin4Value": false
+                  "cqValue": false
                 }
       responses:
         '204':
@@ -2860,35 +2860,35 @@ paths:
                 examples:
                     104:
                       value:
-                        msgCode: 104
+                        code: 104
                         message: Action locked by another client (e.g. fieldbus controller)
                     201:
                       value:
-                        msgCode: 201
+                        code: 201
                         message: Parsing failed (error while parsing the incoming JSON value)
                     202:
                       value:
-                        msgCode: 202
+                        code: 202
                         message: Invalid data (given for the value, e.g. malformed IP address)
                     203:
                       value:
-                        msgCode: 203
+                        code: 203
                         message: Invalid JSON data type (e.g. string instead of numbers)
                     204:
                       value:
-                        msgCode: 204
+                        code: 204
                         message: Unknown enumeration value
                     205:
                       value:
-                        msgCode: 205
+                        code: 205
                         message: Value out of range (exceeds the minimum or maximum value)
                     206:
                       value:
-                        msgCode: 206
+                        code: 206
                         message: Out of bounds (an array/string was accessed exceeding its maximum length)
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
@@ -2896,27 +2896,27 @@ paths:
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     501:
                       value:
-                        msgCode: 501
+                        code: 501
                         message: Writing processdata to Pin 2 is not possible. Pin 2 is not configured as DIGITAL_OUTPUT
                     502:
                       value:
-                        msgCode: 502
+                        code: 502
                         message: Writing processdata to Pin 4 is not possible. Pin 4 is not configured as DIGITAL_OUTPUT
                     503:
                       value:
-                        msgCode: 503
+                        code: 503
                         message: Attached IO-Link device has no output process data
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
                     703:
                       value:
-                        msgCode: 703
+                        code: 703
                         message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
@@ -2925,7 +2925,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 example:
-                  - msgCode: 150
+                  - code: 150
                     message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -2936,15 +2936,15 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
         '500':
           description: Internal server error
@@ -2955,13 +2955,13 @@ paths:
                 examples:
                   101:
                     value:
-                      msgCode: 101
+                      code: 101
                       message: Internal server error
                   102:
                     value:
-                      msgCode: 102
+                      code: 102
                       message: Internal communication error
-  '/devices/{deviceName}/parameters':
+  '/devices/{deviceAlias}/parameters':
     get:
       tags:
         - devices
@@ -2969,7 +2969,7 @@ paths:
         Read the available parameter indices and parameter names. Requires the
         IODD support.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
       responses:
         '200':
           description: Successful operation
@@ -2986,11 +2986,11 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -3001,7 +3001,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3012,12 +3012,12 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
         '500':
           description: Internal server error
           content:
@@ -3027,19 +3027,19 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/parameters/{index}/value':
+  '/devices/{deviceAlias}/parameters/{index}/value':
     get:
       tags:
         - devices
       summary: Read the parameter with the given index.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
         - $ref: '#/components/parameters/format'
       responses:
@@ -3080,23 +3080,23 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -3107,7 +3107,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3118,19 +3118,19 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
         '500':
           description: Internal server error
@@ -3141,18 +3141,18 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
     post:
       tags:
         - devices
       summary: Write the parameter with the given index.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
       requestBody:
         required: true
@@ -3193,59 +3193,59 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     104:
                       value:
-                        msgCode: 104
+                        code: 104
                         message: Action locked by another client (e.g. fieldbus controller)
                     201:
                       value:
-                        msgCode: 201
+                        code: 201
                         message: Parsing failed (error while parsing the incoming JSON value)
                     202:
                       value:
-                        msgCode: 202
+                        code: 202
                         message: Invalid data (given for the value, e.g. malformed IP address)
                     203:
                       value:
-                        msgCode: 203
+                        code: 203
                         message: Invalid JSON data type (e.g. string instead of numbers)
                     204:
                       value:
-                        msgCode: 204
+                        code: 204
                         message: Unknown enumeration value
                     205:
                       value:
-                        msgCode: 205
+                        code: 205
                         message: Value out of range (exceeds the minimum or maximum value)
                     206:
                       value:
-                        msgCode: 206
+                        code: 206
                         message: Out of bounds (an array/string was accessed exceeding its maximum length)
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
                     703:
                       value:
-                        msgCode: 703
+                        code: 703
                         message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
@@ -3256,7 +3256,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3267,15 +3267,15 @@ paths:
                 examples:
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
         '500':
           description: Internal server error
@@ -3286,13 +3286,13 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/parameters/{parameterName}/value':
+  '/devices/{deviceAlias}/parameters/{parameterName}/value':
     get:
       tags:
         - devices
@@ -3300,7 +3300,7 @@ paths:
         Read the parameter with the given index.
         Requires IODD support.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
         - $ref: '#/components/parameters/format'
       responses:
@@ -3340,23 +3340,23 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -3367,7 +3367,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3378,23 +3378,23 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
                     312:
                       value:
-                        msgCode: 312
+                        code: 312
                         message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
@@ -3405,11 +3405,11 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
     post:
       tags:
@@ -3418,7 +3418,7 @@ paths:
         Write the parameter with the given index.
         Requires IODD support.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
       requestBody:
         required: true
@@ -3459,55 +3459,55 @@ paths:
                 examples:
                     104:
                       value:
-                        msgCode: 104
+                        code: 104
                         message: Action locked by another client (e.g. fieldbus controller)
                     201:
                       value:
-                        msgCode: 201
+                        code: 201
                         message: Parsing failed (error while parsing the incoming JSON value)
                     202:
                       value:
-                        msgCode: 202
+                        code: 202
                         message: Invalid data (given for the value, e.g. malformed IP address)
                     203:
                       value:
-                        msgCode: 203
+                        code: 203
                         message: Invalid JSON data type (e.g. string instead of numbers)
                     204:
                       value:
-                        msgCode: 204
+                        code: 204
                         message: Unknown enumeration value
                     205:
                       value:
-                        msgCode: 205
+                        code: 205
                         message: Value out of range (exceeds the minimum or maximum value)
                     206:
                       value:
-                        msgCode: 206
+                        code: 206
                         message: Out of bounds (an array/string was accessed exceeding its maximum length)
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
                     703:
                       value:
-                        msgCode: 703
+                        code: 703
                         message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
@@ -3518,7 +3518,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3529,23 +3529,23 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
                     312:
                       value:
-                        msgCode: 312
+                        code: 312
                         message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
@@ -3556,13 +3556,13 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/parameters/{index}/subindices':
+  '/devices/{deviceAlias}/parameters/{index}/subindices':
     get:
       tags:
         - devices
@@ -3570,7 +3570,7 @@ paths:
         Read the available parameter sub-indices, sub-parameter names. Requires
         IODD support.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
       responses:
         '200':
@@ -3588,11 +3588,11 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -3603,7 +3603,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3614,15 +3614,15 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
         '500':
           description: Internal server error
@@ -3633,13 +3633,13 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/parameters/{parameterName}/subindices':
+  '/devices/{deviceAlias}/parameters/{parameterName}/subindices':
     get:
       tags:
         - devices
@@ -3647,7 +3647,7 @@ paths:
         Read the available parameter sub-indices, sub-parameter names. Requires
         IODD support.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
       responses:
         '200':
@@ -3665,11 +3665,11 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -3680,7 +3680,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3691,19 +3691,19 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
                     312:
                       value:
-                        msgCode: 312
+                        code: 312
                         message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
@@ -3714,20 +3714,20 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/parameters/{index}/subindices/{subindex}/value':
+  '/devices/{deviceAlias}/parameters/{index}/subindices/{subindex}/value':
     get:
       tags:
         - devices
       summary: >-
         Read the parameter with the given index and subindex.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
         - $ref: '#/components/parameters/subindex'
         - $ref: '#/components/parameters/format'
@@ -3759,23 +3759,23 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -3786,7 +3786,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3797,19 +3797,19 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
         '500':
           description: Internal server error
@@ -3820,11 +3820,11 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
     post:
       tags:
@@ -3832,7 +3832,7 @@ paths:
       summary: >-
         Write the parameter with the given index and subindex.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
         - $ref: '#/components/parameters/subindex'
       requestBody:
@@ -3865,55 +3865,55 @@ paths:
                 examples:
                     104:
                       value:
-                        msgCode: 104
+                        code: 104
                         message: Action locked by another client (e.g. fieldbus controller)
                     201:
                       value:
-                        msgCode: 201
+                        code: 201
                         message: Parsing failed (error while parsing the incoming JSON value)
                     202:
                       value:
-                        msgCode: 202
+                        code: 202
                         message: Invalid data (given for the value, e.g. malformed IP address)
                     203:
                       value:
-                        msgCode: 203
+                        code: 203
                         message: Invalid JSON data type (e.g. string instead of numbers)
                     204:
                       value:
-                        msgCode: 204
+                        code: 204
                         message: Unknown enumeration value
                     205:
                       value:
-                        msgCode: 205
+                        code: 205
                         message: Value out of range (exceeds the minimum or maximum value)
                     206:
                       value:
-                        msgCode: 206
+                        code: 206
                         message: Out of bounds (an array/string was accessed exceeding its maximum length)
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not availabl
                     703:
                       value:
-                        msgCode: 703
+                        code: 703
                         message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
@@ -3924,7 +3924,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -3935,19 +3935,19 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
         '500':
           description: Internal server error
@@ -3958,13 +3958,13 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/parameters/{parameterName}/subindices/{subParameterName}/value':
+  '/devices/{deviceAlias}/parameters/{parameterName}/subindices/{subParameterName}/value':
     get:
       tags:
         - devices
@@ -3972,7 +3972,7 @@ paths:
         Read the parameter with the given index and subindex.
         Requires IODD support.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
         - $ref: '#/components/parameters/subParameterName'
         - $ref: '#/components/parameters/format'
@@ -4004,23 +4004,23 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
         '403':
           description: Forbidden
@@ -4031,7 +4031,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -4042,23 +4042,23 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
                     312:
                       value:
-                        msgCode: 312
+                        code: 312
                         message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
@@ -4069,11 +4069,11 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
     post:
       tags:
@@ -4081,7 +4081,7 @@ paths:
       summary: >-
         Write the parameter with the given index and subindex. Requires IODD support.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
         - $ref: '#/components/parameters/subParameterName'
       requestBody:
@@ -4114,59 +4114,59 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     104:
                       value:
-                        msgCode: 104
+                        code: 104
                         message: Action locked by another client (e.g. fieldbus controller)
                     201:
                       value:
-                        msgCode: 201
+                        code: 201
                         message: Parsing failed (error while parsing the incoming JSON value)
                     202:
                       value:
-                        msgCode: 202
+                        code: 202
                         message: Invalid data (given for the value, e.g. malformed IP address)
                     203:
                       value:
-                        msgCode: 203
+                        code: 203
                         message: Invalid JSON data type (e.g. string instead of numbers)
                     204:
                       value:
-                        msgCode: 204
+                        code: 204
                         message: Unknown enumeration value
                     205:
                       value:
-                        msgCode: 205
+                        code: 205
                         message: Value out of range (exceeds the minimum or maximum value)
                     206:
                       value:
-                        msgCode: 206
+                        code: 206
                         message: Out of bounds (an array/string was accessed exceeding its maximum length)
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
                     703:
                       value:
-                        msgCode: 703
+                        code: 703
                         message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
@@ -4177,7 +4177,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -4188,23 +4188,23 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
                     312:
                       value:
-                        msgCode: 312
+                        code: 312
                         message: IO-Link parameter name is not unique
         '500':
           description: Internal server error
@@ -4215,20 +4215,20 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/blockparameterization':
+  '/devices/{deviceAlias}/blockparameterization':
     post:
       tags:
         - devices
       summary: >-
         Read or write one or more parameters by using the block parameterization method.
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/format'
       requestBody:
         required: true
@@ -4487,59 +4487,59 @@ paths:
                 examples:
                     104:
                       value:
-                        msgCode: 104
+                        code: 104
                         message: Action locked by another client (e.g. fieldbus controller)
                     201:
                       value:
-                        msgCode: 201
+                        code: 201
                         message: Parsing failed (error while parsing the incoming JSON value)
                     202:
                       value:
-                        msgCode: 202
+                        code: 202
                         message: Invalid data (given for the value, e.g. malformed IP address)
                     203:
                       value:
-                        msgCode: 203
+                        code: 203
                         message: Invalid JSON data type (e.g. string instead of numbers)
                     204:
                       value:
-                        msgCode: 204
+                        code: 204
                         message: Unknown enumeration value
                     205:
                       value:
-                        msgCode: 205
+                        code: 205
                         message: Value out of range (exceeds the minimum or maximum value)
                     206:
                       value:
-                        msgCode: 206
+                        code: 206
                         message: Out of bounds (an array/string was accessed exceeding its maximum length)
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
                     307:
                       value:
-                        msgCode: 307
+                        code: 307
                         message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
                     311:
                       value:
-                        msgCode: 311
+                        code: 311
                         message: IO-Link parameter access error
                     601:
                       value:
-                        msgCode: 601
+                        code: 601
                         message: IODD is not available
                     701:
                       value:
-                        msgCode: 701
+                        code: 701
                         message: Incomplete data set
                     703:
                       value:
-                        msgCode: 703
+                        code: 703
                         message: Incompatible data set combination, the whole data set is rejected
         '403':
           description: Forbidden
@@ -4550,7 +4550,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -4561,19 +4561,19 @@ paths:
                 examples:
                     103:
                       value:
-                        msgCode: 103
+                        code: 103
                         message: Operation not supported
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
                     308:
                       value:
-                        msgCode: 308
+                        code: 308
                         message: IO-Link Device is not accessible (not connected or communication error)
                     309:
                       value:
-                        msgCode: 309
+                        code: 309
                         message: IO-Link parameter not found
         '500':
           description: Internal server error
@@ -4584,18 +4584,18 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
-  '/devices/{deviceName}/events':
+  '/devices/{deviceAlias}/events':
     get:
       tags:
         - devices
       parameters:
-        - $ref: '#/components/parameters/deviceName'
+        - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/eventTop'
         - $ref: '#/components/parameters/eventBottom'
       summary: Read the Device event log. This is a prefiltered copy of the gateway
@@ -4618,11 +4618,11 @@ paths:
                 examples:
                     305:
                       value:
-                        msgCode: 305
+                        code: 305
                         message: Incorrect query parameter name
                     306:
                       value:
-                        msgCode: 306
+                        code: 306
                         message: Incorrect query parameter value
         '403':
           description: Forbidden
@@ -4633,7 +4633,7 @@ paths:
                 examples:
                     150:
                       value:
-                        msgCode: 150
+                        code: 150
                         message: Permission denied (e.g. user management)
         '404':
           description: Not found
@@ -4644,8 +4644,8 @@ paths:
                 examples:
                     304:
                       value:
-                        msgCode: 304
-                        message: deviceName not found
+                        code: 304
+                        message: deviceAlias not found
         '500':
           description: Internal server error
           content:
@@ -4655,11 +4655,11 @@ paths:
                 examples:
                     101:
                       value:
-                        msgCode: 101
+                        code: 101
                         message: Internal server error
                     102:
                       value:
-                        msgCode: 102
+                        code: 102
                         message: Internal communication error
 components:
   schemas:
@@ -4786,17 +4786,17 @@ components:
             - Wireless_Master
         serialNumber:
           type: string
-        orderCode:
+        productId:
           type: string
         productName:
           type: string
         hardwareRevision:
           type: string
-        softwareRevision:
+        firmwareRevision:
           type: string
-        website:
+        vendorUrl:
           type: string
-        manual:
+        manualUrl:
           type: string
         applicationSpecificTag:
           type: string
@@ -4810,12 +4810,12 @@ components:
         masterId: 42
         masterType: Master acc. V1.0
         serialNumber: IOLM123456
-        orderCode: PROD-123456
+        productId: PROD-123456
         productName: IO-Link Master
         hardwareRevision: 3.2.1.444R
-        softwareRevision: 3.2.1.888R
-        website: 'http://www.io-link.com/io-link-master'
-        manual: 'http://www.io-link.com/io-link-master/documentation.pdf'
+        firmwareRevision: 3.2.1.888R
+        vendorUrl: 'http://www.io-link.com/io-link-master'
+        manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
         applicationSpecificTag: Fallback reader at the end of the belt
         locationTag: Down under
         functionTag: Code reading
@@ -4903,12 +4903,12 @@ components:
             Device Events. Should not be used for other log entries.
           type: integer
           minimum: 1
-        deviceName:
+        deviceAlias:
           description: >-
             This property is mandatory for IO-Link Device Events. Should not
             be used for other log entries.
           type: string
-    eventMessageObject:
+    eventObject:
       type: object
       properties:
         code:
@@ -4944,7 +4944,7 @@ components:
           origin:
             $ref: '#/components/schemas/eventOriginObject'
           message:
-            $ref: '#/components/schemas/eventMessageObject'
+            $ref: '#/components/schemas/eventObject'
     blockParameterizationPostParametersRequest:
       type: array
       items:
@@ -5039,7 +5039,7 @@ components:
               - code
               - mode
             allOf:
-              - $ref: '#/components/schemas/eventMessageObject'
+              - $ref: '#/components/schemas/eventObject'
       example:
         - time: '2018-05-18T07:31:54.123Z'
           severity: WARNING
@@ -5157,7 +5157,7 @@ components:
           required:
             - topicName
             - qos
-            - deviceName
+            - deviceAlias
           properties:
             topicName:
               type: string
@@ -5167,9 +5167,9 @@ components:
                 - 0_ONLY_ONCE
                 - 1_AT_LEAST_ONCE
                 - 2_EXACTLY_ONCE
-            deviceName:
+            deviceAlias:
               type: string
-              description: Unique deviceName.
+              description: Unique deviceAlias.
         - oneOf:
             - type: object
               required:
@@ -5196,7 +5196,7 @@ components:
         topicId: 1
         topicName: PD input
         qos: 1_AT_LEAST_ONCE
-        deviceName: DT35
+        deviceAlias: DT35
         processData:
           direction: in
           format: iodd
@@ -5366,8 +5366,8 @@ components:
         - cycleTime
         - vendorId
         - deviceId
-        - pin2Configuration
-        - deviceName
+        - iqConfiguration
+        - deviceAlias
       properties:
         mode:
           type: string
@@ -5408,25 +5408,25 @@ components:
           type: integer
           minimum: 1
           maximum: 16777215
-        pin2Configuration:
+        iqConfiguration:
           type: string
           enum:
             - NOT_SUPPORTED
             - DIGITAL_INPUT
             - DIGITAL_OUTPUT
             - POWER_2
-        deviceName:
+        deviceAlias:
           type: string
       example:
         mode: IOLINK_AUTOSTART
         validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-        pin2Configuration: ANALOG_INPUT
+        iqConfiguration: ANALOG_INPUT
         cycleTime:
           value: 2.3
           unit: ms
         vendorId: 26
         deviceId: 333
-        deviceName: Distance_sensor_1
+        deviceAlias: Distance_sensor_1
     portConfigurationPost:
       type: object
       properties:
@@ -5471,7 +5471,7 @@ components:
           type: integer
           minimum: 1
           maximum: 16777215
-        pin2Configuration:
+        iqConfiguration:
           type: string
           enum:
             - NOT_SUPPORTED
@@ -5480,7 +5480,7 @@ components:
             - ANALOG_INPUT
             - ANALOG_OUTPUT
             - POWER_2
-        deviceName:
+        deviceAlias:
           type: string
     dataStorageGetPost:
       description: >-
@@ -5538,18 +5538,18 @@ components:
                 - $ref: '#/components/schemas/deviceComplexTypeValue'
               description: >
                 Process data value
-        pin4Value:
+        cqValue:
           type: boolean
           description: >
-            IO-Link cable pin4 (C/Q) level if it is used as digital input or output
+            IO-Link cable cq (C/Q) level if it is used as digital input or output
             (SIO mode). (false - 0 V, true - 24 V)
-        pin2Value:
+        iqValue:
           type: boolean
           description: >
-            IO-Link cable pin2 level if it is used as digital input or output.
+            IO-Link cable iq level if it is used as digital input or output.
             (false - 0 V, true - 24 V)
       example:
-        'format=byteArray, pin4=IO-Link, pin2=sio':
+        'format=byteArray, cq=IO-Link, iq=sio':
           ioLink:
             valid: true
             value:
@@ -5557,23 +5557,23 @@ components:
               - 123
               - 126
               - 236
-          pin2Value: true
-        'format=iodd, pin4=IO-Link, pin2=deactivated/not available':
+          iqValue: true
+        'format=iodd, cq=IO-Link, iq=deactivated/not available':
           iolink:
             valid: true
             value:
               Valve_1: { value: true }
               Valve_2: { value: false }
-        'format=byteArray/iodd, pin4=sio, pin2=deactivated/not available':
-          pin4Value: false
+        'format=byteArray/iodd, cq=sio, iq=deactivated/not available':
+          cqValue: false
     deviceProcessDataValueGet:
       type: object
       description: >
-        The pin4Value is present in the 'in' object if the pin4 is configured as digital input.
-        The pin4Value is present in the 'out' object if the pin4 is configured as digital output.
-        The ioLink is present either in the 'in' or 'out' or both objects if the pin4 is configured to IO-Link mode.
-        The pin2Value is present in the 'in' object if the pin2 is configured as digital input.
-        The pin2value is present in the 'out' object if the pin4 is configured as digital output.
+        The cqValue is present in the 'in' object if the cq is configured as digital input.
+        The cqValue is present in the 'out' object if the cq is configured as digital output.
+        The ioLink is present either in the 'in' or 'out' or both objects if the cq is configured to IO-Link mode.
+        The iqValue is present in the 'in' object if the iq is configured as digital input.
+        The iqvalue is present in the 'out' object if the cq is configured as digital output.
       properties:
         measure:
           $ref: '#/components/schemas/processDataValue'
@@ -5723,10 +5723,10 @@ components:
     errorObject:
       type: object
       required:
-        - msgCode
+        - code
         - message
       properties:
-        msgCode:
+        code:
           type: integer
         message:
           type: string
@@ -5782,8 +5782,8 @@ components:
         type: integer
         minimum: 1
       required: true
-    deviceName:
-      name: deviceName
+    deviceAlias:
+      name: deviceAlias
       in: path
       description: >-
         Device Name configured with the port/configuration URL. Default Device
@@ -5811,9 +5811,9 @@ components:
       schema:
         $ref: '#/components/schemas/eventPortNumber'
     eventDeviceName:
-      name: deviceName
+      name: deviceAlias
       in: query
-      description: deviceName is only applicable with origin=DEVICES
+      description: deviceAlias is only applicable with origin=DEVICES
       schema:
         $ref: '#/components/schemas/eventDeviceName'
     eventTop:
@@ -5884,10 +5884,10 @@ components:
           schema:
             type: object
             required:
-              - msgCode
+              - code
               - message
             properties:
-              msgCode:
+              code:
                 type: integer
               message:
                 type: string
