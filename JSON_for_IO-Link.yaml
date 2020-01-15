@@ -3051,12 +3051,14 @@ paths:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
                 format=byteArray:
-                  value: [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
+                  value: { 
+                      "value": [
+                        0,
+                        156,
+                        125,
+                        25
+                      ]
+                    }
                 format=iodd, simple type:
                   value: {
                     "value": 15.2
@@ -3162,12 +3164,14 @@ paths:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
                 format=byteArray:
-                  value: [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
+                  value: { 
+                      "value": [
+                        0,
+                        156,
+                        125,
+                        25
+                      ]
+                    }
                 format=iodd, simple type:
                   value: {
                     "value": 15.2
@@ -3740,12 +3744,14 @@ paths:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
               examples:
                 format=byteArray:
-                  value: [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
+                  value: { 
+                      "value": [
+                        0,
+                        156,
+                        125,
+                        25
+                      ]
+                    }
                 format=iodd:
                   value: {
                     "value": 15.2
@@ -3843,12 +3849,14 @@ paths:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
             examples:
                 format=byteArray:
-                  value: [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
+                  value: { 
+                      "value": [
+                        0,
+                        156,
+                        125,
+                        25
+                      ]
+                    }
                 format=iodd:
                   value: {
                     "value": 15.2
