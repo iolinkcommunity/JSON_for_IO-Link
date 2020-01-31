@@ -43,13 +43,13 @@ info:
       - Remark: An array/string was accessed exceeding its maximum length
 
     * [207] HTTP Status 400: deviceAlias is not unique
-    
+
     * [208] HTTP Status 400: POST request without content
 
     ### Resource access errors
 
     * [301] HTTP Status 404: Resource not found
-      - Remark: wrong URL
+      - Remark: e.g. wrong URL
 
     * [302] HTTP Status 404: masterNumber not found
 
@@ -61,7 +61,7 @@ info:
 
     * [306] HTTP Status 400: Query parameter value invalid
 
-    * [307] HTTP Status 400: Port is not configured for IO-Link
+    * [307] HTTP Status 400: Port is not configured to IO-Link
       - Remark: e.g. not in IOLINK_MANUAL or IOLINK_AUTOSTART mode
 
     * [308] HTTP Status 404: IO-Link Device is not accessible
@@ -75,7 +75,7 @@ info:
       - Remark: The additional iolinkErrorCode and iolinkErrorMessage fields contain
       the IO-Link error code and the incident text from the ErrorTypes table
 
-    * [312] HTTP Status 404: IO-Link parameter name is not unique.
+    * [312] HTTP Status 404: IO-Link parameter name is not unique
       - Remark: Please use the {name}_{index} format
 
     ### Data Storage errors
@@ -196,7 +196,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -241,7 +241,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -269,11 +269,11 @@ paths:
                 Manual:
                   value:
                     ethIpv4: [
-                      { 
+                      {
                         ipConfiguration: MANUAL,
                         ipAddress: 192.168.1.13,
                         subnetMask: 255.255.255.0,
-                        standardGateway: 192.168.1.1   
+                        standardGateway: 192.168.1.1
                       }
                     ]
                 DHCP:
@@ -283,7 +283,7 @@ paths:
                         ipConfiguration: DHCP,
                         ipAddress: 192.168.100.5,
                         subnetMask: 255.255.255.0,
-                        standardGateway: 192.168.100.1  
+                        standardGateway: 192.168.100.1
                       }
                     ]
                 Multiple ethernet interfaces:
@@ -293,19 +293,19 @@ paths:
                         ipConfiguration: MANUAL,
                         ipAddress: 192.168.1.13,
                         subnetMask: 255.255.255.0,
-                        standardGateway: 192.168.1.1   
+                        standardGateway: 192.168.1.1
                       },
                       {
                         ipConfiguration: MANUAL,
                         ipAddress: 192.168.2.10,
                         subnetMask: 255.255.255.0,
-                        standardGateway: 192.168.2.1  
+                        standardGateway: 192.168.2.1
                       },
                       {
                         ipConfiguration: DHCP,
                         ipAddress: 192.168.200.7,
                         subnetMask: 255.255.255.0,
-                        standardGateway: 192.168.200.1  
+                        standardGateway: 192.168.200.1
                       }
                     ]
         '400':
@@ -329,7 +329,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -355,11 +355,11 @@ paths:
               Manual:
                 value:
                   ethIpv4: [
-                    { 
+                    {
                       ipConfiguration: MANUAL,
                       ipAddress: 192.168.1.13,
                       subnetMask: 255.255.255.0,
-                      standardGateway: 192.168.1.1   
+                      standardGateway: 192.168.1.1
                     }
                   ]
               DHCP:
@@ -376,13 +376,13 @@ paths:
                       ipConfiguration: MANUAL,
                       ipAddress: 192.168.1.13,
                       subnetMask: 255.255.255.0,
-                      standardGateway: 192.168.1.1   
+                      standardGateway: 192.168.1.1
                     },
                     {
                       ipConfiguration: MANUAL,
                       ipAddress: 192.168.2.10,
                       subnetMask: 255.255.255.0,
-                      standardGateway: 192.168.2.1  
+                      standardGateway: 192.168.2.1
                     },
                     {
                       ipConfiguration: DHCP
@@ -399,13 +399,13 @@ paths:
                 $ref: '#/components/schemas/errorObject'
               examples:
                 104:
-                  value: 
+                  value:
                     code: 104
-                    message: Action locked by another client (e.g. fieldbuscontroller)
+                    message: Action locked by another client
                 201:
                   value:
                     code: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
+                    message: Parsing failed
 
         '403':
           description: Forbidden
@@ -417,7 +417,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -447,7 +447,7 @@ paths:
                 104:
                   value:
                     code: 104
-                    message: Action locked by another client (e.g. fieldbuscontroller)
+                    message: Action locked by another client
                 305:
                   value:
                     code: 305
@@ -462,7 +462,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -492,7 +492,7 @@ paths:
                 104:
                   value:
                     code: 104
-                    message: Action locked by another client (e.g. fieldbuscontroller)
+                    message: Action locked by another client
                 305:
                   value:
                     code: 305
@@ -507,7 +507,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -686,7 +686,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -751,7 +751,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -815,23 +815,23 @@ paths:
                 $ref: '#/components/schemas/errorObject'
               example:
                 - code: 104
-                  message: Action locked by another client (e.g. fieldbus controller)
+                  message: Action locked by another client
                 - code: 201
-                  message: Parsing failed (error while parsing the incoming JSON value)
+                  message: Parsing failed
                 - code: 202
-                  message: Invalid data (given for the value, e.g. malformed IP address)
+                  message: Data value invalid
                 - code: 203
-                  message: Invalid JSON data type (e.g. string instead of numbers)
+                  message: Data type invalid
                 - code: 204
-                  message: Unknown enumeration value
+                  message: Enumeration value unknown
                 - code: 205
-                  message: Value out of range (exceeds the minimum or maximum value)
+                  message: Data value out of range
                 - code: 206
-                  message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                  message: Data value out of bounds
                 - code: 305
                   message: Incorrect query parameter name
                 - code: 701
-                  message: Incomplete data set
+                  message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -842,7 +842,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -924,7 +924,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1000,27 +1000,27 @@ paths:
                 201:
                   value:
                     code: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
+                    message: Parsing failed
                 202:
                   value:
                     code: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
+                    message: Data value invalid
                 203:
                   value:
                     code: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
+                    message: Data type invalid
                 204:
                   value:
                     code: 204
-                    message: Unknown enumeration value
+                    message: Enumeration value unknown
                 205:
                   value:
                     code: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
+                    message: Data value out of range
                 206:
                   value:
                     code: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    message: Data value out of bounds
                 305:
                   value:
                     code: 305
@@ -1028,7 +1028,7 @@ paths:
                 701:
                   value:
                     code: 701
-                    message: Incomplete data set
+                    message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -1039,7 +1039,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1121,7 +1121,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1136,7 +1136,7 @@ paths:
                 301:
                   value:
                     code: 301
-                    message: Resource not found (e.g. wrong URL)
+                    message: Resource not found
         '500':
           description: Internal server error
           content:
@@ -1182,7 +1182,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1197,7 +1197,7 @@ paths:
                 301:
                   value:
                     code: 301
-                    message: Resource not found (e.g. wrong URL)
+                    message: Resource not found
         '500':
           description: Internal server error
           content:
@@ -1247,7 +1247,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1306,15 +1306,15 @@ paths:
                 603:
                   value:
                     code: 603
-                    message: Uploaded file is no valid IODD XML. Upload rejected
+                    message: IODD upload failed. IODD XML invalid
                 604:
                   value:
                     code: 604
-                    message: Uploaded file is no valid IODD XML. CRC check failed
+                    message: IODD upload failed. CRC error
                 605:
                   value:
                     code: 605
-                    message: Uploaded file is no valid IODD XML. Parsing failed
+                    message: IODD upload failed. Parsing error
         '403':
           description: Forbidden
           content:
@@ -1325,7 +1325,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1351,7 +1351,7 @@ paths:
                 602:
                   value:
                     code: 602
-                    message: Unable to upload IODD XML file. Insufficient memory space
+                    message: IODD upload failed. Not enough memory
   '/iodds/vendors/{vendorId}/devices/{deviceId}/revisions/{ioLinkRevision}':
     get:
       tags:
@@ -1392,7 +1392,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1407,7 +1407,7 @@ paths:
                 301:
                   value:
                     code: 301
-                    message: Resource not found (e.g. wrong URL)
+                    message: Resource not found
         '500':
           description: Internal server error
           content:
@@ -1455,7 +1455,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1470,7 +1470,7 @@ paths:
                 301:
                   value:
                     code: 301
-                    message: Resource not found (e.g. wrong URL)
+                    message: Resource not found
         '500':
           description: Internal server error
           content:
@@ -1517,7 +1517,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -1567,7 +1567,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Bad request
           content:
@@ -1626,23 +1626,23 @@ paths:
                 104:
                   value:
                     code: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
+                    message: Action locked by another client
                 201:
                   value:
                     code: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
+                    message: Parsing failed
                 202:
                   value:
                     code: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
+                    message: Data value invalid
                 203:
                   value:
                     code: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
+                    message: Data type invalid
                 206:
                   value:
                     code: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    message: Data value out of bounds
                 305:
                   value:
                     code: 305
@@ -1657,7 +1657,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1719,7 +1719,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1794,7 +1794,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1857,7 +1857,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1924,7 +1924,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -1995,31 +1995,31 @@ paths:
                 104:
                   value:
                     code: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
+                    message: Action locked by another client
                 201:
                   value:
                     code: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
+                    message: Parsing failed
                 202:
                   value:
                     code: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
+                    message: Data value invalid
                 203:
                   value:
                     code: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
+                    message: Data type invalid
                 204:
                   value:
                     code: 204
-                    message: Unknown enumeration value
+                    message: Enumeration value unknown
                 205:
                   value:
                     code: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
+                    message: Data value out of range
                 207:
                   value:
                     code: 207
-                    message: Duplicated Device Name
+                    message: deviceAlias is not unique
                 305:
                   value:
                     code: 305
@@ -2027,11 +2027,11 @@ paths:
                 702:
                   value:
                     code: 702
-                    message: Data set not applicable (not supported), the whole data set is rejected
+                    message: Data set not applicable
                 703:
                   value:
                     code: 703
-                    message: Incompatible data set combination, the whole data set is rejected
+                    message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -2042,7 +2042,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -2109,7 +2109,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -2191,7 +2191,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -2263,31 +2263,31 @@ paths:
                 104:
                   value:
                     code: 104
-                    message: Action locked by another client (e.g. fieldbus controller)
+                    message: Action locked by another client
                 201:
                   value:
                     code: 201
-                    message: Parsing failed (error while parsing the incoming JSON value)
+                    message: Parsing failed
                 202:
                   value:
                     code: 202
-                    message: Invalid data (given for the value, e.g. malformed IP address)
+                    message: Data value invalid
                 203:
                   value:
                     code: 203
-                    message: Invalid JSON data type (e.g. string instead of numbers)
+                    message: Data type invalid
                 204:
                   value:
                     code: 204
-                    message: Unknown enumeration value
+                    message: Enumeration value unknown
                 205:
                   value:
                     code: 205
-                    message: Value out of range (exceeds the minimum or maximum value)
+                    message: Data value out of range
                 206:
                   value:
                     code: 206
-                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                    message: Data value out of bounds
                 305:
                   value:
                     code: 305
@@ -2295,11 +2295,11 @@ paths:
                 401:
                   value:
                     msgcode: 401
-                    message: Mismatch between configured device and data storage meta data
+                    message: Data storage mismatch
                 701:
                   value:
                     code: 701
-                    message: Incomplete data set
+                    message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -2310,7 +2310,7 @@ paths:
                 150:
                   value:
                     code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -2402,7 +2402,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '500':
           description: Internal server error
           content:
@@ -2450,7 +2450,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
         '403':
           description: Forbidden
           content:
@@ -2461,7 +2461,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -2476,7 +2476,7 @@ paths:
                 308:
                   value:
                     code: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
+                    message: IO-Link Device is not accessible
         '500':
           description: Internal server error
           content:
@@ -2524,23 +2524,23 @@ paths:
                     104:
                       value:
                         code: 104
-                        message: Action locked by another client (e.g. fieldbus controller)
+                        message: Action locked by another client
                     201:
                       value:
                         code: 201
-                        message: Parsing failed (error while parsing the incoming JSON value)
+                        message: Parsing failed
                     202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                     203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                     206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                     305:
                       value:
                         code: 305
@@ -2548,7 +2548,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
         '403':
           description: Forbidden
           content:
@@ -2559,7 +2559,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -2574,7 +2574,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -2582,7 +2582,7 @@ paths:
                     310:
                       value:
                         code: 310
-                        message: IO-Link parameter access not supported by the Device
+                        message: IO-Link parameter access not supported by the device
         '500':
           description: Internal server error
           content:
@@ -2630,7 +2630,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
         '404':
           description: Not found
           content:
@@ -2645,7 +2645,7 @@ paths:
                 308:
                   value:
                     code: 308
-                    message: IO-Link Device is not accessible (not connected or communication error)
+                    message: IO-Link Device is not accessible
         '500':
           description: Internal server error
           content:
@@ -2756,7 +2756,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -2767,7 +2767,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -2856,31 +2856,31 @@ paths:
                     104:
                       value:
                         code: 104
-                        message: Action locked by another client (e.g. fieldbus controller)
+                        message: Action locked by another client
                     201:
                       value:
                         code: 201
-                        message: Parsing failed (error while parsing the incoming JSON value)
+                        message: Parsing failed
                     202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                     203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                     204:
                       value:
                         code: 204
-                        message: Unknown enumeration value
+                        message: Enumeration value unknown
                     205:
                       value:
                         code: 205
-                        message: Value out of range (exceeds the minimum or maximum value)
+                        message: Data value out of range
                     206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                     305:
                       value:
                         code: 305
@@ -2892,27 +2892,27 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     501:
                       value:
                         code: 501
-                        message: Writing processdata to Pin 2 is not possible. Pin 2 is not configured as DIGITAL_OUTPUT
+                        message: I/Q is not configured as DIGITAL_OUTPUT
                     502:
                       value:
                         code: 502
-                        message: Writing processdata to Pin 4 is not possible. Pin 4 is not configured as DIGITAL_OUTPUT
+                        message: C/Q is not configured as DIGITAL_OUTPUT
                     503:
                       value:
                         code: 503
-                        message: Attached IO-Link device has no output process data
+                        message: IO-Link device has no output process data
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
                     703:
                       value:
                         code: 703
-                        message: Incompatible data set combination, the whole data set is rejected
+                        message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -2921,7 +2921,7 @@ paths:
                   $ref: '#/components/schemas/errorObject'
                 example:
                   - code: 150
-                    message: Permission denied (e.g. user management)
+                    message: Permission denied
         '404':
           description: Not found
           content:
@@ -2940,7 +2940,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
         '500':
           description: Internal server error
           content:
@@ -2986,7 +2986,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -2997,7 +2997,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3046,7 +3046,7 @@ paths:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
                 format=byteArray:
-                  value: { 
+                  value: {
                       "value": [
                         0,
                         156,
@@ -3067,7 +3067,7 @@ paths:
                       "value": 12
                     }
                   }
-                  
+
         '400':
           description: Bad request
           content:
@@ -3086,7 +3086,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -3094,7 +3094,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -3105,7 +3105,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3124,7 +3124,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -3159,7 +3159,7 @@ paths:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
                 format=byteArray:
-                  value: { 
+                  value: {
                       "value": [
                         0,
                         156,
@@ -3197,31 +3197,31 @@ paths:
                     104:
                       value:
                         code: 104
-                        message: Action locked by another client (e.g. fieldbus controller)
+                        message: Action locked by another client
                     201:
                       value:
                         code: 201
-                        message: Parsing failed (error while parsing the incoming JSON value)
+                        message: Parsing failed
                     202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                     203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                     204:
                       value:
                         code: 204
-                        message: Unknown enumeration value
+                        message: Enumeration value unknown
                     205:
                       value:
                         code: 205
-                        message: Value out of range (exceeds the minimum or maximum value)
+                        message: Data value out of range
                     206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                     305:
                       value:
                         code: 305
@@ -3233,7 +3233,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -3241,11 +3241,11 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
                     703:
                       value:
                         code: 703
-                        message: Incompatible data set combination, the whole data set is rejected
+                        message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -3256,7 +3256,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3271,7 +3271,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -3348,7 +3348,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -3356,7 +3356,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -3367,7 +3367,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3386,7 +3386,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -3459,31 +3459,31 @@ paths:
                     104:
                       value:
                         code: 104
-                        message: Action locked by another client (e.g. fieldbus controller)
+                        message: Action locked by another client
                     201:
                       value:
                         code: 201
-                        message: Parsing failed (error while parsing the incoming JSON value)
+                        message: Parsing failed
                     202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                     203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                     204:
                       value:
                         code: 204
-                        message: Unknown enumeration value
+                        message: Enumeration value unknown
                     205:
                       value:
                         code: 205
-                        message: Value out of range (exceeds the minimum or maximum value)
+                        message: Data value out of range
                     206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                     305:
                       value:
                         code: 305
@@ -3495,7 +3495,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -3503,11 +3503,11 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
                     703:
                       value:
                         code: 703
-                        message: Incompatible data set combination, the whole data set is rejected
+                        message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -3518,7 +3518,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3537,7 +3537,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -3592,7 +3592,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -3603,7 +3603,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3669,7 +3669,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -3680,7 +3680,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3739,7 +3739,7 @@ paths:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
               examples:
                 format=byteArray:
-                  value: { 
+                  value: {
                       "value": [
                         0,
                         156,
@@ -3769,7 +3769,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -3777,7 +3777,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -3788,7 +3788,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3807,7 +3807,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -3844,7 +3844,7 @@ paths:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
             examples:
                 format=byteArray:
-                  value: { 
+                  value: {
                       "value": [
                         0,
                         156,
@@ -3869,31 +3869,31 @@ paths:
                     104:
                       value:
                         code: 104
-                        message: Action locked by another client (e.g. fieldbus controller)
+                        message: Action locked by another client
                     201:
                       value:
                         code: 201
-                        message: Parsing failed (error while parsing the incoming JSON value)
+                        message: Parsing failed
                     202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                     203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                     204:
                       value:
                         code: 204
-                        message: Unknown enumeration value
+                        message: Enumeration value unknown
                     205:
                       value:
                         code: 205
-                        message: Value out of range (exceeds the minimum or maximum value)
+                        message: Data value out of range
                     206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                     305:
                       value:
                         code: 305
@@ -3905,7 +3905,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -3917,7 +3917,7 @@ paths:
                     703:
                       value:
                         code: 703
-                        message: Incompatible data set combination, the whole data set is rejected
+                        message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -3928,7 +3928,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -3947,7 +3947,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -4016,7 +4016,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -4024,7 +4024,7 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
         '403':
           description: Forbidden
           content:
@@ -4035,7 +4035,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -4054,7 +4054,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -4122,31 +4122,31 @@ paths:
                     104:
                       value:
                         code: 104
-                        message: Action locked by another client (e.g. fieldbus controller)
+                        message: Action locked by another client
                     201:
                       value:
                         code: 201
-                        message: Parsing failed (error while parsing the incoming JSON value)
+                        message: Parsing failed
                     202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                     203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                     204:
                       value:
                         code: 204
-                        message: Unknown enumeration value
+                        message: Enumeration value unknown
                     205:
                       value:
                         code: 205
-                        message: Value out of range (exceeds the minimum or maximum value)
+                        message: Data value out of range
                     206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                     305:
                       value:
                         code: 305
@@ -4158,7 +4158,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -4166,11 +4166,11 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
                     703:
                       value:
                         code: 703
-                        message: Incompatible data set combination, the whole data set is rejected
+                        message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -4181,7 +4181,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -4200,7 +4200,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -4238,7 +4238,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/deviceBlockParameterizationPost' 
+              $ref: '#/components/schemas/deviceBlockParameterizationPost'
             examples:
               read, format=byteArray:
                 value: {
@@ -4491,31 +4491,31 @@ paths:
                     104:
                       value:
                         code: 104
-                        message: Action locked by another client (e.g. fieldbus controller)
+                        message: Action locked by another client
                     201:
                       value:
                         code: 201
-                        message: Parsing failed (error while parsing the incoming JSON value)
+                        message: Parsing failed
                     202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                     203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                     204:
                       value:
                         code: 204
-                        message: Unknown enumeration value
+                        message: Enumeration value unknown
                     205:
                       value:
                         code: 205
-                        message: Value out of range (exceeds the minimum or maximum value)
+                        message: Data value out of range
                     206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                     305:
                       value:
                         code: 305
@@ -4527,7 +4527,7 @@ paths:
                     307:
                       value:
                         code: 307
-                        message: Port is not configured in IOLINK_MANUAL or IOLINK_AUTOSTART mode
+                        message: Port is not configured to IO-Link
                     311:
                       value:
                         code: 311
@@ -4535,15 +4535,15 @@ paths:
                     601:
                       value:
                         code: 601
-                        message: IODD is not available
+                        message: IODD (representation) for this IO-Link device is not available
                     701:
                       value:
                         code: 701
-                        message: Incomplete data set
+                        message: Data set incomplete
                     703:
                       value:
                         code: 703
-                        message: Incompatible data set combination, the whole data set is rejected
+                        message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -4554,7 +4554,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -4573,7 +4573,7 @@ paths:
                     308:
                       value:
                         code: 308
-                        message: IO-Link Device is not accessible (not connected or communication error)
+                        message: IO-Link Device is not accessible
                     309:
                       value:
                         code: 309
@@ -4637,7 +4637,7 @@ paths:
                     150:
                       value:
                         code: 150
-                        message: Permission denied (e.g. user management)
+                        message: Permission denied
         '404':
           description: Not found
           content:
