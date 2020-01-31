@@ -16,37 +16,40 @@ info:
 
     * [103] HTTP Status 404: Operation not supported
 
-    * [104] HTTP Status 400: Action locked by another client (e.g. fieldbus
-    controller)
+    * [104] HTTP Status 400: Action locked by another client
+      - Remark: Fieldbus controller or another gateway protocol has claimed priority
 
-    * [150] HTTP Status 403: Permission denied (e.g. user management)
+    * [150] HTTP Status 403: Permission denied
+      - Remark: due to user management restrictions
 
 
     ### JSON Parsing errors
 
-    * [201] HTTP Status 400: Parsing failed (error while parsing the incoming
-    JSON value)
+    * [201] HTTP Status 400: Parsing failed
+      - Remark: Error while parsing the incoming JSON object
 
-    * [202] HTTP Status 400: Invalid data (given for the value, e.g. malformed
-    IP address)
+    * [202] HTTP Status 400: Data value invalid
+      - Remark: Error while parsing a specific JSON value, e.g. malformed IP address
 
-    * [203] HTTP Status 400: Invalid JSON data type (e.g. string instead of
-    numbers)
+    * [203] HTTP Status 400: Data type invalid
+      - Remark: e.g. string instead of number
 
-    * [204] HTTP Status 400: Unknown enumeration value
+    * [204] HTTP Status 400: Enumeration value unknown
 
-    * [205] HTTP Status 400: Value out of range (exceeds the minimum or maximum
-    value)
+    * [205] HTTP Status 400: Data value out of range
+      - Remark: Exceeds the minimum or maximum value
 
-    * [206] HTTP Status 400: Out of bounds (an array/string was accessed
-    exceeding its maximum length)
+    * [206] HTTP Status 400: Data value out of bounds
+      - Remark: An array/string was accessed exceeding its maximum length
 
-    * [207] HTTP Status 400: Duplicated deviceAlias
-
+    * [207] HTTP Status 400: deviceAlias is not unique
+    
+    * [208] HTTP Status 400: POST request without content
 
     ### Resource access errors
 
-    * [301] HTTP Status 404: Resource not found (e.g. wrong URL).
+    * [301] HTTP Status 404: Resource not found
+      - Remark: wrong URL
 
     * [302] HTTP Status 404: masterNumber not found
 
@@ -54,74 +57,66 @@ info:
 
     * [304] HTTP Status 404: deviceAlias not found
 
-    * [305] HTTP Status 400: Incorrect query parameter name
+    * [305] HTTP Status 400: Query parameter name invalid
 
-    * [306] HTTP Status 400: Incorrect query parameter value
+    * [306] HTTP Status 400: Query parameter value invalid
 
-    * [307] HTTP Status 400: Port is not configured in IOLINK_MANUAL or
-    IOLINK_AUTOSTART mode.
+    * [307] HTTP Status 400: Port is not configured for IO-Link
+      - Remark: e.g. not in IOLINK_MANUAL or IOLINK_AUTOSTART mode
 
-    * [308] HTTP Status 404: IO-Link Device is not accessible (not connected or
-    communication error)
+    * [308] HTTP Status 404: IO-Link Device is not accessible
+      - Remark: e.g. not connected or communication error
 
     * [309] HTTP Status 404: IO-Link parameter not found
 
-    * [310] HTTP Status 404: IO-Link parameter access not supported by the Device
+    * [310] HTTP Status 404: IO-Link parameter access not supported by the device
 
     * [311] HTTP Status 400: IO-Link parameter access error
-      - Remark: The additional  iolinkErrorCode and iolinkErrorMessage fields contain
+      - Remark: The additional iolinkErrorCode and iolinkErrorMessage fields contain
       the IO-Link error code and the incident text from the ErrorTypes table
 
-    * [312] HTTP Status 404: IO-Link parameter name is not unique. Please use the
-      [name]_[index] format.
-
+    * [312] HTTP Status 404: IO-Link parameter name is not unique.
+      - Remark: Please use the {name}_{index} format
 
     ### Data Storage errors
 
-    * [401] HTTP Status 400: Mismatch between configured device and data storage
-    meta data
-
+    * [401] HTTP Status 400: Data storage mismatch
+      - Remark: Mismatch between meta data of device and data storage
 
     ### Process Data handling
 
-    * [501] HTTP Status 400: Writing processdata to Pin 2 is not possible. Pin 2
-    is not configured as DIGITAL_OUTPUT
+    * [501] HTTP Status 400: I/Q is not configured as DIGITAL_OUTPUT
 
-    * [502] HTTP Status 400: Writing processdata to Pin 4 is not possible. Pin 4
-    is not configured as DIGITAL_OUTPUT
+    * [502] HTTP Status 400: C/Q is not configured as DIGITAL_OUTPUT
 
-    * [503] HTTP Status 400: Attached IO-Link device has no output process data
+    * [503] HTTP Status 400: IO-Link device has no output process data
 
 
     ### IODD errors
 
-    * [601] HTTP Status 400: IODD is not available.
+    * [601] HTTP Status 400: IODD (representation) for this IO-Link device is not available
 
-    * [602] HTTP Status 500: Unable to upload IODD XML file. Insufficient memory
-    space
+    * [602] HTTP Status 500: IODD upload failed. Not enough memory
 
-    * [603] HTTP Status 400: Uploaded file is no valid IODD XML. Upload rejected
-      - Remark: We could check the file content superficially to ensure that the
+    * [603] HTTP Status 400: IODD upload failed: IODD XML invalid
+      - Remark: Check the file content superficially to ensure that the
       IODD is an XML and an IODD (e.g. vendorId, deviceId, VendorName, ProductName
       and other mandatory elements or attributes)
 
-    * [604] HTTP Status 400: Uploaded file is no valid IODD XML. CRC check
-    failed. Upload rejected
+    * [604] HTTP Status 400: IODD upload failed. CRC error
 
-    * [605] HTTP Status 400: Uploaded file is no valid IODD XML. Parsing
-    failed. Upload rejected
+    * [605] HTTP Status 400: IODD upload failed. Parsing error
       - Remark: All those systems that do not want to store the IODD have to parse
       it immediately
 
 
     ### Data content errors
 
-    * [701] HTTP Status 400: Incomplete data set
+    * [701] HTTP Status 400: Data set incomplete
 
-    * [702] HTTP Status 400: Data set not applicable (not supported), the whole data set is rejected
+    * [702] HTTP Status 400: Data set not applicable
 
-    * [703] HTTP Status 400: Incompatible data set combination, the whole data set is rejected
-
+    * [703] HTTP Status 400: Data set combination incompatible
 
 
     ### Implementation hints:
