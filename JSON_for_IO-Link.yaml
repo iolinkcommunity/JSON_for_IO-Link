@@ -42,9 +42,7 @@ info:
     * [206] HTTP Status 400: Data value out of bounds
       - Remark: An array/string was accessed exceeding its maximum length
 
-<<<<<<< .mine    * [207] HTTP Status 400: deviceName is not unique
-=======    * [207] HTTP Status 400: Duplicated deviceAlias
->>>>>>> .theirs
+    * [207] HTTP Status 400: deviceAlias is not unique
 
     ### Resource access errors
 
@@ -4690,7 +4688,7 @@ components:
               $ref: '#/components/schemas/content'
             format:
               $ref: '#/components/schemas/format'
-      oneOf:s
+      oneOf:
         - type: object
           required:
             - interval
