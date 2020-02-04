@@ -411,6 +411,34 @@ paths:
                   value:
                     code: 201
                     message: Parsing failed (error while parsing the incoming JSON value)
+                202:
+                      value:
+                        code: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                203:
+                      value:
+                        code: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                204:
+                      value:
+                        code: 204
+                        message: Unknown enumeration value
+                205:
+                      value:
+                        code: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                206:
+                      value:
+                        code: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                305:
+                      value:
+                        code: 305
+                        message: Incorrect query parameter name
+                701:
+                      value:
+                        code: 701
+                        message: Incomplete data set
 
         '403':
           description: Forbidden
@@ -818,25 +846,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - code: 104
-                  message: Action locked by another client (e.g. fieldbus controller)
-                - code: 201
-                  message: Parsing failed (error while parsing the incoming JSON value)
-                - code: 202
-                  message: Invalid data (given for the value, e.g. malformed IP address)
-                - code: 203
-                  message: Invalid JSON data type (e.g. string instead of numbers)
-                - code: 204
-                  message: Unknown enumeration value
-                - code: 205
-                  message: Value out of range (exceeds the minimum or maximum value)
-                - code: 206
-                  message: Out of bounds (an array/string was accessed exceeding its maximum length)
-                - code: 305
-                  message: Incorrect query parameter name
-                - code: 701
-                  message: Incomplete data set
+              examples:
+                104:
+                  value:
+                    code: 104
+                    message: Action locked by another client (e.g. fieldbus controller)
+                201:
+                  value:
+                    code: 201
+                    message: Parsing failed (error while parsing the incoming JSON value)
+                202:
+                  value:
+                    code: 202
+                    message: Invalid data (given for the value, e.g. malformed IP address)
+                203:
+                  value:
+                    code: 203
+                    message: Invalid JSON data type (e.g. string instead of numbers)
+                204:
+                  value:
+                    code: 204
+                    message: Unknown enumeration value
+                205:
+                  value:
+                    code: 205
+                    message: Value out of range (exceeds the minimum or maximum value)
+                206:
+                  value:
+                    code: 206
+                    message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                305:
+                  value:
+                    code: 305
+                    message: Incorrect query parameter name
+                701:
+                  value:
+                    code: 701
+                    message: Incomplete data set
         '403':
           description: Forbidden
           content:
