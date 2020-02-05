@@ -406,6 +406,34 @@ paths:
                   value:
                     code: 201
                     message: Parsing failed
+                202:
+                      value:
+                        code: 202
+                        message: Invalid data (given for the value, e.g. malformed IP address)
+                203:
+                      value:
+                        code: 203
+                        message: Invalid JSON data type (e.g. string instead of numbers)
+                204:
+                      value:
+                        code: 204
+                        message: Unknown enumeration value
+                205:
+                      value:
+                        code: 205
+                        message: Value out of range (exceeds the minimum or maximum value)
+                206:
+                      value:
+                        code: 206
+                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                305:
+                      value:
+                        code: 305
+                        message: Incorrect query parameter name
+                701:
+                      value:
+                        code: 701
+                        message: Incomplete data set
 
         '403':
           description: Forbidden
@@ -813,24 +841,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorObject'
-              example:
-                - code: 104
+              examples:
+                104:
+                  value:
+                    code: 104
                   message: Action locked by another client
-                - code: 201
+                201:
+                  value:
+                    code: 201
                   message: Parsing failed
-                - code: 202
+                202:
+                  value:
+                    code: 202
                   message: Data value invalid
-                - code: 203
+                203:
+                  value:
+                    code: 203
                   message: Data type invalid
-                - code: 204
+                204:
+                  value:
+                    code: 204
                   message: Enumeration value unknown
-                - code: 205
+                205:
+                  value:
+                    code: 205
                   message: Data value out of range
-                - code: 206
+                206:
+                  value:
+                    code: 206
                   message: Data value out of bounds
-                - code: 305
+                305:
+                  value:
+                    code: 305
                   message: Incorrect query parameter name
-                - code: 701
+                701:
+                  value:
+                    code: 701
                   message: Data set incomplete
         '403':
           description: Forbidden
