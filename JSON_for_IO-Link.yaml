@@ -25,21 +25,21 @@ info:
 
     ### JSON Parsing errors
 
-    * [201] HTTP Status 400: Parsing failed
+    * [201] HTTP Status 400: JSON parsing failed
       - Remark: Error while parsing the incoming JSON object
 
-    * [202] HTTP Status 400: Data value invalid
+    * [202] HTTP Status 400: JSON data value invalid
       - Remark: Error while parsing a specific JSON value, e.g. malformed IP address
 
-    * [203] HTTP Status 400: Data type invalid
+    * [203] HTTP Status 400: JSON data type invalid
       - Remark: e.g. string instead of number
 
     * [204] HTTP Status 400: Enumeration value unknown
 
-    * [205] HTTP Status 400: Data value out of range
+    * [205] HTTP Status 400: JSON data value out of range
       - Remark: Exceeds the minimum or maximum value
 
-    * [206] HTTP Status 400: Data value out of bounds
+    * [206] HTTP Status 400: JSON data value out of bounds
       - Remark: An array/string was accessed exceeding its maximum length
 
     * [207] HTTP Status 400: deviceAlias is not unique
@@ -405,15 +405,15 @@ paths:
                 201:
                   value:
                     code: 201
-                    message: Parsing failed
+                    message: JSON parsing failed
                 202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                 203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                 204:
                       value:
                         code: 204
@@ -421,11 +421,11 @@ paths:
                 205:
                       value:
                         code: 205
-                        message: Data value out of range
+                        message: JSON data value out of range
                 206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                 305:
                       value:
                         code: 305
@@ -849,15 +849,15 @@ paths:
                 201:
                   value:
                     code: 201
-                  message: Parsing failed
+                  message: JSON parsing failed
                 202:
                   value:
                     code: 202
-                  message: Data value invalid
+                  message: JSON data value invalid
                 203:
                   value:
                     code: 203
-                  message: Data type invalid
+                  message: JSON data type invalid
                 204:
                   value:
                     code: 204
@@ -865,11 +865,11 @@ paths:
                 205:
                   value:
                     code: 205
-                  message: Data value out of range
+                  message: JSON data value out of range
                 206:
                   value:
                     code: 206
-                  message: Data value out of bounds
+                  message: JSON data value out of bounds
                 305:
                   value:
                     code: 305
@@ -1046,15 +1046,15 @@ paths:
                 201:
                   value:
                     code: 201
-                    message: Parsing failed
+                    message: JSON parsing failed
                 202:
                   value:
                     code: 202
-                    message: Data value invalid
+                    message: JSON data value invalid
                 203:
                   value:
                     code: 203
-                    message: Data type invalid
+                    message: JSON data type invalid
                 204:
                   value:
                     code: 204
@@ -1062,11 +1062,11 @@ paths:
                 205:
                   value:
                     code: 205
-                    message: Data value out of range
+                    message: JSON data value out of range
                 206:
                   value:
                     code: 206
-                    message: Data value out of bounds
+                    message: JSON data value out of bounds
                 305:
                   value:
                     code: 305
@@ -1676,19 +1676,19 @@ paths:
                 201:
                   value:
                     code: 201
-                    message: Parsing failed
+                    message: JSON parsing failed
                 202:
                   value:
                     code: 202
-                    message: Data value invalid
+                    message: JSON data value invalid
                 203:
                   value:
                     code: 203
-                    message: Data type invalid
+                    message: JSON data type invalid
                 206:
                   value:
                     code: 206
-                    message: Data value out of bounds
+                    message: JSON data value out of bounds
                 305:
                   value:
                     code: 305
@@ -2045,15 +2045,15 @@ paths:
                 201:
                   value:
                     code: 201
-                    message: Parsing failed
+                    message: JSON parsing failed
                 202:
                   value:
                     code: 202
-                    message: Data value invalid
+                    message: JSON data value invalid
                 203:
                   value:
                     code: 203
-                    message: Data type invalid
+                    message: JSON data type invalid
                 204:
                   value:
                     code: 204
@@ -2061,7 +2061,7 @@ paths:
                 205:
                   value:
                     code: 205
-                    message: Data value out of range
+                    message: JSON data value out of range
                 207:
                   value:
                     code: 207
@@ -2313,15 +2313,15 @@ paths:
                 201:
                   value:
                     code: 201
-                    message: Parsing failed
+                    message: JSON parsing failed
                 202:
                   value:
                     code: 202
-                    message: Data value invalid
+                    message: JSON data value invalid
                 203:
                   value:
                     code: 203
-                    message: Data type invalid
+                    message: JSON data type invalid
                 204:
                   value:
                     code: 204
@@ -2329,11 +2329,11 @@ paths:
                 205:
                   value:
                     code: 205
-                    message: Data value out of range
+                    message: JSON data value out of range
                 206:
                   value:
                     code: 206
-                    message: Data value out of bounds
+                    message: JSON data value out of bounds
                 305:
                   value:
                     code: 305
@@ -2574,19 +2574,19 @@ paths:
                     201:
                       value:
                         code: 201
-                        message: Parsing failed
+                        message: JSON parsing failed
                     202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                     203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                     206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                     305:
                       value:
                         code: 305
@@ -2906,15 +2906,15 @@ paths:
                     201:
                       value:
                         code: 201
-                        message: Parsing failed
+                        message: JSON parsing failed
                     202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                     203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                     204:
                       value:
                         code: 204
@@ -2922,11 +2922,11 @@ paths:
                     205:
                       value:
                         code: 205
-                        message: Data value out of range
+                        message: JSON data value out of range
                     206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                     305:
                       value:
                         code: 305
@@ -3247,15 +3247,15 @@ paths:
                     201:
                       value:
                         code: 201
-                        message: Parsing failed
+                        message: JSON parsing failed
                     202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                     203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                     204:
                       value:
                         code: 204
@@ -3263,11 +3263,11 @@ paths:
                     205:
                       value:
                         code: 205
-                        message: Data value out of range
+                        message: JSON data value out of range
                     206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                     305:
                       value:
                         code: 305
@@ -3509,15 +3509,15 @@ paths:
                     201:
                       value:
                         code: 201
-                        message: Parsing failed
+                        message: JSON parsing failed
                     202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                     203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                     204:
                       value:
                         code: 204
@@ -3525,11 +3525,11 @@ paths:
                     205:
                       value:
                         code: 205
-                        message: Data value out of range
+                        message: JSON data value out of range
                     206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                     305:
                       value:
                         code: 305
@@ -3919,15 +3919,15 @@ paths:
                     201:
                       value:
                         code: 201
-                        message: Parsing failed
+                        message: JSON parsing failed
                     202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                     203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                     204:
                       value:
                         code: 204
@@ -3935,11 +3935,11 @@ paths:
                     205:
                       value:
                         code: 205
-                        message: Data value out of range
+                        message: JSON data value out of range
                     206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                     305:
                       value:
                         code: 305
@@ -4172,15 +4172,15 @@ paths:
                     201:
                       value:
                         code: 201
-                        message: Parsing failed
+                        message: JSON parsing failed
                     202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                     203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                     204:
                       value:
                         code: 204
@@ -4188,11 +4188,11 @@ paths:
                     205:
                       value:
                         code: 205
-                        message: Data value out of range
+                        message: JSON data value out of range
                     206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                     305:
                       value:
                         code: 305
@@ -4541,15 +4541,15 @@ paths:
                     201:
                       value:
                         code: 201
-                        message: Parsing failed
+                        message: JSON parsing failed
                     202:
                       value:
                         code: 202
-                        message: Data value invalid
+                        message: JSON data value invalid
                     203:
                       value:
                         code: 203
-                        message: Data type invalid
+                        message: JSON data type invalid
                     204:
                       value:
                         code: 204
@@ -4557,11 +4557,11 @@ paths:
                     205:
                       value:
                         code: 205
-                        message: Data value out of range
+                        message: JSON data value out of range
                     206:
                       value:
                         code: 206
-                        message: Data value out of bounds
+                        message: JSON data value out of bounds
                     305:
                       value:
                         code: 305
