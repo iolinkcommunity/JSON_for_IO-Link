@@ -409,31 +409,31 @@ paths:
                 202:
                       value:
                         code: 202
-                        message: Invalid data (given for the value, e.g. malformed IP address)
+                        message: Data value invalid
                 203:
                       value:
                         code: 203
-                        message: Invalid JSON data type (e.g. string instead of numbers)
+                        message: Data type invalid
                 204:
                       value:
                         code: 204
-                        message: Unknown enumeration value
+                        message: Enumeration value unknown
                 205:
                       value:
                         code: 205
-                        message: Value out of range (exceeds the minimum or maximum value)
+                        message: Data value out of range
                 206:
                       value:
                         code: 206
-                        message: Out of bounds (an array/string was accessed exceeding its maximum length)
+                        message: Data value out of bounds
                 305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                 701:
                       value:
                         code: 701
-                        message: Incomplete data set
+                        message: Data set incomplete
 
         '403':
           description: Forbidden
