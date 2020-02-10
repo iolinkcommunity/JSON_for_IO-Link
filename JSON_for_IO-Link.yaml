@@ -845,39 +845,39 @@ paths:
                 104:
                   value:
                     code: 104
-                  message: Action locked by another client
+                    message: Action locked by another client
                 201:
                   value:
                     code: 201
-                  message: JSON parsing failed
+                    message: JSON parsing failed
                 202:
                   value:
                     code: 202
-                  message: JSON data value invalid
+                    message: JSON data value invalid
                 203:
                   value:
                     code: 203
-                  message: JSON data type invalid
+                    message: JSON data type invalid
                 204:
                   value:
                     code: 204
-                  message: Enumeration value unknown
+                    message: Enumeration value unknown
                 205:
                   value:
                     code: 205
-                  message: JSON data value out of range
+                    message: JSON data value out of range
                 206:
                   value:
                     code: 206
-                  message: JSON data value out of bounds
+                    message: JSON data value out of bounds
                 305:
                   value:
                     code: 305
-                  message: Incorrect query parameter name
+                    message: Incorrect query parameter name
                 701:
                   value:
                     code: 701
-                  message: Data set incomplete
+                    message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -5942,3 +5942,4 @@ components:
                 type: string
               iolError:
                 type: integer
+
