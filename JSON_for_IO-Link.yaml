@@ -137,6 +137,21 @@ info:
 
     * If the request was successful and no body is specified, the response
     contains nothing in the body.
+    
+    ### Warranty
+   
+    The description available here is free of charge and a general application example. 
+    This description is intended to support the programming and project engineering 
+    of PLC applications and to provide possible solutions.
+    The user is not entitled to claim for warranty, error correction and updates. In particular there is excluded
+    any claims against the vendor for damages that might result from the use of this description. Excluded from
+    this limitation of liability shall be (a) those damages that are based on injury to life, limb or health, 
+    (b) a liability according to the Product Liability Act and (c) cases of willful intent.
+    Please check if the description provided here is intended for your application before adapting it in plants
+    and machineries.
+    
+    By using this description, made available free of charge you accept the limitation of warranty and liability!
+   
   version: 0.0.10
   title: Swagger IO-Link Master
   contact:
