@@ -99,7 +99,7 @@ info:
     ### IODD errors
 
     * [601] HTTP Status 400: IODD (representation) is not available
-      - Remark: IODD re prese ntation for this IO-Link Device is not available
+      - Remark: IODD representation for this IO-Link Device is not available
 
     * [602] HTTP Status 500: IODD upload failed: not enough memory
 
@@ -120,8 +120,10 @@ info:
     * [701] HTTP Status 400: Data set incomplete
 
     * [702] HTTP Status 400: Data set not applicable
+      - Remark: whole data set is rejected
 
     * [703] HTTP Status 400: Data set combination incompatible
+      - Remark: whole data set is rejected
 
 
     ### Implementation hints:
@@ -374,14 +376,22 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                305:
-                      value:
-                        code: 305
-                        message: Query parameter name invalid
+                208:
+                  value:
+                    code: 208
+                    message: POST reqiest without content
                 701:
-                      value:
-                        code: 701
-                        message: Data set incomplete
+                  value:
+                    code: 701
+                    message: Data set incomplete
+                702:
+                  value:
+                    code: 702
+                    message: Data set not applicable
+                703:
+                  value:
+                    code: 703
+                    message: Data set combination incompatible
 
         '403':
           description: Forbidden
@@ -603,7 +613,11 @@ paths:
                 305:
                   value:
                     code: 305
-                    message: Incorrect query parameter name
+                    message: Query parameter name invalid
+                306:
+                  value:
+                    code: 306
+                    message: Query parameter value invalid
         '403':
           description: Forbidden
           content:
@@ -695,7 +709,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                106:
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -764,14 +778,22 @@ paths:
                   value:
                     code: 206
                     message: JSON data value out of bounds
-                305:
+                208:
                   value:
-                    code: 305
-                    message: Query parameter name invalid
-                '701':
+                    code: 208
+                    message: POST reqiest without content
+                701:
                   value:
                     code: 701
                     message: Data set incomplete
+                702:
+                  value:
+                    code: 702
+                    message: Data set not applicable
+                703:
+                  value:
+                    code: 703
+                    message: Data set combination incompatible
         '403':
           description: Forbidden
           content:
@@ -812,7 +834,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                106:
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -894,7 +916,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                106:
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -966,10 +988,17 @@ paths:
                   value:
                     code: 206
                     message: JSON data value out of bounds
+                208:
+                  value:
+                    code: 208
+                    message: POST reqiest without content
                 701:
                   value:
                     code: 701
                     message: Data set incomplete
+                702:
+                  value:
+                    code: 702
         '403':
           description: Forbidden
           content:
@@ -1010,7 +1039,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                106:
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1048,17 +1077,6 @@ paths:
                     qos: 1_AT_LEAST_ONCE
                     deviceAlias: TAD081
                     event: {}
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errorObject'
-              examples:
-                305:
-                  value:
-                    code: 305
-                    message: Query parameter name invalid
         '403':
           description: Forbidden
           content:
@@ -1103,7 +1121,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                106:
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1171,7 +1189,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                106:
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1227,7 +1245,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                106:
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1306,7 +1324,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                105:
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1384,7 +1402,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                105:
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1466,7 +1484,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                105:
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1475,7 +1493,7 @@ paths:
         - iodds
       summary: Store or update an IODD.
       description: >
-        I do not need to specifiy the identification data for this action as the
+        It is not needed to specifiy the identification data for this action as the
         parser can read this information.
       requestBody:
         required: true
@@ -1499,6 +1517,10 @@ paths:
                   value:
                     code: 104
                     message: Action locked by another client
+                208:
+                  value:
+                    code: 208
+                    message: POST reqiest without content
                 603:
                   value:
                     code: 603
@@ -1555,7 +1577,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                105:
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1682,10 +1704,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                9999:
+                302:
                   value:
-                    code: 9999
-                    message: Error codes 302
+                    code: 302
+                    message: masterNumber not found
         '500':
           description: Internal server error
           content:
@@ -1749,6 +1771,10 @@ paths:
                   value:
                     code: 206
                     message: JSON data value out of bounds
+                208:
+                  value:
+                    code: 208
+                    message: POST reqiest without content
         '403':
           description: Forbidden
           content:
@@ -2104,6 +2130,14 @@ paths:
                   value:
                     code: 207
                     message: deviceAlias is not unique
+                208:
+                  value:
+                    code: 208
+                    message: POST reqiest without content
+                701:
+                  value:
+                    code: 701
+                    message: Data set incomplete
                 702:
                   value:
                     code: 702
@@ -2286,6 +2320,10 @@ paths:
                   value:
                     code: 206
                     message: JSON data value out of bounds
+                208:
+                  value:
+                    code: 208
+                    message: POST reqiest without content
                 401:
                   value:
                     msgcode: 401
@@ -2431,6 +2469,17 @@ paths:
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
+        '403':
+          description: Forbidden
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/errorObject'
+                examples:
+                    150:
+                      value:
+                        code: 150
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -2579,6 +2628,10 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
+                    208:
+                      value:
+                        code: 208
+                        message: POST reqiest without content
                     307:
                       value:
                         code: 307
@@ -2686,11 +2739,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     601:
                       value:
                         code: 601
@@ -2721,6 +2774,10 @@ paths:
                       value:
                         code: 304
                         message: deviceAlias not found
+                    308:
+                      value:
+                        code: 308
+                        message: IO-Link Device is not accessible
         '500':
           description: Internal server error
           content:
@@ -2736,6 +2793,17 @@ paths:
                   value:
                     code: 102
                     message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
     post:
       tags:
         - devices
@@ -2806,14 +2874,18 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
+                    208:
+                      value:
+                        code: 208
+                        message: POST reqiest without content
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         msgcode: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     307:
                       value:
                         code: 307
@@ -2829,11 +2901,19 @@ paths:
                     503:
                       value:
                         code: 503
-                        message: IO-Link device has no output process data
+                        message: IO-Link Device has no output process data
                     601:
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
+                    701:
+                      value:
+                        code: 701
+                        message: Data set incomplete
+                    702:
+                      value:
+                        code: 702
+                        message: Data set not applicable
                     703:
                       value:
                         code: 703
@@ -2844,9 +2924,11 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/errorObject'
-                example:
-                  - code: 150
-                    message: Permission denied
+                examples:
+                    150:
+                      value:
+                        code: 150
+                        message: Permission denied
         '404':
           description: Not found
           content:
@@ -2881,6 +2963,17 @@ paths:
                     value:
                       code: 102
                       message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/processdata/getdata/value':
     get:
       tags:
@@ -2930,11 +3023,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     601:
                       value:
                         code: 601
@@ -2965,6 +3058,10 @@ paths:
                       value:
                         code: 304
                         message: deviceAlias not found
+                    308:
+                      value:
+                        code: 308
+                        message: IO-Link Device is not accessible
         '500':
           description: Internal server error
           content:
@@ -2980,6 +3077,17 @@ paths:
                   value:
                     code: 102
                     message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/processdata/setdata/value':
     get:
       tags:
@@ -3048,14 +3156,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                '103':
+                103:
                   value:
                     code: 103
                     message: Operation not supported
-                '304':
+                304:
                   value:
                     code: 304
                     message: deviceAlias not found
+                308:
+                  value:
+                    code: 308
+                    message: IO-Link Device is not accessible
+                503:
+                      value:
+                        code: 503
+                        message: IO-Link Device has no output process data
         '500':
           description: Internal server error
           content:
@@ -3071,6 +3187,17 @@ paths:
                   value:
                     code: 102
                     message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/parameters':
     get:
       tags:
@@ -3097,7 +3224,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
+                    306:
+                      value:
+                        code: 305
+                        message: Query parameter value invalid
                     601:
                       value:
                         code: 601
@@ -3143,6 +3274,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/parameters/{index}/value':
     get:
       tags:
@@ -3188,11 +3330,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     307:
                       value:
                         code: 307
@@ -3239,6 +3381,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
         '500':
           description: Internal server error
           content:
@@ -3254,6 +3400,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
     post:
       tags:
         - devices
@@ -3328,14 +3485,18 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
+                    208:
+                      value:
+                        code: 208
+                        message: POST reqiest without content
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     307:
                       value:
                         code: 307
@@ -3348,10 +3509,10 @@ paths:
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    703:
+                    701:
                       value:
-                        code: 703
-                        message: Data set combination incompatible
+                        code: 701
+                        message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -3382,6 +3543,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
         '500':
           description: Internal server error
           content:
@@ -3397,6 +3562,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/parameters/{parameterName}/value':
     get:
       tags:
@@ -3444,11 +3620,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     307:
                       value:
                         code: 307
@@ -3495,6 +3671,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
                     312:
                       value:
                         code: 312
@@ -3514,6 +3694,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported 
     post:
       tags:
         - devices
@@ -3586,14 +3777,10 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    305:
+                    208:
                       value:
-                        code: 305
-                        message: Incorrect query parameter name
-                    306:
-                      value:
-                        code: 306
-                        message: Incorrect query parameter value
+                        code: 208
+                        message: POST reqiest without content
                     307:
                       value:
                         code: 307
@@ -3606,10 +3793,10 @@ paths:
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    703:
+                    701:
                       value:
-                        code: 703
-                        message: Data set combination incompatible
+                        code: 701
+                        message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -3644,6 +3831,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
                     312:
                       value:
                         code: 312
@@ -3663,6 +3854,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/parameters/{index}/subindices':
     get:
       tags:
@@ -3687,10 +3889,6 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
-                      value:
-                        code: 305
-                        message: Incorrect query parameter name
                     601:
                       value:
                         code: 601
@@ -3725,6 +3923,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
         '500':
           description: Internal server error
           content:
@@ -3740,6 +3942,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/parameters/{parameterName}/subindices':
     get:
       tags:
@@ -3764,10 +3977,6 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
-                      value:
-                        code: 305
-                        message: Incorrect query parameter name
                     601:
                       value:
                         code: 601
@@ -3798,10 +4007,6 @@ paths:
                       value:
                         code: 304
                         message: deviceAlias not found
-                    309:
-                      value:
-                        code: 309
-                        message: IO-Link parameter not found
                     312:
                       value:
                         code: 312
@@ -3821,6 +4026,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/parameters/{index}/subindices/{subindex}/value':
     get:
       tags:
@@ -3862,11 +4078,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     307:
                       value:
                         code: 307
@@ -3913,6 +4129,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
         '500':
           description: Internal server error
           content:
@@ -3928,6 +4148,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
     post:
       tags:
         - devices
@@ -3994,14 +4225,10 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    305:
+                    208:
                       value:
-                        code: 305
-                        message: Incorrect query parameter name
-                    306:
-                      value:
-                        code: 306
-                        message: Incorrect query parameter value
+                        code: 208
+                        message: POST reqiest without content
                     307:
                       value:
                         code: 307
@@ -4014,10 +4241,10 @@ paths:
                       value:
                         code: 601
                         message: IODD is not availabl
-                    703:
+                    701:
                       value:
-                        code: 703
-                        message: Data set combination incompatible
+                        code: 701
+                        message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -4052,6 +4279,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
         '500':
           description: Internal server error
           content:
@@ -4067,6 +4298,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/parameters/{parameterName}/subindices/{subParameterName}/value':
     get:
       tags:
@@ -4109,11 +4351,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     307:
                       value:
                         code: 307
@@ -4160,6 +4402,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
                     312:
                       value:
                         code: 312
@@ -4179,6 +4425,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
     post:
       tags:
         - devices
@@ -4250,14 +4507,10 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    305:
+                    208:
                       value:
-                        code: 305
-                        message: Incorrect query parameter name
-                    306:
-                      value:
-                        code: 306
-                        message: Incorrect query parameter value
+                        code: 208
+                        message: POST reqiest without content
                     307:
                       value:
                         code: 307
@@ -4270,10 +4523,10 @@ paths:
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    703:
+                    701:
                       value:
-                        code: 703
-                        message: Data set combination incompatible
+                        code: 701
+                        message: Data set incomplete
         '403':
           description: Forbidden
           content:
@@ -4308,6 +4561,10 @@ paths:
                       value:
                         code: 309
                         message: IO-Link parameter not found
+                    310:
+                      value:
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
                     312:
                       value:
                         code: 312
@@ -4327,6 +4584,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/blockparameterization':
     post:
       tags:
@@ -4523,14 +4791,18 @@ paths:
                       value:
                         code: 206
                         message: JSON data value out of bounds
+                    208:
+                      value:
+                        code: 208
+                        message: POST reqiest without content
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
                     307:
                       value:
                         code: 307
@@ -4547,6 +4819,10 @@ paths:
                       value:
                         code: 701
                         message: Data set incomplete
+                    702:
+                      value:
+                        code: 702
+                        message: Data set not applicable
                     703:
                       value:
                         code: 703
@@ -4581,10 +4857,10 @@ paths:
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    310:
                       value:
-                        code: 309
-                        message: IO-Link parameter not found
+                        code: 310
+                        message: IO-Link parameter access not supported by the device
         '500':
           description: Internal server error
           content:
@@ -4600,6 +4876,17 @@ paths:
                       value:
                         code: 102
                         message: Internal communication error
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorObject'
+              examples:
+                105:
+                  value:
+                    code: 105
+                    message: IODD feature not supported
   '/devices/{deviceAlias}/events':
     get:
       tags:
@@ -4628,11 +4915,11 @@ paths:
                     305:
                       value:
                         code: 305
-                        message: Incorrect query parameter name
+                        message: Query parameter name invalid
                     306:
                       value:
                         code: 306
-                        message: Incorrect query parameter value
+                        message: Query parameter value invalid
         '403':
           description: Forbidden
           content:
