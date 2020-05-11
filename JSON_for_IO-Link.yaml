@@ -2993,25 +2993,23 @@ paths:
               examples:
                 'Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input':
                   value:
-                    getData:
-                      ioLink:
-                        valid: true
-                        value:
-                          - 12
-                          - 22
-                          - 216
-                      iqValue: true
+                    ioLink:
+                      valid: true
+                      value:
+                        - 12
+                        - 22
+                        - 216
+                    iqValue: true
                 'Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input':
                   value:
-                    getData:
-                      ioLink:
-                        valid: true
-                        value:
-                          Distance:
-                            value: 55
-                          Quality:
-                            value: 12
-                      iqValue: true
+                    ioLink:
+                      valid: true
+                      value:
+                        Distance:
+                          value: 55
+                        Quality:
+                          value: 12
+                    iqValue: true
 
         '400':
           description: Bad request
@@ -3107,18 +3105,16 @@ paths:
               examples:
                 'Format=byteArray, CQ (pin4) in digital output, IQ (pin2) in digital input':
                   value:
-                    setData:
-                      cqValue: false
+                    cqValue: false
                 'Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input':
                   value:
-                    setData:
-                      iolink:
-                        valid: true
-                        value:
-                          Valve_1:
-                            value: true
-                          Valve_2:
-                            value: false
+                    iolink:
+                      valid: true
+                      value:
+                        Valve_1:
+                          value: true
+                        Valve_2:
+                          value: false
         '400':
           description: Bad request
           content:
