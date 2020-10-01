@@ -379,7 +379,7 @@ paths:
                 208:
                   value:
                     code: 208
-                    message: POST reqiest without content
+                    message: POST request without content
                 701:
                   value:
                     code: 701
@@ -781,7 +781,7 @@ paths:
                 208:
                   value:
                     code: 208
-                    message: POST reqiest without content
+                    message: POST request without content
                 701:
                   value:
                     code: 701
@@ -991,7 +991,7 @@ paths:
                 208:
                   value:
                     code: 208
-                    message: POST reqiest without content
+                    message: POST request without content
                 701:
                   value:
                     code: 701
@@ -1520,7 +1520,7 @@ paths:
                 208:
                   value:
                     code: 208
-                    message: POST reqiest without content
+                    message: POST request without content
                 603:
                   value:
                     code: 603
@@ -1774,7 +1774,7 @@ paths:
                 208:
                   value:
                     code: 208
-                    message: POST reqiest without content
+                    message: POST request without content
         '403':
           description: Forbidden
           content:
@@ -2133,7 +2133,7 @@ paths:
                 208:
                   value:
                     code: 208
-                    message: POST reqiest without content
+                    message: POST request without content
                 701:
                   value:
                     code: 701
@@ -2323,7 +2323,7 @@ paths:
                 208:
                   value:
                     code: 208
-                    message: POST reqiest without content
+                    message: POST request without content
                 401:
                   value:
                     msgcode: 401
@@ -2631,7 +2631,7 @@ paths:
                     208:
                       value:
                         code: 208
-                        message: POST reqiest without content
+                        message: POST request without content
                     307:
                       value:
                         code: 307
@@ -2877,7 +2877,7 @@ paths:
                     208:
                       value:
                         code: 208
-                        message: POST reqiest without content
+                        message: POST request without content
                     305:
                       value:
                         code: 305
@@ -3484,7 +3484,7 @@ paths:
                     208:
                       value:
                         code: 208
-                        message: POST reqiest without content
+                        message: POST request without content
                     305:
                       value:
                         code: 305
@@ -3776,7 +3776,7 @@ paths:
                     208:
                       value:
                         code: 208
-                        message: POST reqiest without content
+                        message: POST request without content
                     307:
                       value:
                         code: 307
@@ -4224,7 +4224,7 @@ paths:
                     208:
                       value:
                         code: 208
-                        message: POST reqiest without content
+                        message: POST request without content
                     307:
                       value:
                         code: 307
@@ -4506,7 +4506,7 @@ paths:
                     208:
                       value:
                         code: 208
-                        message: POST reqiest without content
+                        message: POST request without content
                     307:
                       value:
                         code: 307
@@ -4790,7 +4790,7 @@ paths:
                     208:
                       value:
                         code: 208
-                        message: POST reqiest without content
+                        message: POST request without content
                     305:
                       value:
                         code: 305
