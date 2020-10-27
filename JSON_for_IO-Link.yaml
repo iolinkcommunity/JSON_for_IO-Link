@@ -1823,7 +1823,7 @@ paths:
         '200':
           description: Successful operation
           content:
-            applicaion/json:
+            application/json:
               schema:
                 type: array
                 items:
