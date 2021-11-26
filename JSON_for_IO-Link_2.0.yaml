@@ -1,0 +1,5304 @@
+openapi: 3.0.3
+info:
+  description: >-
+    This is a sample IO-Link Master server. You can find out more about IO-Link
+    at [http://www.io-link.com](http://www.io-link.com)
+
+    # Description
+    
+    * Document version from 10.11.2021
+    
+  version: 2.0.0
+  title: Swagger IO-Link Master
+  contact:
+    email: benjamin.vervoort@balluff.de
+  license:
+    name: tbd
+    url: 'http://www.io-link.com'
+    
+servers:
+  - url: 'http://iolmaster.io-link.com/{basePath}'
+  - url: '{scheme}://{host}/{basePath}'
+    variables:
+      host:
+        default: 'iolmaster.io-link.com'    
+      basePath:
+        enum:
+          - 'iolink'
+          - 'iolink/v1'      
+        default: iolink
+      scheme:
+        description: 'The IO-Link gateway can expose the API over https and/or http'
+        enum:
+          - 'https'
+          - 'http'
+        default: 'http'
+
+tags:
+  - name: general
+    description: Access to general informations
+  - name: gateway
+    description: Access to parameters of the JSON gateway
+  - name: mqtt
+    description: Access to the parameters of the MQTT client
+  - name: iodds
+    description: Access to the IODDs
+  - name: masters
+    description: Access to parameters of the IO-Link master itself
+  - name: tracks
+    description: Access to the tracks (radios) of the IO-Link wireless master    
+  - name: ports
+    description: Access to the IO-Link ports of the IO-Link master
+  - name: devices
+    description: Access to the IO-Link Devices connected ot the Master
+
+    
+paths:
+################################################################################
+  '/login':
+    get:
+      tags:
+        - general
+      summary: Returns the login status of the user
+      description: >-
+        Returns the login status of the user as a boolean value
+      operationId: getUsersLogin
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  isLoggedIn:
+                    type: boolean
+                  userRole:
+                    type: string
+                    description: 'Is true in case of a valid user, that is logged in.'
+              example:
+                isLoggedIn: true
+                userRole: 'Operator'                    
+    post:
+      tags:
+        - general
+      summary: Logs in with credentials and returns the session bearer token.
+      description: >-
+         Credentials based authentication - Depending on technical feasibility, the HTTP cookie header shall be used. If the backend does not support cookies, the session bearer token shall be sent in the JSON body. The client has to support both mechanisms.
+      operationId: postUsersLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              example:
+                username: fred
+                password: '12345678'
+      security: []
+      responses:
+        '200':
+          description: >
+            Successfully authenticated. <br><br> The set cookie header is only
+            sent if the server supports HTTP cookies. Otherwise, the session ID
+            is also sent in the JSON body.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: SESSIONID=abcde12345; Path=/; HttpOnly; Secure;
+          content:
+            application/json:
+              schema:
+                required:
+                  - userRole
+                properties:
+                  SESSIONID:
+                    type: string
+                  userRole:
+                    type: string
+                    enum:
+                        - Operator
+                        - Maintenance
+                        - Specialist
+              examples:
+                without cookie handling:
+                 value:
+                  SESSIONID: abc123abc123
+                  userRole: Maintenance
+                with cookie handling:
+                 value:
+                  userRole: Maintenance                   
+            
+        '401':
+          $ref: '#/components/responses/HTTP_401'
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+          
+  '/logout':
+    post:
+      tags:
+        - general
+      summary: Logs out and invalidates the Session-Token.
+      description: >-
+        This command does not discern between a logged out or a logged in user.
+      operationId: postUsersLogout
+      responses:
+        '204':
+          description: |
+            Successfully logged out. Session-Token is now invalid.
+        '401':
+          description: |
+            Session-Token invalid or not found. No action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventObject'
+              example:
+                code: 141
+                message: 'Unknown SESSIONID'
+  '/specs':
+    get:
+      tags:
+        - general
+      summary: Read the version information as list of specification references.
+      description: >-
+        This command is mandatory.      
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                  - specUri                  
+                properties:
+                  specUri: 
+                    type: string
+                  specDesc: 
+                    type: string                    
+                example: # Wireless Master with Profinet
+                  - specUri: "http://www.io-link.com/io-link/10.222/V2.0"
+                    specDesc: "JSON Integration for IO-Link - Draft V2.0"                
+                  - specUri: "http://www.io-link.com/io-link/10.222/V1.0"
+                    specDesc: "JSON Integration for IO-Link V1.0"                  
+                  - specUri: "http://www.io-link.com/io-link/10.002/V1.13"
+                    specDesc: "IO-Link Interface and System Specification V1.13"          
+                  - specUri: "http://www.io-link.com/io-link/10.122/V1.1"
+                    specDesc: "IO-Link Wireless System Extensions V1.1"
+                  - specUri: "http://profibus.com/profinet/2.722/V2.4MU2"
+                    specDesc: "Application Layer protocol for decentralized periphery - Technical Specification for PROFINET IO"                  
+                  - specUri: "http://profibus.com/profinet/2.712/V2.4MU2"
+                    specDesc: "Application Layer services for decentralized periphery - Technical Specification for PROFINET IO"                   
+  '/gateways':
+    get:
+      tags:
+        - general
+      summary: Read the known IO-Link gateways as list of URLs.
+      description: >-
+        This command is optional.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - gatewayUrl
+                  properties:
+                    gatewayUrl:
+                      type: string
+                    masterNumber:
+                      type: integer
+                      minimum: 1
+                    portNumber:
+                      type: integer
+                      minimum: 1
+                example:
+                  - gatewayAlias: gateway1
+                    gatewayUrl: 'http://gateway1' 
+                  - gatewayAlias: gatewayXYZ
+                    gatewayUrl: 'http://gatewayXYZ' 
+                  - gatewayAlias: BNI_IOL
+                    gatewayUrl: 'https://BNI_IOL/' 
+                  - gatewayAlias: master1
+                    gatewayUrl: 'https://192.168.88.191' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/gateway/identification':
+    get:
+      tags:
+        - gateway
+      summary: Read the identification of the Gateway.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gatewayIdentificationGet'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/gateway/capabilities':
+    get:
+      tags:
+        - gateway
+      summary: Read the capabilities of the Gateway.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gatewayCapabilitiesGet'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/gateway/configuration':
+    get:
+      tags:
+        - gateway
+      summary: Read the configuration of the Gateway .
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gatewayConfigurationGetPost'
+              examples:
+                Manual:
+                  value:
+                    ethIpv4:
+                      - ipConfiguration: MANUAL
+                        ipAddress: 192.168.1.13
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.1.1
+                DHCP:
+                  value:
+                    ethIpv4:
+                      - ipConfiguration: DHCP
+                        ipAddress: 192.168.100.5
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.100.1
+                Multiple ethernet interfaces:
+                  value:
+                    ethIpv4:
+                      - ipConfiguration: MANUAL
+                        ipAddress: 192.168.1.13
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.1.1
+                      - ipConfiguration: MANUAL
+                        ipAddress: 192.168.2.10
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.2.1
+                      - ipConfiguration: DHCP
+                        ipAddress: 192.168.200.7
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.200.1
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+    post:
+      tags:
+        - gateway
+      summary: Write the configuration of the Gateway.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/gatewayConfigurationGetPost'
+            examples:
+              Manual:
+                value:
+                  ethIpv4:
+                    - ipConfiguration: MANUAL
+                      ipAddress: 192.168.1.13
+                      subnetMask: 255.255.255.0
+                      standardGateway: 192.168.1.1
+              DHCP:
+                value:
+                  ethIpv4:
+                    - ipConfiguration: DHCP
+              Multiple ethernet interfaces:
+                value:
+                  ethIpv4:
+                    - ipConfiguration: MANUAL
+                      ipAddress: 192.168.1.13
+                      subnetMask: 255.255.255.0
+                      standardGateway: 192.168.1.1
+                    - ipConfiguration: MANUAL
+                      ipAddress: 192.168.2.10
+                      subnetMask: 255.255.255.0
+                      standardGateway: 192.168.2.1
+                    - ipConfiguration: DHCP
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 206,208, 701,702,703
+           $ref: '#/components/responses/HTTP_400'          
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/gateway/reset':
+    post:
+      tags:
+        - gateway
+      summary: Reset the Gateway including all Masters. Optional.
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104
+              $ref: '#/components/responses/HTTP_400'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/gateway/reboot':
+    post:
+      tags:
+        - gateway
+      summary: Reboot the Gateway including all Masters. Optional.
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104
+           $ref: '#/components/responses/HTTP_400'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/gateway/events':
+    get:
+      tags:
+        - gateway
+      summary: Read the EventLog containing all events from Gateway, Masters, Ports and Devices.
+      parameters:
+        - $ref: '#/components/parameters/eventOrigin'
+        - $ref: '#/components/parameters/eventMasterNumber'
+        - $ref: '#/components/parameters/eventPortNumber'
+        - $ref: '#/components/parameters/eventdeviceAlias'
+        - $ref: '#/components/parameters/eventTop'
+        - $ref: '#/components/parameters/eventBottom'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gatewayEventsGet'
+              examples:
+                origin=ALL:
+                  value:
+                    - time: '2018-05-18T07:31:54.123Z'
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                      message:
+                        text: IO-Link Master has restarted
+                    - time: '2018-05-18T07:32:42.023Z'
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: '2018-05-18T07:31:54.123Z'
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                origin=MASTERS:
+                  value:
+                    - time: '2018-05-18T07:31:54.123Z'
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                      message:
+                        text: IO-Link Master has restarted
+                origin=PORTS:
+                  value:
+                    - time: '2018-05-18T07:32:42.023Z'
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        port: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: '2018-05-18T07:33:42.023Z'
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                      message:
+                        code: 6163
+                        mode: DISAPPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: '2018-05-18T07:35:54.123Z'
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=DEVICES:
+                  value:
+                    - time: '2018-05-18T07:31:54.123Z'
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: '2018-05-18T08:31:54.123Z'
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+        '400':  # code 305, 306
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/mqtt/configuration':
+    get:
+      tags:
+        - mqtt
+      summary: >-
+        Read the MQTT configuration of the Gateway.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mqttConfigurationGetPost'
+              examples:
+                Active client:
+                  value:
+                    clientMode: "ACTIVE"
+                    serverAddress: 192.168.2.1/mqttbroker
+                    username: iolink_json
+                    password: '1234'
+                    lastwill:
+                      - topic: process_data
+                        message: Process data transfer stopped.
+                        qos: 0_ONLY_ONCE
+                        retain: true
+                    keepAliveTime: 10
+                Inactive client:
+                  value:
+                    clientMode: "INACTIVE"
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'           
+
+    post:
+      tags:
+        - mqtt
+      summary: >-
+        Update the MQTT configuration of the Gateway.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mqttConfigurationGetPost'
+            examples:
+              Active Client:
+                value:
+                  clientMode: ACTIVE
+                  serverAddress: 192.168.2.1/mqttbroker
+                  username: iolink_json
+                  password: '1234'
+                  lastwill:
+                    - topic: process_data
+                      message: Process data transfer stopped.
+                      qos: 0_ONLY_ONCE
+                      retain: true
+                  keepAliveTime: 10
+              Inactive Client:
+                value:
+                  clientMode: INACTIVE
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 206, 208, 701, 702, 703
+           $ref: '#/components/responses/HTTP_400'           
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        
+  '/mqtt/topics':
+    get:
+      tags:
+        - mqtt
+      summary: Get the list of MQTT topics.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/mqttConfigurationTopicGet'
+              example:
+                - topicId: 1
+                  topicName: Sensor34/processData
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: DT35
+                  processData:
+                    direction: getData
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+                - topicId: 2
+                  topicName: Sensor34/event
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: TAD081
+                  event: null
+                - topicId: 3
+                  topicName: PD
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: BNI_IOL
+                  processData:
+                    direction: getSetData
+                    format: iodd
+                    onChange: true
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+    post:
+      tags:
+        - mqtt
+      summary: Create a new MQTT topic.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mqttConfigurationTopicPost'
+            examples:
+              Process Data:
+                value:
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: DT35
+                  processData:
+                    direction: getData
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+              Event:
+                value:
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: TAD081
+                  event: {}
+      responses:
+        '200':
+          description: Successful operation returning the topic ID
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':  # code 104, 201, 202, 203, 204, 205, 206, 208, 701, 702
+           $ref: '#/components/responses/HTTP_400'                     
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+  '/mqtt/topics/{topicId}':
+    get:
+      tags:
+        - mqtt
+      summary: Get one MQTT topic.
+      parameters:
+        - $ref: '#/components/parameters/mqttTopicId'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mqttConfigurationTopicGet'
+              examples:
+                Process Data:
+                  value:
+                    topicId: 1
+                    topicName: PD input
+                    qos: 1_AT_LEAST_ONCE
+                    deviceAlias: DT35
+                    processData:
+                      direction: getData
+                      format: iodd
+                      interval:
+                        value: 10
+                        unit: ms
+                Event:
+                  value:
+                    topicId: 2
+                    topicName: Event
+                    qos: 1_AT_LEAST_ONCE
+                    deviceAlias: TAD081
+                    event: {}
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+    delete:
+      tags:
+        - mqtt
+      summary: Delete a specific MQTT topic.
+      parameters:
+        - $ref: '#/components/parameters/mqttTopicId'
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104
+           $ref: '#/components/responses/HTTP_400'     
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+  '/mqtt/connectionstatus':
+    get:
+      tags:
+        - mqtt
+      summary: Read the connection status of the MQTT client to the MQTT server.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mqttConnectionStatusGet'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+  '/iodds':
+    get:
+      tags:
+        - iodds
+      summary: >-
+        Get a list of all IODD (representations) that are available on the Gateway.
+      description: >-
+        Only one version of an IODD is stored on the webserver at the same time
+        for one vendorId-deviceId-ioLinkRevision-combination.
+      parameters:
+        - $ref: '#/components/parameters/vendorId'
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/revision'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ioddsGet'
+        '400':  # code 305, 306
+           $ref: '#/components/responses/HTTP_400'     
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+    delete:
+      tags:
+        - iodds
+      summary: Delete a specific IODD representation.
+      parameters:
+        - $ref: '#/components/parameters/vendorId'
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/revision'
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 305, 306
+           $ref: '#/components/responses/HTTP_400'     
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+  '/iodds/file':
+    get:
+      tags:
+        - iodds
+      summary: Get a specific IODD. Optional.
+      description: All query parameters are mandatory.
+      parameters:
+        - $ref: '#/components/parameters/vendorId'
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/revision'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ioddFile'
+              example:
+                - IODD XML file
+        '400':  # code 305, 306
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'                    
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+    post:
+      tags:
+        - iodds
+      summary: Store or update an IODD.
+      description: >
+        It is not needed to specifiy the identification data for this action as the
+        parser can read this information.
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ioddFile'
+            example:
+              - IODD XML file
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 208, 603, 604, 605 
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':  # code 101, 602
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+  '/masters':
+    get:
+      tags:
+        - masters
+      summary: >-
+        Read all the available masterNumber keys with the corresponding
+        identification information.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identificationMasters'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/masters/{masterNumber}/capabilities':
+    get:
+      tags:
+        - masters
+      summary: Read the capabilities of the Master.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/masterCapabilitiesGet'
+              examples:
+                wired:
+                  value:
+                    numberOfPorts: 8
+                    maxPowerSupply: #overall power consumption
+                      value: 0.3
+                      unit: A
+                wireless:
+                  value:
+                    masterType: Wireless_Master
+                    numberOfPorts: 40                  
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/masters/{masterNumber}/identification':
+    get:
+      tags:
+        - masters
+      summary: Read the identification of the Master.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identificationGet'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+    post:
+      tags:
+        - masters
+      summary: Write application specific identification to a Master.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identificationPost'
+            examples:
+              All optional fiels:
+                value:
+                  applicationSpecificTag: Fallback reader at the end of the belt
+                  locationTag: Down under
+                  functionTag: Code reading
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 206, 208
+           $ref: '#/components/responses/HTTP_400'           
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/masters/{masterNumber}/configuration':
+    get:
+      tags:
+        - masters
+      summary: Read the actual configuration of the specified Master.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'      
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/masterConfiguration'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+    post:
+      tags:
+        - masters
+      summary: Write the configuration of the specified Master.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/masterConfiguration'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              examples:
+                104:
+                  value:
+                    code: 104
+                    message: Action locked by another client
+                201:
+                  value:
+                    code: 201
+                    message: JSON parsing failed
+                202:
+                  value:
+                    code: 202
+                    message: JSON data value invalid
+                203:
+                  value:
+                    code: 203
+                    message: JSON data type invalid
+                206:
+                  value:
+                    code: 206
+                    message: JSON data value out of bounds
+                208:
+                  value:
+                    code: 208
+                    message: POST request without content
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+################################################################################
+# tracks
+################################################################################
+  '/masters/{masterNumber}/tracks':
+    get:
+      tags:
+        - tracks
+      summary: Read the information about the available wireless tracks. Mandatory for W-Masters. 
+
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+      description: >-
+        A W-Master can handle up to 5 transmission tracks in parallel, each trackNumber can handle a maximum of 8 W-Devices, thus supporting up to 40 W-Devices per W-Master.         
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                  required:
+                    - trackNumber
+                    - statusInfo
+                  properties:
+                    trackNumber:
+                      type: integer
+                      minimum: 1
+                      maximum: 5
+                    statusInfo:
+                      type: string
+                      enum:
+                        - STOP
+                        - CYCLIC
+                        - ROAMING
+                        - SCANNING
+                        - PAIRING
+                example:
+                  tracksInfo:
+                    - trackNumber: 1
+                      statusInfo: "STOP"
+                    - trackNumber: 2
+                      statusInfo: "CYCLIC"
+                    - trackNumber: 3
+                      statusInfo: "ROAMING"
+                    - trackNumber: 4
+                      statusInfo: "SCANNING"
+                    - trackNumber: 5
+                      statusInfo: "PAIRING"
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+                    
+  '/masters/{masterNumber}/tracks/scan':
+    post:
+      tags:
+        - tracks
+      summary: Start scanning on the specified trackNumber. Mandatory for W-Masters.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+      description: >-
+        Discover unpaired W-Devices in the proximity of the W-Master.        
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                txPower:
+                  type: integer
+                  minimum: 1
+                  maximum: 31
+              example:
+                txPower: 31
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              examples:
+                104:
+                  value:
+                    code: 104
+                    message: Action locked by another client
+                201:
+                  value:
+                    code: 201
+                    message: JSON parsing failed
+                202:
+                  value:
+                    code: 202
+                    message: JSON data value invalid
+                203:
+                  value:
+                    code: 203
+                    message: JSON data type invalid
+                205:
+                  value:
+                    code: 205
+                    message: JSON data value out of range
+                208:
+                  value:
+                    code: 208
+                    message: POST request without content
+                701:
+                  value:
+                    code: 701
+                    message: Data set incomplete
+                702:
+                  value:
+                    code: 702
+                    message: Data set not applicable
+                703:
+                  value:
+                    code: 703
+                    message: Data set combination incompatible
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '404':
+          $ref: '#/components/responses/HTTP_404'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+        '503':
+          $ref: '#/components/responses/HTTP_503'
+    get:
+      tags:
+        - tracks
+      summary: Read back the last scan result. Mandatory for W-Masters.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'   
+      description: >-
+        List the unique identifiers (UniqueID) of the discovered unpaired W-Devices.    
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                  properties:
+                    SlotType:
+                      type: string
+                      enum:
+                        - SSLOT
+                        - DSLOT
+                    revisionId:
+                      type: string
+                    uniqueId:
+                      type: string
+                example:
+                  scanResult:
+                    - slotType: SSLOT
+                      revisionId: 1.1
+                      uniqueId: 03:78:00:00:01:32:50:60:46
+                      lastSeen: "2019-02-19T08:02:51.786Z"
+                    - slotType: DSLOT
+                      revisionId: 1.1
+                      uniqueId: 03:78:00:00:01:32:50:60:47
+                      lastSeen: "2019-02-19T08:02:51.786Z"
+                    - slotType: SSLOT
+                      revisionId: 1.1
+                      uniqueId: 03:78:00:00:01:32:50:60:48
+                      lastSeen: "2019-02-19T08:02:51.786Z"
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '404':
+          $ref: '#/components/responses/HTTP_404'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+        '503':
+          $ref: '#/components/responses/HTTP_503'                  
+  '/masters/{masterNumber}/tracks/{trackNumber}/status':
+    get:
+      tags:
+        - tracks
+      summary: Read the status of the selected trackNumber. Mandatory for W-Masters.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/trackNumber'
+      description: >-
+        Indicates the actual operational mode of the trackNumber (STOP, CYCLIC, SCAN, PAIRING, ROAMING) and the transmission power of the trackNumber radio.      
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - trackNumber
+                  - statusInfo
+                  - txPower
+                properties:
+                  trackNumber:
+                    type: integer
+                    minimum: 1
+                    maximum: 5
+                  statusInfo:
+                    type: string
+                    enum:
+                      - STOP
+                      - CYCLIC
+                      - ROAMING
+                      - SCANNING
+                      - PAIRING
+                  txPower:
+                    type: integer
+                    minimum: 1
+                    maximum: 31
+                example:
+                    trackNumber: 2
+                    statusInfo: "STOP"
+                    txPower: 31
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '404':
+          $ref: '#/components/responses/HTTP_404'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+
+  '/masters/{masterNumber}/tracks/{trackNumber}/statistics':
+    get:
+      tags:
+        - tracks
+      summary: Read the statistics (Errors and PEP) of the selected trackNumber. Optional for W-Masters.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/trackNumber'
+      description: >-
+        Monitoring the wireless environment regarding reliability indicating link quality.        
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - trackNumber
+                  - errors
+                  - PEP
+                properties:
+                  trackNumber:
+                    type: integer
+                    minimum: 1
+                    maximum: 5
+                  errors:
+                    type: integer
+                    minimum: 0
+                    maximum: 65535 # 65535 = no data available
+                  PEP:
+                    type: string
+                example:
+                    trackNumber: 2
+                    slots:
+                    - slotNumber: 0
+                      errors: "-"
+                      PEP: "-"
+                    - slotNumber: 1
+                      errors: "-"
+                      PEP: "-"
+                    - slotNumber: 2
+                      errors: "-"
+                      PEP: "-"
+                    - slotNumber: 3
+                      errors: "-"
+                      PEP: "-"
+                    - slotNumber: 4
+                      errors: "-"
+                      PEP: "-"
+                    - slotNumber: 5
+                      errors: 63
+                      PEP: 1.5380859375
+                    - slotNumber: 6
+                      errors: "-"
+                      PEP: "-"
+                    - slotNumber: 7
+                      errors: "-"
+                      PEP: "-"
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '404':
+          $ref: '#/components/responses/HTTP_404'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+          
+  '/masters/{masterNumber}/tracks/{trackNumber}/statisticsChannel':
+    get:
+      tags:
+        - tracks
+      summary: Read the channel statistics (Errors %) of the selected trackNumber. Optional for W-Masters.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/trackNumber'
+      description: >-
+        Monitoring the wireless channel regarding reliability indicating link quality. 100 transmissions per channel are computed.         
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tracksStatisticsChannel'
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '404':
+          $ref: '#/components/responses/HTTP_404'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+
+  '/masters/{masterNumber}/tracks/{trackNumber}/configuration':
+    get:
+      tags:
+        - tracks
+      summary: Read the configuration of the specified trackNumber. Mandatory for W-Masters.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/trackNumber'
+      description: >-
+                
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/trackConfiguration'
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '404':
+          $ref: '#/components/responses/HTTP_404'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+    post:
+      tags:
+        - tracks
+      summary: Write the configuration of the specified trackNumber. Mandatory for W-Masters.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/trackNumber'
+      description: >-
+                
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/trackConfigurationPost'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              examples:
+                104:
+                  value:
+                    code: 104
+                    message: Action locked by another client
+                201:
+                  value:
+                    code: 201
+                    message: JSON parsing failed
+                202:
+                  value:
+                    code: 202
+                    message: JSON data value invalid
+                203:
+                  value:
+                    code: 203
+                    message: JSON data type invalid
+                204:
+                  value:
+                    code: 204
+                    message: Enumeration value unknown
+                205:
+                  value:
+                    code: 205
+                    message: JSON data value out of range
+                208:
+                  value:
+                    code: 208
+                    message: POST request without content
+                701:
+                  value:
+                    code: 701
+                    message: Data set incomplete
+                702:
+                  value:
+                    code: 702
+                    message: Data set not applicable
+                703:
+                  value:
+                    code: 703
+                    message: Data set combination incompatible
+        '403':
+          $ref: '#/components/responses/HTTP_403'
+        '404':
+          $ref: '#/components/responses/HTTP_404'
+        '500':
+          $ref: '#/components/responses/HTTP_500'
+
+################################################################################
+# ports
+################################################################################  
+  '/masters/{masterNumber}/ports':
+    get:
+      tags:
+        - ports
+      summary: Read all the available portNumber keys with the corresponding identification information.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - portNumber
+                    - statusInfo
+                    - deviceAlias
+                  properties:
+                    portNumber:
+                      type: number
+                    deviceAlias:
+                      type: string
+                    statusInfo:
+                      type: string
+                      enum:                    # see Terminology in V.113, Table E.4 PortStatusList
+                        - COMMUNICATION_LOST   # NO_DEVICE
+                        - DEACTIVATED          # DEACTIVATED
+                        - INCORRECT_DEVICE     # PORT_DIAG
+                        - DEVICE_STARTING      #
+                        - DEVICE_ONLINE        # OPERATE
+                        - DIGITAL_INPUT_C/Q    # DI_CQ
+                        - DIGITAL_OUTPUT_C/Q   # DO_CQ
+                        - NOT_AVAILABLE        # NOT_AVAILABLE
+                        - PORT_POWER_OFF       # PORT_POWER_OFF
+                        - PAIRING_FAULT        # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE 
+                    slotNumber:
+                      type: number
+                    trackNumber:
+                      type: number
+                    slotType:
+                      type: string
+                      enum:
+                        - SSLOT
+                        - DSLOT
+                    items:
+                      type: object
+                      properties:
+                        vendorId:
+                          type: number
+                        deviceId:
+                          type: number
+                        productName:
+                          type: string
+              example:                      
+                  - portNumber: 1
+                    statusInfo: "DEVICE_ONLINE"
+                    deviceAlias: "Distance_Sensor"
+                  - portNumber: 2
+                    statusInfo: "DIGITAL_INPUT_C/Q"
+                    deviceAlias: "Switching_Sensor"
+                  - portNumber: 3
+                    trackNumber: 1
+                    slotNumber: 2
+                    slotType: "SSLOT"
+                    statusInfo: "DEVICE_ONLINE"                  
+                    deviceAlias: "Wireless_Bridge"
+                    deviceInfo:
+                      vendorId: 888
+                      deviceId: 10485760
+                      productName: "BNI IOW-302-W01-K080" 
+                  - portNumber: 4
+                    statusInfo: "DEACTIVATED"
+                    deviceAlias: "Empty_port"                      
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/masters/{masterNumber}/ports/{portNumber}/capabilities':
+    get:
+      tags:
+        - ports
+      summary: Read the capability information of the specified port.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/portCapabilitiesGet'
+              examples:
+                CLASS_A:
+                  value:
+                    maxPowerSupply:
+                      value: 0.3
+                      unit: A
+                    portType: CLASS_A
+                CLASS_B:
+                  value:
+                    maxPowerSupply:
+                      value: 2.0
+                      unit: A
+                    portType: CLASS_B   
+                CLASS_A_WITH_PORT_POWER_OFF_ON:
+                  value:
+                    maxPowerSupply:
+                      value: 0.3
+                      unit: A
+                    portType: CLASS_A_WITH_PORT_POWER_OFF_ON
+                FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS:
+                  value:
+                    maxPowerSupply:
+                      value: 0.2
+                      unit: A
+                    portType: FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
+                FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS:
+                  value:
+                    maxPowerSupply:
+                      value: 0.2
+                      unit: A
+                    portType: FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS                    
+                FAILSAFE_PORT_B:
+                  value:
+                    maxPowerSupply:
+                      value: 2.0
+                      unit: A
+                    portType: FAILSAFE_PORT_B                      
+                WIRELESS:
+                  value:
+                    portType: WIRELESS
+                    slotType: "DSLOT"
+
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/masters/{masterNumber}/ports/{portNumber}/status':
+    get:
+      tags:
+        - ports
+      summary: Read the actual status of the selected port.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                # $ref: '#/components/schemas/portStatusGet'
+                type: object
+                required:
+                  - statusInfo
+                properties:
+                  statusInfo:
+                    type: string
+                    enum:                    # see Terminology in V.113, Table E.4 PortStatusList
+                      - COMMUNICATION_LOST   # NO_DEVICE
+                      - DEACTIVATED          # DEACTIVATED
+                      - INCORRECT_DEVICE     # PORT_DIAG
+                      - DEVICE_STARTING      #
+                      - DEVICE_ONLINE        # OPERATE
+                      - DIGITAL_INPUT_C/Q    # DI_CQ
+                      - DIGITAL_OUTPUT_C/Q   # DO_CQ
+                      - NOT_AVAILABLE        # NOT_AVAILABLE
+                      - PORT_POWER_OFF       # PORT_POWER_OFF
+                      - PAIRING_FAULT        # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE 
+             
+                  ioLinkRevision:
+                    description: >-
+                      Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+                      OPERATE.
+                    type: string
+                    enum:
+                      - '1.0'
+                      - '1.1'
+                  transmissionRate:
+                    description: >-
+                      Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+                      OPERATE.
+                    type: string
+                    enum:
+                      - COM1
+                      - COM2
+                      - COM3
+                      - WIRELESS
+                  masterCycleTime:
+                    description: >-
+                      Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+                      OPERATE.
+                    type: object
+                    allOf:
+                      - $ref: '#/components/schemas/cycleTime'
+                  portQualityInfo:
+                    type: object
+                    required:
+                    - value
+                    - unit
+                    properties:
+                      value:
+                        type: integer
+                        minimum: 0
+                        maximum: 100
+                      unit:
+                        type: string
+                        enum: 
+                          - "%"
+              examples:
+                wired:
+                  value:
+                    statusInfo: "DEVICE_ONLINE"
+                    ioLinkRevision: "1.1"  
+                    transmissionRate: COM2
+                    masterCycleTime:
+                      value: 2.3
+                      unit: ms
+                wireless:
+                  value:
+                    statusInfo: "DEVICE_ONLINE"
+                    ioLinkRevision: "1.1"
+                    transmissionRate: WIRELESS                    
+                    masterCycleTime: 
+                      value: 5
+                      unit: "ms"
+                    portQuality:
+                      value: 100
+                      unit: "%"                      
+
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/masters/{masterNumber}/ports/{portNumber}/configuration':
+    get:
+      tags:
+        - ports
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      summary: Read the actual configuration of the specified port.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+               oneOf:
+                - $ref: '#/components/schemas/wirelessPortConfigurationGet'               
+                - $ref: '#/components/schemas/portConfigurationGet'
+
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+    post:
+      tags:
+        - ports
+      summary: Write the configuration of the specified port.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+               oneOf:
+                - $ref: '#/components/schemas/wirelessPortConfigurationPost'               
+                - $ref: '#/components/schemas/portConfigurationPost'
+            examples:
+              Complete configuration:
+                value:
+                  mode: IOLINK_MANUAL
+                  validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                  cycleTime:
+                    value: 2.3
+                    unit: ms
+                  vendorId: 26
+                  deviceId: 333
+                  iqConfiguration: DIGITAL_INPUT
+                  deviceAlias: Distance_sensor_1
+              Change CQ mode:
+                value:
+                  mode: IOLINK_AUTOSTART
+              Change iqConfiguration:
+                value:
+                  iqConfiguration: DIGITAL_OUTPUT
+              Change the deviceAlias:
+                value:
+                  deviceAlias: Flow_control_1
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 207, 208, 701, 702, 703
+           $ref: '#/components/responses/HTTP_400'                    
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/masters/{masterNumber}/ports/{portNumber}/datastorage':
+    get:
+      tags:
+        - ports
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      summary: Read the Data Storage content of a specific port.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataStorageGetPost'
+              examples:
+                Data Storage with valid content:
+                  value:
+                    header:
+                      vendorId: 15
+                      deviceId: 65253
+                      ioLinkRevision: '1.1'
+                    content: >-
+                      TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
+                Empty Data Storage:
+                  value:
+                    header: {}
+                    content: ''
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+    post:
+      tags:
+        - ports
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      summary: Write the Data Storage content to a specific port.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dataStorageGetPost'
+            examples:
+              Data Storage with valid content:
+                value:
+                  header:
+                    vendorId: 15
+                    deviceId: 65253
+                    ioLinkRevision: '1.1'
+                  content: >-
+                    TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
+              Empty Data Storage:
+                value:
+                  header: {}
+                  content: ''
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 206, 208, 401, 701
+           $ref: '#/components/responses/HTTP_400'                       
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/devices':
+    get:
+      tags:
+        - devices
+      summary: Get all available deviceAlias keys and the location by Master number and Port number.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - deviceAlias
+                    - masterNumber
+                    - portNumber
+                  properties:
+                    deviceAlias:
+                      type: string
+                    masterNumber:
+                      type: integer
+                      minimum: 1
+                    portNumber:
+                      type: integer
+                      minimum: 1
+                example:
+                  - deviceAlias: DT35
+                    masterNumber: 1
+                    portNumber: 1
+                  - deviceAlias: TAD081
+                    masterNumber: 1
+                    portNumber: 2
+                  - deviceAlias: BNI_IOL
+                    masterNumber: 1
+                    portNumber: 3
+                  - deviceAlias: master1port4
+                    masterNumber: 1
+                    portNumber: 4
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/devices/{deviceAlias}/capabilities':
+    get:
+      tags:
+        - devices
+      summary: Read the capabililties from the specific Device.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+      responses:
+        '200':
+          description: Successful opearation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceCapabilitiesGet'
+              example:
+                minimumCycleTime:
+                  value: 2.3
+                  unit: ms
+                  supportedProfiles: [10, 32770]
+        '400':  # code 307
+           $ref: '#/components/responses/HTTP_400'       
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/devices/{deviceAlias}/identification':
+    get:
+      tags:
+        - devices
+      summary: Read the identification from the specific Device.
+      description: >-
+        *Implementation hint*: You have to request the ISDU values of
+        applicationSpecificTag, locationTag and functionTag (if they are
+        supported by the device).
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceIdentificationGet'
+        '400':  # code 307
+           $ref: '#/components/responses/HTTP_400'       
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+    post:
+      tags:
+        - devices
+      summary: Write application specific identification to the Device.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/portIdentificationPost'
+            examples:
+              All optional fields:
+                value:
+                  applicationSpecificTag: Fallback light switch at the end of the belt
+                  locationTag: Down under
+                  functionTag: Check start of belt
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 206, 208, 307
+           $ref: '#/components/responses/HTTP_400'                               
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+  '/devices/{deviceAlias}/processdata/value':
+    get:
+      tags:
+        - devices
+      summary: Read the process data values (input and output) from the specified Device.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceProcessDataValueGet'
+              examples:
+                'Format=byteArray, CQ in IO-Link (only input), IQ in digital output':
+                  value:
+                    getData:
+                      ioLink:
+                        valid: true
+                        value:
+                          - 12
+                          - 22
+                          - 216
+                    setData:
+                      iqValue: true
+                'Format=iodd, CQ in IO-Link (input and output), IQ in digital input':
+                  value:
+                    getData:
+                      ioLink:
+                        valid: true
+                        value:
+                          Distance:
+                            value: 55
+                          Quality:
+                            value: 12
+                      iqValue: true
+                    setData:
+                      ioLink:
+                        valid: true
+                        value:
+                          Buzzer:
+                            value: 5
+        '400':  # code 305, 306, 601
+           $ref: '#/components/responses/HTTP_400'       
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+    post:
+      tags:
+        - devices
+      summary: Write the process data output values to the specified Device.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceProcessDataValuePost'
+            examples:
+              'format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output':
+                value:
+                  ioLink:
+                    valid: true
+                    value:
+                      - 15
+                      - 123
+                      - 126
+                      - 236
+                  iqValue: true
+              'format=iodd, CQ (pin4) in IO-Link, IQ (pin2) not available':
+                value:
+                  iolink:
+                    valid: true
+                    value:
+                      Valve_1:
+                        value: true
+                      Valve_2:
+                        value: false
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 501, 502, 503, 601, 701, 702, 703
+           $ref: '#/components/responses/HTTP_400'                            
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+           
+  '/devices/{deviceAlias}/processdata/getdata/value':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read the process data input values from the specified Device.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processDataValue'
+              examples:
+                'Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input':
+                  value:
+                    ioLink:
+                      valid: true
+                      value:
+                        - 12
+                        - 22
+                        - 216
+                    iqValue: true
+                'Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input':
+                  value:
+                    ioLink:
+                      valid: true
+                      value:
+                        Distance:
+                          value: 55
+                        Quality:
+                          value: 12
+                    iqValue: true
+        '400':  # code 305, 306, 601
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+           
+  '/devices/{deviceAlias}/processdata/setdata/value':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read the process data output values from the specified Device.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processDataValue'
+              examples:
+                'Format=byteArray, CQ (pin4) in digital output, IQ (pin2) in digital input':
+                  value:
+                    cqValue: false
+                'Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input':
+                  value:
+                    iolink:
+                      valid: true
+                      value:
+                        Valve_1:
+                          value: true
+                        Valve_2:
+                          value: false
+        '400':  # code 305, 306, 601
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403' 
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+           
+  '/devices/{deviceAlias}/parameters':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read all available parameter indices and parameter names from the specific Device.
+        IODD support is required.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParametersGet'
+        '400':  # code 305, 306, 601
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+           
+  '/devices/{deviceAlias}/parameters/{index}/value':
+    get:
+      tags:
+        - devices
+      summary: Read a parameter value from the specific Device with the given index.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/index'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParameterValueGetPost'
+              examples:
+                format=byteArray:
+                  value: {
+                      "value": [
+                        0,
+                        156,
+                        125,
+                        25
+                      ]
+                    }
+                'format=iodd, simple type':
+                  value:
+                    value: 15.2
+                'format=iodd, complex type':
+                  value:
+                    Distance:
+                      value: 15
+                    Quality:
+                      value: 12
+        '400':  # code 305, 306, 307, 311, 601
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+
+    post:
+      tags:
+        - devices
+      summary: Write a parameter value with the given index to the specified Device.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/index'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceParameterValueGetPost'
+            examples:
+              format=byteArray:
+                value: {
+                  "value": [
+                    0,
+                    156,
+                    125,
+                    25
+                  ]
+                }
+              'format=iodd, simple type':
+                value:
+                  value: 15.2
+              'format=iodd, complex type':
+                value:
+                  Distance:
+                    value: 15
+                  Quality:
+                    value: 12
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 103, 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 311, 601, 701
+           $ref: '#/components/responses/HTTP_400'                        
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+           
+  '/devices/{deviceAlias}/parameters/{parameterName}/value':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read a parameter value from the specific Device by parameter name.
+        IODD support is required.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/parameterName'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParameterValueGetPost'
+              examples:
+                format=byteArray:
+                  value: {
+                    "value": [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                  }
+                'format=iodd, simple type':
+                  value:
+                    value: 15.2
+                'format=iodd, complex type':
+                  value:
+                    Distance:
+                      value: 15
+                    Quality:
+                      value: 12
+
+        '400':  # code 305, 306, 307, 311, 601
+           $ref: '#/components/responses/HTTP_400'                                  
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'    
+    post:
+      tags:
+        - devices
+      summary: >-
+        Write a parameter value by name to the specified Device.IODD support is required.
+        IODD support is required.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/parameterName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceParameterValueGetPost'
+            examples:
+              format=byteArray:
+                value: {
+                  "value": [
+                    0,
+                    156,
+                    125,
+                    25
+                  ]
+                }
+              'format=iodd, simple type':
+                value:
+                  value: 15.2
+              'format=iodd, complex type':
+                value:
+                  Distance:
+                    value: 15
+                  Quality:
+                    value: 12
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
+           $ref: '#/components/responses/HTTP_400'                        
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+           
+  '/devices/{deviceAlias}/parameters/{index}/subindices':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read all available parameter sub-indices and sub-parameter names from the specific Device.
+        IODD support is required.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/index'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceSubParametersGet'
+        '400':  # code 601
+           $ref: '#/components/responses/HTTP_400'                        
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+           
+  '/devices/{deviceAlias}/parameters/{parameterName}/subindices':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read all available parameter sub-indices and sub-parameter names from the specific Device (referenced by parameter name).
+        IODD support is required.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/parameterName'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceSubParametersGet'
+        '400':  # code 601
+           $ref: '#/components/responses/HTTP_400'                        
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'
+           
+  '/devices/{deviceAlias}/parameters/{index}/subindices/{subindex}/value':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read a parameter value from the specific Device with the given index and subindex.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/index'
+        - $ref: '#/components/parameters/subindex'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+              examples:
+                format=byteArray:
+                  value: {
+                    "value": [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                  }
+                format=iodd:
+                  value:
+                    value: 15.2
+
+        '400':  # code 305, 306, 307, 311, 601
+           $ref: '#/components/responses/HTTP_400'            
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+    post:
+      tags:
+        - devices
+      summary: >-
+        Write the parameter with the given index and subindex.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/index'
+        - $ref: '#/components/parameters/subindex'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+            examples:
+              format=byteArray:
+                value: {
+                  "value": [
+                    0,
+                    156,
+                    125,
+                    25
+                  ]
+                }
+              format=iodd:
+                value:
+                  value: 15.2
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
+           $ref: '#/components/responses/HTTP_400'                        
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+           
+  '/devices/{deviceAlias}/parameters/{parameterName}/subindices/{subParameterName}/value':
+    get:
+      tags:
+        - devices
+      summary: >-
+        Read a parameter value from the specific Device by parameter name and subname.
+        IODD support is required.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/parameterName'
+        - $ref: '#/components/parameters/subParameterName'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+              examples:
+                format=byteArray:
+                  value: {
+                    "value": [
+                      0,
+                      156,
+                      125,
+                      25
+                    ]
+                  }
+                format=iodd:
+                  value:
+                    value: 15.2
+
+        '400':  # code 305, 306, 307, 311, 601
+           $ref: '#/components/responses/HTTP_400'                        
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+    post:
+      tags:
+        - devices
+      summary: >-
+        Write a parameter value to the specific Device by the parameter name and subname.IODD support is required.
+        IODD support is required.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/parameterName'
+        - $ref: '#/components/parameters/subParameterName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
+            examples:
+              format=byteArray:
+                value: {
+                  "value": [
+                    0,
+                    156,
+                    125,
+                    25
+                  ]
+                }
+              format=iodd:
+                value:
+                  value: 15.2
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 103, 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
+           $ref: '#/components/responses/HTTP_400'                        
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'   
+           
+  '/devices/{deviceAlias}/blockparameterization':
+    post:
+      tags:
+        - devices
+      summary: >-
+        Write or read one or more parameters using the block parameterization method.
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceBlockParameterizationPost'
+            examples:
+              'read, format=byteArray':
+                value:
+                  direction: READ
+                  parameters:
+                    - identifier:
+                        index: 15
+                    - identifier:
+                        index: 65
+                        subIndex: 2
+              'read, format=iodd':
+                value:
+                  direction: READ
+                  parameters:
+                    - identifier:
+                        parameterName: Application_tag
+                    - identifier:
+                        parameterName: Distance
+                        subParameterName: Quality
+              'write, format=byteArray':
+                value:
+                  direction: WRITE
+                  parameters:
+                    - identifier:
+                        index: 123
+                      content:
+                        - 15
+                        - 232
+                        - 22
+                    - identifier:
+                        index: 233
+                        subIndex: 2
+                      content:
+                        - 23
+                        - 149
+                        - 206
+              'write, format=iodd':
+                value:
+                  direction: WRITE
+                  parameters:
+                    - identifier:
+                        parameterName: Application_tag
+                      content:
+                        value: 'Level 2, row 3'
+                    - identifier:
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
+                      content:
+                        value: 123
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceBlockParameterizationPostParametersAnswer'
+              examples:
+                'read, format=byteArray':
+                  value:
+                    - identifier:
+                        index: 123
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value:
+                            - 15
+                            - 232
+                            - 22
+                    - identifier:
+                        index: 233
+                        subIndex: 2
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value:
+                            - 23
+                            - 149
+                            - 206
+                'read, format=iodd':
+                  value:
+                    - identifier:
+                        parameterName: Application_tag
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value: 'Level 2, row 3'
+                    - identifier:
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value: 123
+                'read, format=byteArray with error':
+                  value:
+                    - identifier:
+                        index: 123
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32802
+                          message: Service temporarily not available – Device control
+                    - identifier:
+                        index: 233
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32803
+                          message: Access denied
+                'write, format=byteArray':
+                  value:
+                    - identifier:
+                        index: 123
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                    - identifier:
+                        index: 233
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                'write, format=iodd':
+                  value:
+                    - identifier:
+                        parameterName: Application_tag
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                    - identifier:
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                'write, format=byteArray, with error':
+                  value:
+                    - address:
+                        index: 123
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32816
+                          message: Parameter value out of range
+                    - address:
+                        index: 233
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32817
+                          message: Parameter value above limit
+        '400':  # code 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 311, 601, 701, 702, 703
+           $ref: '#/components/responses/HTTP_400'            
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'           
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+        '501':
+           $ref: '#/components/responses/HTTP_501'           
+
+  '/devices/{deviceAlias}/events':
+    get:
+      tags:
+        - devices
+      parameters:
+        - $ref: '#/components/parameters/deviceAlias'
+        - $ref: '#/components/parameters/eventTop'
+        - $ref: '#/components/parameters/eventBottom'
+      summary:  Reading the EventLog filtered for a specific Device.
+      responses:
+        '200':
+          description: >-
+            Successful operation. In case of empty event log, an empty array is
+            returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceEventsGet'
+        '400':  # code 305, 306
+           $ref: '#/components/responses/HTTP_400'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+components:
+  schemas:
+    cycleTime:
+      type: object
+      required:
+        - value
+        - unit
+      properties:
+        value:
+          type: number
+        unit:
+          type: string
+          enum:
+            - ms
+    event:
+      type: object
+    ipConfiguration:
+      type: string
+      enum:
+        - MANUAL
+        - DHCP
+    processData:
+      allOf:
+        - type: object
+          required:
+            - direction
+            - format
+          properties:
+            direction:
+              $ref: '#/components/schemas/content'
+            format:
+              $ref: '#/components/schemas/format'
+      oneOf:
+        - type: object
+          required:
+            - interval
+          properties:
+            interval:
+              $ref: '#/components/schemas/cycleTime'
+        - type: object
+          required:
+            - onChange
+          properties:
+            onChange:
+              type: boolean
+    format:
+      type: string
+      enum:
+        - byteArray
+        - iodd
+      default: byteArray
+    content:
+      type: string
+      enum:
+        - getData
+        - setData
+        - getSetData
+      default: getData
+    eventOrigin:
+      type: string
+      enum:
+        - ALL
+        - GATEWAY
+        - MASTERS
+        - PORTS
+        - DEVICES
+      default: ALL
+    eventMasterNumber:
+      type: number
+      minimum: 1
+    eventPortNumber:
+      type: integer
+      minimum: 1
+    eventdeviceAlias:
+      type: string
+    eventTop:
+      type: number
+    eventBottom:
+      type: number
+    identificationMasters:
+      type: array
+      items:
+        type: object
+        required:
+          - masterNumber
+        properties:
+          masterNumber:
+            type: number
+            minimum: 1
+          serialNumber:
+            type: string
+          locationTag:
+            type: string
+      example:
+        - masterNumber: 1
+          serialNumber: A12345678B
+          locationTag: slotNumber 5
+        - masterNumber: 2
+          serialNumber: 123A45B783
+          locationTag: slotNumber 6
+    identificationGet:
+      required:
+        - vendorName
+        - vendorId
+        - masterId
+        - masterType
+      type: object
+      properties:
+        vendorName:
+          type: string
+        vendorId:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        masterId:
+          type: integer
+          minimum: 1
+          maximum: 4294967295
+        masterType:
+          type: string
+          enum:
+            - Unspecific
+            - Master acc. V1.0
+            - Master acc. V1.1
+            - Failsafe_Master
+            - Wireless_Master
+        serialNumber:
+          type: string
+        orderCode:
+          type: string
+        productName:
+          type: string
+        productId:
+          type: string
+        hardwareRevision:
+          type: string
+        firmwareRevision:
+          type: string
+        vendorUrl:
+          type: string
+        manualUrl:
+          type: string
+        productInstanceUri:
+          type: string
+        gsdUri: 
+          type: string         
+        applicationSpecificTag:
+          type: string
+        locationTag:
+          type: string
+        functionTag:
+          type: string
+      example:
+        vendorName: Vendor GmbH
+        vendorId: 26
+        masterId: 42
+        masterType: Wireless_Master
+        serialNumber: IOLWM123456
+        orderCode: PROD123456
+        productName: IO-Link Wireless Master
+        productId: PROD123456
+        hardwareRevision: 3.2.1.444R
+        firmwareRevision: 3.2.1.888R
+        vendorUrl: 'http://www.io-link.com'
+        productInstanceUri: 'http://www.io-link.com/PROD123456/IOLWM123456'
+        gsdUri: 'https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml'          
+        manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
+        applicationSpecificTag: Fallback reader at the end of the belt
+        locationTag: Down under
+        functionTag: Code reading
+    identificationPost:
+      type: object
+      properties:
+        applicationSpecificTag:
+          type: string
+        locationTag:
+          type: string
+        functionTag:
+          type: string
+    gatewayCapabilitiesGet:
+      required:
+        - ioddSupported
+        - mqttSupported
+      type: object
+      properties:
+        ioddSupported:
+          type: boolean
+        mqttSupported:
+          type: boolean
+      example:
+        ioddSupported: true
+        mqttSupported: true
+    masterCapabilitiesGet:
+      required:
+        - numberOfPorts
+        - maxPowerSupply
+      type: object
+      properties:
+        numberOfPorts:
+          type: integer
+          minimum: 1
+        maxPowerSupply:
+          type: object
+          required:
+            - value
+            - unit
+          properties:
+            value:
+              type: number
+            unit:
+              type: string
+    eventTime:
+      description: >-
+        Timestamp (format defined in DIN ISO 8601). This field can give an
+        absolute time or a relative time. Both formats are defined in DIN ISO
+        8601.
+      type: string
+    eventSeverity:
+      description: >-
+        Indicates the severity of the message. The IO-Link EventType
+        NOTIFICATION maps to NOTICE, WARNING to WARNING and ERROR to ERROR.
+      type: string
+      enum:
+        - EMERGENCY
+        - ALERT
+        - CRITICAL
+        - ERROR
+        - WARNING
+        - NOTICE
+        - INFO
+        - DEBUG
+    eventOriginObject:
+      type: object
+      properties:
+        gateway:
+          type: string
+        masterNumber:
+          description: >-
+            This property is mandatory for IO-Link Master Events, IO-Link Port
+            Events and IO-Link Device Events. Should not be used for other log
+            entries.
+          type: integer
+          minimum: 1
+        portNumber:
+          description: >-
+            This property is mandatory for IO-Link Port Events and IO-Link
+            Device Events. Should not be used for other log entries.
+          type: integer
+          minimum: 1
+        deviceAlias:
+          description: >-
+            This property is mandatory for IO-Link Device Events. Should not be
+            used for other log entries.
+          type: string
+    eventObject:
+      type: object
+      properties:
+        code:
+          description: >-
+            IO-Link Port EventCode or IO-Link Device EventCode. This property is
+            mandatory for IO-Link Port Events or IO-Link Device Events.
+          type: number
+        mode:
+          description: >-
+            IO-Link Port Event Mode or IO-Link Device EventMode. This property
+            is mandatory for IO-Link Port Events or IO-Link Device Events.
+          type: string
+          enum:
+            - SINGLESHOT
+            - APPEARS
+            - DISAPPEARS
+        text:
+          type: string
+    gatewayEventsGet:
+      type: array
+      items:
+        type: object
+        required:
+          - time
+          - severity
+          - origin
+          - message
+        properties:
+          time:
+            $ref: '#/components/schemas/eventTime'
+          severity:
+            $ref: '#/components/schemas/eventSeverity'
+          origin:
+            $ref: '#/components/schemas/eventOriginObject'
+          message:
+            $ref: '#/components/schemas/eventObject'
+    blockParameterizationPostParametersRequest:
+      type: array
+      items:
+        type: object
+        required:
+          - identifier
+        properties:
+          identifier:
+            oneOf:
+              - type: object
+                required:
+                  - index
+                properties:
+                  index:
+                    type: number
+                  subIndex:
+                    type: number
+              - type: object
+                required:
+                  - parameterName
+                properties:
+                  parameterName:
+                    type: string
+                  subParameterName:
+                    type: string
+          content:
+            $ref: '#/components/schemas/deviceParameterValueGetPost'
+    deviceBlockParameterizationPostParametersAnswer:
+      type: array
+      items:
+        type: object
+        required:
+          - identifier
+          - result
+        properties:
+          identifier:
+            oneOf:
+              - type: object
+                required:
+                  - index
+                properties:
+                  index:
+                    type: number
+                  subIndex:
+                    type: number
+              - type: object
+                required:
+                  - parameterName
+                properties:
+                  parameterName:
+                    type: string
+                  subParameterName:
+                    type: string
+          result:
+            type: object
+            required:
+              - parameterExchangeResult
+            properties:
+              parameterExchangeResult:
+                type: string
+                enum:
+                  - WRITE_SUCCESS
+                  - READ_SUCCESS
+                  - ERROR
+              content:
+                $ref: '#/components/schemas/deviceParameterValueGetPost'
+              iolinkError:
+                $ref: '#/components/schemas/iolinkErrorObject'
+    deviceEventsGet:
+      type: array
+      items:
+        type: object
+        required:
+          - time
+          - severity
+          - origin
+          - message
+        properties:
+          time:
+            $ref: '#/components/schemas/eventTime'
+          severity:
+            $ref: '#/components/schemas/eventSeverity'
+          origin:
+            required:
+              - master
+              - port
+              - deviceAlias
+            allOf:
+              - $ref: '#/components/schemas/eventOriginObject'
+          message:
+            required:
+              - code
+              - mode
+            allOf:
+              - $ref: '#/components/schemas/eventObject'
+      example:
+        - time: '2018-05-18T07:31:54.123Z'
+          severity: WARNING
+          origin:
+            master: 1
+            port: 1
+            deviceAlias: Temperature_sensor_1
+          message:
+            code: 16912
+            mode: APPEARED
+            text: Device temperature over-run – Clear source of heat
+    gatewayIdentificationGet:
+      type: object
+      required:
+        - macAddress
+        - vendorName
+      properties:
+        macAddress:
+          type: string
+        serialNumber:
+          type: string
+        orderCode:
+          type: string
+        productName:
+          type: string
+        productId:
+          type: string
+        hardwareRevision:
+          type: string
+        firmwareRevision:
+          type: string
+        vendorUrl:
+          type: string
+        manualUrl:
+          type: string
+        productInstanceUri:
+          type: string          
+        applicationSpecificTag:
+          type: string
+        locationTag:
+          type: string
+        functionTag:
+          type: string          
+      example:
+        macAddress: '00:02:72:CE:A6:49'
+        serialNumber: 'C134A746'
+        productId: 'TMP34Z'
+        vendorName: 'SensorCompany'
+        productName: 'FlowSensor34'
+        hardwareRevision: 'V3.45'
+        firmwareRevision: 'V1.30'
+        productInstanceUri: 'sensor.tmp.23.com'
+    gatewayConfigurationGetPost:
+      type: object
+      required:
+        - ethIpv4
+      properties:
+        ethIpv4:
+          type: array
+          items:
+            type: object
+            required:
+              - ipConfiguration
+            properties:
+              ipConfiguration:
+                $ref: '#/components/schemas/ipConfiguration'
+              ipAddress:
+                type: string
+              subnetMask:
+                type: string
+              standardGateway:
+                type: string
+      example:
+        ethIpv4:
+          - ipConfiguration: MANUAL
+            ipAddress: 192.168.1.13
+            subnetMask: 255.255.255.0
+            standardGateway: 192.168.1.1
+    mqttConfigurationGetPost:
+      type: object
+      required:
+        - clientMode
+      properties:
+        clientMode:
+          type: string
+        serverAddress:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        lastWill:
+          type: object
+          required:
+            - topic
+            - message
+            - qos
+            - retain
+          properties:
+            topic:
+              type: string
+            message:
+              type: string
+            qos:
+              type: string
+              enum:
+                - 0_ONLY_ONCE
+                - 1_AT_LEAST_ONCE
+                - 2_EXACTLY_ONCE
+            retain:
+              type: boolean
+        keepAliveTime:
+          type: integer
+    mqttConfigurationTopic:
+      allOf:
+        - type: object
+          required:
+            - qos
+            - deviceAlias
+          properties:
+            qos:
+              type: string
+              enum:
+                - 0_ONLY_ONCE
+                - 1_AT_LEAST_ONCE
+                - 2_EXACTLY_ONCE
+            deviceAlias:
+              type: string
+              description: Unique deviceAlias.
+        - oneOf:
+            - type: object
+              required:
+                - event
+                - processData
+              properties:
+                event:
+                  $ref: '#/components/schemas/event'
+                processData:
+                  $ref: '#/components/schemas/processData'
+    mqttConfigurationTopicPost:
+      allOf:
+        - type: object
+          properties:
+            topicName:
+              type: string
+        - $ref: '#/components/schemas/mqttConfigurationTopic'
+    mqttConfigurationTopicGet:
+      allOf:
+        - type: object
+          required:
+            - topicId
+          properties:
+            topicId:
+              type: integer
+        - type: object
+          required:
+            - topicName
+          properties:
+            topicName:
+              type: string
+        - $ref: '#/components/schemas/mqttConfigurationTopic'
+      example:
+        topicId: 1
+        topicName: PD input
+        qos: 1_AT_LEAST_ONCE
+        deviceAlias: DT35
+        processData:
+          direction: getData
+          format: iodd
+          interval:
+            value: 10
+            unit: ms
+    mqttConnectionStatusGet:
+      allOf:
+        - type: object
+          required:
+            - connectionStatus
+            - serverAddress
+            - upTime
+          properties:
+            connectionStatus:
+              type: string
+              enum:
+                - CLIENT_INACTIVE
+                - CONNECTION_ACCEPTED
+                - UNACCEPTABLE_PROTOCOL_VERSION
+                - IDENTIFIER_REJECTED
+                - SERVER_UNAVAILABLE
+                - BAD_USERNAME_OR_PASSWORD
+                - NOT_AUTHORIZED
+            serverAddress:
+              type: string
+            upTime:
+              type: integer
+      example:
+        connectionStatus: CONNECTION_ACCEPTED
+        serverAddress: 'http://broker-address.com'
+        upTime: 1050
+    portStatusGet:
+      type: object
+      required:
+        - statusInfo
+      properties:
+        statusInfo:
+          type: string
+          enum:                    # see Terminology in V.113, Table E.4 PortStatusList
+            - COMMUNICATION_LOST   # NO_DEVICE
+            - DEACTIVATED          # DEACTIVATED
+            - INCORRECT_DEVICE     # PORT_DIAG
+            - DEVICE_STARTING      #
+            - DEVICE_ONLINE        # OPERATE
+            - DIGITAL_INPUT_C/Q    # DI_CQ
+            - DIGITAL_OUTPUT_C/Q   # DO_CQ
+            - NOT_AVAILABLE        # NOT_AVAILABLE
+            - PORT_POWER_OFF       # PORT_POWER_OFF
+            - PAIRING_FAULT        # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE 
+        ioLinkRevision:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE.
+          type: string
+          enum:
+            - '1.0'
+            - '1.1'
+        transmissionRate:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE.
+          type: string
+          enum:
+            - COM1
+            - COM2
+            - COM3
+            - WIRELESS
+        masterCycleTime:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/cycleTime'
+      example:  #TODO
+        wired:
+          statusInfo: DEVICE_ONLINE
+          ioLinkRevision: '1.1'
+          transmissionRate: COM2
+          masterCycleTime:
+            value: 2.3
+            unit: ms
+        wireless:
+          statusInfo: DEVICE_ONLINE
+          ioLinkRevision: '1.1'
+          transmissionRate: WIRELESS
+          masterCycleTime:
+            value: 5
+            unit: ms            
+    deviceCapabilitiesGet:
+      required:
+        - minimumCycleTime
+        - supportedProfiles
+      type: object
+      properties:
+        minimumCycleTime:
+          $ref: '#/components/schemas/cycleTime'
+        supportedProfiles:
+          type: array
+          items:
+            type: integer
+    deviceIdentificationGet:
+      required:
+        - vendorId
+        - deviceId
+        - ioLinkRevision
+      type: object
+      properties:
+        vendorId:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        deviceId:
+          type: integer
+          minimum: 1
+          maximum: 16777215
+        ioLinkRevision:
+          type: string
+          enum:
+            - '1.0'
+            - '1.1'
+        vendorName:
+          description: Mandatory if the Device suports the ISDU.
+          type: string
+        vendorText:
+          type: string
+        vendorUrl:
+          type: string          
+        productName:
+          description: Mandatory if the Device suports the ISDU.
+          type: string
+        productId:
+          type: string
+        productText:
+          type: string
+        serialNumber:
+          type: string
+        hardwareRevision:
+          type: string
+        firmwareRevision:
+          type: string
+        productInstanceUri:
+          type: string 
+        ioddUri:
+          type: string              
+        applicationSpecificTag:
+          type: string
+        locationTag:
+          type: string
+        functionTag:
+          type: string
+      example:
+        vendorId: 26
+        deviceId: 8389226
+        ioLinkRevision: '1.1'
+        vendorName: SICK AG
+        vendorText: Sensor Intelligence.
+        productName: SLG-2
+        productId: SLG-2
+        productText: The SLG-2 IO-Link device is a smart lightgrid for space sensitive applications.
+        serialNumber: Serial123456
+        hardwareRevision: 3.2.1.444R
+        firmwareRevision: 3.2.1.888R
+        vendorUrl: 'http://www.sick.com'
+        productInstanceUri: 'http://www.sick.com/SLG-2/Serial123456'
+        ioddUri: 'https://ioddfinder.io-link.com/26/42/SICK-SLG-2-20210428-IODD1.1'  
+        # 'https://ioddfinder.io-link.com/api/vendors/26/iodds/11541/files/zip/rated'
+        # 'https://ioddfinder.io-link.com/productvariants/search/32872'
+        applicationSpecificTag: Fallback light switch at the end of the belt
+        locationTag: Down under
+        functionTag: Check end of belt
+    portIdentificationPost:
+      type: object
+      properties:
+        applicationSpecificTag:
+          type: string
+          example: Fallback light switch at the end of the belt
+        locationTag:
+          type: string
+          example: Down under
+        functionTag:
+          type: string
+          example: Check start of belt
+    portCapabilitiesGet:
+      type: object
+      required:
+        - portType
+      properties:
+        portType:
+          type: string
+          enum:
+            - CLASS_A
+            - CLASS_B
+            - CLASS_A_WITH_PORT_POWER_OFF_ON
+            - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
+            - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
+            - FAILSAFE_PORT_B
+            - WIRELESS
+        slotType:
+          type: string
+          enum:
+            - SSLOT
+            - DSLOT            
+        maxPowerSupply:
+          type: object
+          required:
+            - value
+            - unit
+          properties:
+            value:
+              type: number
+            unit:
+              type: string
+
+    portConfigurationGet:
+      type: object
+      required:
+        - mode
+        - iqConfiguration
+        - deviceAlias
+      properties:
+        mode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - IOLINK_MANUAL
+            - IOLINK_AUTOSTART
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+
+        validationAndBackup:
+          description: Used by the IO-Link Master just when portMode is IOLINK_MANUAL.
+          type: string
+          enum:
+            - NO_DEVICE_CHECK
+            - TYPE_COMPATIBLE_DEVICE_V1.0
+            - TYPE_COMPATIBLE_DEVICE_V1.1
+            - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+            - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        cycleTime:
+          description: >-
+            Used by the IO-Link Master just when portMode is IOLINK_MANUAL or
+            IOLINK_AUTOSTART. Default value is 0 ms which means as fast as
+            possible.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/cycleTime'
+        vendorId:
+          description: >-
+            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
+            validationAndBackup is not NO_DEVICE_CHECK.
+          type: integer
+          minimum: 1
+          maximum: 65535
+        deviceId:
+          description: >-
+            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
+            validationAndBackup is not NO_DEVICE_CHECK.
+          type: integer
+          minimum: 1
+          maximum: 16777215
+        iqConfiguration:
+          type: string
+          enum:
+            - NOT_SUPPORTED
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+        deviceAlias:
+          type: string
+      example:
+        mode: IOLINK_MANUAL
+        validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+        iqConfiguration: ANALOG_INPUT
+        cycleTime:
+          value: 2.3
+          unit: ms
+        vendorId: 26
+        deviceId: 333
+        deviceAlias: Distance_sensor_1
+        
+    masterConfiguration:
+      properties:
+        masterId:
+          type: integer
+          minimum: 1
+          maximum: 29
+        ahtEnable:
+          type: boolean
+          default: false
+        pairingTimeout:
+          type: object
+          required:
+            - value
+            - unit
+          properties:
+            value:
+              type: integer
+              minimum: 5      
+              maximum: 65535    
+            unit:
+              type: string
+              enum: 
+                - s
+        blacklist:
+          type: object
+          required:
+            - all
+          properties:
+            2402:
+              type: boolean
+              default: false
+            2403:
+              type: boolean
+              default: false
+            2404:
+              type: boolean
+              default: false
+            2405:
+              type: boolean
+              default: false
+            2406:
+              type: boolean
+              default: false
+            2407:
+              type: boolean
+              default: false
+            2408:
+              type: boolean
+              default: false
+            2409:
+              type: boolean
+              default: false
+            2410:
+              type: boolean
+              default: false
+            2411:
+              type: boolean
+              default: false
+            2412:
+              type: boolean
+              default: false
+            2413:
+              type: boolean
+              default: false
+            2414:
+              type: boolean
+              default: false
+            2415:
+              type: boolean
+              default: false
+            2416:
+              type: boolean
+              default: false
+            2417:
+              type: boolean
+              default: false
+            2418:
+              type: boolean
+              default: false
+            2419:
+              type: boolean
+              default: false
+            2420:
+              type: boolean
+              default: false
+            2421:
+              type: boolean
+              default: false
+            2422:
+              type: boolean
+              default: false
+            2423: 
+              type: boolean
+              default: false
+            2424: 
+              type: boolean
+              default: false
+            2425: 
+              type: boolean
+              default: false
+            2426: 
+              type: boolean
+              default: false
+            2427: 
+              type: boolean
+              default: false
+            2428: 
+              type: boolean
+              default: false
+            2429: 
+              type: boolean
+              default: false
+            2430: 
+              type: boolean
+              default: false
+            2431: 
+              type: boolean
+              default: false
+            2432: 
+              type: boolean
+              default: false
+            2433: 
+              type: boolean
+              default: false
+            2434: 
+              type: boolean
+              default: false
+            2435: 
+              type: boolean
+              default: false
+            2436: 
+              type: boolean
+              default: false
+            2437: 
+              type: boolean
+              default: false
+            2438: 
+              type: boolean
+              default: false
+            2439: 
+              type: boolean
+              default: false
+            2440: 
+              type: boolean
+              default: false
+            2441: 
+              type: boolean
+              default: false
+            2442: 
+              type: boolean
+              default: false
+            2443: 
+              type: boolean
+              default: false
+            2444: 
+              type: boolean
+              default: false
+            2445: 
+              type: boolean
+              default: false
+            2446: 
+              type: boolean
+              default: false
+            2447: 
+              type: boolean
+              default: false
+            2448: 
+              type: boolean
+              default: false
+            2449: 
+              type: boolean
+              default: false
+            2450: 
+              type: boolean
+              default: false
+            2451: 
+              type: boolean
+              default: false
+            2452: 
+              type: boolean
+              default: false
+            2453: 
+              type: boolean
+              default: false
+            2454: 
+              type: boolean
+              default: false
+            2455: 
+              type: boolean
+              default: false
+            2456: 
+              type: boolean
+              default: false
+            2457: 
+              type: boolean
+              default: false
+            2458: 
+              type: boolean
+              default: false
+            2459: 
+              type: boolean
+              default: false
+            2460: 
+              type: boolean
+              default: false
+            2461: 
+              type: boolean
+              default: false
+            2462: 
+              type: boolean
+              default: false
+            2463: 
+              type: boolean
+              default: false
+            2464: 
+              type: boolean
+              default: false
+            2465: 
+              type: boolean
+              default: false
+            2466: 
+              type: boolean
+              default: false
+            2467: 
+              type: boolean
+              default: false
+            2468: 
+              type: boolean
+              default: false
+            2469: 
+              type: boolean
+              default: false
+            2470: 
+              type: boolean
+              default: false
+            2471: 
+              type: boolean
+              default: false
+            2472: 
+              type: boolean
+              default: false
+            2473: 
+              type: boolean
+              default: false
+            2474: 
+              type: boolean
+              default: false
+            2475: 
+              type: boolean
+              default: false
+            2476: 
+              type: boolean
+              default: false
+            2477: 
+              type: boolean
+              default: false
+            2478: 
+              type: boolean
+              default: false
+            2479: 
+              type: boolean
+              default: false
+      example:
+        masterId: 5
+        ahtEnable: false
+        pairingTimeout: 
+          value: 25
+          unit: s
+        blackList:
+          2402: false
+          2403: false
+          2404: false
+          2405: false
+          2406: false
+          2407: false
+          2408: false
+          2409: false
+          2410: false
+          2411: false
+          2412: false
+          2413: false
+          2414: false
+          2415: false
+          2416: false
+          2417: false
+          2418: false
+          2419: false
+          2420: false
+          2421: false
+          2422: false
+          2423: false
+          2424: false
+          2425: false
+          2426: false
+          2427: false
+          2428: false
+          2429: false
+          2430: false
+          2431: false
+          2432: false
+          2433: false
+          2434: false
+          2435: false
+          2436: false
+          2437: false
+          2438: false
+          2439: false
+          2440: false
+          2441: false
+          2442: false
+          2443: false
+          2444: false
+          2445: false
+          2446: false
+          2447: false
+          2448: false
+          2449: false
+          2450: false
+          2451: false
+          2452: false
+          2453: false
+          2454: false
+          2455: false
+          2456: false
+          2457: false
+          2458: false
+          2459: false
+          2460: false
+          2461: false
+          2462: false
+          2463: false
+          2464: false
+          2465: false
+          2466: false
+          2467: false
+          2468: false
+          2469: false
+          2470: false
+          2471: false
+          2472: false
+          2473: false
+          2474: false
+          2475: false
+          2476: false
+          2477: false
+          2478: false
+          2479: false
+          
+    tracksStatisticsChannel:
+      properties:
+        trackNumber:
+          type: integer
+          minimum: 1
+          maximum: 5
+        channelErrors:
+          type: object
+          required:
+            - all
+          properties:
+            2402:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available 
+            2403:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2404:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2405:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2406:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2407:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2408:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2409:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2410:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2411:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2412:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2413:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2414:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2415:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2416:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2417:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2418:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2419:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2420:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2421:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2422:
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2423: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2424: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2425: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2426: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2427: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2428: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2429: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2430: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2431: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2432: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2433: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2434: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2435: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2436: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2437: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2438: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2439: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2440: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2441: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2442: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2443: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2444: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2445: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2446: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2447: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2448: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2449: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2450: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2451: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2452: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2453: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2454: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2455: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2456: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2457: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2458: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2459: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2460: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2461: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2462: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2463: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2464: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2465: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2466: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2467: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2468: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2469: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2470: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2471: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2472: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2473: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2474: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2475: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2476: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2477: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2478: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+            2479: 
+              type: integer
+              minimum: 0
+              maximum: 65535 # 0 to 100, 65535 means no data available
+      example:
+        trackNumber: 2
+        channelErrors:
+          2402: 0
+          2403: 0
+          2404: 0
+          2405: 0
+          2406: 0
+          2407: 3
+          2408: 1
+          2409: 5
+          2410: 9
+          2411: 6
+          2412: 4
+          2413: 1
+          2414: 0
+          2415: 0
+          2416: 0
+          2417: 0
+          2418: 0
+          2419: 0
+          2420: 0
+          2421: 0
+          2422: 0
+          2423: 0
+          2424: 0
+          2425: 0
+          2426: 0
+          2427: 0
+          2428: 0
+          2429: 0
+          2430: 0
+          2431: 0
+          2432: 0
+          2433: 0
+          2434: 0
+          2435: 3
+          2436: 2
+          2437: 5
+          2438: 2
+          2439: 0
+          2440: 0
+          2441: 0
+          2442: 0
+          2443: 0
+          2444: 0
+          2445: 0
+          2446: 0
+          2447: 0
+          2448: 0
+          2449: 0
+          2450: 0
+          2451: 0
+          2452: 0
+          2453: 0
+          2454: 0
+          2455: 0
+          2456: 0
+          2457: 0
+          2458: 0
+          2459: 0
+          2460: 0
+          2461: 0
+          2462: 0
+          2463: 0
+          2464: 0
+          2465: 0
+          2466: 0
+          2467: 0
+          2468: 0
+          2469: 0
+          2470: 0
+          2471: 0
+          2472: 0
+          2473: 0
+          2474: 0
+          2475: 0
+          2476: 0
+          2477: 0
+          2478: 0
+          2479: 0
+          
+    trackConfiguration:
+      properties:
+        statusInfo:
+          type: string
+          enum:
+            - STOP
+            - CYCLIC
+            - ROAMING
+            - SERVICE
+        txPower:
+          type: integer
+          minimum: 1
+          maximum: 31
+      example:
+        trackMode: CYCLIC
+        
+    trackConfigurationPost:
+      properties:
+        statusInfo:
+          type: string
+          enum:
+            - STOP
+            - CYCLIC
+            - ROAMING
+            - SERVICE
+        txPower:
+          type: integer
+          minimum: 1
+          maximum: 31
+      example:
+        trackMode: CYCLIC
+        txPower: 20
+        
+    wirelessPortConfigurationGet:
+      properties:
+        portMode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - CYCLIC
+            - ROAMING
+        validationBackup:
+          type: string
+          enum:
+            - NO_DEVICE_CHECK
+            - TYPE_COMPATIBLE_DEVICE_V1.1
+            - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+            - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        vendorId:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        deviceId:
+          type: integer
+          minimum: 1
+          maximum: 16777215
+        portCycleTime:
+          type: object
+          required:
+            - value
+            - unit
+          properties:
+            value:
+              type: integer
+              minimum: 0      ## 0 means Freerunning
+              maximum: 315    ## Step size 5ms
+            unit:
+              type: string
+              enum: 
+                - ms
+        trackNumber:
+          type: integer
+          minimum: 1
+          maximum: 5
+        slotNumber:
+          type: integer
+          minimum: 0
+          maximum: 7
+        slotType:
+          type: string
+          enum:
+            - "SSLOT"
+            - "DSLOT"          
+        maxRetry:
+          type: integer
+          minimum: 2
+          maximum: 31
+        imaTime:
+          type: object
+          required:
+            - base
+            - multiplier
+          properties:
+            base:
+              type: string
+              enum:
+                - "1664us"
+                - "5ms"
+                - "1s"
+                - "1min"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 255
+        deviceTxPower:
+          type: integer
+          minimum: 0
+          maximum: 31              
+        lowPowerDevice:
+          type: string
+          enum:
+            - "NORMAL"
+            - "LOW_POWER"
+        maxPDSegLength:
+          type: integer
+          minimum: 0
+          maximum: 32
+        uniqueId:
+          type: string
+        deviceAlias:
+          type: string
+      example:
+        portMode: CYCLIC
+        validationBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+        vendorId: 888
+        deviceId: 1
+        portCycleTime:
+          value: 0
+          unit: ms
+        trackNumber: 5
+        slotNumber: 1
+        slotType: SSLOT        
+        maxRetry: 20
+        imaTime:
+          base: 1664us
+          multiplier: 60
+        deviceTxPower: 31          
+        lowPowerDevice: NORMAL
+        maxPDSegLength: 0
+        uniqueId: 03:78:00:00:01:32:50:60:46
+        deviceAlias: "Port_X01"
+        
+    wirelessPortConfigurationPost:
+      properties:
+        portMode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - CYCLIC
+            - ROAMING
+        validationBackup:
+          type: string
+          enum:
+            - NO_DEVICE_CHECK
+            - TYPE_COMPATIBLE_DEVICE_V1.1
+            - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+            - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        vendorId:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        deviceId:
+          type: integer
+          minimum: 1
+          maximum: 16777215
+        portCycleTime:
+          type: object
+          required:
+            - value
+            - unit
+          properties:
+            value:
+              type: integer
+              minimum: 0      ## 0 means Freerunning
+              maximum: 315    ## Step size 5ms
+            unit:
+              type: string
+              enum: 
+                - ms
+        trackNumber:
+          type: integer
+          minimum: 1
+          maximum: 5                
+        slotNumber:
+          type: integer
+          minimum: 0
+          maximum: 7
+        slotType:
+          type: string
+          enum:
+            - "SSLOT"
+            - "DSLOT"          
+        maxRetry:
+          type: integer
+          minimum: 2
+          maximum: 31
+        imaTime:
+          type: object
+          required:
+            - base
+            - multiplier
+          properties:
+            base:
+              type: string
+              enum:
+                - "1664us"
+                - "5ms"
+                - "1s"
+                - "1min"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 255              
+        deviceTxPower:
+          type: integer
+          minimum: 0
+          maximum: 31            
+        lowPowerDevice:
+          type: string
+          enum:
+            - "NORMAL"
+            - "LOW_POWER"
+        maxPDSegLength:
+          type: integer
+          minimum: 0
+          maximum: 32
+        uniqueId:
+          type: string
+      example:
+        portMode: CYCLIC
+        validationBackup: TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+        vendorId: 888
+        deviceId: 1
+        portCycleTime:
+          value: 0    ##Or FreeRunning
+          unit: ms
+        trackNumber: 5
+        slotNumber: 1
+        slotType: SSLOT        
+        maxRetry: 20
+        imaTime:
+          base: 1664us
+          multiplier: 60
+        deviceTxPower: 31          
+        lowPowerDevice: NORMAL
+        maxPDSegLength: 0
+        uniqueId: 03:78:00:00:01:32:50:60:46
+
+
+    portConfigurationPost:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - IOLINK_MANUAL
+            - IOLINK_AUTOSTART
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+        validationAndBackup:
+          description: >-
+            Mandatory if portMode is IOLINK_MANUAL. Must not be used with
+            portMode other than IOL_MANUAL.
+          type: string
+          enum:
+            - NO_DEVICE_CHECK
+            - TYPE_COMPATIBLE_DEVICE_V1.0
+            - TYPE_COMPATIBLE_DEVICE_V1.1
+            - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+            - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+        cycleTime:
+          description: >-
+            If no cycleTime configured with portMode IOLINK_MANUAL or
+            IOLINK_AUTOSTART, the possible fastest cycle time is used by the
+            IO-Link Master.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/cycleTime'
+        vendorId:
+          description: >-
+            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
+            not NO_DEVICE_CHECK.
+          type: integer
+          minimum: 1
+          maximum: 65535
+        deviceId:
+          description: >-
+            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
+            not NO_DEVICE_CHECK.
+          type: integer
+          minimum: 1
+          maximum: 16777215
+        iqConfiguration:
+          type: string
+          enum:
+            - NOT_SUPPORTED
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+            - ANALOG_INPUT
+            - ANALOG_OUTPUT
+            - POWER_2
+        deviceAlias:
+          type: string
+    dataStorageGetPost:
+      description: >-
+        In case the Data Storage is empty, the header object is empty and the
+        content is an empty string.
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          oneOf:
+            - type: object
+              required:
+                - vendorId
+                - deviceId
+                - ioLinkRevision
+              properties:
+                vendorId:
+                  type: integer
+                  minimum: 1
+                  maximum: 65535
+                deviceId:
+                  type: integer
+                  minimum: 1
+                  maximum: 16777215
+                ioLinkRevision:
+                  type: string
+                  enum:
+                    - '1.0'
+                    - '1.1'
+            - type: object
+        content:
+          description: Base64 coded DS data Ojects. Max size = 2KB*1.33.
+          type: string
+    processDataValue:
+      type: object
+      properties:
+        ioLink:
+          type: object
+          description: >
+            Process data in IO-Link mode
+          required:
+            - valid
+            - value
+          properties:
+            valid:
+              type: boolean
+              description: >
+                Process data validity
+            value:
+              oneOf:
+                - $ref: '#/components/schemas/deviceByteArrayTypeValue'
+                - $ref: '#/components/schemas/deviceSimpleTypeValue'
+                - $ref: '#/components/schemas/deviceComplexTypeValue'
+              description: >
+                Process data value
+        cqValue:
+          type: boolean
+          description: >
+            IO-Link cable CQ (pin4) level if it is used as digital input or
+            output (SIO mode). (false - 0 V, true - 24 V)
+        iqValue:
+          type: boolean
+          description: >
+            IO-Link cable IQ (pin2) level if it is used as digital input or output.
+            (false - 0 V, true - 24 V)
+      example:
+        'format=byteArray, pin4=IO-Link, pin2=sio':
+          ioLink:
+            valid: true
+            value:
+              - 15
+              - 123
+              - 126
+              - 236
+          iqValue: true
+        'format=iodd, pin4=IO-Link, pin2=deactivated/not available':
+          iolink:
+            valid: true
+            value:
+              Valve_1:
+                value: true
+              Valve_2:
+                value: false
+        'format=byteArray/iodd, pin4=sio, pin2=deactivated/not available':
+          cqValue: false
+    deviceProcessDataValueGet:
+      type: object
+      description: >
+        The cqValue is present in the 'getData' object if the CQ (pin4) is configured as
+        digital input. The cqValue is present in the 'setData' object if the CQ (pin4)
+        is configured as digital output. The ioLink is present either in the
+        'getData' or 'setData' or both objects if the CQ (pin4) is configured to IO-Link mode.
+        The iqValue is present in the 'getData' object if the IQ (pin2) is configured as
+        digital input. The iqValue is present in the 'setData' object if the IQ (pin4)
+        is configured as digital output.
+      properties:
+        getData:
+          $ref: '#/components/schemas/processDataValue'
+        setData:
+          $ref: '#/components/schemas/processDataValue'
+    deviceProcessDataValuePost:
+      $ref: '#/components/schemas/processDataValue'
+    deviceByteArrayTypeValue:
+      type: object
+      required:
+        - value
+      properties:
+        value:
+          type: array
+          description: The value in byteArray format.
+          items:
+            type: number
+            minimum: 0
+            maximum: 255
+    deviceSimpleTypeValue:
+      type: object
+      properties:
+        value:
+          oneOf:
+            - type: boolean
+            - type: string
+            - type: number
+          description: The value (with simple type) in iodd format.
+      required:
+        - value
+    deviceComplexTypeValue:
+      type: object
+      minProperties: 1
+      maxProperties: 255
+      description: The value (with complex type) in iodd format.
+      additionalProperties:
+        $ref: '#/components/schemas/deviceSimpleTypeValue'
+    deviceParametersGet:
+      type: array
+      items:
+        type: object
+        required:
+          - index
+          - parameterName
+        properties:
+          index:
+            type: number
+          parameterName:
+            type: string
+      example:
+        - index: 0
+          parameterName: Direct_Parameter_Page_1
+        - index: 1
+          parameterName: Direct_Parameter_Page_2
+        - index: 2
+          parameterName: System_Command
+    deviceSubParametersGet:
+      type: array
+      items:
+        type: object
+        required:
+          - subIndex
+          - subParameterName
+        properties:
+          subIndex:
+            type: number
+          subParameterName:
+            type: string
+      example:
+        - subIndex: 1
+          subParameterName: Master_command
+        - subIndex: 2
+          subParameterName: Master_cycle_time
+        - subIndex: 3
+          subParameterName: Minimum_cycle_time
+    deviceParameterValueGetPost:
+      oneOf:
+        - $ref: '#/components/schemas/deviceByteArrayTypeValue'
+        - $ref: '#/components/schemas/deviceSimpleTypeValue'
+        - $ref: '#/components/schemas/deviceComplexTypeValue'
+    deviceParameterSubindexValueGetPost:
+      oneOf:
+        - $ref: '#/components/schemas/deviceByteArrayTypeValue'
+        - $ref: '#/components/schemas/deviceSimpleTypeValue'
+    deviceBlockParameterizationPost:
+      type: object
+      required:
+        - direction
+        - parameters
+      properties:
+        direction:
+          type: string
+          enum:
+            - WRITE
+            - READ
+        parameters:
+          $ref: '#/components/schemas/blockParameterizationPostParametersRequest'
+    ioddIdentification:
+      type: object
+      required:
+        - vendorId
+        - deviceId
+        - version
+        - releaseDate
+        - ioLinkRevision
+      properties:
+        vendorId:
+          type: number
+        deviceId:
+          type: number
+        version:
+          type: string
+        releaseDate:
+          type: string
+        ioLinkRevision:
+          type: string
+          enum:
+            - '1.0'
+            - '1.1'
+    ioddFile:
+      description: The IODD XML file.
+      type: string
+      format: binary
+    ioddsGet:
+      type: array
+      items:
+        $ref: '#/components/schemas/ioddIdentification'
+      example:
+        - vendorId: 1234
+          deviceId: 4567
+          version: '4.3'
+          releaseDate: '2018-01-02'
+          ioLinkRevision: '1.1'
+        - vendorId: 4321
+          deviceId: 8765
+          version: '2.1'
+          releaseDate: '2015-01-02'
+          ioLinkRevision: '1.1'
+    iolinkErrorObject:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    errorObject:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        iolinkError:
+          $ref: '#/components/schemas/iolinkErrorObject'
+          
+  #---------------------------------------------------------------------------        
+  parameters:
+    vendorId:
+      name: vendorId
+      in: query
+      description: IO-Link VendorID
+      required: false
+      schema:
+        type: integer
+    deviceId:
+      name: deviceId
+      in: query
+      description: IO-Link DeviceID
+      required: false
+      schema:
+        type: integer
+    revision:
+      name: revision
+      in: query
+      description: IO-Link Revision
+      required: false
+      schema:
+        type: string
+        enum:
+          - '1.0'
+          - '1.1'
+    mqttTopicId:
+      name: topicId
+      in: path
+      description: >-
+        ID of a configured MQTT topic. This the position of the topic in the
+        topics list.
+      required: true
+      schema:
+        type: integer
+    masterNumber:
+      name: masterNumber
+      in: path
+      description: Master identification number starting with 1
+      schema:
+        type: integer
+        minimum: 1
+      required: true
+    trackNumber:
+      name: trackNumber
+      in: path
+      description: trackNumber identification number starting with 1
+      schema:
+        type: integer
+        minimum: 1
+      required: true      
+    portNumber:
+      name: portNumber
+      in: path
+      description: Port identification number starting with 1
+      schema:
+        type: integer
+        minimum: 1
+      required: true
+    deviceAlias:
+      name: deviceAlias
+      in: path
+      description: >-
+        Device Name configured with the port/configuration URL. Default Device
+        Name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+        the portNumber.
+      schema:
+        type: string
+      required: true
+    eventOrigin:
+      name: origin
+      in: query
+      description: The event source to filter
+      schema:
+        $ref: '#/components/schemas/eventOrigin'
+    eventMasterNumber:
+      name: masterNumber
+      in: query
+      description: masterNumber is only applicable with origin=MASTERS and origin=PORTS
+      schema:
+        $ref: '#/components/schemas/eventMasterNumber'
+    eventPortNumber:
+      name: portNumber
+      in: query
+      description: portnumber is only applicable with origin=PORTS
+      schema:
+        $ref: '#/components/schemas/eventPortNumber'
+    eventdeviceAlias:
+      name: deviceAlias
+      in: query
+      description: deviceAlias is only applicable with origin=DEVICES
+      schema:
+        $ref: '#/components/schemas/eventdeviceAlias'
+    eventTop:
+      name: top
+      in: query
+      description: >-
+        Delivers the oldest n events of the event buffer. top is mutually
+        exclusive to bottom.
+      schema:
+        $ref: '#/components/schemas/eventTop'
+    eventBottom:
+      name: bottom
+      in: query
+      description: >-
+        Delivers the youngest n events of the event buffer. bottom is mutually
+        exclusive to top.
+      schema:
+        $ref: '#/components/schemas/eventBottom'
+    format:
+      name: format
+      in: query
+      description: Value format in response document
+      schema:
+        $ref: '#/components/schemas/format'
+    content:
+      name: content
+      in: query
+      description: Process data element(s) in respose document
+      schema:
+        $ref: '#/components/schemas/content'
+    index:
+      name: index
+      in: path
+      description: Index of ISDU variable
+      schema:
+        type: integer
+      required: true
+    subindex:
+      name: subindex
+      in: path
+      description: Subindex of ISDU variable with the given index
+      schema:
+        type: integer
+      required: true
+    parameterName:
+      name: parameterName
+      in: path
+      description: >-
+        Parameter name. Comes from the IODD but might be reformatted according
+        to the JSON mapping specification.
+      schema:
+        type: string
+      required: true
+    subParameterName:
+      name: subParameterName
+      in: path
+      description: >-
+        Sub-parameter name. Comes from the IODD but might be reformatted
+        according to the JSON mapping specification.
+      schema:
+        type: string
+      required: true
+  responses:
+    HTTP_400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorObject'
+          examples:
+                104:
+                    description: Fieldbus controller or another gateway protocol has claimed priority
+                    value:
+                      code: 104
+                      message: Action locked by another client
+                201:
+                    description: Error while parsing the incoming JSON object
+                    value:
+                      code: 201
+                      message: JSON parsing failed
+                202:
+                    description: Error while parsing a specific JSON value, e.g. a malformed IP address
+                    value:
+                      code: 202
+                      message: JSON data value invalid
+                203:
+                    description: e.g. string instead of number
+                    value:
+                      code: 203
+                      message: JSON data type invalid
+                204:
+                    value:
+                      code: 204
+                      message: Enumeration value unknown
+                205:
+                    description: Exceeds the minimum or maximum value
+                    value:
+                      code: 205
+                      message: JSON data value out of range
+                206:
+                    description: An array or string was accessed exceeding its maximum length
+                    value:
+                      code: 206
+                      message: JSON data value out of bounds
+                208:
+                    value:
+                      code: 208
+                      message: POST or PUT request without content
+                305:
+                    value:
+                      code: 305
+                      message: Query parameter name invalid
+                306:
+                    value:
+                      code: 306
+                      message: Query parameter value invalid
+                307:
+                    value:
+                      code: 307
+                      message: Port is not configured to IO-Link
+                311:
+                    value:
+                      code: 311
+                      message: IO-Link parameter access error
+                401:
+                    value:
+                      code: 401
+                      message: Data storage mismatch
+                501:
+                   value:
+                      code: 501
+                      message: I/Q is not configured as DIGITAL_OUTPUT
+                502:
+                    value:
+                      code: 502
+                      message: C/Q is not configured as DIGITAL_OUTPUT
+                503:
+                    value:
+                      code: 503
+                      message: IO-Link Device has no output process data             
+                601:
+                    value:
+                      code: 601
+                      message: IODD (representation) for this IO-Link device is not available                      
+                603:
+                    value:
+                      code: 603
+                      message: IODD upload failed. IODD XML invalid
+                604:
+                    value:
+                      code: 604
+                      message: IODD upload failed. CRC error
+                605:
+                    value:
+                      code: 605
+                      message: IODD upload failed. Parsing error
+                701:
+                   value:
+                      code: 701
+                      message: Data set incomplete 
+                702:
+                    description: whole data set is rejected
+                    value:
+                      code: 702
+                      message: Data set not applicable
+                703:
+                    description: whole data set is rejected
+                    value:
+                      code: 703
+                      message: Data set combination incompatible
+    HTTP_401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorObject'
+          examples:
+                150:
+                    description: due to user management restrictions
+                    value:
+                      code: 140
+                      message: Invalid credentials
+    HTTP_403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorObject'
+          examples:
+                150:
+                    description: due to user management restrictions
+                    value:
+                      code: 150
+                      message: Permission denied
+    HTTP_404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorObject'
+          examples:
+                103:
+                    value:
+                      code: 103
+                      message: Operation not supported
+                301:
+                    description: e.g. wrong URL              
+                    value:
+                      code: 301
+                      message: Resource not found
+                302:
+                    value:
+                      code: 302
+                      message: masterNumber not found
+                303:
+                    value:
+                      code: 303
+                      message: portNumber not found                      
+                304:
+                    value:
+                      code: 304
+                      message: deviceAlias not found
+                308:
+                    description: e.g. not connected or communication error
+                    value:
+                      code: 308
+                      message: IO-Link Device is not accessible
+                309:
+                    value:
+                      code: 309
+                      message: IO-Link Parameter not found
+                310:
+                    value:
+                      code: 310
+                      message: IO-Link parameter access not supported by the Device
+                312:
+                    value:
+                      code: 312
+                      message: IO-Link parameter name is not unique 
+    HTTP_500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorObject'
+          examples:
+                101:
+                    value:
+                      code: 101
+                      message: Internal server error
+                102:
+                    value:
+                      code: 102
+                      message: Internal communication error
+                602:
+                    value:
+                      code: 602
+                      message: IODD upload failed. Not enough memory                      
+    HTTP_501:
+      description: Not Implemented
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorObject'
+          examples:
+                105:
+                    value:
+                      code: 105
+                      message: IODD feature not supported
+                106:
+                    value:
+                      code: 106
+                      message: MQTT feature not supported
+    HTTP_503:
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorObject'
+          examples:
+                107:
+                    value:
+                      code: 107
+                      message: 'Service temporarily unavailable'
+                   
+                      
