@@ -520,11 +520,7 @@ paths:
         - $ref: '#/components/parameters/eventBottom'
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/gatewayEventsGet'              
+          description: Successful operation             
         '400':  # code 305, 306
            $ref: '#/components/responses/HTTP_400' 
         '403':
