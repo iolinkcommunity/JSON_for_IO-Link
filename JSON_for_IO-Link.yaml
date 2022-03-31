@@ -506,6 +506,26 @@ paths:
            $ref: '#/components/responses/HTTP_403'
         '500':
            $ref: '#/components/responses/HTTP_500'
+    delete:
+      tags:
+        - gateway
+      summary: Delete events of Gateway, Masters, Ports and Devices from EventLog according to filter query.
+      parameters:
+        - $ref: '#/components/parameters/eventOrigin'
+        - $ref: '#/components/parameters/eventMasterNumber'
+        - $ref: '#/components/parameters/eventPortNumber'
+        - $ref: '#/components/parameters/eventdeviceAlias'
+        - $ref: '#/components/parameters/eventTop'
+        - $ref: '#/components/parameters/eventBottom'
+      responses:
+        '200':
+          description: Successful operation             
+        '400':  # code 305, 306
+           $ref: '#/components/responses/HTTP_400' 
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
            
   '/mqtt/configuration':
     get:
@@ -5035,7 +5055,7 @@ components:
       name: top
       in: query
       description: >-
-        Delivers the oldest n events of the event buffer. top is mutually
+        Delivers or removes the oldest n events of the event buffer. top is mutually
         exclusive to bottom.
       schema:
         $ref: '#/components/schemas/eventTop'
@@ -5043,7 +5063,7 @@ components:
       name: bottom
       in: query
       description: >-
-        Delivers the youngest n events of the event buffer. bottom is mutually
+        Delivers or removes the youngest n events of the event buffer. bottom is mutually
         exclusive to top.
       schema:
         $ref: '#/components/schemas/eventBottom'
