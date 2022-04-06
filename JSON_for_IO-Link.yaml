@@ -5703,7 +5703,7 @@ components:
             - DIGITAL_INPUT
             - DIGITAL_OUTPUT
         validationAndBackup:
-          description: Used by the IO-Link Master just when portMode is IOLINK_MANUAL.
+          description: Used by the IO-Link Master just when the port's mode is IOLINK_MANUAL.
           type: string
           enum:
             - NO_DEVICE_CHECK
@@ -5713,7 +5713,7 @@ components:
             - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
         cycleTime:
           description: >-
-            Used by the IO-Link Master just when portMode is IOLINK_MANUAL or
+            Used by the IO-Link Master just when the port's mode is IOLINK_MANUAL or
             IOLINK_AUTOSTART. Default value is 0 ms which means as fast as
             possible.
           type: object
@@ -5721,14 +5721,14 @@ components:
             - $ref: '#/components/schemas/cycleTime'
         vendorId:
           description: >-
-            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
+            Used by the IO-Link Master just when the port's mode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
           maximum: 65535
         deviceId:
           description: >-
-            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
+            Used by the IO-Link Master just when the port's mode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
@@ -5764,8 +5764,8 @@ components:
             - DIGITAL_OUTPUT
         validationAndBackup:
           description: >-
-            Mandatory if portMode is IOLINK_MANUAL. Must not be used with
-            portMode other than IOL_MANUAL.
+            Mandatory if the port's mode is IOLINK_MANUAL. Must not be used with
+            mode other than IOL_MANUAL.
           type: string
           enum:
             - NO_DEVICE_CHECK
@@ -5775,7 +5775,7 @@ components:
             - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
         cycleTime:
           description: >-
-            If no cycleTime configured with portMode IOLINK_MANUAL or
+            If no cycleTime configured with mode IOLINK_MANUAL or
             IOLINK_AUTOSTART, the possible fastest cycle time is used by the
             IO-Link Master.
           type: object
@@ -5783,14 +5783,14 @@ components:
             - $ref: '#/components/schemas/cycleTime'
         vendorId:
           description: >-
-            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
+            Mandatory if the port's mode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
           maximum: 65535
         deviceId:
           description: >-
-            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
+            Mandatory if the port's mode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
