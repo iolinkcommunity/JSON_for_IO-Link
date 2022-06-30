@@ -170,7 +170,7 @@ tags:
   - name: ports
     description: Access to the IO-Link ports of the IO-Link master
   - name: devices
-    description: Access to the IO-Link Devices connected ot the Master
+    description: Access to the IO-Link Devices connected to the Master
 paths:
   '/gateway/identification':
     get:
@@ -1493,7 +1493,7 @@ paths:
         - iodds
       summary: Store or update an IODD.
       description: >
-        It is not needed to specifiy the identification data for this action as the
+        It is not needed to specify the identification data for this action as the
         parser can read this information.
       requestBody:
         required: true
@@ -2443,7 +2443,7 @@ paths:
     get:
       tags:
         - devices
-      summary: Read the capabililties from the specific Device.
+      summary: Read the capabilities from the specific Device.
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
       responses:
@@ -4436,7 +4436,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write a parameter value to the specific Device by the parameter name and subname.IODD support is required.
+        Write a parameter value to the specific Device by the parameter name and subname.
         IODD support is required.
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
