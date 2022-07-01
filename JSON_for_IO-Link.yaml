@@ -3414,6 +3414,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
+        - $ref: '#/components/parameters/format'        
       requestBody:
         required: true
         content:
