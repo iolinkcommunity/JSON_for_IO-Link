@@ -3413,8 +3413,7 @@ paths:
       summary: Write a parameter value with the given index to the specified Device.
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
-        - $ref: '#/components/parameters/index'
-        - $ref: '#/components/parameters/format'        
+        - $ref: '#/components/parameters/index'     
       requestBody:
         required: true
         content:
@@ -3422,7 +3421,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
-              format=byteArray:
+              'payload as byteArray':
                 value: {
                   "value": [
                     0,
@@ -3431,10 +3430,10 @@ paths:
                     25
                   ]
                 }
-              'format=iodd, simple type':
+              'payload as iodd, simple type':
                 value:
                   value: 15.2
-              'format=iodd, complex type':
+              'payload as iodd, complex type':
                 value:
                   Distance:
                     value: 15
