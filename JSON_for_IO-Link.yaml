@@ -859,7 +859,7 @@ paths:
         - iodds
       summary: Store or update an IODD.
       description: >
-        It is not needed to specifiy the identification data for this action as the
+        It is not needed to specify the identification data for this action as the
         parser can read this information.
       requestBody:
         required: true
@@ -1907,7 +1907,7 @@ paths:
     get:
       tags:
         - devices
-      summary: Read the capabililties from the specific Device.
+      summary: Read the capabilities from the specific Device.
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
       responses:
@@ -2251,7 +2251,7 @@ paths:
       summary: Write a parameter value with the given index to the specified Device.
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
-        - $ref: '#/components/parameters/index'
+        - $ref: '#/components/parameters/index'     
       requestBody:
         required: true
         content:
@@ -2259,7 +2259,7 @@ paths:
             schema:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
-              format=byteArray:
+              'payload as byteArray':
                 value: {
                   "value": [
                     0,
@@ -2268,10 +2268,10 @@ paths:
                     25
                   ]
                 }
-              'format=iodd, simple type':
+              'payload as iodd, simple type':
                 value:
                   value: 15.2
-              'format=iodd, complex type':
+              'payload as iodd, complex type':
                 value:
                   Distance:
                     value: 15
@@ -2574,7 +2574,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write a parameter value to the specific Device by the parameter name and subname.IODD support is required.
+        Write a parameter value to the specific Device by the parameter name and subname.
         IODD support is required.
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
@@ -4659,8 +4659,8 @@ components:
             - DIGITAL_OUTPUT
         validationAndBackup:
           description: >-
-            Mandatory if portMode is IOLINK_MANUAL. Must not be used with
-            portMode other than IOL_MANUAL.
+            Mandatory if the port's mode is IOLINK_MANUAL. Must not be used with
+            mode other than IOL_MANUAL.
           type: string
           enum:
             - NO_DEVICE_CHECK
@@ -4670,7 +4670,7 @@ components:
             - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
         cycleTime:
           description: >-
-            If no cycleTime configured with portMode IOLINK_MANUAL or
+            If no cycleTime configured with mode IOLINK_MANUAL or
             IOLINK_AUTOSTART, the possible fastest cycle time is used by the
             IO-Link Master.
           type: object
@@ -4678,14 +4678,14 @@ components:
             - $ref: '#/components/schemas/cycleTime'
         vendorId:
           description: >-
-            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
+            Mandatory if the port's mode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
           maximum: 65535
         deviceId:
           description: >-
-            Mandatory if portMode is IOLINK_MANUAL and validationAndBackup is
+            Mandatory if the port's mode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
