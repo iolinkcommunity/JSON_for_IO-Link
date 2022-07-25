@@ -244,7 +244,8 @@ paths:
     get:
       tags:
         - gateway
-      summary: Read the network configuration of the Gateway .
+      summary: Read the network configuration of the Gateway.
+      description: Read the actual active configuration of the IO-Link Gateway. The Gateway may support multiple IPv4 interfaces
       responses:
         '200':
           description: Successful operation
@@ -264,9 +265,6 @@ paths:
                   value:
                     ethIpv4:
                       - ipConfiguration: DHCP
-                        ipAddress: 192.168.100.5
-                        subnetMask: 255.255.255.0
-                        standardGateway: 192.168.100.1
                 Multiple ethernet interfaces:
                   value:
                     ethIpv4:
@@ -279,9 +277,6 @@ paths:
                         subnetMask: 255.255.255.0
                         standardGateway: 192.168.2.1
                       - ipConfiguration: DHCP
-                        ipAddress: 192.168.200.7
-                        subnetMask: 255.255.255.0
-                        standardGateway: 192.168.200.1
         '403':
           description: Forbidden
           content:
@@ -420,6 +415,7 @@ paths:
       tags:
         - gateway
       summary: Reset the Gateway including all Masters. Optional.
+      description: Invoke a reset of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog
       responses:
         '204':
           description: Successful operation
@@ -461,6 +457,7 @@ paths:
       tags:
         - gateway
       summary: Reboot the Gateway including all Masters. Optional.
+      description: Invoke a reboot of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog
       responses:
         '204':
           description: Successful operation
@@ -502,6 +499,9 @@ paths:
       tags:
         - gateway
       summary: Read the EventLog containing all events from Gateway, Masters, Ports and Devices.
+      description: >
+        Each Gateway shall have an Event Log object containing the events of the devices, ports and 
+        the masters. The content of the Event Log can be read by getting the object “Gateway Event Log”
       parameters:
         - $ref: '#/components/parameters/eventOrigin'
         - $ref: '#/components/parameters/eventMasterNumber'
@@ -4974,6 +4974,8 @@ components:
       enum:
         - MANUAL
         - DHCP
+        - AUTO_IP
+        - DCP
     processData:
       allOf:
         - type: object
