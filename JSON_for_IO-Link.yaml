@@ -11,7 +11,7 @@ info:
   version: 1.1.0
   title: Swagger IO-Link Master
   contact:
-    email: benjamin.vervoort@balluff.de
+    email: info@io-link.com
   license:
     name: tbd
     url: 'http://www.io-link.com'
@@ -1718,9 +1718,7 @@ paths:
           content:
             application/json:
               schema:
-               oneOf:
-                - $ref: '#/components/schemas/wirelessPortConfigurationGet'               
-                - $ref: '#/components/schemas/portConfigurationGet'
+                $ref: '#/components/schemas/portConfigurationGet'
               example:
                 mode: IOLINK_MANUAL
                 validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
@@ -1748,10 +1746,8 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-               oneOf:
-                - $ref: '#/components/schemas/wirelessPortConfigurationPost'               
-                - $ref: '#/components/schemas/portConfigurationPost'
+            schema:              
+              $ref: '#/components/schemas/portConfigurationPost'
             examples:
               Complete configuration:
                 value:
@@ -3593,9 +3589,8 @@ components:
             - IOLINK_AUTOSTART
             - DIGITAL_INPUT
             - DIGITAL_OUTPUT
-
         validationAndBackup:
-          description: Used by the IO-Link Master just when portMode is IOLINK_MANUAL.
+          description: required if portMode is IOLINK_MANUAL.
           type: string
           enum:
             - NO_DEVICE_CHECK
@@ -3605,22 +3600,24 @@ components:
             - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
         cycleTime:
           description: >-
-            Used by the IO-Link Master just when portMode is IOLINK_MANUAL or
+            required if portMode is IOLINK_MANUAL or
             IOLINK_AUTOSTART. Default value is 0 ms which means as fast as
-            possible.
+            possible. Note: If the applied value for cycle time cannot exactly be mapped,
+            the port shall use the next possible higher value. If the cycle time is greater 
+            than 132.8 ms the error 702 shall be returned.
           type: object
           allOf:
             - $ref: '#/components/schemas/cycleTime'
         vendorId:
           description: >-
-            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
+            required if portMode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
           maximum: 65535
         deviceId:
           description: >-
-            Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
+            required if portMode is IOLINK_MANUAL and
             validationAndBackup is not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
@@ -4645,8 +4642,9 @@ components:
         maxPDSegLength: 0
         uniqueId: 03:78:00:00:01:32:50:60:46
 
-
     portConfigurationPost:
+      description: "Note:  At least one of the mode, iqConfiguration,
+       deviceAlias properties shall be included to the POST request"
       type: object
       properties:
         mode:
@@ -4659,8 +4657,7 @@ components:
             - DIGITAL_OUTPUT
         validationAndBackup:
           description: >-
-            Mandatory if the port's mode is IOLINK_MANUAL. Must not be used with
-            mode other than IOL_MANUAL.
+            required if the port's mode is IOLINK_MANUAL.
           type: string
           enum:
             - NO_DEVICE_CHECK
@@ -4672,20 +4669,23 @@ components:
           description: >-
             If no cycleTime configured with mode IOLINK_MANUAL or
             IOLINK_AUTOSTART, the possible fastest cycle time is used by the
-            IO-Link Master.
+            IO-Link Master. If the applied value for cycle time cannot exactly be
+            mapped, the port shall use the next possible higher value.
+            If the cycle time is greater than 132.8 ms the error 702 shall 
+            be returned.
           type: object
           allOf:
             - $ref: '#/components/schemas/cycleTime'
         vendorId:
           description: >-
-            Mandatory if the port's mode is IOLINK_MANUAL and validationAndBackup is
+            required if the port's mode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
           maximum: 65535
         deviceId:
           description: >-
-            Mandatory if the port's mode is IOLINK_MANUAL and validationAndBackup is
+            required if the port's mode is IOLINK_MANUAL and validationAndBackup is
             not NO_DEVICE_CHECK.
           type: integer
           minimum: 1
@@ -4701,6 +4701,7 @@ components:
             - POWER_2
         deviceAlias:
           type: string
+
     dataStorageGetPost:
       description: >-
         In case the Data Storage is empty, the header object is empty and the
