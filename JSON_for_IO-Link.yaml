@@ -642,6 +642,25 @@ paths:
                     direction: getSetData
                     format: iodd
                     onChange: true
+                - topicId: 4
+                  topicName: DT35_CycleTime
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: DT35
+                  parameter:
+                    parametereName: Direct_Parameters_1
+                    subParameterName: Min_Cycle_Time
+                    format: iodd
+                    onChange: true
+                - topicId: 5
+                  topicName: deviceTemperature
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: master1port2
+                  parameter:
+                    index: 153
+                    format: byteArray
+                    interval:
+                      value: 10
+                      unit: ms
         '403':
            $ref: '#/components/responses/HTTP_403'
         '404':
@@ -676,6 +695,27 @@ paths:
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
                   event: {}
+              Parameter (Index):
+                value:
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: master1port1
+                  parameter:
+                    index: 86
+                    format: byteArray
+                    interval:
+                      value: 10
+                      unit: ms
+              Parameter (ParameterName):
+                value:
+                  topicName: deviceTemperature
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: AHM36A
+                  parameter:
+                    parameterName: Temperature1
+                    format: IODD
+                    interval:
+                      value: 1000
+                      unit: ms
       responses:
         '200':
           description: Successful operation returning the topic ID
@@ -727,6 +767,27 @@ paths:
                     qos: 1_AT_LEAST_ONCE
                     deviceAlias: TAD081
                     event: {}
+                Parameter (Index):
+                  value:
+                    qos: 0_ONLY_ONCE
+                    deviceAlias: master1port1
+                    parameter:
+                      index: 86
+                      format: byteArray
+                      interval:
+                        value: 10
+                        unit: ms
+                Parameter (ParameterName):
+                  value:
+                    topicName: deviceTemperature
+                    qos: 0_ONLY_ONCE
+                    deviceAlias: AHM36A
+                    parameter:
+                      parameterName: Temperature1
+                      format: IODD
+                      interval:
+                        value: 1000
+                        unit: ms
         '403':
            $ref: '#/components/responses/HTTP_403'
         '404':
@@ -2817,10 +2878,13 @@ components:
       properties:
         value:
           type: number
+          example:
+            10
         unit:
           type: string
           enum:
             - ms
+          default: ms
     event:
       type: object
     ipConfiguration:
@@ -2865,6 +2929,55 @@ components:
         - setData
         - getSetData
       default: getData
+    mqttParameter:
+      type: object
+      required:
+        - parameter
+        - format
+      properties:
+        parameter:
+          $ref: '#/components/schemas/parameter'
+        format:
+          $ref: '#/components/schemas/format'
+      oneOf:
+        - type: object
+          required:
+            - interval
+          properties:
+            interval:
+              $ref: '#/components/schemas/cycleTime'
+        - type: object
+          required:
+            - onChange
+          properties:
+            onChange:
+              type: boolean
+    parameter:
+      oneOf:
+        - type: object
+          required:
+            - parameterName
+          properties:
+            parameterName:
+              type: string
+              example:
+                Direct_Parameters_1
+            subParameterName:
+              type: string
+              example:
+                Min_Cycle_Time
+        - type: object
+          required:
+            - index
+          properties:
+            index:
+              type: integer
+              example:
+                233
+            subindex:
+              type: integer
+              example:
+                2
     eventOrigin:
       type: string
       enum:
@@ -3327,11 +3440,14 @@ components:
               required:
                 - event
                 - processData
+                - parameter
               properties:
                 event:
                   $ref: '#/components/schemas/event'
                 processData:
                   $ref: '#/components/schemas/processData'
+                parameter:
+                  $ref: '#/components/schemas/mqttParameter'
     mqttConfigurationTopicPost:
       allOf:
         - type: object
