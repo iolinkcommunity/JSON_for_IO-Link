@@ -2165,22 +2165,22 @@ paths:
                     setData:
                       iqValue: true
                 'Format=iodd, CQ in IO-Link (input and output), IQ in digital input':
-                  value:
-                    getData:
-                      ioLink:
-                        valid: true
-                        value:
-                          Distance:
-                            value: 55
-                          Quality:
-                            value: 12
-                      iqValue: true
-                    setData:
-                      ioLink:
-                        valid: true
-                        value:
-                          Buzzer:
-                            value: 5
+                 value:
+                   getData:
+                     ioLink:
+                       valid: true
+                       value:
+                         Distance:
+                           value: 55
+                         Quality:
+                           value: 12
+                     iqValue: true
+                   setData:
+                     ioLink:
+                       valid: true
+                       value:
+                         Buzzer:
+                           value: 5
         '400':  # code 305, 306, 601
            $ref: '#/components/responses/HTTP_400'       
         '403':
@@ -2379,14 +2379,11 @@ paths:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
                 format=byteArray:
-                  value: {
-                      "value": [
-                        0,
-                        156,
-                        125,
-                        25
-                      ]
-                    }
+                  value:  
+                    - 0
+                    - 156
+                    - 125
+                    - 25
                 'format=iodd, simple type':
                   value:
                     value: 15.2
@@ -2424,14 +2421,12 @@ paths:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
               'payload as byteArray':
-                value: {
-                  "value": [
-                    0,
-                    156,
-                    125,
-                    25
-                  ]
-                }
+                value: 
+                  value: 
+                   - 0
+                   - 156
+                   - 125
+                   - 25
               'payload as iodd, simple type':
                 value:
                   value: 15.2
@@ -2637,18 +2632,15 @@ paths:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
               examples:
                 format=byteArray:
-                  value: {
-                    "value": [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
-                  }
+                  value: 
+                    - 0
+                    - 156
+                    - 125
+                    - 25
                 format=iodd:
                   value:
-                    value: 15.2
-
+                    Distance:
+                      value: 15.2
         '400':  # code 305, 306, 307, 311, 601
            $ref: '#/components/responses/HTTP_400'            
         '403':
@@ -2836,16 +2828,18 @@ paths:
                     - identifier:
                         index: 123
                       content:
-                        - 15
-                        - 232
-                        - 22
+                        value:
+                          - 15
+                          - 232
+                          - 22
                     - identifier:
                         index: 233
                         subIndex: 2
                       content:
-                        - 23
-                        - 149
-                        - 206
+                        value:
+                          - 23
+                          - 149
+                          - 206
               'write, format=iodd':
                 value:
                   direction: WRITE
@@ -4929,22 +4923,25 @@ components:
       type: object
       properties:
         ioLink:
-          type: object
-          description: >
-            Process data in IO-Link mode
-          required:
-            - valid
-            - value
-          properties:
-            valid:
-              type: boolean
-              description: >
-                Process data validity
-            value:
-              oneOf:
-                - $ref: '#/components/schemas/deviceByteArrayTypeValue'
-                - $ref: '#/components/schemas/deviceSimpleTypeValue'
-                - $ref: '#/components/schemas/deviceComplexTypeValue'
+          description:  Process data in IO-Link mode
+          allOf:
+            - type: object
+              required:
+                - valid
+              properties:
+                valid:
+                  type: boolean
+                  description: >
+                    Process data validity
+            - type: object
+              required:
+                - value
+              properties:
+                value:
+                  oneOf:
+                    - $ref: '#/components/schemas/deviceByteArrayTypeValue'
+                    - $ref: '#/components/schemas/deviceSimpleTypeValue'
+                    - $ref: '#/components/schemas/deviceComplexTypeValue'
               description: >
                 Process data value
         cqValue:
@@ -4995,11 +4992,6 @@ components:
     deviceProcessDataValuePost:
       $ref: '#/components/schemas/processDataValue'
     deviceByteArrayTypeValue:
-      type: object
-      required:
-        - value
-      properties:
-        value:
           type: array
           description: The value in byteArray format.
           items:
@@ -5007,23 +4999,20 @@ components:
             minimum: 0
             maximum: 255
     deviceSimpleTypeValue:
-      type: object
-      properties:
-        value:
-          oneOf:
-            - type: boolean
-            - type: string
-            - type: number
-          description: The value (with simple type) in iodd format.
-      required:
-        - value
+      oneOf:
+      - type: boolean
+        description: The value (with simple type) in iodd format.
+      - type: string
+        description: The value (with simple type) in iodd format.
+      - type: number
+        description: The value (with simple type) in iodd format.
     deviceComplexTypeValue:
       type: object
       minProperties: 1
       maxProperties: 255
       description: The value (with complex type) in iodd format.
-      additionalProperties:
-        $ref: '#/components/schemas/deviceSimpleTypeValue'
+      #additionalProperties: # @todo schema "processDataValue" is not correct, additionalProperties deactivated to suppress warnings
+      #  $ref: '#/components/schemas/deviceSimpleTypeValue'
     deviceParametersGet:
       type: array
       items:
@@ -5077,6 +5066,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/deviceByteArrayTypeValue'
         - $ref: '#/components/schemas/deviceSimpleTypeValue'
+        - $ref: '#/components/schemas/deviceComplexTypeValue'
     deviceBlockParameterizationPost:
       type: object
       required:
