@@ -5912,28 +5912,18 @@ components:
     deviceProcessDataValuePost:
       $ref: '#/components/schemas/processDataValue'
     deviceByteArrayTypeValue:
-      type: object
-      required:
-        - value
-      properties:
-        value:
-          type: array
-          description: The value in byteArray format.
-          items:
-            type: number
-            minimum: 0
-            maximum: 255
+      type: array
+      description: The value in byteArray format.
+      items:
+        type: integer
+        minimum: 0
+        maximum: 255
     deviceSimpleTypeValue:
-      type: object
-      properties:
-        value:
-          oneOf:
-            - type: boolean
-            - type: string
-            - type: number
-          description: The value (with simple type) in iodd format.
-      required:
-        - value
+      oneOf:
+        - type: boolean
+        - type: string
+        - type: number
+      description: The value (with simple type) in iodd format.
     deviceComplexTypeValue:
       type: object
       minProperties: 1
@@ -5980,14 +5970,24 @@ components:
         - subIndex: 3
           subParameterName: Minimum_cycle_time
     deviceParameterValueGetPost:
-      oneOf:
-        - $ref: '#/components/schemas/deviceByteArrayTypeValue'
-        - $ref: '#/components/schemas/deviceSimpleTypeValue'
-        - $ref: '#/components/schemas/deviceComplexTypeValue'
+      type: object
+      properties:
+        value: 
+          oneOf:
+            - $ref: '#/components/schemas/deviceByteArrayTypeValue'
+            - $ref: '#/components/schemas/deviceSimpleTypeValue'
+            - $ref: '#/components/schemas/deviceComplexTypeValue'
+      required:
+        - value
     deviceParameterSubindexValueGetPost:
-      oneOf:
-        - $ref: '#/components/schemas/deviceByteArrayTypeValue'
-        - $ref: '#/components/schemas/deviceSimpleTypeValue'
+      type: object
+      properties:
+        value: 
+          oneOf:
+            - $ref: '#/components/schemas/deviceByteArrayTypeValue'
+            - $ref: '#/components/schemas/deviceSimpleTypeValue'
+      required:
+        - value
     deviceBlockParameterizationPost:
       type: object
       required:
