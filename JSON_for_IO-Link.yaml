@@ -6208,20 +6208,3 @@ components:
       schema:
         type: string
       required: true
-  responses:
-    errorResponse:
-      description: Error
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: integer
-              message:
-                type: string
-              iolError:
-                type: integer
