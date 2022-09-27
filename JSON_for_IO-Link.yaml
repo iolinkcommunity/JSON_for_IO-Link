@@ -1826,6 +1826,7 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 1
                 items:
                   type: object
                   required:
@@ -1840,6 +1841,8 @@ paths:
                       type: string
                     deviceAlias:
                       type: string
+                      minLength: 1
+                      maxLength: 32
                 example:
                   - portNumber: 1
                     statusInfo: "DEVICE_ONLINE"
@@ -2394,6 +2397,8 @@ paths:
                   properties:
                     deviceAlias:
                       type: string
+                      minLength: 1
+                      maxLength: 32
                     masterNumber:
                       type: integer
                       minimum: 1
@@ -4963,6 +4968,7 @@ components:
       properties:
         value:
           type: number
+          minimum: 0
         unit:
           type: string
           enum:
@@ -5023,17 +5029,21 @@ components:
         - DEVICES
       default: ALL
     eventMasterNumber:
-      type: number
+      type: integer
       minimum: 1
     eventPortNumber:
       type: integer
       minimum: 1
     eventdeviceAlias:
       type: string
+      minLength: 1
+      maxLength: 32
     eventTop:
-      type: number
+      type: integer
+      minimum: 1
     eventBottom:
-      type: number
+      type: integer
+      minimum: 1
     identificationMasters:
       type: array
       items:
@@ -5042,12 +5052,16 @@ components:
           - masterNumber
         properties:
           masterNumber:
-            type: number
+            type: integer
             minimum: 1
           serialNumber:
             type: string
+            minLength: 1
+            maxLength: 16
           locationTag:
             type: string
+            minLength: 1
+            maxLength: 32
       example:
         - masterNumber: 1
           serialNumber: A12345678B
@@ -5065,6 +5079,8 @@ components:
       properties:
         vendorName:
           type: string
+          minLength: 1
+          maxLength: 64
         vendorId:
           type: integer
           minimum: 1
@@ -5083,26 +5099,46 @@ components:
             - Wireless_Master
         serialNumber:
           type: string
+          minLength: 1
+          maxLength: 16
         orderCode:
           type: string
+          minLength: 1
+          maxLength: 64
         productName:
           type: string
+          minLength: 1
+          maxLength: 64
         productId:
           type: string
+          minLength: 1
+          maxLength: 64
         hardwareRevision:
           type: string
+          minLength: 1
+          maxLength: 64
         firmwareRevision:
           type: string
+          minLength: 1
+          maxLength: 64
         vendorUrl:
           type: string
+          format: uri
         manualUrl:
           type: string
+          format: uri
         applicationSpecificTag:
           type: string
+          minLength: 1
+          maxLength: 32
         locationTag:
           type: string
+          minLength: 1
+          maxLength: 32
         functionTag:
           type: string
+          minLength: 1
+          maxLength: 32
       example:
         vendorName: Vendor GmbH
         vendorId: 26
@@ -5124,10 +5160,16 @@ components:
       properties:
         applicationSpecificTag:
           type: string
+          minLength: 1
+          maxLength: 32
         locationTag:
           type: string
+          minLength: 1
+          maxLength: 32
         functionTag:
           type: string
+          minLength: 1
+          maxLength: 32
     gatewayCapabilitiesGet:
       required:
         - ioddSupported
@@ -5158,8 +5200,10 @@ components:
           properties:
             value:
               type: number
+              minimum: 0
             unit:
               type: string
+              minLength: 1
       example:
         numberOfPorts: 8
         maxPowerSupply:
@@ -5208,6 +5252,8 @@ components:
             This property is mandatory for IO-Link Device Events. Should not be
             used for other log entries.
           type: string
+          minLength: 1
+          maxLength: 32
     eventObject:
       type: object
       properties:
@@ -5215,7 +5261,9 @@ components:
           description: >-
             IO-Link Port EventCode or IO-Link Device EventCode. This property is
             mandatory for IO-Link Port Events or IO-Link Device Events.
-          type: number
+          type: integer
+          minimum: 0
+          maximum: 65535
         mode:
           description: >-
             IO-Link Port Event Mode or IO-Link Device EventMode. This property
@@ -5227,6 +5275,7 @@ components:
             - DISAPPEARS
         text:
           type: string
+          minLength: 1
     gatewayEventsGet:
       type: array
       items:
@@ -5247,6 +5296,7 @@ components:
             $ref: '#/components/schemas/eventObject'
     blockParameterizationPostParametersRequest:
       type: array
+      minItems: 1
       items:
         type: object
         required:
@@ -5259,17 +5309,25 @@ components:
                   - index
                 properties:
                   index:
-                    type: number
+                    type: integer
+                    minimum: 0
+                    maximum: 65535
                   subIndex:
-                    type: number
+                    type: integer
+                    minimum: 0
+                    maximum: 255
               - type: object
                 required:
                   - parameterName
                 properties:
                   parameterName:
                     type: string
+                    minLength: 1
+                    maxLength: 71
                   subParameterName:
                     type: string
+                    minLength: 1
+                    maxLength: 71
           content:
             $ref: '#/components/schemas/deviceParameterValueGetPost'
     deviceBlockParameterizationPostParametersAnswer:
@@ -5287,17 +5345,25 @@ components:
                   - index
                 properties:
                   index:
-                    type: number
+                    type: integer
+                    minimum: 0
+                    maximum: 65535
                   subIndex:
-                    type: number
+                    type: integer
+                    minimum: 0
+                    maximum: 255
               - type: object
                 required:
                   - parameterName
                 properties:
                   parameterName:
                     type: string
+                    minLength: 1
+                    maxLength: 71
                   subParameterName:
                     type: string
+                    minLength: 1
+                    maxLength: 71
           result:
             type: object
             required:
@@ -5359,20 +5425,28 @@ components:
       properties:
         macAddress:
           type: string
+          pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
         serialNumber:
           type: string
+          maxLength: 16
         productId:
           type: string
+          maxLength: 64
         vendorName:
           type: string
+          maxLength: 64
         productName:
           type: string
+          maxLength: 64
         hardwareRevision:
           type: string
+          maxLength: 64
         firmwareRevision:
           type: string
+          maxLength: 64
         productInstanceUri:
           type: string
+          format: uri
       example:
         macAddress: '00:02:72:CE:A6:49'
         serialNumber: 'C134A746'
@@ -5389,6 +5463,7 @@ components:
       properties:
         ethIpv4:
           type: array
+          minItems: 1
           items:
             type: object
             required:
@@ -5398,10 +5473,12 @@ components:
                 $ref: '#/components/schemas/ipConfiguration'
               ipAddress:
                 type: string
+                format: ipv4
               subnetMask:
                 type: string
               standardGateway:
                 type: string
+                format: ipv4
       example:
         ethIpv4:
           - ipConfiguration: MANUAL
@@ -5587,6 +5664,7 @@ components:
           type: array
           items:
             type: integer
+            minimum: 1
     deviceIdentificationGet:
       required:
         - vendorId
@@ -5610,27 +5688,49 @@ components:
         vendorName:
           description: Mandatory if the Device suports the ISDU.
           type: string
+          minLength: 1
+          maxLength: 64
         vendorText:
           type: string
+          minLength: 1
+          maxLength: 64
         productName:
           description: Mandatory if the Device suports the ISDU.
           type: string
+          minLength: 1
+          maxLength: 64
         productId:
           type: string
+          minLength: 1
+          maxLength: 64
         productText:
           type: string
+          minLength: 1
+          maxLength: 64
         serialNumber:
           type: string
+          minLength: 1
+          maxLength: 16
         hardwareRevision:
           type: string
+          minLength: 1
+          maxLength: 64
         firmwareRevision:
           type: string
+          minLength: 1
+          maxLength: 64
         applicationSpecificTag:
           type: string
+          minLength: 1
+          maxLength: 32
         locationTag:
           type: string
+          minLength: 1
+          maxLength: 32
         functionTag:
           type: string
+          minLength: 1
+          maxLength: 32
       example:
         vendorId: 26
         deviceId: 42
@@ -5651,12 +5751,18 @@ components:
       properties:
         applicationSpecificTag:
           type: string
+          minLength: 1
+          maxLength: 32
           example: Fallback light switch at the end of the belt
         locationTag:
           type: string
+          minLength: 1
+          maxLength: 32
           example: Down under
         functionTag:
           type: string
+          minLength: 1
+          maxLength: 32
           example: Check start of belt
     portCapabilitiesGet:
       type: object
@@ -5672,8 +5778,10 @@ components:
           properties:
             value:
               type: number
+              minimum: 0
             unit:
               type: string
+              minLength: 1
         portType:
           type: string
           enum:
@@ -5743,6 +5851,8 @@ components:
             - DIGITAL_OUTPUT
         deviceAlias:
           type: string
+          minLength: 1
+          maxLength: 32
       example:
         mode: IOLINK_MANUAL
         validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
@@ -5808,6 +5918,8 @@ components:
             - POWER_2
         deviceAlias:
           type: string
+          minLength: 1
+          maxLength: 32
     dataStorageGetPost:
       description: >-
         In case the Data Storage is empty, the header object is empty and the
@@ -5842,6 +5954,7 @@ components:
         content:
           description: Base64 coded DS data Ojects. Max size = 2KB*1.33.
           type: string
+          format: byte
     processDataValue:
       type: object
       properties:
@@ -5920,7 +6033,7 @@ components:
           type: array
           description: The value in byteArray format.
           items:
-            type: number
+            type: integer
             minimum: 0
             maximum: 255
     deviceSimpleTypeValue:
@@ -5950,9 +6063,13 @@ components:
           - parameterName
         properties:
           index:
-            type: number
+            type: integer
+            minimum: 0
+            maximum: 65535
           parameterName:
             type: string
+            minLength: 1
+            maxLength: 71
       example:
         - index: 0
           parameterName: Direct_Parameter_Page_1
@@ -5969,9 +6086,13 @@ components:
           - subParameterName
         properties:
           subIndex:
-            type: number
+            type: integer
+            minimum: 1
+            maximum: 255
           subParameterName:
             type: string
+            minLength: 1
+            maxLength: 71
       example:
         - subIndex: 1
           subParameterName: Master_command
@@ -6050,8 +6171,11 @@ components:
       properties:
         code:
           type: integer
+          minimum: 0
+          maximum: 65535
         message:
           type: string
+          minLength: 1
     errorObject:
       type: object
       required:
@@ -6060,8 +6184,10 @@ components:
       properties:
         code:
           type: integer
+          minimum: 0
         message:
           type: string
+          minLength: 1
         iolinkError:
           $ref: '#/components/schemas/iolinkErrorObject'
   parameters:
@@ -6072,6 +6198,8 @@ components:
       required: false
       schema:
         type: integer
+        minimum: 0
+        maximum: 65535
     deviceId:
       name: deviceId
       in: query
@@ -6079,6 +6207,8 @@ components:
       required: false
       schema:
         type: integer
+        minimum: 1
+        maximum: 16777215
     revision:
       name: revision
       in: query
@@ -6123,6 +6253,8 @@ components:
         the portNumber.
       schema:
         type: string
+        minLength: 1
+        maxLength: 32
       required: true
     eventOrigin:
       name: origin
@@ -6182,6 +6314,8 @@ components:
       description: Index of ISDU variable
       schema:
         type: integer
+        minimum: 0
+        maximum: 65535
       required: true
     subindex:
       name: subindex
@@ -6189,6 +6323,8 @@ components:
       description: Subindex of ISDU variable with the given index
       schema:
         type: integer
+        minimum: 0
+        maximum: 255
       required: true
     parameterName:
       name: parameterName
@@ -6198,6 +6334,8 @@ components:
         to the JSON mapping specification.
       schema:
         type: string
+        minLength: 1
+        maxLength: 71
       required: true
     subParameterName:
       name: subParameterName
@@ -6207,6 +6345,8 @@ components:
         according to the JSON mapping specification.
       schema:
         type: string
+        minLength: 1
+        maxLength: 71
       required: true
   responses:
     errorResponse:
