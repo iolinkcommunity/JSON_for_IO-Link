@@ -1837,7 +1837,7 @@ paths:
                       type: integer
                       minimum: 1
                     statusInfo:
-                      type: string
+                      $ref: '#/components/schemas/portStatusInfo'
                     deviceAlias:
                       type: string
                 example:
@@ -5528,22 +5528,24 @@ components:
         connectionStatus: CONNECTION_ACCEPTED
         serverAddress: 'http://broker-address.com'
         upTime: 1050
+    portStatusInfo:
+      type: string
+      enum:
+        - COMMUNICATION_LOST
+        - DEACTIVATED
+        - INCORRECT_DEVICE
+        - DEVICE_STARTING
+        - DEVICE_ONLINE
+        - DIGITAL_INPUT_C/Q
+        - DIGITAL_OUTPUT_C/Q
+        - NOT_AVAILABLE
     portStatusGet:
       type: object
       required:
         - statusInfo
       properties:
         statusInfo:
-          type: string
-          enum:
-            - COMMUNICATION_LOST
-            - DEACTIVATED
-            - INCORRECT_DEVICE
-            - DEVICE_STARTING
-            - DEVICE_ONLINE
-            - DIGITAL_INPUT_C/Q
-            - DIGITAL_OUTPUT_C/Q
-            - NOT_AVAILABLE
+          $ref: '#/components/schemas/portStatusInfo'
         ioLinkRevision:
           description: >-
             Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
