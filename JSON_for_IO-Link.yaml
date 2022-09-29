@@ -5689,13 +5689,6 @@ components:
           value: 0.3
           unit: A
         portType: CLASS_A
-    iqConfigurationType:
-      type: string
-      enum:
-        - NOT_SUPPORTED
-        - DIGITAL_INPUT
-        - DIGITAL_OUTPUT
-        - POWER_2
     portConfigurationGet:
       type: object
       required:
@@ -5743,13 +5736,17 @@ components:
           minimum: 1
           maximum: 16777215
         iqConfiguration:
-          $ref : '#/components/schemas/iqConfigurationType'
+          type: string
+          enum:
+            - NOT_SUPPORTED
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
         deviceAlias:
           type: string
       example:
         mode: IOLINK_MANUAL
         validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-        iqConfiguration: DIGITAL_INPUT
+        iqConfiguration: ANALOG_INPUT
         cycleTime:
           value: 2.3
           unit: ms
@@ -5801,7 +5798,14 @@ components:
           minimum: 1
           maximum: 16777215
         iqConfiguration:
-          $ref : '#/components/schemas/iqConfigurationType'
+          type: string
+          enum:
+            - NOT_SUPPORTED
+            - DIGITAL_INPUT
+            - DIGITAL_OUTPUT
+            - ANALOG_INPUT
+            - ANALOG_OUTPUT
+            - POWER_2
         deviceAlias:
           type: string
     dataStorageGetPost:
