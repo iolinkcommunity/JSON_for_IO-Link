@@ -154,10 +154,18 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: 'http://iolmaster.io-link.com/{basePath}'
+  - url: '{scheme}://{host}/{basePath}'
     variables:
       basePath:
         default: iolink/v1
+      host:
+        default: 'iolmaster.io-link.com'
+      scheme:
+        description: 'The IO-Link gateway can expose the API over https and/or http'
+        enum:
+          - 'https'
+          - 'http'
+        default: 'http'
 tags:
   - name: gateway
     description: Access to parameters of the JSON gateway
