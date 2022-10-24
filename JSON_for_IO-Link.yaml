@@ -1085,7 +1085,7 @@ paths:
             examples:
               All optional fiels:
                 value:
-                  applicationSpecificTag: Fallback reader at the end of the belt
+                  applicationSpecificTag: Fallback reader at the end
                   locationTag: Down under
                   functionTag: Code reading
       responses:
@@ -1332,20 +1332,19 @@ paths:
                       type: string
                       minLength: 1
                       maxLength: 32
-                example:
-                  scanResult:
-                    - slotType: SSLOT
-                      revisionId: 1.1
-                      uniqueId: 03:78:00:00:01:32:50:60:46
-                      lastSeen: "2019-02-19T08:02:51.786Z"
-                    - slotType: DSLOT
-                      revisionId: 1.1
-                      uniqueId: 03:78:00:00:01:32:50:60:47
-                      lastSeen: "2019-02-19T08:02:51.786Z"
-                    - slotType: SSLOT
-                      revisionId: 1.1
-                      uniqueId: 03:78:00:00:01:32:50:60:48
-                      lastSeen: "2019-02-19T08:02:51.786Z"
+              example:
+                - slotType: SSLOT
+                  revisionId: "1.1"
+                  uniqueId: 03:78:00:00:01:32:50:60:46
+                  lastSeen: "2019-02-19T08:02:51.786Z"
+                - slotType: DSLOT
+                  revisionId: "1.1"
+                  uniqueId: 03:78:00:00:01:32:50:60:47
+                  lastSeen: "2019-02-19T08:02:51.786Z"
+                - slotType: SSLOT
+                  revisionId: "1.1"
+                  uniqueId: 03:78:00:00:01:32:50:60:48
+                  lastSeen: "2019-02-19T08:02:51.786Z"
         '403':
           $ref: '#/components/responses/HTTP_403'
         '404':
@@ -2122,7 +2121,7 @@ paths:
             examples:
               All optional fields:
                 value:
-                  applicationSpecificTag: Fallback light switch at the end of the belt
+                  applicationSpecificTag: Fallback light switch
                   locationTag: Down under
                   functionTag: Check start of belt
       responses:
@@ -3239,7 +3238,7 @@ components:
         productInstanceUri: 'http://www.io-link.com/PROD123456/IOLWM123456'
         gsdUri: 'https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml'          
         manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
-        applicationSpecificTag: Fallback reader at the end of the belt
+        applicationSpecificTag: Fallback reader
         locationTag: Down under
         functionTag: Code reading
     identificationPost:
@@ -3784,7 +3783,7 @@ components:
         vendorText: Sensor Intelligence.
         productName: SLG-2
         productId: SLG-2
-        productText: The SLG-2 IO-Link device is a smart lightgrid for space sensitive applications.
+        productText: The SLG-2 IO-Link device is a smart lightgrid
         serialNumber: Serial123456
         hardwareRevision: 3.2.1.444R
         firmwareRevision: 3.2.1.888R
@@ -3793,7 +3792,7 @@ components:
         ioddUri: 'https://ioddfinder.io-link.com/26/42/SICK-SLG-2-20210428-IODD1.1'  
         # 'https://ioddfinder.io-link.com/api/vendors/26/iodds/11541/files/zip/rated'
         # 'https://ioddfinder.io-link.com/productvariants/search/32872'
-        applicationSpecificTag: Fallback light switch at the end of the belt
+        applicationSpecificTag: Fallback light switch
         locationTag: Down under
         functionTag: Check end of belt
     portIdentificationPost:
@@ -3803,7 +3802,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          example: Fallback light switch at the end of the belt
+          example: Fallback light switch
         locationTag:
           type: string
           minLength: 1
