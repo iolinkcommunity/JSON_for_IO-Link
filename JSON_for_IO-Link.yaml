@@ -32,23 +32,18 @@ info:
     url: 'http://www.io-link.com'
     
 servers:
-  - url: 'http://iolmaster.io-link.com/{basePath}'
   - url: '{scheme}://{host}/{basePath}'
     variables:
       host:
         default: 'iolmaster.io-link.com'    
       basePath:
-        enum:
-          - 'iolink'
-          - 'iolink/v1'      
-        default: iolink
+        default: iolink/v1
       scheme:
         description: 'The IO-Link gateway can expose the API over https and/or http'
         enum:
           - 'https'
           - 'http'
         default: 'http'
-
 tags:
   - name: general
     description: Access to general informations
