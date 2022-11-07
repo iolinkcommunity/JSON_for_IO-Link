@@ -2,6 +2,7 @@ name: Lint RestAPI with Spectral
 
 on:
   - push
+  - pull_request
 
 jobs:
   build:
