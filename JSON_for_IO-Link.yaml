@@ -2173,6 +2173,7 @@ paths:
                        value:
                          Distance:
                            value: 55
+                           unit: "cm"
                          Quality:
                            value: 12
                      iqValue: true
@@ -2275,6 +2276,7 @@ paths:
                       value:
                         Distance:
                           value: 55
+                          unit: "cm"
                         Quality:
                           value: 12
                     iqValue: true
@@ -2389,11 +2391,13 @@ paths:
                 'format=iodd, simple type':
                   value:
                     value: 15.2
+                    unit: "cm"
                 'format=iodd, complex type':
                   value:
                     value:
                       Distance:
                         value: 15
+                        unit: "cm"
                       Quality:
                         value: 12
         '400':  # code 305, 306, 307, 311, 601
@@ -2433,11 +2437,13 @@ paths:
               'payload as iodd, simple type':
                 value:
                   value: 15.2
+                  unit: "cm"
               'payload as iodd, complex type':
                 value:
                   value:
                     Distance:
                       value: 15
+                      unit: "cm"
                     Quality:
                       value: 12
       responses:
@@ -2487,11 +2493,13 @@ paths:
                 'format=iodd, simple type':
                   value:
                     value: 15.2
+                    unit: "cm"
                 'format=iodd, complex type':
                   value:
                     value:
                       Distance:
                         value: 15
+                        unit: "cm"
                       Quality:
                         value: 12
 
@@ -2535,11 +2543,13 @@ paths:
               'format=iodd, simple type':
                 value:
                   value: 15.2
+                  unit: "cm"
               'format=iodd, complex type':
                 value:
                   value:
                     Distance:
                       value: 15
+                      unit: "cm"
                     Quality:
                       value: 12
       responses:
@@ -2649,6 +2659,7 @@ paths:
                     value:
                       Distance:
                         value: 15.2
+                        unit: "cm"
         '400':  # code 305, 306, 307, 311, 601
            $ref: '#/components/responses/HTTP_400'            
         '403':
@@ -2689,6 +2700,7 @@ paths:
               format=iodd:
                 value:
                   value: 15.2
+                  unit: "cm"
       responses:
         '204':
           description: Successful operation
@@ -2737,6 +2749,7 @@ paths:
                 format=iodd:
                   value:
                     value: 15.2
+                    unit: "cm"
 
         '400':  # code 305, 306, 307, 311, 601
            $ref: '#/components/responses/HTTP_400'                        
@@ -2779,6 +2792,7 @@ paths:
               format=iodd:
                 value:
                   value: 15.2
+                  unit: "cm"
       responses:
         '204':
           description: Successful operation
@@ -5044,6 +5058,8 @@ components:
                     - $ref: '#/components/schemas/deviceByteArrayTypeValue'
                     - $ref: '#/components/schemas/deviceSimpleTypeValue'
                     - $ref: '#/components/schemas/deviceComplexTypeValue'
+                unit:
+                  $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
               description: >
                 Process data value
         cqValue:
@@ -5106,6 +5122,9 @@ components:
         - type: string
         - type: number
       description: The value (with simple type) in iodd format.
+    deviceSimpleTypeValueUnit:
+      type: string
+      description: The unit for the simple type number value in SI format.
     deviceComplexTypeValue:
       type: object
       minProperties: 1
@@ -5173,6 +5192,8 @@ components:
             - $ref: '#/components/schemas/deviceByteArrayTypeValue'
             - $ref: '#/components/schemas/deviceSimpleTypeValue'
             - $ref: '#/components/schemas/deviceComplexTypeValue'
+        unit:
+          $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
       required:
         - value
     deviceParameterSubindexValueGetPost:
@@ -5183,6 +5204,8 @@ components:
             - $ref: '#/components/schemas/deviceByteArrayTypeValue'
             - $ref: '#/components/schemas/deviceSimpleTypeValue'
             - $ref: '#/components/schemas/deviceComplexTypeValue'
+        unit:
+          $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
       required:
         - value
     deviceBlockParameterizationPost:
