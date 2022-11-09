@@ -5122,6 +5122,16 @@ components:
         - type: string
         - type: number
       description: The value (with simple type) in iodd format.
+    deviceComplexTypeEntry:
+      type: object
+      description: The entry for a complex iodd type
+      required:
+        - value
+      properties:
+        value:
+          $ref: '#/components/schemas/deviceSimpleTypeValue'
+        unit:
+          $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
     deviceSimpleTypeValueUnit:
       type: string
       description: The unit for the simple type number value in SI format.
@@ -5130,8 +5140,8 @@ components:
       minProperties: 1
       maxProperties: 255
       description: The value (with complex type) in iodd format.
-      #additionalProperties: # @todo schema "processDataValue" is not correct, additionalProperties deactivated to suppress warnings
-      #  $ref: '#/components/schemas/deviceSimpleTypeValue'
+      additionalProperties:
+        $ref: '#/components/schemas/deviceComplexTypeEntry'
     deviceParametersGet:
       type: array
       items:
