@@ -2,6 +2,10 @@
 
 JSON serialization for IO-Link data.
 
+## Contribution
+
+In order to raise a bugfix, improvement or change/feature request file an issue. This issue will then be discussed by the community and the change can be done via pull request. Minor changes like typing errors can be fixed directly by a pull request and does not require opening an issue.
+
 ## Branches:
   - master: released version (1.0)
   - version-1-x: Draft for the next version
