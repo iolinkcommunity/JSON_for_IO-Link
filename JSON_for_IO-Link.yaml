@@ -1119,8 +1119,8 @@ paths:
       operationId: GetMastersMasterNumberConfiguration
       tags:
         - masters
-      summary: Read the actual configuration of the specified W-Master.
-      description: Read the actual configuration of the specified W-Master.
+      summary: Read the actual configuration of the specified Master.
+      description: Read the actual configuration of the specified Master.
       parameters:
         - $ref: '#/components/parameters/masterNumber'      
       responses:
@@ -1130,6 +1130,103 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/mastersConfigurationGetPost'
+              examples:
+                IO-Link:
+                  value:
+                IO-Link_Wireless:
+                  value:
+                    masterId: 5
+                    advancedConnectivity:
+                      "ahtEnable": false
+                    pairingTimeout: 
+                      value: 25
+                      unit: s
+                    serviceTrackNumber: 1
+                    serviceTrackMode: CYCLIC
+                    trackTxPower:
+                      "track_1": 31 
+                      "track_2": 31
+                      "track_3": 31
+                      "track_4": 0
+                      "track_5": 0
+                    blockList:
+                      "2402": false
+                      "2403": false
+                      "2404": false
+                      "2405": false
+                      "2406": false
+                      "2407": false
+                      "2408": false
+                      "2409": false
+                      "2410": false
+                      "2411": false
+                      "2412": false
+                      "2413": false
+                      "2414": false
+                      "2415": false
+                      "2416": false
+                      "2417": false
+                      "2418": false
+                      "2419": false
+                      "2420": false
+                      "2421": false
+                      "2422": false
+                      "2423": false
+                      "2424": false
+                      "2425": false
+                      "2426": false
+                      "2427": false
+                      "2428": false
+                      "2429": false
+                      "2430": false
+                      "2431": false
+                      "2432": false
+                      "2433": false
+                      "2434": false
+                      "2435": false
+                      "2436": false
+                      "2437": false
+                      "2438": false
+                      "2439": false
+                      "2440": false
+                      "2441": false
+                      "2442": false
+                      "2443": false
+                      "2444": false
+                      "2445": false
+                      "2446": false
+                      "2447": false
+                      "2448": false
+                      "2449": false
+                      "2450": false
+                      "2451": false
+                      "2452": false
+                      "2453": false
+                      "2454": false
+                      "2455": false
+                      "2456": false
+                      "2457": false
+                      "2458": false
+                      "2459": false
+                      "2460": false
+                      "2461": false
+                      "2462": false
+                      "2463": false
+                      "2464": false
+                      "2465": false
+                      "2466": false
+                      "2467": false
+                      "2468": false
+                      "2469": false
+                      "2470": false
+                      "2471": false
+                      "2472": false
+                      "2473": false
+                      "2474": false
+                      "2475": false
+                      "2476": false
+                      "2477": false
+                      "2478": false
         '403':
            $ref: '#/components/responses/HTTP_403'
         '500':
@@ -1138,8 +1235,8 @@ paths:
       operationId: PostMastersMasterNumberConfiguration
       tags:
         - masters
-      summary: Write the configuration of the specified W-Master.
-      description: Write the configuration of the specified W-Master.
+      summary: Write the configuration of the specified Master.
+      description: Write the configuration of the specified Master.
       parameters:
         - $ref: '#/components/parameters/masterNumber'      
       requestBody:
@@ -1148,6 +1245,103 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/mastersConfigurationGetPost'
+            examples:
+              IO-Link:
+                value:
+              IO-Link_Wireless:
+                value:
+                  masterId: 5
+                  advancedConnectivity:
+                    "ahtEnable": false
+                  pairingTimeout: 
+                    value: 25
+                    unit: s
+                  serviceTrackNumber: 1
+                  serviceTrackMode: CYCLIC
+                  trackTxPower:
+                    "track_1": 31 
+                    "track_2": 31
+                    "track_3": 31
+                    "track_4": 0
+                    "track_5": 0
+                  blockList:
+                    "2402": false
+                    "2403": false
+                    "2404": false
+                    "2405": false
+                    "2406": false
+                    "2407": false
+                    "2408": false
+                    "2409": false
+                    "2410": false
+                    "2411": false
+                    "2412": false
+                    "2413": false
+                    "2414": false
+                    "2415": false
+                    "2416": false
+                    "2417": false
+                    "2418": false
+                    "2419": false
+                    "2420": false
+                    "2421": false
+                    "2422": false
+                    "2423": false
+                    "2424": false
+                    "2425": false
+                    "2426": false
+                    "2427": false
+                    "2428": false
+                    "2429": false
+                    "2430": false
+                    "2431": false
+                    "2432": false
+                    "2433": false
+                    "2434": false
+                    "2435": false
+                    "2436": false
+                    "2437": false
+                    "2438": false
+                    "2439": false
+                    "2440": false
+                    "2441": false
+                    "2442": false
+                    "2443": false
+                    "2444": false
+                    "2445": false
+                    "2446": false
+                    "2447": false
+                    "2448": false
+                    "2449": false
+                    "2450": false
+                    "2451": false
+                    "2452": false
+                    "2453": false
+                    "2454": false
+                    "2455": false
+                    "2456": false
+                    "2457": false
+                    "2458": false
+                    "2459": false
+                    "2460": false
+                    "2461": false
+                    "2462": false
+                    "2463": false
+                    "2464": false
+                    "2465": false
+                    "2466": false
+                    "2467": false
+                    "2468": false
+                    "2469": false
+                    "2470": false
+                    "2471": false
+                    "2472": false
+                    "2473": false
+                    "2474": false
+                    "2475": false
+                    "2476": false
+                    "2477": false
+                    "2478": false
       responses:
         '204':
           description: Successful operation
@@ -4083,99 +4277,6 @@ components:
             "2478": 
               type: boolean
               default: false
-      example:
-        masterId: 5
-        advancedConnectivity:
-          "ahtEnable": false
-        pairingTimeout: 
-          value: 25
-          unit: s
-        serviceTrackNumber: 1
-        serviceTrackMode: CYCLIC
-        trackTxPower:
-          "track_1": 31 
-          "track_2": 31
-          "track_3": 31
-          "track_4": 0
-          "track_5": 0
-        blockList:
-          "2402": false
-          "2403": false
-          "2404": false
-          "2405": false
-          "2406": false
-          "2407": false
-          "2408": false
-          "2409": false
-          "2410": false
-          "2411": false
-          "2412": false
-          "2413": false
-          "2414": false
-          "2415": false
-          "2416": false
-          "2417": false
-          "2418": false
-          "2419": false
-          "2420": false
-          "2421": false
-          "2422": false
-          "2423": false
-          "2424": false
-          "2425": false
-          "2426": false
-          "2427": false
-          "2428": false
-          "2429": false
-          "2430": false
-          "2431": false
-          "2432": false
-          "2433": false
-          "2434": false
-          "2435": false
-          "2436": false
-          "2437": false
-          "2438": false
-          "2439": false
-          "2440": false
-          "2441": false
-          "2442": false
-          "2443": false
-          "2444": false
-          "2445": false
-          "2446": false
-          "2447": false
-          "2448": false
-          "2449": false
-          "2450": false
-          "2451": false
-          "2452": false
-          "2453": false
-          "2454": false
-          "2455": false
-          "2456": false
-          "2457": false
-          "2458": false
-          "2459": false
-          "2460": false
-          "2461": false
-          "2462": false
-          "2463": false
-          "2464": false
-          "2465": false
-          "2466": false
-          "2467": false
-          "2468": false
-          "2469": false
-          "2470": false
-          "2471": false
-          "2472": false
-          "2473": false
-          "2474": false
-          "2475": false
-          "2476": false
-          "2477": false
-          "2478": false
     
     mastersPortsPairingPost:                                                               # TODO: IOLW
       properties:
@@ -4212,15 +4313,19 @@ components:
               type: string
               enum:
                 - '1.1'
+            lastSeen:
+              $ref: '#/components/schemas/eventTime'
       example:
         scanStatus: ScanEnded
         scanResults:
           - slotType: SSLOT
             uniqueId: 03:78:00:00:01:32:50:60:46
             ioLinkRevision: 1.1
+            lastSeen: "2022-12-01T08:42:23.314Z"
           - slotType: DSLOT
             uniqueId: 03:78:00:00:01:32:50:60:47
             ioLinkRevision: 1.1
+            lastSeen: "2022-12-01T09:42:23.314Z"
 
     mastersScanPost:                                                            # TODO: IOLW
       properties:
