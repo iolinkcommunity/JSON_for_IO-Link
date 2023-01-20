@@ -3073,7 +3073,7 @@ components:
       in: query
       description: deviceAlias is only applicable with origin=DEVICES
       schema:
-        $ref: './schemas.yaml#/eventdeviceAlias'
+        $ref: './schemas.yaml#/deviceAlias'
     eventTop:
       name: top
       in: query

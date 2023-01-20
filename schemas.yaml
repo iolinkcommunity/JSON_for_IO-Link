@@ -153,7 +153,7 @@ eventMasterNumber:
 eventPortNumber:
   type: integer
   minimum: 1
-eventdeviceAlias:
+deviceAlias:
   type: string
   minLength: 1
   maxLength: 32
@@ -517,7 +517,7 @@ deviceEventsGet:
         required:
           - master
           - port
-          - deviceAlias
+          - $ref: '#/deviceAlias'
         allOf:
           - $ref: '#/eventOriginObject'
       message:
@@ -650,7 +650,7 @@ mqttConfigurationTopic:
     - type: object
       required:
         - qos
-        - deviceAlias
+        - $ref: '#/deviceAlias'
       properties:
         qos:
           type: string
@@ -1007,7 +1007,7 @@ portConfigurationGet:
   required:
     - mode
     - iqConfiguration
-    - deviceAlias
+    - $ref: '#/deviceAlias'
   properties:
     mode:
       type: string
@@ -2128,9 +2128,8 @@ portConfigurationPost:
         - ANALOG_OUTPUT
         - POWER_2
     deviceAlias:
-      type: string
-      minLength: 1
-      maxLength: 32
+      schema:
+        $ref: '#/deviceAlias'
 dataStorageGetPost:
   description: >-
     In case the Data Storage is empty, the header object is empty and the

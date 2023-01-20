@@ -4,7 +4,7 @@
 # git config core.hooksPath .githooks
 
 # run from the root of the repo
-python .git/hooks/replace_by_git_vars.py README.md README.md
+python .githooks/replace_by_git_vars.py README.md README.md
 # If your filesystem is not case-sensitive you can use
 # .githooks/replace_by_git_vars.py README.template.md README.md
 
