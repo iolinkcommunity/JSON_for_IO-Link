@@ -1384,8 +1384,8 @@ paths:
       operationId: GetMastersMasterNumberTrackstatus
       tags:
         - masters
-      summary: Read the actual Track status of the specified W-Master.
-      description: Read the actual Track status of the specified W-Master.
+      summary: Read the actual Track status of the specified Wireless-Master.
+      description: Read the actual Track status of the specified Wireless-Master.
       parameters:
         - $ref: '#/components/parameters/masterNumber'      
       responses:
@@ -1405,8 +1405,8 @@ paths:
       operationId: GetMastersMasterNumberScan
       tags:
         - masters
-      summary: Read the actual scan results of the specified W-Master.
-      description: Read the actual scan results of the specified W-Master.
+      summary: Read the actual scan results of the specified Wireless-Master.
+      description: Read the actual scan results of the specified Wireless-Master.
       parameters:
         - $ref: '#/components/parameters/masterNumber'      
       responses:
@@ -1424,8 +1424,8 @@ paths:
       operationId: PostMastersMasterNumberScan
       tags:
         - masters
-      summary: To start a scan of the specified W-Master.
-      description: To start a scan of the specified W-Master.
+      summary: To start a scan of the specified Wireless-Master.
+      description: To start a scan of the specified Wireless-Master.
       parameters:
         - $ref: '#/components/parameters/masterNumber'      
       requestBody:
@@ -1532,8 +1532,8 @@ paths:
         - ports
       parameters:
         - $ref: '#/components/parameters/masterNumber'
-      summary: Read the link quality and the RSSI of all used W-Ports (W-Device and W-Master).
-      description: Read the link quality and the RSSI of all used W-Ports (W-Device and W-Master).
+      summary: Read the link quality and the RSSI of all used Wireless-Ports (Wireless-Device and Wireless-Master).
+      description: Read the link quality and the RSSI of all used Wireless-Ports (Wireless-Device and Wireless-Master).
       responses:
         '200':
           description: Successful operation
@@ -1868,8 +1868,8 @@ paths:
       operationId: PostMastersMasterNumberPortsPortNumberPairing
       tags:
         - ports
-      summary: To pair a W-Device with the specified W-Port.
-      description: To pair a W-Device with the specified W-Port.
+      summary: To pair a Wireless-Device with the specified Wireless-Port.
+      description: To pair a Wireless-Device with the specified Wireless-Port.
       parameters:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
@@ -1899,8 +1899,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
-      summary: Read the link quality and the RSSI of the specified W-Port (W-Device and W-Master).
-      description: Read the link quality and the RSSI of the specified W-Port (W-Device and W-Master).
+      summary: Read the link quality and the RSSI of the specified Wireless-Port (Wireless-Device and Wireless-Master).
+      description: Read the link quality and the RSSI of the specified Wireless-Port (Wireless-Device and Wireless-Master).
       responses:
         '200':
           description: Successful operation
@@ -3858,20 +3858,20 @@ components:
           type: string
         slotNumber:
           description: >-
-            slot number of the W-Device (Wireless Master only).
+            slot number of the Wireless-Device (Wireless Master only).
           type: integer
           minimum: 0
           maximum: 7
         trackNumber:
           description: >-
-            track number of the W-Device, maximum depends on the number of 
-            available tracks on the W-Master (Wireless Master only).
+            track number of the Wireless-Device, maximum depends on the number of 
+            available tracks on the Wireless-Master (Wireless Master only).
           type: integer
           minimum: 1
           maximum: 5
         deviceTxPower:
           description: >-
-            transmission power of the W-Device (Wireless Master only).
+            transmission power of the Wireless-Device (Wireless Master only).
           type: integer
           minimum: 1
           maximum: 31
@@ -3913,7 +3913,7 @@ components:
             - "DSLOT"  
         lowEnergyDevice:
           description: >-
-            to set low energy mode (Wireless Master only and W-Device has to support low energy).
+            to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
           type: boolean
           default: false
         maxPDSegLength:
@@ -3924,7 +3924,7 @@ components:
           maximum: 32
         wMasterCycleTimeOut:
           description: >-
-            W-Master cycle time output for PD data (Wireless Master only).
+            Wireless-Master cycle time output for PD data (Wireless Master only).
           type: object
           required:
             - base
@@ -3940,7 +3940,7 @@ components:
               maximum: 63
         wMasterCycleTimeIn:
           description: >-
-            W-Master cycle time input for PD data (Wireless Master only).
+            Wireless-Master cycle time input for PD data (Wireless Master only).
           type: object
           required:
             - base
@@ -3956,7 +3956,7 @@ components:
               maximum: 63
         uniqueId:
           description: >-
-            unique identifier for each W-Device (Wireless Master only).
+            unique identifier for each Wireless-Device (Wireless Master only).
           type: string
           minLength: 26
           maxLength: 26
@@ -3967,13 +3967,13 @@ components:
       properties:
         wMasterId:
           description: >-
-            Master identifier for connection with W-Devices.
+            Master identifier for connection with Wireless-Devices.
           type: integer
           minimum: 1
           maximum: 29
         advancedConnectivity:
           description: >-
-            To set advanced connectivity functions on the W-Master.
+            To set advanced connectivity functions on the Wireless-Master.
           type: object
           properties:
             "ahtEnable":
@@ -4364,14 +4364,14 @@ components:
               - PAIRING_FAULT        # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
           slotNumber:
             description: >-
-              slot number of the W-Device (Wireless Master only).
+              slot number of the Wireless-Device (Wireless Master only).
             type: integer
             minimum: 0
             maximum: 7
           trackNumber:
             description: >-
-              track number of the W-Device, maximum depends on the number of 
-              available tracks on the W-Master (Wireless Master only).
+              track number of the Wireless-Device, maximum depends on the number of 
+              available tracks on the Wireless-Master (Wireless Master only).
             type: integer
             minimum: 1
             maximum: 5
@@ -4482,7 +4482,7 @@ components:
           maximum: 16777215
         wMasterCycleTimeOut:
           description: >-
-            W-Master cycle time output for PD data (Wireless Master only).
+            Wireless-Master cycle time output for PD data (Wireless Master only).
           type: object
           required:
             - base
@@ -4498,7 +4498,7 @@ components:
               maximum: 63
         wMasterCycleTimeIn:
           description: >-
-            W-Master cycle time input for PD data (Wireless Master only).
+            Wireless-Master cycle time input for PD data (Wireless Master only).
           type: object
           required:
             - base
@@ -4673,20 +4673,20 @@ components:
           maxLength: 32
         slotNumber:
           description: >-
-            slot number of the W-Device (Wireless Master only).
+            slot number of the Wireless-Device (Wireless Master only).
           type: integer
           minimum: 0
           maximum: 7
         trackNumber:
           description: >-
-            track number of the W-Device, maximum depends on the number of 
-            available tracks on the W-Master (Wireless Master only).
+            track number of the Wireless-Device, maximum depends on the number of 
+            available tracks on the Wireless-Master (Wireless Master only).
           type: integer
           minimum: 1
           maximum: 5
         deviceTxPower:
           description: >-
-            transmission power of the W-Device (Wireless Master only).
+            transmission power of the Wireless-Device (Wireless Master only).
           type: integer
           minimum: 1
           maximum: 31
@@ -4728,7 +4728,7 @@ components:
             - "DSLOT"  
         lowEnergyDevice:
           description: >-
-            to set low energy mode (Wireless Master only and W-Device has to support low energy).
+            to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
           type: boolean
           default: false
         maxPDSegLength:
@@ -4739,7 +4739,7 @@ components:
           maximum: 32
         wMasterCycleTimeOut:
           description: >-
-            W-Master cycle time output for PD data (Wireless Master only).
+            Wireless-Master cycle time output for PD data (Wireless Master only).
           type: object
           required:
             - base
@@ -4755,7 +4755,7 @@ components:
               maximum: 63
         wMasterCycleTimeIn:
           description: >-
-            W-Master cycle time input for PD data (Wireless Master only).
+            Wireless-Master cycle time input for PD data (Wireless Master only).
           type: object
           required:
             - base
@@ -4771,7 +4771,7 @@ components:
               maximum: 63
         uniqueId:
           description: >-
-            unique identifier for each W-Device (Wireless Master only).
+            unique identifier for each Wireless-Device (Wireless Master only).
           type: string
           minLength: 26
           maxLength: 26
@@ -5465,4 +5465,4 @@ components:
                       code: 107
                       message: 'Service temporarily unavailable'
                    
-                      
+                  
