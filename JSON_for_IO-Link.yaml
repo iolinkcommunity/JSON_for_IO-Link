@@ -78,7 +78,7 @@ paths:
         '200':
           description: Successful operation
           content:
-            application/json:
+            application/text:
               schema:
                 type: string
               examples:
@@ -87,6 +87,10 @@ paths:
                 'url-vendor':
                   value: >-
                     https://www.iolink-master-vendor.com/de/de/p/p672882
+            application/yaml:
+              schema:
+                type: string
+              example:
                 'yaml':
                   value: >-
                     openapi: 3.0.3
@@ -112,21 +116,22 @@ paths:
                       name: tbd
                       url: 'http://www.io-link.com'
                     ...
+            application/json:
+              schema:
+                type: string
+              example:
                 'json':
-                  value: >-
+                  value:
                     {
-                      "openapi": "3.0.3",
-                      "info": null,
-                      "description": "This is a sample IO-Link Master server. You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com) # Description * Draft for version 1.x ## Disclaimer: >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents.  >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products.  >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.   >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). \n\n>IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.",
-                      "version": "1.1.0",
-                      "title": "Swagger IO-Link Master",
-                      "contact": {
-                          "email": "info@io-link.com"
-                      },
-                      "license": {
-                          "name": "tbd",
-                          "url": "http://www.io-link.com"
-                      }
+                      'openapi': '3.0.3',
+                      'info': null,
+                      'description': "This is a sample IO-Link Master server. You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com) # Description * Draft for version 1.x ## Disclaimer: >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents.  >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products.  >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.   >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). \n\n>IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.",
+                      'version': '1.1.0',
+                      'title': 'Swagger IO-Link Master',
+                      'contact': { 'email': 'info@io-link.com' },
+                      'license':
+                        { 'name': 'tbd', 'url': 'http://www.io-link.com' },
+                      ...: 'to be continued',
                     }
         '403':
           description: Forbidden
@@ -165,13 +170,21 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - version
+                properties:
+                  version:
+                    type: string
+                  additionalInfo:
+                    type: string
               examples:
-                default:
+                'mandatory':
                   value:
-                    version: '1.0.0'
-                vendor-extension:
+                    version: 1.0.0
+                'optional addition':
                   value:
-                    version: '1.0.0-feature-xyz'
+                    version: 1.0.0
+                    additionalInfo: 1.2.3-feature-xyz
         '403':
           description: Forbidden
           content:
