@@ -88,8 +88,6 @@ paths:
                   value: >-
                     https://www.iolink-master-vendor.com/de/de/p/p672882
             application/yaml:
-              schema:
-                type: string
               example:
                 'yaml':
                   value: >-
@@ -117,8 +115,6 @@ paths:
                       url: 'http://www.io-link.com'
                     ...
             application/json:
-              schema:
-                type: string
               example:
                 'json':
                   value:
