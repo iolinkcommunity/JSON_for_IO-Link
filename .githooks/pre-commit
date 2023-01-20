@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# https://www.viget.com/articles/two-ways-to-share-git-hooks-with-your-team/
+# git config core.hooksPath .githooks
+
+# run from the root of the repo
+python .git/hooks/replace_by_git_vars.py README.md README.md
+# If your filesystem is not case-sensitive you can use
+# .githooks/replace_by_git_vars.py README.template.md README.md
+
+# Example:
+# [![Integration Tests](https://github.com/{{ repository.name }}/actions/workflows/integration-tests.yaml/badge.svg?branch={{ current.branch }})](https://github.com/{{ repository.name }}/actions/workflows/integration-tests.yaml?query=branch%3A{{ current.branch }})
