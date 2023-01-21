@@ -32,23 +32,18 @@ info:
     url: 'http://www.io-link.com'
     
 servers:
-  - url: 'http://iolmaster.io-link.com/{basePath}'
   - url: '{scheme}://{host}/{basePath}'
     variables:
       host:
         default: 'iolmaster.io-link.com'    
       basePath:
-        enum:
-          - 'iolink'
-          - 'iolink/v1'      
-        default: iolink
+        default: iolink/v1
       scheme:
         description: 'The IO-Link gateway can expose the API over https and/or http'
         enum:
           - 'https'
           - 'http'
         default: 'http'
-
 tags:
   - name: general
     description: Access to general informations
@@ -301,7 +296,7 @@ paths:
       tags:
         - gateway
       summary: Read the configuration of the Gateway.
-      description: Read the configuration of the Gateway.
+      description: Read the actual active configuration of the IO-Link Gateway. The Gateway may support multiple IPv4 interfaces
       responses:
         '200':
           description: Successful operation
@@ -395,7 +390,7 @@ paths:
       tags:
         - gateway
       summary: Reset the Gateway including all Masters. Optional.
-      description: Reset the Gateway including all Masters.  Optional.
+      description: Invoke a reset of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog.
       responses:
         '204':
           description: Successful operation
@@ -412,7 +407,7 @@ paths:
       tags:
         - gateway
       summary: Reboot the Gateway including all Masters. Optional.
-      description: Reboot the Gateway including all Masters. Optional.
+      description: Invoke a reboot of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog
       responses:
         '204':
           description: Successful operation
@@ -429,7 +424,8 @@ paths:
       tags:
         - gateway
       summary: Read the EventLog containing all events from Gateway, Masters, Ports and Devices.
-      description: Read the EventLog containing all events from Gateway, Masters, Ports and Devices.
+      description: Each Gateway shall have an Event Log object containing the events of the devices, ports and 
+        the masters. The content of the Event Log can be read by getting the object "Gateway Event Log"
       parameters:
         - $ref: '#/components/parameters/eventOrigin'
         - $ref: '#/components/parameters/eventMasterNumber'
@@ -1090,7 +1086,7 @@ paths:
             examples:
               All optional fiels:
                 value:
-                  applicationSpecificTag: Fallback reader at the end of the belt
+                  applicationSpecificTag: Fallback reader at the end
                   locationTag: Down under
                   functionTag: Code reading
       responses:
@@ -1337,20 +1333,19 @@ paths:
                       type: string
                       minLength: 1
                       maxLength: 32
-                example:
-                  scanResult:
-                    - slotType: SSLOT
-                      revisionId: 1.1
-                      uniqueId: 03:78:00:00:01:32:50:60:46
-                      lastSeen: "2019-02-19T08:02:51.786Z"
-                    - slotType: DSLOT
-                      revisionId: 1.1
-                      uniqueId: 03:78:00:00:01:32:50:60:47
-                      lastSeen: "2019-02-19T08:02:51.786Z"
-                    - slotType: SSLOT
-                      revisionId: 1.1
-                      uniqueId: 03:78:00:00:01:32:50:60:48
-                      lastSeen: "2019-02-19T08:02:51.786Z"
+              example:
+                - slotType: SSLOT
+                  revisionId: "1.1"
+                  uniqueId: 03:78:00:00:01:32:50:60:46
+                  lastSeen: "2019-02-19T08:02:51.786Z"
+                - slotType: DSLOT
+                  revisionId: "1.1"
+                  uniqueId: 03:78:00:00:01:32:50:60:47
+                  lastSeen: "2019-02-19T08:02:51.786Z"
+                - slotType: SSLOT
+                  revisionId: "1.1"
+                  uniqueId: 03:78:00:00:01:32:50:60:48
+                  lastSeen: "2019-02-19T08:02:51.786Z"
         '403':
           $ref: '#/components/responses/HTTP_403'
         '404':
@@ -2127,7 +2122,7 @@ paths:
             examples:
               All optional fields:
                 value:
-                  applicationSpecificTag: Fallback light switch at the end of the belt
+                  applicationSpecificTag: Fallback light switch
                   locationTag: Down under
                   functionTag: Check start of belt
       responses:
@@ -2178,6 +2173,7 @@ paths:
                        value:
                          Distance:
                            value: 55
+                           unit: "cm"
                          Quality:
                            value: 12
                      iqValue: true
@@ -2280,6 +2276,7 @@ paths:
                       value:
                         Distance:
                           value: 55
+                          unit: "cm"
                         Quality:
                           value: 12
                     iqValue: true
@@ -2385,20 +2382,24 @@ paths:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
                 format=byteArray:
-                  value:  
-                    - 0
-                    - 156
-                    - 125
-                    - 25
+                  value: 
+                    value: 
+                      - 0
+                      - 156
+                      - 125
+                      - 25
                 'format=iodd, simple type':
                   value:
                     value: 15.2
+                    unit: "cm"
                 'format=iodd, complex type':
                   value:
-                    Distance:
-                      value: 15
-                    Quality:
-                      value: 12
+                    value:
+                      Distance:
+                        value: 15
+                        unit: "cm"
+                      Quality:
+                        value: 12
         '400':  # code 305, 306, 307, 311, 601
            $ref: '#/components/responses/HTTP_400' 
         '403':
@@ -2436,12 +2437,15 @@ paths:
               'payload as iodd, simple type':
                 value:
                   value: 15.2
+                  unit: "cm"
               'payload as iodd, complex type':
                 value:
-                  Distance:
-                    value: 15
-                  Quality:
-                    value: 12
+                  value:
+                    Distance:
+                      value: 15
+                      unit: "cm"
+                    Quality:
+                      value: 12
       responses:
         '204':
           description: Successful operation
@@ -2489,12 +2493,15 @@ paths:
                 'format=iodd, simple type':
                   value:
                     value: 15.2
+                    unit: "cm"
                 'format=iodd, complex type':
                   value:
-                    Distance:
-                      value: 15
-                    Quality:
-                      value: 12
+                    value:
+                      Distance:
+                        value: 15
+                        unit: "cm"
+                      Quality:
+                        value: 12
 
         '400':  # code 305, 306, 307, 311, 601
            $ref: '#/components/responses/HTTP_400'                                  
@@ -2536,12 +2543,15 @@ paths:
               'format=iodd, simple type':
                 value:
                   value: 15.2
+                  unit: "cm"
               'format=iodd, complex type':
                 value:
-                  Distance:
-                    value: 15
-                  Quality:
-                    value: 12
+                  value:
+                    Distance:
+                      value: 15
+                      unit: "cm"
+                    Quality:
+                      value: 12
       responses:
         '204':
           description: Successful operation
@@ -2639,14 +2649,17 @@ paths:
               examples:
                 format=byteArray:
                   value: 
-                    - 0
-                    - 156
-                    - 125
-                    - 25
+                    value:
+                      - 0
+                      - 156
+                      - 125
+                      - 25
                 format=iodd:
                   value:
-                    Distance:
-                      value: 15.2
+                    value:
+                      Distance:
+                        value: 15.2
+                        unit: "cm"
         '400':  # code 305, 306, 307, 311, 601
            $ref: '#/components/responses/HTTP_400'            
         '403':
@@ -2687,6 +2700,7 @@ paths:
               format=iodd:
                 value:
                   value: 15.2
+                  unit: "cm"
       responses:
         '204':
           description: Successful operation
@@ -2735,6 +2749,7 @@ paths:
                 format=iodd:
                   value:
                     value: 15.2
+                    unit: "cm"
 
         '400':  # code 305, 306, 307, 311, 601
            $ref: '#/components/responses/HTTP_400'                        
@@ -2777,6 +2792,7 @@ paths:
               format=iodd:
                 value:
                   value: 15.2
+                  unit: "cm"
       responses:
         '204':
           description: Successful operation
@@ -3244,7 +3260,7 @@ components:
         productInstanceUri: 'http://www.io-link.com/PROD123456/IOLWM123456'
         gsdUri: 'https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml'          
         manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
-        applicationSpecificTag: Fallback reader at the end of the belt
+        applicationSpecificTag: Fallback reader
         locationTag: Down under
         functionTag: Code reading
     identificationPost:
@@ -3789,7 +3805,7 @@ components:
         vendorText: Sensor Intelligence.
         productName: SLG-2
         productId: SLG-2
-        productText: The SLG-2 IO-Link device is a smart lightgrid for space sensitive applications.
+        productText: The SLG-2 IO-Link device is a smart lightgrid
         serialNumber: Serial123456
         hardwareRevision: 3.2.1.444R
         firmwareRevision: 3.2.1.888R
@@ -3798,7 +3814,7 @@ components:
         ioddUri: 'https://ioddfinder.io-link.com/26/42/SICK-SLG-2-20210428-IODD1.1'  
         # 'https://ioddfinder.io-link.com/api/vendors/26/iodds/11541/files/zip/rated'
         # 'https://ioddfinder.io-link.com/productvariants/search/32872'
-        applicationSpecificTag: Fallback light switch at the end of the belt
+        applicationSpecificTag: Fallback light switch
         locationTag: Down under
         functionTag: Check end of belt
     portIdentificationPost:
@@ -3808,7 +3824,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          example: Fallback light switch at the end of the belt
+          example: Fallback light switch
         locationTag:
           type: string
           minLength: 1
@@ -5020,7 +5036,7 @@ components:
         content:
           description: Base64 coded DS data Ojects. Max size = 2KB*1.33.
           type: string
-          format: byte
+          # format: byte
     processDataValue:
       type: object
       properties:
@@ -5044,6 +5060,8 @@ components:
                     - $ref: '#/components/schemas/deviceByteArrayTypeValue'
                     - $ref: '#/components/schemas/deviceSimpleTypeValue'
                     - $ref: '#/components/schemas/deviceComplexTypeValue'
+                unit:
+                  $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
               description: >
                 Process data value
         cqValue:
@@ -5106,13 +5124,26 @@ components:
         - type: string
         - type: number
       description: The value (with simple type) in iodd format.
+    deviceComplexTypeEntry:
+      type: object
+      description: The entry for a complex iodd type
+      required:
+        - value
+      properties:
+        value:
+          $ref: '#/components/schemas/deviceSimpleTypeValue'
+        unit:
+          $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
+    deviceSimpleTypeValueUnit:
+      type: string
+      description: The unit for the simple type number value in SI format.
     deviceComplexTypeValue:
       type: object
       minProperties: 1
       maxProperties: 255
       description: The value (with complex type) in iodd format.
-      #additionalProperties: # @todo schema "processDataValue" is not correct, additionalProperties deactivated to suppress warnings
-      #  $ref: '#/components/schemas/deviceSimpleTypeValue'
+      additionalProperties:
+        $ref: '#/components/schemas/deviceComplexTypeEntry'
     deviceParametersGet:
       type: array
       items:
@@ -5173,6 +5204,8 @@ components:
             - $ref: '#/components/schemas/deviceByteArrayTypeValue'
             - $ref: '#/components/schemas/deviceSimpleTypeValue'
             - $ref: '#/components/schemas/deviceComplexTypeValue'
+        unit:
+          $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
       required:
         - value
     deviceParameterSubindexValueGetPost:
@@ -5182,6 +5215,9 @@ components:
           oneOf:
             - $ref: '#/components/schemas/deviceByteArrayTypeValue'
             - $ref: '#/components/schemas/deviceSimpleTypeValue'
+            - $ref: '#/components/schemas/deviceComplexTypeValue'
+        unit:
+          $ref: '#/components/schemas/deviceSimpleTypeValueUnit'
       required:
         - value
     deviceBlockParameterizationPost:
