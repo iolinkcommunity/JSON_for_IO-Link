@@ -337,19 +337,25 @@ paths:
                     type: string
                   specDesc:
                     type: string
-                example: # Wireless Master with Profinet
-                  - specUri: 'http://www.io-link.com/io-link/10.222/V2.0'
-                    specDesc: 'JSON Integration for IO-Link - Draft V2.0'
+              examples:
+                IO-Link_with_Profinet:
+                  value:
                   - specUri: 'http://www.io-link.com/io-link/10.222/V1.0'
                     specDesc: 'JSON Integration for IO-Link V1.0'
                   - specUri: 'http://www.io-link.com/io-link/10.002/V1.13'
-                    specDesc: 'IO-Link Interface and System Specification V1.13'
-                  - specUri: 'http://www.io-link.com/io-link/10.122/V1.1'
-                    specDesc: 'IO-Link Wireless System Extensions V1.1'
+                    specDesc: 'IO-Link Interface and System Specification V1.13' 
                   - specUri: 'http://profibus.com/profinet/2.722/V2.4MU2'
                     specDesc: 'Application Layer protocol for decentralized periphery - Technical Specification for PROFINET IO'
                   - specUri: 'http://profibus.com/profinet/2.712/V2.4MU2'
                     specDesc: 'Application Layer services for decentralized periphery - Technical Specification for PROFINET IO'
+                IO-Link_Wireless:
+                  value:
+                  - specUri: 'http://www.io-link.com/io-link/10.222/V2.0'
+                    specDesc: 'JSON Integration for IO-Link - Draft V2.0'
+                  - specUri: 'http://www.io-link.com/io-link/10.002/V1.13'
+                    specDesc: 'IO-Link Interface and System Specification V1.13'
+                  - specUri: 'http://www.io-link.com/io-link/10.122/V1.1'
+                    specDesc: 'IO-Link Wireless System Extensions V1.1'
   '/gateways':
     get:
       operationId: GetGateways
@@ -378,15 +384,21 @@ paths:
                     portNumber:
                       type: integer
                       minimum: 1
-                example:
-                  - gatewayAlias: gateway1
-                    gatewayUrl: 'http://gateway1'
-                  - gatewayAlias: gatewayXYZ
-                    gatewayUrl: 'http://gatewayXYZ'
-                  - gatewayAlias: BNI_IOL
-                    gatewayUrl: 'https://BNI_IOL/'
-                  - gatewayAlias: master1
-                    gatewayUrl: 'https://192.168.88.191'
+              examples:
+                self:
+                  value:
+                    - gatewayAlias: gateway1
+                      gatewayUrl: 'http://gateway1'
+                multiple:
+                  value:
+                    - gatewayAlias: gateway1
+                      gatewayUrl: 'http://gateway1'                    
+                    - gatewayAlias: gatewayXYZ
+                      gatewayUrl: 'http://gatewayXYZ'
+                    - gatewayAlias: BNI_IOL
+                      gatewayUrl: 'https://BNI_IOL/'
+                    - gatewayAlias: master_ABC
+                      gatewayUrl: 'https://192.168.88.191'
         '403':
           $ref: '#/components/responses/HTTP_403'
         '500':
@@ -1181,12 +1193,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/masterCapabilitiesGet'
-              example:
-                value:
-                  numberOfPorts: 8
-                  maxPowerSupply: #overall power consumption
-                    value: 0.3
-                    unit: A
+              examples:
+                IO-Link:
+                  value:
+                    numberOfPorts: 8
+                    maxPowerSupply: # max power supply per port
+                      value: 0.3
+                      unit: A                  
+                IO-Link_Wireless:
+                  value:
+                    numberOfPorts: 40
         '403':
           $ref: '#/components/responses/HTTP_403'
         '404':
@@ -1208,7 +1224,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/identificationGet'
+                $ref: '#/components/schemas/masterIdentificationGet'
+              examples:
+                  IO-Link:
+                    value:
+                      vendorName: Vendor GmbH
+                      vendorId: 26
+                      masterId: 42
+                      masterType: Master acc. V1.0
+                      serialNumber: IOLM123456
+                      orderCode: PROD-123456
+                      productName: IO-Link Master
+                      productId: PROD-123456
+                      hardwareRevision: "3.2.1.444R"
+                      firmwareRevision: "3.2.1.888R"
+                      vendorUrl: 'http://www.io-link.com/io-link-master'
+                      manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
+                      applicationSpecificTag: End of the belt
+                      locationTag: Down under
+                      functionTag: Code reading            
+                  IO-Link_Wireless:
+                    value:
+                      vendorName: Vendor GmbH
+                      vendorId: 01
+                      masterId: 22
+                      masterType: Wireless_Master
+                      serialNumber: IOLWM123456
+                      orderCode: PROD6789
+                      productName: IO-Link Wireless Master
+                      productId: PROD6789
+                      hardwareRevision: "1"
+                      firmwareRevision: "2.0.0"
+                      vendorUrl: 'http://www.io-link.com'
+                      productInstanceUri: 'http://www.io-link.com/PROD123456/IOLWM123456'
+                      descriptionFileUri: 'https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml'
+                      manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
+                      applicationSpecificTag: "***"
+                      locationTag: "***"
+                      functionTag: "***"                   
         '403':
           $ref: '#/components/responses/HTTP_403'
         '404':
@@ -1228,7 +1281,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/identificationPost'
+              $ref: '#/components/schemas/masterIdentificationPost'
             examples:
               All optional fiels:
                 value:
@@ -1738,7 +1791,6 @@ paths:
                 IO-Link_Wireless:
                   value:
                     portType: WIRELESS_MASTER
-                    slotType: "DSLOT" 
         '403':
            $ref: '#/components/responses/HTTP_403'
         '404':
@@ -1778,7 +1830,7 @@ paths:
                     portQualityInfo: 
                       pdInValid: true
                       pdOutValid: true
-                    ioLinkRevision: 1.1
+                    ioLinkRevision: '1.1'
                     inputDataLength: 2
                     outputDataLength: 2
                     vendorId: 888
@@ -1826,6 +1878,7 @@ paths:
                   value:
                     mode: WIOLINK_CYCLIC_AUTOPAIRING
                     validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                    iqConfiguration: NOT_SUPPORTED
                     vendorId: 888
                     deviceId: 1
                     slotNumber: 1
@@ -3183,7 +3236,7 @@ components:
         - masterNumber: 2
           serialNumber: 123A45B783
           locationTag: slotNumber 6
-    identificationGet:
+    masterIdentificationGet:
       required:
         - vendorName
         - vendorId
@@ -3243,7 +3296,7 @@ components:
           format: uri
         productInstanceUri:
           type: string
-        gsdUri:
+        descriptionFileUri:
           type: string
         applicationSpecificTag:
           type: string
@@ -3257,25 +3310,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-      example:
-        vendorName: Vendor GmbH
-        vendorId: 26
-        masterId: 42
-        masterType: Wireless_Master
-        serialNumber: IOLWM123456
-        orderCode: PROD123456
-        productName: IO-Link Wireless Master
-        productId: PROD123456
-        hardwareRevision: 3.2.1.444R
-        firmwareRevision: 3.2.1.888R
-        vendorUrl: 'http://www.io-link.com'
-        productInstanceUri: 'http://www.io-link.com/PROD123456/IOLWM123456'
-        gsdUri: 'https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml'
-        manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
-        applicationSpecificTag: Fallback reader
-        locationTag: Down under
-        functionTag: Code reading
-    identificationPost:
+    masterIdentificationPost:
       type: object
       properties:
         applicationSpecificTag:
@@ -3306,7 +3341,6 @@ components:
     masterCapabilitiesGet:
       required:
         - numberOfPorts
-        - maxPowerSupply
       type: object
       properties:
         numberOfPorts:
@@ -3744,8 +3778,6 @@ components:
         - vendorId
         - deviceId
         - ioLinkRevision
-        - vendorName
-        - productName
       type: object
       properties:
         vendorId:
@@ -4135,8 +4167,6 @@ components:
               default: 0
         blockList:
           type: object
-          required:
-            - all
           properties:
             '2402':
               type: boolean
@@ -4411,11 +4441,11 @@ components:
         scanResults:
           - slotType: SSLOT
             uniqueId: 03:78:00:00:01:32:50:60:46
-            ioLinkRevision: 1.1
+            ioLinkRevision: '1.1'
             lastSeen: "2022-12-01T08:42:23.314Z"
           - slotType: DSLOT
             uniqueId: 03:78:00:00:01:32:50:60:47
-            ioLinkRevision: 1.1
+            ioLinkRevision: '1.1'
             lastSeen: "2022-12-01T09:42:23.314Z"
 
     mastersScanPost:                                                            # TODO: IOLW
@@ -4538,8 +4568,6 @@ components:
           description: >-
             status information of the Process Data (Wireless Master only).
           type: object
-          required:
-            - all
           properties:
             "pdInValid":
               type: boolean
