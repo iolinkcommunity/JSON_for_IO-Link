@@ -55,15 +55,15 @@ tags:
     description: Access to the IODDs
   - name: masters
     description: Access to parameters of the IO-Link master itself
-  - name: tracks
-    description: Access to the tracks (radios) of the IO-Link wireless master
   - name: ports
     description: Access to the IO-Link ports of the IO-Link master
   - name: devices
     description: Access to the IO-Link Devices connected ot the Master
 
 paths:
-  ################################################################################
+################################################################################
+# general
+################################################################################
   '/openapi':
     get:
       tags:
@@ -203,7 +203,6 @@ paths:
                   value:
                     code: 101
                     message: Internal server error
-
   '/login':
     get:
       tags:
@@ -391,8 +390,10 @@ paths:
         '403':
           $ref: '#/components/responses/HTTP_403'
         '500':
-          $ref: '#/components/responses/HTTP_500'
-
+           $ref: '#/components/responses/HTTP_500'
+################################################################################
+# gateway
+################################################################################
   '/gateway/identification':
     get:
       operationId: GetGatewayIdentification
@@ -694,7 +695,11 @@ paths:
         '403':
           $ref: '#/components/responses/HTTP_403'
         '500':
-          $ref: '#/components/responses/HTTP_500'
+           $ref: '#/components/responses/HTTP_500'
+
+################################################################################
+# mqtt
+################################################################################
 
   '/mqtt/configuration':
     get:
@@ -1020,7 +1025,11 @@ paths:
         '500':
           $ref: '#/components/responses/HTTP_500'
         '501':
-          $ref: '#/components/responses/HTTP_501'
+           $ref: '#/components/responses/HTTP_501'
+            
+################################################################################
+# iodds
+################################################################################
   '/iodds':
     get:
       operationId: GetIodds
@@ -1131,7 +1140,11 @@ paths:
         '500': # code 101, 602
           $ref: '#/components/responses/HTTP_500'
         '501':
-          $ref: '#/components/responses/HTTP_501'
+           $ref: '#/components/responses/HTTP_501' 
+           
+################################################################################
+# masters
+################################################################################
   '/masters':
     get:
       operationId: GetMasters
@@ -1168,17 +1181,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/masterCapabilitiesGet'
-              examples:
-                wired:
-                  value:
-                    numberOfPorts: 8
-                    maxPowerSupply: #overall power consumption
-                      value: 0.3
-                      unit: A
-                # wireless: # @todo wireless
-                #   value:
-                #     masterType: Wireless_Master
-                #     numberOfPorts: 40
+              example:
+                value:
+                  numberOfPorts: 8
+                  maxPowerSupply: #overall power consumption
+                    value: 0.3
+                    unit: A
         '403':
           $ref: '#/components/responses/HTTP_403'
         '404':
@@ -1238,8 +1246,8 @@ paths:
           $ref: '#/components/responses/HTTP_404'
         '500':
           $ref: '#/components/responses/HTTP_500'
-
-  '/masters/{masterNumber}/configuration': #@todo wireles
+           
+  '/masters/{masterNumber}/configuration':                                      #TODO: wireles
     get:
       operationId: GetMastersMasterNumberConfiguration
       tags:
@@ -1254,7 +1262,104 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/masterConfiguration'
+                $ref: '#/components/schemas/mastersConfigurationGetPost'
+              examples:
+                IO-Link:
+                  value:
+                IO-Link_Wireless:
+                  value:
+                    masterId: 5
+                    advancedConnectivity:
+                      "ahtEnable": false
+                    pairingTimeout: 
+                      value: 25
+                      unit: s
+                    serviceTrackNumber: 1
+                    serviceTrackMode: CYCLIC
+                    trackTxPower:
+                      "track_1": 31 
+                      "track_2": 31
+                      "track_3": 31
+                      "track_4": 0
+                      "track_5": 0
+                    blockList:
+                      "2402": false
+                      "2403": false
+                      "2404": false
+                      "2405": false
+                      "2406": false
+                      "2407": false
+                      "2408": false
+                      "2409": false
+                      "2410": false
+                      "2411": false
+                      "2412": false
+                      "2413": false
+                      "2414": false
+                      "2415": false
+                      "2416": false
+                      "2417": false
+                      "2418": false
+                      "2419": false
+                      "2420": false
+                      "2421": false
+                      "2422": false
+                      "2423": false
+                      "2424": false
+                      "2425": false
+                      "2426": false
+                      "2427": false
+                      "2428": false
+                      "2429": false
+                      "2430": false
+                      "2431": false
+                      "2432": false
+                      "2433": false
+                      "2434": false
+                      "2435": false
+                      "2436": false
+                      "2437": false
+                      "2438": false
+                      "2439": false
+                      "2440": false
+                      "2441": false
+                      "2442": false
+                      "2443": false
+                      "2444": false
+                      "2445": false
+                      "2446": false
+                      "2447": false
+                      "2448": false
+                      "2449": false
+                      "2450": false
+                      "2451": false
+                      "2452": false
+                      "2453": false
+                      "2454": false
+                      "2455": false
+                      "2456": false
+                      "2457": false
+                      "2458": false
+                      "2459": false
+                      "2460": false
+                      "2461": false
+                      "2462": false
+                      "2463": false
+                      "2464": false
+                      "2465": false
+                      "2466": false
+                      "2467": false
+                      "2468": false
+                      "2469": false
+                      "2470": false
+                      "2471": false
+                      "2472": false
+                      "2473": false
+                      "2474": false
+                      "2475": false
+                      "2476": false
+                      "2477": false
+                      "2478": false
         '403':
           $ref: '#/components/responses/HTTP_403'
         '500':
@@ -1272,7 +1377,104 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/masterConfiguration'
+              $ref: '#/components/schemas/mastersConfigurationGetPost'
+            examples:
+              IO-Link:
+                value:
+              IO-Link_Wireless:
+                value:
+                  masterId: 5
+                  advancedConnectivity:
+                    "ahtEnable": false
+                  pairingTimeout: 
+                    value: 25
+                    unit: s
+                  serviceTrackNumber: 1
+                  serviceTrackMode: CYCLIC
+                  trackTxPower:
+                    "track_1": 31 
+                    "track_2": 31
+                    "track_3": 31
+                    "track_4": 0
+                    "track_5": 0
+                  blockList:
+                    "2402": false
+                    "2403": false
+                    "2404": false
+                    "2405": false
+                    "2406": false
+                    "2407": false
+                    "2408": false
+                    "2409": false
+                    "2410": false
+                    "2411": false
+                    "2412": false
+                    "2413": false
+                    "2414": false
+                    "2415": false
+                    "2416": false
+                    "2417": false
+                    "2418": false
+                    "2419": false
+                    "2420": false
+                    "2421": false
+                    "2422": false
+                    "2423": false
+                    "2424": false
+                    "2425": false
+                    "2426": false
+                    "2427": false
+                    "2428": false
+                    "2429": false
+                    "2430": false
+                    "2431": false
+                    "2432": false
+                    "2433": false
+                    "2434": false
+                    "2435": false
+                    "2436": false
+                    "2437": false
+                    "2438": false
+                    "2439": false
+                    "2440": false
+                    "2441": false
+                    "2442": false
+                    "2443": false
+                    "2444": false
+                    "2445": false
+                    "2446": false
+                    "2447": false
+                    "2448": false
+                    "2449": false
+                    "2450": false
+                    "2451": false
+                    "2452": false
+                    "2453": false
+                    "2454": false
+                    "2455": false
+                    "2456": false
+                    "2457": false
+                    "2458": false
+                    "2459": false
+                    "2460": false
+                    "2461": false
+                    "2462": false
+                    "2463": false
+                    "2464": false
+                    "2465": false
+                    "2466": false
+                    "2467": false
+                    "2468": false
+                    "2469": false
+                    "2470": false
+                    "2471": false
+                    "2472": false
+                    "2473": false
+                    "2474": false
+                    "2475": false
+                    "2476": false
+                    "2477": false
+                    "2478": false
       responses:
         '204':
           description: Successful operation
@@ -1308,86 +1510,63 @@ paths:
         '403':
           $ref: '#/components/responses/HTTP_403'
         '500':
-          $ref: '#/components/responses/HTTP_500'
-
-  ################################################################################
-  # tracks
-  ################################################################################
-  '/masters/{masterNumber}/tracks': #@todo wireles
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/masters/{masterNumber}/trackstatus':                                        #TODO: wireles
     get:
-      operationId: GetMastersMasterNumberTracks
+      operationId: GetMastersMasterNumberTrackstatus
       tags:
-        - tracks
-      summary: Read the information about the available wireless tracks. Mandatory for W-Masters.
-
+        - masters
+      summary: Read the actual Track status of the specified Wireless-Master.
+      description: Read the actual Track status of the specified Wireless-Master.
       parameters:
-        - $ref: '#/components/parameters/masterNumber'
-      description: >-
-        A W-Master can handle up to 5 transmission tracks in parallel, each trackNumber can handle a maximum of 8 W-Devices, thus supporting up to 40 W-Devices per W-Master.
+        - $ref: '#/components/parameters/masterNumber'      
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                items:
-                  type: object
-                  required:
-                    - trackNumber
-                    - statusInfo
-                  properties:
-                    trackNumber:
-                      type: integer
-                      minimum: 1
-                      maximum: 5
-                    statusInfo:
-                      type: string
-                      enum:
-                        - STOP
-                        - CYCLIC
-                        - ROAMING
-                        - SCANNING
-                        - PAIRING
-                example:
-                  tracksInfo:
-                    - trackNumber: 1
-                      statusInfo: 'STOP'
-                    - trackNumber: 2
-                      statusInfo: 'CYCLIC'
-                    - trackNumber: 3
-                      statusInfo: 'ROAMING'
-                    - trackNumber: 4
-                      statusInfo: 'SCANNING'
-                    - trackNumber: 5
-                      statusInfo: 'PAIRING'
+                $ref: '#/components/schemas/mastersTrackstatusGet'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/masters/{masterNumber}/scan':                                               #TODO: wireles
+    get:
+      operationId: GetMastersMasterNumberScan
+      tags:
+        - masters
+      summary: Read the actual scan results of the specified Wireless-Master.
+      description: Read the actual scan results of the specified Wireless-Master.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'      
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mastersScanGet'
         '403':
           $ref: '#/components/responses/HTTP_403'
         '500':
-          $ref: '#/components/responses/HTTP_500'
-
-  '/masters/{masterNumber}/tracks/scan': #@todo wireles
+           $ref: '#/components/responses/HTTP_500'
     post:
-      operationId: PostMastersMasterNumberTracksScan
+      operationId: PostMastersMasterNumberScan
       tags:
-        - tracks
-      summary: Start scanning on the specified trackNumber. Mandatory for W-Masters.
+        - masters
+      summary: To start a scan of the specified Wireless-Master.
+      description: To start a scan of the specified Wireless-Master.
       parameters:
-        - $ref: '#/components/parameters/masterNumber'
-      description: >-
-        Discover unpaired W-Devices in the proximity of the W-Master.
+        - $ref: '#/components/parameters/masterNumber'      
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                txPower:
-                  type: integer
-                  minimum: 1
-                  maximum: 31
-              example:
-                txPower: 31
+              $ref: '#/components/schemas/mastersScanPost'
       responses:
         '204':
           description: Successful operation
@@ -1412,322 +1591,23 @@ paths:
                   value:
                     code: 203
                     message: JSON data type invalid
-                '205':
+                "206":
                   value:
-                    code: 205
-                    message: JSON data value out of range
-                '208':
-                  value:
-                    code: 208
-                    message: POST request without content
-                '701':
-                  value:
-                    code: 701
-                    message: Data set incomplete
-                '702':
-                  value:
-                    code: 702
-                    message: Data set not applicable
-                '703':
-                  value:
-                    code: 703
-                    message: Data set combination incompatible
-        '403':
-          $ref: '#/components/responses/HTTP_403'
-        '404':
-          $ref: '#/components/responses/HTTP_404'
-        '500':
-          $ref: '#/components/responses/HTTP_500'
-        '503':
-          $ref: '#/components/responses/HTTP_503'
-    get:
-      operationId: GetMastersMasterNumberTracksScan
-      tags:
-        - tracks
-      summary: Read back the last scan result. Mandatory for W-Masters.
-      parameters:
-        - $ref: '#/components/parameters/masterNumber'
-      description: >-
-        List the unique identifiers (UniqueID) of the discovered unpaired W-Devices.
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                minItems: 1
-                items:
-                  type: object
-                  properties:
-                    SlotType:
-                      type: string
-                      enum:
-                        - SSLOT
-                        - DSLOT
-                    revisionId:
-                      type: string
-                    uniqueId:
-                      type: string
-                      minLength: 1
-                      maxLength: 32
-              example:
-                - slotType: SSLOT
-                  revisionId: '1.1'
-                  uniqueId: 03:78:00:00:01:32:50:60:46
-                  lastSeen: '2019-02-19T08:02:51.786Z'
-                - slotType: DSLOT
-                  revisionId: '1.1'
-                  uniqueId: 03:78:00:00:01:32:50:60:47
-                  lastSeen: '2019-02-19T08:02:51.786Z'
-                - slotType: SSLOT
-                  revisionId: '1.1'
-                  uniqueId: 03:78:00:00:01:32:50:60:48
-                  lastSeen: '2019-02-19T08:02:51.786Z'
-        '403':
-          $ref: '#/components/responses/HTTP_403'
-        '404':
-          $ref: '#/components/responses/HTTP_404'
-        '500':
-          $ref: '#/components/responses/HTTP_500'
-        '503':
-          $ref: '#/components/responses/HTTP_503'
-  '/masters/{masterNumber}/tracks/{trackNumber}/status': #@todo wireles
-    get:
-      operationId: GetMastersMasterNumberTracksTrackNumberstatus
-      tags:
-        - tracks
-      summary: Read the status of the selected trackNumber. Mandatory for W-Masters.
-      parameters:
-        - $ref: '#/components/parameters/masterNumber'
-        - $ref: '#/components/parameters/trackNumber'
-      description: >-
-        Indicates the actual operational mode of the trackNumber (STOP, CYCLIC, SCAN, PAIRING, ROAMING) and the transmission power of the trackNumber radio.
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - trackNumber
-                  - statusInfo
-                  - txPower
-                properties:
-                  trackNumber:
-                    type: integer
-                    minimum: 1
-                    maximum: 5
-                  statusInfo:
-                    type: string
-                    enum:
-                      - STOP
-                      - CYCLIC
-                      - ROAMING
-                      - SCANNING
-                      - PAIRING
-                  txPower:
-                    type: integer
-                    minimum: 1
-                    maximum: 31
-                example:
-                  trackNumber: 2
-                  statusInfo: 'STOP'
-                  txPower: 31
-        '403':
-          $ref: '#/components/responses/HTTP_403'
-        '404':
-          $ref: '#/components/responses/HTTP_404'
-        '500':
-          $ref: '#/components/responses/HTTP_500'
-
-  '/masters/{masterNumber}/tracks/{trackNumber}/statistics': #@todo wireles
-    get:
-      operationId: GetMastersMasterNumberTracksTrackNumberstatistics
-      tags:
-        - tracks
-      summary: Read the statistics (Errors and PEP) of the selected trackNumber. Optional for W-Masters.
-      parameters:
-        - $ref: '#/components/parameters/masterNumber'
-        - $ref: '#/components/parameters/trackNumber'
-      description: >-
-        Monitoring the wireless environment regarding reliability indicating link quality.
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - trackNumber
-                  - errors
-                  - PEP
-                properties:
-                  trackNumber:
-                    type: integer
-                    minimum: 1
-                    maximum: 5
-                  errors:
-                    type: integer
-                    minimum: 0
-                    maximum: 65535 # 65535 = no data available
-                  PEP:
-                    type: string
-                # example: @todo wireles
-                #     - trackNumber: 0
-                #       errors: 0
-                #       PEP: "-"
-                #     - trackNumber: 1
-                #       errors: 4
-                #       PEP: "-"
-                #     - trackNumber: 2
-                #       errors: 5
-                #       PEP: "-"
-                #     - trackNumber: 3
-                #       errors: 7
-                #       PEP: "-"
-                #     - trackNumber: 4
-                #       errors: 5
-                #       PEP: "-"
-                #     - trackNumber: 5
-                #       errors: 63
-                #       PEP: 1.5380859375
-                #     - trackNumber: 6
-                #       errors: 6
-                #       PEP: "-"
-                #     - trackNumber: 7
-                #       errors: 1
-                #       PEP: "-"
-        '403':
-          $ref: '#/components/responses/HTTP_403'
-        '404':
-          $ref: '#/components/responses/HTTP_404'
-        '500':
-          $ref: '#/components/responses/HTTP_500'
-
-  '/masters/{masterNumber}/tracks/{trackNumber}/statisticsChannel': #@todo wireles
-    get:
-      operationId: GetMastersMasterNumberTracksTrackNumberstatisticsChannel
-      tags:
-        - tracks
-      summary: Read the channel statistics (Errors %) of the selected trackNumber. Optional for W-Masters.
-      parameters:
-        - $ref: '#/components/parameters/masterNumber'
-        - $ref: '#/components/parameters/trackNumber'
-      description: >-
-        Monitoring the wireless channel regarding reliability indicating link quality. 100 transmissions per channel are computed.
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/tracksStatisticsChannel'
-        '403':
-          $ref: '#/components/responses/HTTP_403'
-        '404':
-          $ref: '#/components/responses/HTTP_404'
-        '500':
-          $ref: '#/components/responses/HTTP_500'
-
-  '/masters/{masterNumber}/tracks/{trackNumber}/configuration': #@todo wireles
-    get:
-      operationId: GetMastersMasterNumberTracksTrackNumberConfiguration
-      tags:
-        - tracks
-      summary: Read the configuration of the specified trackNumber. Mandatory for W-Masters.
-      parameters:
-        - $ref: '#/components/parameters/masterNumber'
-        - $ref: '#/components/parameters/trackNumber'
-      description: Read the configuration of the specified trackNumber. Mandatory for W-Masters.
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/trackConfiguration'
-        '403':
-          $ref: '#/components/responses/HTTP_403'
-        '404':
-          $ref: '#/components/responses/HTTP_404'
-        '500':
-          $ref: '#/components/responses/HTTP_500'
-    post:
-      operationId: PostMastersMasterNumberTracksTrackNumberConfiguration
-      tags:
-        - tracks
-      summary: Write the configuration of the specified trackNumber. Mandatory for W-Masters.
-      parameters:
-        - $ref: '#/components/parameters/masterNumber'
-        - $ref: '#/components/parameters/trackNumber'
-      description: Write the configuration of the specified trackNumber. Mandatory for W-Masters.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/trackConfigurationPost'
-      responses:
-        '204':
-          description: Successful operation
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              examples:
-                '104':
-                  value:
-                    code: 104
-                    message: Action locked by another client
-                '201':
-                  value:
-                    code: 201
-                    message: JSON parsing failed
-                '202':
-                  value:
-                    code: 202
-                    message: JSON data value invalid
-                '203':
-                  value:
-                    code: 203
-                    message: JSON data type invalid
-                '204':
-                  value:
-                    code: 204
-                    message: Enumeration value unknown
-                '205':
-                  value:
-                    code: 205
-                    message: JSON data value out of range
-                '208':
+                    code: 206
+                    message: JSON data value out of bounds
+                "208":
                   value:
                     code: 208
                     message: POST request without content
-                '701':
-                  value:
-                    code: 701
-                    message: Data set incomplete
-                '702':
-                  value:
-                    code: 702
-                    message: Data set not applicable
-                '703':
-                  value:
-                    code: 703
-                    message: Data set combination incompatible
         '403':
-          $ref: '#/components/responses/HTTP_403'
-        '404':
-          $ref: '#/components/responses/HTTP_404'
+           $ref: '#/components/responses/HTTP_403'
         '500':
-          $ref: '#/components/responses/HTTP_500'
+           $ref: '#/components/responses/HTTP_500'
+           
 
-  ################################################################################
-  # ports
-  ################################################################################
+################################################################################
+# ports
+################################################################################  
   '/masters/{masterNumber}/ports':
     get:
       operationId: GetMastersMasterNumberPorts
@@ -1743,75 +1623,64 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  required:
-                    - portNumber
-                    - statusInfo
-                    - deviceAlias
-                  properties:
-                    portNumber:
-                      type: number
-                    deviceAlias:
-                      type: string
-                    statusInfo:
-                      type: string
-                      enum: # see Terminology in V.113, Table E.4 PortStatusList
-                        - COMMUNICATION_LOST # NO_DEVICE
-                        - DEACTIVATED # DEACTIVATED
-                        - INCORRECT_DEVICE # PORT_DIAG
-                        - DEVICE_STARTING #
-                        - DEVICE_ONLINE # OPERATE
-                        - DIGITAL_INPUT_C/Q # DI_CQ
-                        - DIGITAL_OUTPUT_C/Q # DO_CQ
-                        - NOT_AVAILABLE # NOT_AVAILABLE
-                        - PORT_POWER_OFF # PORT_POWER_OFF
-                        - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
-                    # slotNumber: # @todo wireles
-                    #   type: number
-                    # trackNumber:
-                    #   type: number
-                    # slotType:
-                    #   type: string
-                    #   enum:
-                    #     - SSLOT
-                    #     - DSLOT
-                    # items:
-                    #   type: object
-                    #   properties:
-                    #     vendorId:
-                    #       type: number
-                    #     deviceId:
-                    #       type: number
-                    #     productName:
-                    #       type: string
-              example:
-                - portNumber: 1
-                  statusInfo: 'DEVICE_ONLINE'
-                  deviceAlias: 'Distance_Sensor'
-                - portNumber: 2
-                  statusInfo: 'DIGITAL_INPUT_C/Q'
-                  deviceAlias: 'Switching_Sensor'
-                # - portNumber: 3 # @todo wireles
-                #   trackNumber: 1
-                #   slotNumber: 2
-                #   slotType: "SSLOT"
-                #   statusInfo: "DEVICE_ONLINE"
-                #   deviceAlias: "Wireless_Bridge"
-                #   deviceInfo:
-                #     vendorId: 888
-                #     deviceId: 10485760
-                #     productName: "BNI IOW-302-W01-K080"
-                - portNumber: 4
-                  statusInfo: 'DEACTIVATED'
-                  deviceAlias: 'Empty_port'
+                $ref: '#/components/schemas/mastersPortsGet'
+              examples:
+                IO-Link:
+                  value:
+                    - portNumber: 1
+                      statusInfo: "DEVICE_ONLINE"
+                      deviceAlias: "Distance_Sensor"
+                    - portNumber: 2
+                      statusInfo: "DIGITAL_INPUT_C/Q"
+                      deviceAlias: "Switching_Sensor"
+                    - portNumber: 4
+                      statusInfo: "DEACTIVATED"
+                      deviceAlias: "Empty_port"
+                IO-Link_Wireless:
+                  value:
+                    - portNumber: 1
+                      deviceAlias: "Port_X01"
+                      statusInfo: "DEVICE_ONLINE"
+                      slotNumber: 2
+                      trackNumber: 1
+                      slotType: "SSLOT"
+                      deviceInfo:
+                        vendorId: 888
+                        deviceId: 10485760
+                        productName: "BNI IOW-302-W01-K080" 
+                    - portNumber: 4
+                      statusInfo: "DEACTIVATED"
+                      deviceAlias: "Empty_port"
         '403':
-          $ref: '#/components/responses/HTTP_403'
+           $ref: '#/components/responses/HTTP_403'
         '404':
-          $ref: '#/components/responses/HTTP_404'
+           $ref: '#/components/responses/HTTP_404'
         '500':
-          $ref: '#/components/responses/HTTP_500'
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/masters/{masterNumber}/ports/qualityall':
+    get:
+      operationId: GetMastersMasterNumberPortsQuality
+      tags:
+        - ports
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+      summary: Read the link quality and the RSSI of all used Wireless-Ports (Wireless-Device and Wireless-Master).
+      description: Read the link quality and the RSSI of all used Wireless-Ports (Wireless-Device and Wireless-Master).
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mastersPortsQualityallGet'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
   '/masters/{masterNumber}/ports/{portNumber}/capabilities':
     get:
       operationId: GetMastersMasterNumberPortsPortNumberCapabilities
@@ -1841,7 +1710,7 @@ paths:
                     maxPowerSupply:
                       value: 2.0
                       unit: A
-                    portType: CLASS_B
+                    portType: CLASS_B   
                 CLASS_A_WITH_PORT_POWER_OFF_ON:
                   value:
                     maxPowerSupply:
@@ -1859,25 +1728,24 @@ paths:
                     maxPowerSupply:
                       value: 0.2
                       unit: A
-                    portType: FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
+                    portType: FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS                    
                 FAILSAFE_PORT_B:
                   value:
                     maxPowerSupply:
                       value: 2.0
                       unit: A
-                    portType: FAILSAFE_PORT_B
-                WIRELESS:
+                    portType: FAILSAFE_PORT_B   
+                IO-Link_Wireless:
                   value:
                     portType: WIRELESS_MASTER
-                    slotType: 'DSLOT'
-
+                    slotType: "DSLOT" 
         '403':
-          $ref: '#/components/responses/HTTP_403'
+           $ref: '#/components/responses/HTTP_403'
         '404':
-          $ref: '#/components/responses/HTTP_404'
+           $ref: '#/components/responses/HTTP_404'
         '500':
-          $ref: '#/components/responses/HTTP_500'
-
+           $ref: '#/components/responses/HTTP_500'
+           
   '/masters/{masterNumber}/ports/{portNumber}/status':
     get:
       operationId: GetMastersMasterNumberPortsPortNumberStatus
@@ -1894,91 +1762,37 @@ paths:
           content:
             application/json:
               schema:
-                # $ref: '#/components/schemas/portStatusGet'
-                type: object
-                required:
-                  - statusInfo
-                properties:
-                  statusInfo:
-                    type: string
-                    enum: # see Terminology in V.113, Table E.4 PortStatusList
-                      - COMMUNICATION_LOST # NO_DEVICE
-                      - DEACTIVATED # DEACTIVATED
-                      - INCORRECT_DEVICE # PORT_DIAG
-                      - DEVICE_STARTING #
-                      - DEVICE_ONLINE # OPERATE
-                      - DIGITAL_INPUT_C/Q # DI_CQ
-                      - DIGITAL_OUTPUT_C/Q # DO_CQ
-                      - NOT_AVAILABLE # NOT_AVAILABLE
-                      - PORT_POWER_OFF # PORT_POWER_OFF
-                      - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
-
-                  ioLinkRevision:
-                    description: >-
-                      Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
-                      OPERATE.
-                    type: string
-                    enum:
-                      - '1.0'
-                      - '1.1'
-                  transmissionRate:
-                    description: >-
-                      Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
-                      OPERATE.
-                    type: string
-                    enum:
-                      - COM1
-                      - COM2
-                      - COM3
-                      - WIRELESS
-                  masterCycleTime:
-                    description: >-
-                      Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
-                      OPERATE.
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/cycleTime'
-                  portQualityInfo:
-                    type: object
-                    required:
-                      - value
-                      - unit
-                    properties:
-                      value:
-                        type: integer
-                        minimum: 0
-                        maximum: 100
-                      unit:
-                        type: string
-                        enum:
-                          - '%'
+                $ref: '#/components/schemas/mastersPortsStatusGet'
               examples:
-                wired:
+                IO-Link:
                   value:
-                    statusInfo: 'DEVICE_ONLINE'
-                    ioLinkRevision: '1.1'
+                    statusInfo: "DEVICE_ONLINE"
+                    ioLinkRevision: "1.1"  
                     transmissionRate: COM2
                     masterCycleTime:
                       value: 2.3
                       unit: ms
-                wireless: # @todo wireles
+                IO-Link_Wireless:
                   value:
-                    statusInfo: 'DEVICE_ONLINE'
-                    ioLinkRevision: '1.1'
-                    transmissionRate: WIRELESS
-                    masterCycleTime:
-                      value: 5
-                      unit: 'ms'
-                    portQuality:
-                      value: 100
-                      unit: '%'
-
+                    statusInfo: DEVICE_ONLINE
+                    portQualityInfo: 
+                      pdInValid: true
+                      pdOutValid: true
+                    ioLinkRevision: 1.1
+                    inputDataLength: 2
+                    outputDataLength: 2
+                    vendorId: 888
+                    deviceId: 1
+                    wMasterCycleTimeOut:
+                      base: FreeRunning
+                    wMasterCycleTimeIn:
+                      base: FreeRunning
         '403':
-          $ref: '#/components/responses/HTTP_403'
+           $ref: '#/components/responses/HTTP_403'
         '404':
-          $ref: '#/components/responses/HTTP_404'
+           $ref: '#/components/responses/HTTP_404'
         '500':
-          $ref: '#/components/responses/HTTP_500'
+           $ref: '#/components/responses/HTTP_500'
   '/masters/{masterNumber}/ports/{portNumber}/configuration':
     get:
       operationId: GetMastersMasterNumberPortsPortNumberConfiguration
@@ -1996,22 +1810,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/portConfigurationGet'
-              example:
-                mode: IOLINK_MANUAL
-                validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-                iqConfiguration: DIGITAL_INPUT
-                cycleTime:
-                  value: 2.3
-                  unit: ms
-                vendorId: 26
-                deviceId: 333
-                deviceAlias: Distance_sensor_1
+              examples:
+                IO-Link:
+                  value:
+                    mode: IOLINK_MANUAL
+                    validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                    iqConfiguration: DIGITAL_INPUT
+                    cycleTime:
+                      value: 2.3
+                      unit: ms
+                    vendorId: 26
+                    deviceId: 333
+                    deviceAlias: Distance_sensor_1
+                IO-Link_Wireless:
+                  value:
+                    mode: WIOLINK_CYCLIC_AUTOPAIRING
+                    validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                    vendorId: 888
+                    deviceId: 1
+                    slotNumber: 1
+                    trackNumber: 5
+                    deviceTxPower: 31 
+                    maxRetry: 20
+                    imaTime:
+                      base: 1664us
+                      multiplier: 60
+                    slotType: SSLOT
+                    lowEnergyDevice: false
+                    maxPDSegLength: 0
+                    wMasterCycleTimeOut:
+                      base: FreeRunning
+                    wMasterCycleTimeIn:
+                      base: FreeRunning
+                    uniqueId: 03:78:00:00:01:32:50:60:46
+                    deviceAlias: Port_X01
         '403':
-          $ref: '#/components/responses/HTTP_403'
+           $ref: '#/components/responses/HTTP_403'
         '404':
-          $ref: '#/components/responses/HTTP_404'
+           $ref: '#/components/responses/HTTP_404'
         '500':
-          $ref: '#/components/responses/HTTP_500'
+           $ref: '#/components/responses/HTTP_500'
     post:
       operationId: PostMastersMasterNumberPortsPortNumberConfiguration
       tags:
@@ -2048,6 +1886,28 @@ paths:
               Change the deviceAlias:
                 value:
                   deviceAlias: Flow_control_1
+              IO-Link_Wireless:
+                value:
+                  mode: WIOLINK_CYCLIC_AUTOPAIRING
+                  validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                  vendorId: 888
+                  deviceId: 1
+                  slotNumber: 1
+                  trackNumber: 5
+                  deviceTxPower: 31 
+                  maxRetry: 20
+                  imaTime:
+                    base: 1664us
+                    multiplier: 60
+                  slotType: SSLOT
+                  lowEnergyDevice: false
+                  maxPDSegLength: 0
+                  wMasterCycleTimeOut:
+                    base: FreeRunning
+                  wMasterCycleTimeIn:
+                    base: FreeRunning
+                  uniqueId: 03:78:00:00:01:32:50:60:46
+                  deviceAlias: Port_X01
       responses:
         '204':
           description: Successful operation
@@ -2134,11 +1994,64 @@ paths:
         '404':
           $ref: '#/components/responses/HTTP_404'
         '500':
-          $ref: '#/components/responses/HTTP_500'
-  ################################################################################
-  # devices
-  ################################################################################
+           $ref: '#/components/responses/HTTP_500'
 
+  '/masters/{masterNumber}/ports/{portNumber}/pairing':
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberPairing
+      tags:
+        - ports
+      summary: To pair a Wireless-Device with the specified Wireless-Port.
+      description: To pair a Wireless-Device with the specified Wireless-Port.
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mastersPortsPairingPost'
+      responses:
+        '204':
+          description: Successful operation
+        '400':  # code 104, 201, 202, 203, 204, 205, 207, 208, 701, 702, 703
+           $ref: '#/components/responses/HTTP_400'                    
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+           
+  '/masters/{masterNumber}/ports/{portNumber}/quality':
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberQuality
+      tags:
+        - ports
+      parameters:
+        - $ref: '#/components/parameters/masterNumber'
+        - $ref: '#/components/parameters/portNumber'
+      summary: Read the link quality and the RSSI of the specified Wireless-Port (Wireless-Device and Wireless-Master).
+      description: Read the link quality and the RSSI of the specified Wireless-Port (Wireless-Device and Wireless-Master).
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mastersPortsQualityGet'
+        '403':
+           $ref: '#/components/responses/HTTP_403'
+        '404':
+           $ref: '#/components/responses/HTTP_404'
+        '500':
+           $ref: '#/components/responses/HTTP_500'
+    
+           
+################################################################################
+# devices
+################################################################################ 
   '/devices':
     get:
       operationId: GetDevices
@@ -3113,7 +3026,8 @@ paths:
         '404':
           $ref: '#/components/responses/HTTP_404'
         '500':
-          $ref: '#/components/responses/HTTP_500'
+           $ref: '#/components/responses/HTTP_500'
+           
 components:
   schemas:
     cycleTime:
@@ -3948,12 +3862,16 @@ components:
             - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
             - FAILSAFE_PORT_B
             - WIRELESS_MASTER
-        slotType: # @todo wireles
+        slotType:
+          description: >-
+             slotType for Wireless Master only
           type: string
           enum:
             - SSLOT
             - DSLOT
         maxPowerSupply:
+          description: >-
+            maxPowerSupply is not supported in IO-Link Wireless.
           type: object
           required:
             - value
@@ -3963,6 +3881,8 @@ components:
               type: number
             unit:
               type: string
+
+
 
     portConfigurationGet:
       type: object
@@ -3979,6 +3899,10 @@ components:
             - IOLINK_AUTOSTART
             - DIGITAL_INPUT
             - DIGITAL_OUTPUT
+            - WIOLINK_CYCLIC_AUTOPAIRING
+            - WIOLINK_CYCLIC
+            - WIOLINK_ROAMING_AUTOPAIRING
+            - WIOLINK_ROAMING
         validationAndBackup:
           description: required if portMode is IOLINK_MANUAL.
           type: string
@@ -3991,10 +3915,12 @@ components:
         cycleTime:
           description: >-
             required if portMode is IOLINK_MANUAL or
-            IOLINK_AUTOSTART. Default value is 0 ms which means as fast as
-            possible. Note: If the applied value for cycle time cannot exactly be mapped,
+            IOLINK_AUTOSTART. Default value is 0 ms which means as fast as possible. 
+            Note: If the applied value for cycle time cannot exactly be mapped,
             the port shall use the next possible higher value. If the cycle time is greater 
             than 132.8 ms the error 702 shall be returned.
+            Note: This value is not used in IO-Link wireless use 
+            wMasterCycleTimeOut and wMasterCycleTimeIn instead. 
           type: object
           allOf:
             - $ref: '#/components/schemas/cycleTime'
@@ -4013,6 +3939,8 @@ components:
           minimum: 1
           maximum: 16777215
         iqConfiguration:
+          description: >-
+            iqConfiguration is not supported in IO-Link Wireless.
           type: string
           enum:
             - NOT_SUPPORTED
@@ -4020,27 +3948,134 @@ components:
             - DIGITAL_OUTPUT
         deviceAlias:
           type: string
-      example:
-        mode: IOLINK_MANUAL
-        validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-        iqConfiguration: DIGITAL_INPUT
-        cycleTime:
-          value: 2.3
-          unit: ms
-        vendorId: 26
-        deviceId: 333
-        deviceAlias: Distance_sensor_1
+        slotNumber:
+          description: >-
+            slot number of the Wireless-Device (Wireless Master only).
+          type: integer
+          minimum: 0
+          maximum: 7
+        trackNumber:
+          description: >-
+            track number of the Wireless-Device, maximum depends on the number of 
+            available tracks on the Wireless-Master (Wireless Master only).
+          type: integer
+          minimum: 1
+          maximum: 5
+        deviceTxPower:
+          description: >-
+            transmission power of the Wireless-Device (Wireless Master only).
+          type: integer
+          minimum: 1
+          maximum: 31
+        maxRetry:
+          description: >-
+            Number of Retries for process data (Wireless Master only).
+          type: integer
+          minimum: 2
+          maximum: 31
+        imaTime:
+          description: >-
+            I am alive time for the wireless connection (Wireless Master only).
+          type: object
+          required:
+            - base
+            - multiplier
+          properties:
+            base:
+              description: >-
+                IMA timeout base.
+              type: string
+              enum:
+                - "1664us"
+                - "5ms"
+                - "1s"
+                - "1min"
+            multiplier:
+              description: >-
+                IMA timeout multiplier.
+              type: integer
+              minimum: 1
+              maximum: 255
+        slotType:
+          description: >-
+            Single Slot or Double Slot (Wireless Master only).
+          type: string
+          enum:
+            - "SSLOT"
+            - "DSLOT"  
+        lowEnergyDevice:
+          description: >-
+            to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
+          type: boolean
+          default: false
+        maxPDSegLength:
+          description: >-
+            maximum process data output segment length (Wireless Master only).
+          type: integer
+          minimum: 0
+          maximum: 32
+        wMasterCycleTimeOut:
+          description: >-
+            Wireless-Master cycle time output for PD data (Wireless Master only).
+          type: object
+          required:
+            - base
+          properties:
+            base:
+              type: string
+              enum:
+                - "FreeRunning"
+                - "5ms"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 63
+        wMasterCycleTimeIn:
+          description: >-
+            Wireless-Master cycle time input for PD data (Wireless Master only).
+          type: object
+          required:
+            - base
+          properties:
+            base:
+              type: string
+              enum:
+                - "FreeRunning"
+                - "5ms"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 63
+        uniqueId:
+          description: >-
+            unique identifier for each Wireless-Device (Wireless Master only).
+          type: string
+          minLength: 26
+          maxLength: 26
 
-    masterConfiguration:
+        
+        
+    mastersConfigurationGetPost :                                                         # TODO: IOLW
       properties:
-        masterId:
+        wMasterId:
+          description: >-
+            Master identifier for connection with Wireless-Devices.
           type: integer
           minimum: 1
           maximum: 29
-        ahtEnable:
-          type: boolean
-          default: false
+        advancedConnectivity:
+          description: >-
+            To set advanced connectivity functions on the Wireless-Master.
+          type: object
+          properties:
+            "ahtEnable":
+              description: >-
+                To enable or disable the Adaptive Hopping Table.
+              type: boolean
+              default: false
         pairingTimeout:
+          description: >-
+            Timeout for pairing by BUTTON / UNIQUE.
           type: object
           required:
             - value
@@ -4048,13 +4083,57 @@ components:
           properties:
             value:
               type: integer
-              minimum: 5
-              maximum: 65535
+              minimum: 5      
+              maximum: 255    
             unit:
               type: string
               enum:
                 - s
-        blacklist:
+        serviceTrackNumber:
+          description: >-
+            W-Track number used for service requests (Scan/Pairing/Roaming).
+          type: integer
+          minimum: 1
+          maximum: 5
+          default: 1
+        serviceTrackMode:
+          description: >-
+            Mode of the service track.
+          type: string
+          enum:
+            - CYCLIC
+            - ROAMING
+        trackTxPower:
+          description: >-
+            transmission power of the W-Track (0 = Disable)
+          type: object
+          properties:
+            "track_1":
+              type: integer
+              minimum: 0
+              maximum: 31
+              default: 0
+            "track_2":
+              type: integer
+              minimum: 0
+              maximum: 31
+              default: 0
+            "track_3":
+              type: integer
+              minimum: 0
+              maximum: 31
+              default: 0
+            "track_4":
+              type: integer
+              minimum: 0
+              maximum: 31
+              default: 0
+            "track_5":
+              type: integer
+              minimum: 0
+              maximum: 31
+              default: 0
+        blockList:
           type: object
           required:
             - all
@@ -4289,748 +4368,330 @@ components:
               default: false
             '2478':
               type: boolean
-              default: false
-            '2479':
+              default: false    
+    mastersPortsPairingPost:                                                               # TODO: IOLW
+      properties:
+        portPairing:
+          type: string
+          enum:
+            - Unpairing
+            - PairingUnique
+            - PairingButton
+      example:
+        WPortPairing: PairingUnique
+
+    mastersScanGet:                                                                 # TODO: IOLW
+      properties:
+        scanStatus:
+          type: string
+          enum:                    
+            - NoScanWasPerformed   
+            - ScanInProgress
+            - ScanEnded
+        scanResults:
+          type: array
+          properties:
+            slotType:
+              type: string
+              enum:
+                - "SSLOT"
+                - "DSLOT"
+            uniqueId:
+              type: string
+              minLength: 26
+              maxLength: 26
+            ioLinkRevision:
+              type: string
+              enum:
+                - '1.1'
+            lastSeen:
+              $ref: '#/components/schemas/eventTime'
+      example:
+        scanStatus: ScanEnded
+        scanResults:
+          - slotType: SSLOT
+            uniqueId: 03:78:00:00:01:32:50:60:46
+            ioLinkRevision: 1.1
+            lastSeen: "2022-12-01T08:42:23.314Z"
+          - slotType: DSLOT
+            uniqueId: 03:78:00:00:01:32:50:60:47
+            ioLinkRevision: 1.1
+            lastSeen: "2022-12-01T09:42:23.314Z"
+
+    mastersScanPost:                                                            # TODO: IOLW
+      properties:
+        txPower:
+          type: integer
+          minimum: 1
+          maximum: 31
+      example:
+        txPower: 31
+    
+    mastersPortsGet:                                                                 # TODO: IOLW
+      type: array
+      items:
+        type: object
+        required:
+          - portNumber
+          - statusInfo
+          - deviceAlias
+        properties:
+          portNumber:
+            type: number
+          deviceAlias:
+            type: string
+          statusInfo:
+            type: string
+            enum:                    # see Terminology in V.113, Table E.4 PortStatusList
+              - COMMUNICATION_LOST   # NO_DEVICE
+              - DEACTIVATED          # DEACTIVATED
+              - INCORRECT_DEVICE     # PORT_DIAG
+              - DEVICE_STARTING      #
+              - DEVICE_ONLINE        # OPERATE
+              - DIGITAL_INPUT_C/Q    # DI_CQ
+              - DIGITAL_OUTPUT_C/Q   # DO_CQ
+              - NOT_AVAILABLE        # NOT_AVAILABLE
+              - PORT_POWER_OFF       # PORT_POWER_OFF
+              - PAIRING_FAULT        # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
+          slotNumber:
+            description: >-
+              slot number of the Wireless-Device (Wireless Master only).
+            type: integer
+            minimum: 0
+            maximum: 7
+          trackNumber:
+            description: >-
+              track number of the Wireless-Device, maximum depends on the number of 
+              available tracks on the Wireless-Master (Wireless Master only).
+            type: integer
+            minimum: 1
+            maximum: 5
+          slotType:
+            description: >-
+              Single Slot or Double Slot (Wireless Master only).
+            type: string
+            enum:
+              - "SSLOT"
+              - "DSLOT"
+          deviceInfo:
+            description: >-
+              Wireless Master only.
+            type: object
+            properties:
+              vendorId:
+                type: integer
+                minimum: 1
+                maximum: 65535
+              deviceId:
+                type: integer
+                minimum: 1
+                maximum: 16777215
+              productName:
+                type: string
+                minLength: 1
+                maxLength: 64
+
+    
+
+
+    mastersPortsStatusGet:                                                            # TODO: IOLW
+      properties:
+        statusInfo:
+          type: string
+          enum:                    # see Terminology in V.113, Table E.4 PortStatusList
+            - COMMUNICATION_LOST   # NO_DEVICE
+            - DEACTIVATED          # DEACTIVATED
+            - INCORRECT_DEVICE     # PORT_DIAG
+            - DEVICE_STARTING      #
+            - DEVICE_ONLINE        # OPERATE
+            - DIGITAL_INPUT_C/Q    # DI_CQ
+            - DIGITAL_OUTPUT_C/Q   # DO_CQ
+            - NOT_AVAILABLE        # NOT_AVAILABLE
+            - PORT_POWER_OFF       # PORT_POWER_OFF
+            - PAIRING_FAULT        # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE 
+        ioLinkRevision:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE.
+          type: string
+          enum:
+            - '1.0'
+            - '1.1'
+        transmissionRate:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE. transmissionRate is not used in IO-Link Wireless.
+          type: string
+          enum:
+            - COM1
+            - COM2
+            - COM3
+        masterCycleTime:
+          description: >-
+            Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+            OPERATE. masterCycleTime is not used in IO-Link wireless use 
+            wMasterCycleTimeOut and wMasterCycleTimeIn instead.
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/cycleTime'
+        portQualityInfo:
+          description: >-
+            status information of the Process Data (Wireless Master only).
+          type: object
+          required:
+            - all
+          properties:
+            "pdInValid":
               type: boolean
               default: false
-      example:
-        masterId: 5
-        ahtEnable: false
-        pairingTimeout:
-          value: 25
-          unit: s
-        blackList:
-          '2402': false
-          '2403': false
-          '2404': false
-          '2405': false
-          '2406': false
-          '2407': false
-          '2408': false
-          '2409': false
-          '2410': false
-          '2411': false
-          '2412': false
-          '2413': false
-          '2414': false
-          '2415': false
-          '2416': false
-          '2417': false
-          '2418': false
-          '2419': false
-          '2420': false
-          '2421': false
-          '2422': false
-          '2423': false
-          '2424': false
-          '2425': false
-          '2426': false
-          '2427': false
-          '2428': false
-          '2429': false
-          '2430': false
-          '2431': false
-          '2432': false
-          '2433': false
-          '2434': false
-          '2435': false
-          '2436': false
-          '2437': false
-          '2438': false
-          '2439': false
-          '2440': false
-          '2441': false
-          '2442': false
-          '2443': false
-          '2444': false
-          '2445': false
-          '2446': false
-          '2447': false
-          '2448': false
-          '2449': false
-          '2450': false
-          '2451': false
-          '2452': false
-          '2453': false
-          '2454': false
-          '2455': false
-          '2456': false
-          '2457': false
-          '2458': false
-          '2459': false
-          '2460': false
-          '2461': false
-          '2462': false
-          '2463': false
-          '2464': false
-          '2465': false
-          '2466': false
-          '2467': false
-          '2468': false
-          '2469': false
-          '2470': false
-          '2471': false
-          '2472': false
-          '2473': false
-          '2474': false
-          '2475': false
-          '2476': false
-          '2477': false
-          '2478': false
-          '2479': false
-
-    tracksStatisticsChannel:
-      properties:
-        trackNumber:
+            "pdOutValid":
+              type: boolean
+              default: false
+        inputDataLength:
+          description: >-
+            this element contains the input data length as number of octets of the Device provided by the PDIn service (Wireless Master only).
+          type: integer
+          minimum: 0
+          maximum: 32
+        outputDataLength:
+          description: >-
+            this element contains the output data length as number of octets of the Device provided by the PDOut service (Wireless Master only).
+          type: integer
+          minimum: 0
+          maximum: 32
+        vendorId:
+          description: >-
+            Wireless Master only.
           type: integer
           minimum: 1
-          maximum: 5
-        channelErrors:
+          maximum: 65535
+        deviceId:
+          description: >-
+            Wireless Master only.
+          type: integer
+          minimum: 1
+          maximum: 16777215
+        wMasterCycleTimeOut:
+          description: >-
+            Wireless-Master cycle time output for PD data (Wireless Master only).
           type: object
-          # required:  # @todo wireles
-          #   - all
+          required:
+            - base
           properties:
-            '2402':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2403':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2404':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2405':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2406':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2407':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2408':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2409':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2410':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2411':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2412':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2413':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2414':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2415':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2416':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2417':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2418':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2419':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2420':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2421':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2422':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2423':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2424':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2425':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2426':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2427':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2428':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2429':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2430':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2431':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2432':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2433':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2434':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2435':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2436':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2437':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2438':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2439':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2440':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2441':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2442':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2443':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2444':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2445':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2446':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2447':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2448':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2449':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2450':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2451':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2452':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2453':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2454':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2455':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2456':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2457':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2458':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2459':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2460':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2461':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2462':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2463':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2464':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2465':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2466':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2467':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2468':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2469':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2470':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2471':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2472':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2473':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2474':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2475':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2476':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2477':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2478':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-            '2479':
-              type: integer
-              minimum: 0
-              maximum: 65535 # 0 to 100, 65535 means no data available
-      example:
-        trackNumber: 2
-        channelErrors:
-          '2402': 0
-          '2403': 0
-          '2404': 0
-          '2405': 0
-          '2406': 0
-          '2407': 3
-          '2408': 1
-          '2409': 5
-          '2410': 9
-          '2411': 6
-          '2412': 4
-          '2413': 1
-          '2414': 0
-          '2415': 0
-          '2416': 0
-          '2417': 0
-          '2418': 0
-          '2419': 0
-          '2420': 0
-          '2421': 0
-          '2422': 0
-          '2423': 0
-          '2424': 0
-          '2425': 0
-          '2426': 0
-          '2427': 0
-          '2428': 0
-          '2429': 0
-          '2430': 0
-          '2431': 0
-          '2432': 0
-          '2433': 0
-          '2434': 0
-          '2435': 3
-          '2436': 2
-          '2437': 5
-          '2438': 2
-          '2439': 0
-          '2440': 0
-          '2441': 0
-          '2442': 0
-          '2443': 0
-          '2444': 0
-          '2445': 0
-          '2446': 0
-          '2447': 0
-          '2448': 0
-          '2449': 0
-          '2450': 0
-          '2451': 0
-          '2452': 0
-          '2453': 0
-          '2454': 0
-          '2455': 0
-          '2456': 0
-          '2457': 0
-          '2458': 0
-          '2459': 0
-          '2460': 0
-          '2461': 0
-          '2462': 0
-          '2463': 0
-          '2464': 0
-          '2465': 0
-          '2466': 0
-          '2467': 0
-          '2468': 0
-          '2469': 0
-          '2470': 0
-          '2471': 0
-          '2472': 0
-          '2473': 0
-          '2474': 0
-          '2475': 0
-          '2476': 0
-          '2477': 0
-          '2478': 0
-          '2479': 0
+            base:
+              type: string
+              enum:
+                - "FreeRunning"
+                - "5ms"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 63
+        wMasterCycleTimeIn:
+          description: >-
+            Wireless-Master cycle time input for PD data (Wireless Master only).
+          type: object
+          required:
+            - base
+          properties:
+            base:
+              type: string
+              enum:
+                - "FreeRunning"
+                - "5ms"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 63
 
-    trackConfiguration:
+
+
+
+    mastersTrackstatusGet:                                                               # TODO: IOLW
+      type: array
+      items:
+        type: object
+        properties:
+          trackNumber:
+            type: number
+          Mode:
+            type: string
+            enum:
+              - DEACTIVATED
+              - CYCLIC
+              - ROAMING
+              - SCAN
+              - PAIRING
+          txPower:
+            type: integer
+            minimum: 1
+            maximum: 31
+      example:                      
+        - trackNumber: 1
+          Mode: CYCLIC
+          txPower: 31
+        - trackNumber: 2
+          Mode: ROAMING
+          txPower: 31
+         
+    mastersPortsQualityallGet:                                                               # TODO: IOLW
+      type: array
+      items:
+        type: object
+        properties:
+          portNumber:
+            type: number
+          lqiMaster:
+            type: integer
+            minimum: 0
+            maximum: 100
+          rssiMaster:
+            type: integer
+            minimum: -128
+            maximum: 20
+          lqiDevice:
+            type: integer
+            minimum: 0
+            maximum: 100
+          rssiDevice:
+            type: integer
+            minimum: -128
+            maximum: 20
+      example:                      
+        - portNumber: 1
+          lqiMaster: 100
+          rssiMaster: -40
+          lqiDevice: 100
+          rssiDevice: -39
+        - portNumber: 2
+          lqiMaster: 100
+          rssiMaster: -60
+          lqiDevice: 100
+          rssiDevice: -61 
+    
+    mastersPortsQualityGet:                                                               # TODO: IOLW
       properties:
-        statusInfo:
-          type: string
-          enum:
-            - STOP
-            - CYCLIC
-            - ROAMING
-            - SERVICE
-        txPower:
+        lqiMaster:
           type: integer
-          minimum: 1
-          maximum: 31
-      example:
-        trackMode: CYCLIC
-
-    trackConfigurationPost:
-      properties:
-        statusInfo:
-          type: string
-          enum:
-            - STOP
-            - CYCLIC
-            - ROAMING
-            - SERVICE
-        txPower:
+          minimum: 0
+          maximum: 100
+        rssiMaster:
           type: integer
-          minimum: 1
-          maximum: 31
-      example:
-        trackMode: CYCLIC
-        txPower: 20
-
-    # wirelessPortConfigurationGet: # @todo wireles
-    #   properties:
-    #     portMode:
-    #       type: string
-    #       enum:
-    #         - DEACTIVATED
-    #         - CYCLIC
-    #         - ROAMING
-    #     validationBackup:
-    #       type: string
-    #       enum:
-    #         - NO_DEVICE_CHECK
-    #         - TYPE_COMPATIBLE_DEVICE_V1.1
-    #         - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-    #         - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-    #     vendorId:
-    #       type: integer
-    #       minimum: 1
-    #       maximum: 65535
-    #     deviceId:
-    #       type: integer
-    #       minimum: 1
-    #       maximum: 16777215
-    #     portCycleTime:
-    #       type: object
-    #       required:
-    #         - value
-    #         - unit
-    #       properties:
-    #         value:
-    #           type: integer
-    #           minimum: 0      ## 0 means Freerunning
-    #           maximum: 315    ## Step size 5ms
-    #         unit:
-    #           type: string
-    #           enum:
-    #             - ms
-    #     trackNumber:
-    #       type: integer
-    #       minimum: 1
-    #       maximum: 5
-    #     slotNumber:
-    #       type: integer
-    #       minimum: 0
-    #       maximum: 7
-    #     slotType:
-    #       type: string
-    #       enum:
-    #         - "SSLOT"
-    #         - "DSLOT"
-    #     maxRetry:
-    #       type: integer
-    #       minimum: 2
-    #       maximum: 31
-    #     imaTime:
-    #       type: object
-    #       required:
-    #         - base
-    #         - multiplier
-    #       properties:
-    #         base:
-    #           type: string
-    #           enum:
-    #             - "1664us"
-    #             - "5ms"
-    #             - "1s"
-    #             - "1min"
-    #         multiplier:
-    #           type: integer
-    #           minimum: 1
-    #           maximum: 255
-    #     deviceTxPower:
-    #       type: integer
-    #       minimum: 0
-    #       maximum: 31
-    #     lowPowerDevice:
-    #       type: string
-    #       enum:
-    #         - "NORMAL"
-    #         - "LOW_POWER"
-    #     maxPDSegLength:
-    #       type: integer
-    #       minimum: 0
-    #       maximum: 32
-    #     uniqueId:
-    #       type: string
-    #     deviceAlias:
-    #       type: string
-    #   example:
-    #     portMode: CYCLIC
-    #     validationBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-    #     vendorId: 888
-    #     deviceId: 1
-    #     portCycleTime:
-    #       value: 0
-    #       unit: ms
-    #     trackNumber: 5
-    #     slotNumber: 1
-    #     slotType: SSLOT
-    #     maxRetry: 20
-    #     imaTime:
-    #       base: 1664us
-    #       multiplier: 60
-    #     deviceTxPower: 31
-    #     lowPowerDevice: NORMAL
-    #     maxPDSegLength: 0
-    #     uniqueId: 03:78:00:00:01:32:50:60:46
-    #     deviceAlias: "Port_X01"
-
-    # wirelessPortConfigurationPost: # @todo wireles
-    #   properties:
-    #     portMode:
-    #       type: string
-    #       enum:
-    #         - DEACTIVATED
-    #         - CYCLIC
-    #         - ROAMING
-    #     validationBackup:
-    #       type: string
-    #       enum:
-    #         - NO_DEVICE_CHECK
-    #         - TYPE_COMPATIBLE_DEVICE_V1.1
-    #         - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-    #         - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-    #     vendorId:
-    #       type: integer
-    #       minimum: 1
-    #       maximum: 65535
-    #     deviceId:
-    #       type: integer
-    #       minimum: 1
-    #       maximum: 16777215
-    #     portCycleTime:
-    #       type: object
-    #       required:
-    #         - value
-    #         - unit
-    #       properties:
-    #         value:
-    #           type: integer
-    #           minimum: 0      ## 0 means Freerunning
-    #           maximum: 315    ## Step size 5ms
-    #         unit:
-    #           type: string
-    #           enum:
-    #             - ms
-    #     trackNumber:
-    #       type: integer
-    #       minimum: 1
-    #       maximum: 5
-    #     slotNumber:
-    #       type: integer
-    #       minimum: 0
-    #       maximum: 7
-    #     slotType:
-    #       type: string
-    #       enum:
-    #         - "SSLOT"
-    #         - "DSLOT"
-    #     maxRetry:
-    #       type: integer
-    #       minimum: 2
-    #       maximum: 31
-    #     imaTime:
-    #       type: object
-    #       required:
-    #         - base
-    #         - multiplier
-    #       properties:
-    #         base:
-    #           type: string
-    #           enum:
-    #             - "1664us"
-    #             - "5ms"
-    #             - "1s"
-    #             - "1min"
-    #         multiplier:
-    #           type: integer
-    #           minimum: 1
-    #           maximum: 255
-    #     deviceTxPower:
-    #       type: integer
-    #       minimum: 0
-    #       maximum: 31
-    #     lowPowerDevice:
-    #       type: string
-    #       enum:
-    #         - "NORMAL"
-    #         - "LOW_POWER"
-    #     maxPDSegLength:
-    #       type: integer
-    #       minimum: 0
-    #       maximum: 32
-    #     uniqueId:
-    #       type: string
-    #   example:
-    #     portMode: CYCLIC
-    #     validationBackup: TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-    #     vendorId: 888
-    #     deviceId: 1
-    #     portCycleTime:
-    #       value: 0    ##Or FreeRunning
-    #       unit: ms
-    #     trackNumber: 5
-    #     slotNumber: 1
-    #     slotType: SSLOT
-    #     maxRetry: 20
-    #     imaTime:
-    #       base: 1664us
-    #       multiplier: 60
-    #     deviceTxPower: 31
-    #     lowPowerDevice: NORMAL
-    #     maxPDSegLength: 0
-    #     uniqueId: 03:78:00:00:01:32:50:60:46
+          minimum: -128
+          maximum: 20
+        lqiDevice:
+          type: integer
+          minimum: 0
+          maximum: 100
+        rssiDevice:
+          type: integer
+          minimum: -128
+          maximum: 20
+      example:                      
+        lqiMaster: 100
+        rssiMaster: -40
+        lqiDevice: 100
+        rssiDevice: -39          
 
     portConfigurationPost:
       description: 'Note:  At least one of the mode, iqConfiguration,
@@ -5045,6 +4706,10 @@ components:
             - IOLINK_AUTOSTART
             - DIGITAL_INPUT
             - DIGITAL_OUTPUT
+            - WIOLINK_CYCLIC_AUTOPAIRING
+            - WIOLINK_CYCLIC
+            - WIOLINK_ROAMING_AUTOPAIRING
+            - WIOLINK_ROAMING
         validationAndBackup:
           description: >-
             required if the port's mode is IOLINK_MANUAL.
@@ -5062,7 +4727,8 @@ components:
             IO-Link Master. If the applied value for cycle time cannot exactly be
             mapped, the port shall use the next possible higher value.
             If the cycle time is greater than 132.8 ms the error 702 shall 
-            be returned.
+            be returned. This value is not used in IO-Link wireless use 
+            wMasterCycleTimeOut and wMasterCycleTimeIn instead.
           type: object
           allOf:
             - $ref: '#/components/schemas/cycleTime'
@@ -5081,6 +4747,8 @@ components:
           minimum: 1
           maximum: 16777215
         iqConfiguration:
+          description: >-
+            iqConfiguration is not supported in IO-Link Wireless.
           type: string
           enum:
             - NOT_SUPPORTED
@@ -5093,6 +4761,111 @@ components:
           type: string
           minLength: 1
           maxLength: 32
+        slotNumber:
+          description: >-
+            slot number of the Wireless-Device (Wireless Master only).
+          type: integer
+          minimum: 0
+          maximum: 7
+        trackNumber:
+          description: >-
+            track number of the Wireless-Device, maximum depends on the number of 
+            available tracks on the Wireless-Master (Wireless Master only).
+          type: integer
+          minimum: 1
+          maximum: 5
+        deviceTxPower:
+          description: >-
+            transmission power of the Wireless-Device (Wireless Master only).
+          type: integer
+          minimum: 1
+          maximum: 31
+        maxRetry:
+          description: >-
+            Number of Retries for process data (Wireless Master only).
+          type: integer
+          minimum: 2
+          maximum: 31
+        imaTime:
+          description: >-
+            I am alive time for the wireless connection (Wireless Master only).
+          type: object
+          required:
+            - base
+            - multiplier
+          properties:
+            base:
+              description: >-
+                IMA timeout base.
+              type: string
+              enum:
+                - "1664us"
+                - "5ms"
+                - "1s"
+                - "1min"
+            multiplier:
+              description: >-
+                IMA timeout multiplier.
+              type: integer
+              minimum: 1
+              maximum: 255
+        slotType:
+          description: >-
+            Single Slot or Double Slot (Wireless Master only).
+          type: string
+          enum:
+            - "SSLOT"
+            - "DSLOT"  
+        lowEnergyDevice:
+          description: >-
+            to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
+          type: boolean
+          default: false
+        maxPDSegLength:
+          description: >-
+            maximum process data output segment length (Wireless Master only).
+          type: integer
+          minimum: 0
+          maximum: 32
+        wMasterCycleTimeOut:
+          description: >-
+            Wireless-Master cycle time output for PD data (Wireless Master only).
+          type: object
+          required:
+            - base
+          properties:
+            base:
+              type: string
+              enum:
+                - "FreeRunning"
+                - "5ms"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 63
+        wMasterCycleTimeIn:
+          description: >-
+            Wireless-Master cycle time input for PD data (Wireless Master only).
+          type: object
+          required:
+            - base
+          properties:
+            base:
+              type: string
+              enum:
+                - "FreeRunning"
+                - "5ms"
+            multiplier:
+              type: integer
+              minimum: 1
+              maximum: 63
+        uniqueId:
+          description: >-
+            unique identifier for each Wireless-Device (Wireless Master only).
+          type: string
+          minLength: 26
+          maxLength: 26
+        
     dataStorageGetPost:
       description: >-
         In case the Data Storage is empty, the header object is empty and the
@@ -5777,7 +5550,9 @@ components:
           schema:
             $ref: '#/components/schemas/errorObject'
           examples:
-            '107':
-              value:
-                code: 107
-                message: 'Service temporarily unavailable'
+                "107":
+                    value:
+                      code: 107
+                      message: 'Service temporarily unavailable'
+                   
+         
