@@ -4896,8 +4896,10 @@ components:
                   enum:
                     - '1.0'
                     - '1.1'
-                parameterChecks:
+                parameterChecksum:
                   type: integer
+                  minimum: 0
+                  maximum: 4294967296
             - type: object # empty object
               additionalProperties: false
               minProperties: 0
