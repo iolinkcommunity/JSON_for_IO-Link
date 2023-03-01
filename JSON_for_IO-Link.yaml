@@ -3779,6 +3779,7 @@ components:
         - deviceId
         - ioLinkRevision
         - vendorName
+        - productName
       type: object
       properties:
         vendorId:
