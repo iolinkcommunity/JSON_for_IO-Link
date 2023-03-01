@@ -1566,11 +1566,11 @@ paths:
                   value:
                     code: 203
                     message: JSON data type invalid
-                "206":
+                '206':
                   value:
                     code: 206
                     message: JSON data value out of bounds
-                "208":
+                '208':
                   value:
                     code: 208
                     message: POST request without content
@@ -1753,7 +1753,7 @@ paths:
                     portQualityInfo: 
                       pdInValid: true
                       pdOutValid: true
-                    ioLinkRevision: 1.1
+                    ioLinkRevision: '1.1'
                     inputDataLength: 2
                     outputDataLength: 2
                     vendorId: 888
@@ -1801,11 +1801,12 @@ paths:
                   value:
                     mode: WIOLINK_CYCLIC_AUTOPAIRING
                     validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                    iqConfiguration: DIGITAL_INPUT
                     vendorId: 888
                     deviceId: 1
                     slotNumber: 1
                     trackNumber: 5
-                    deviceTxPower: 31 
+                    deviceTxPower: 31
                     maxRetry: 20
                     imaTime:
                       base: 1664us
@@ -3862,8 +3863,6 @@ components:
             unit:
               type: string
 
-
-
     portConfigurationGet:
       type: object
       required:
@@ -4115,8 +4114,6 @@ components:
               default: 0
         blockList:
           type: object
-          required:
-            - all
           properties:
             '2402':
               type: boolean
@@ -4519,12 +4516,13 @@ components:
             status information of the Process Data (Wireless Master only).
           type: object
           required:
-            - all
+            - pdInValid
+            - pdOutValid
           properties:
-            "pdInValid":
+            'pdInValid':
               type: boolean
               default: false
-            "pdOutValid":
+            'pdOutValid':
               type: boolean
               default: false
         inputDataLength:
@@ -5532,9 +5530,7 @@ components:
           schema:
             $ref: '#/components/schemas/errorObject'
           examples:
-                "107":
-                    value:
-                      code: 107
-                      message: 'Service temporarily unavailable'
-                   
-         
+            '107':
+              value:
+                code: 107
+                message: 'Service temporarily unavailable'
