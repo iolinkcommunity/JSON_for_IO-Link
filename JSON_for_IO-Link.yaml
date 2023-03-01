@@ -1162,12 +1162,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/masterCapabilitiesGet'
-              example:
-                value:
-                  numberOfPorts: 8
-                  maxPowerSupply: #overall power consumption
-                    value: 0.3
-                    unit: A
         '403':
           $ref: '#/components/responses/HTTP_403'
         '404':
@@ -3305,6 +3299,11 @@ components:
             unit:
               type: string
               minLength: 1
+      example:
+        numberOfPorts: 8
+        maxPowerSupply: #overall power consumption
+          value: 0.3
+          unit: A
     eventTime:
       description: >-
         Timestamp (format defined in DIN ISO 8601). This field can give an
