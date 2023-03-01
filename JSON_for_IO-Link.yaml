@@ -3778,6 +3778,7 @@ components:
         - vendorId
         - deviceId
         - ioLinkRevision
+        - vendorName
       type: object
       properties:
         vendorId:
@@ -4924,7 +4925,7 @@ components:
                   enum:
                     - '1.0'
                     - '1.1'
-                parameterChecks:
+                parameterChecksum:
                   type: integer
             - type: object # empty object
               additionalProperties: false
