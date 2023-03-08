@@ -1183,7 +1183,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/identificationGet'
+                $ref: '#/components/schemas/masterIdentificationGet'
+              examples:
+                  IO-Link:
+                    value:
+                      vendorName: Vendor GmbH
+                      vendorId: 26
+                      masterId: 42
+                      masterType: Master acc. V1.0
+                      serialNumber: IOLM123456
+                      orderCode: PROD-123456
+                      productName: IO-Link Master
+                      productId: PROD-123456
+                      hardwareRevision: "3.2.1.444R"
+                      firmwareRevision: "3.2.1.888R"
+                      vendorUrl: 'http://www.io-link.com/io-link-master'
+                      manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
+                      applicationSpecificTag: End of the belt
+                      locationTag: Down under
+                      functionTag: Code reading            
+                  IO-Link_Wireless:
+                    value:
+                      vendorName: Vendor GmbH
+                      vendorId: 01
+                      masterId: 22
+                      masterType: Wireless_Master
+                      serialNumber: IOLWM123456
+                      orderCode: PROD6789
+                      productName: IO-Link Wireless Master
+                      productId: PROD6789
+                      hardwareRevision: "1"
+                      firmwareRevision: "2.0.0"
+                      vendorUrl: 'http://www.io-link.com'
+                      productInstanceUri: 'http://www.io-link.com/PROD123456/IOLWM123456'
+                      descriptionFileUri: 'https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml'
+                      manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
+                      applicationSpecificTag: "***"
+                      locationTag: "***"
+                      functionTag: "***"                   
         '403':
           $ref: '#/components/responses/HTTP_403'
         '404':
@@ -1203,7 +1240,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/identificationPost'
+              $ref: '#/components/schemas/masterIdentificationPost'
             examples:
               All optional fiels:
                 value:
@@ -1713,7 +1750,6 @@ paths:
                 IO-Link_Wireless:
                   value:
                     portType: WIRELESS_MASTER
-                    slotType: "DSLOT" 
         '403':
            $ref: '#/components/responses/HTTP_403'
         '404':
@@ -1801,7 +1837,7 @@ paths:
                   value:
                     mode: WIOLINK_CYCLIC_AUTOPAIRING
                     validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-                    iqConfiguration: DIGITAL_INPUT
+                    iqConfiguration: NOT_SUPPORTED
                     vendorId: 888
                     deviceId: 1
                     slotNumber: 1
@@ -3159,7 +3195,7 @@ components:
         - masterNumber: 2
           serialNumber: 123A45B783
           locationTag: slotNumber 6
-    identificationGet:
+    masterIdentificationGet:
       required:
         - vendorName
         - vendorId
@@ -3219,7 +3255,7 @@ components:
           format: uri
         productInstanceUri:
           type: string
-        gsdUri:
+        descriptionFileUri:
           type: string
         applicationSpecificTag:
           type: string
@@ -3233,25 +3269,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-      example:
-        vendorName: Vendor GmbH
-        vendorId: 26
-        masterId: 42
-        masterType: Wireless_Master
-        serialNumber: IOLWM123456
-        orderCode: PROD123456
-        productName: IO-Link Wireless Master
-        productId: PROD123456
-        hardwareRevision: 3.2.1.444R
-        firmwareRevision: 3.2.1.888R
-        vendorUrl: 'http://www.io-link.com'
-        productInstanceUri: 'http://www.io-link.com/PROD123456/IOLWM123456'
-        gsdUri: 'https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml'
-        manualUrl: 'http://www.io-link.com/io-link-master/documentation.pdf'
-        applicationSpecificTag: Fallback reader
-        locationTag: Down under
-        functionTag: Code reading
-    identificationPost:
+    masterIdentificationPost:
       type: object
       properties:
         applicationSpecificTag:
@@ -3282,7 +3300,6 @@ components:
     masterCapabilitiesGet:
       required:
         - numberOfPorts
-        - maxPowerSupply
       type: object
       properties:
         numberOfPorts:
@@ -4388,11 +4405,11 @@ components:
         scanResults:
           - slotType: SSLOT
             uniqueId: 03:78:00:00:01:32:50:60:46
-            ioLinkRevision: 1.1
+            ioLinkRevision: '1.1'
             lastSeen: "2022-12-01T08:42:23.314Z"
           - slotType: DSLOT
             uniqueId: 03:78:00:00:01:32:50:60:47
-            ioLinkRevision: 1.1
+            ioLinkRevision: '1.1'
             lastSeen: "2022-12-01T09:42:23.314Z"
 
     mastersScanPost:                                                            # TODO: IOLW
@@ -4876,8 +4893,6 @@ components:
                     - '1.1'
                 parameterChecksum:
                   type: integer
-                  minimum: 0
-                  maximum: 4294967296
             - type: object # empty object
               additionalProperties: false
               minProperties: 0
