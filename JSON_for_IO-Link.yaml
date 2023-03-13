@@ -1,14 +1,16 @@
 openapi: 3.0.3
 info:
+  version: 1.1.0
+  title: JSON for IO-Link Specification
   description: >-
-    This is a sample IO-Link Master server. You can find out more about IO-Link
+    This is an openapi specification for IO-Link gateways, masters and devices. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
 
     # Description
 
-    * Draft for version 1.x
+    * Draft for version 1.1.0
 
-    ## Disclaimer:
+    # Disclaimer:
 
     >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
 
@@ -23,13 +25,12 @@ info:
 
 
     >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
-  version: 1.1.0
-  title: Swagger IO-Link Master
+  
   contact:
     email: info@io-link.com
   license:
-    name: tbd
-    url: 'http://www.io-link.com'
+    name: Legal Information
+    url: 'https://io-link.com/en/Global/Impressum.php'
 
 servers:
   - url: '{scheme}://{host}/{basePath}'
