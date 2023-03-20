@@ -1,4 +1,4 @@
-asyncapi: 2.5.0
+asyncapi: 2.6.0
 info:
   title: MQTT for IO-Link Topics
   version: 0.0.2
@@ -12,12 +12,38 @@ info:
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+defaultContentType: application/json
 servers:
-  client:
+  broker:
     url: 'api.iolink.com:{port}'
     protocol: mqtt
-    description: central mqtt Broker
+    protocolVersion: 3.1.1
+    description: broker to connect to io-link master
+    security:
+      - user-password: []
     variables:
+      host:
+        default: 'iolmaster.io-link.com'
+      basePath:
+        default: iolink/v1
+      port:
+        enum:
+          - '1883'
+          - '8883'
+        default: '1883'
+  iol-master:
+    url: '{host}:{port}'
+    # url: 'api.iolink.com:{port}'
+    protocol: mqtt
+    protocolVersion: 3.1.1
+    description: io-link master as MQTT client
+    security:
+      - user-password: []
+    variables:
+      host:
+        default: 'iolmaster.io-link.com'
+      # basePath:
+      #   default: iolink/v1
       port:
         enum:
           - '1883'
@@ -25,6 +51,8 @@ servers:
         default: '1883'
 channels:
   /{deviceAlias}/processdata:
+    servers:
+      - 'iol-master'
     parameters:
       deviceAlias:
         description: Id of the user.
@@ -32,8 +60,27 @@ channels:
           $ref: './schemas.yaml#/deviceAlias'
     publish:
       summary: Inform about environmental lighting conditions for a particular streetlight.
-      operationId: onLightMeasured
+      operationId: deviceProcessData
       message:
         name: LightMeasured
         payload:
           $ref: './schemas.yaml#/processDataValue'
+  /{deviceAlias}/events:
+    servers:
+      - 'iol-master'
+    parameters:
+      deviceAlias:
+        description: Id of the user.
+        schema:
+          $ref: './schemas.yaml#/deviceAlias'
+    publish:
+      summary: Inform about environmental lighting conditions for a particular streetlight.
+      operationId: deviceEvent
+      message:
+        name: LightMeasured
+        payload:
+          $ref: './schemas.yaml#/processDataValue'
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
