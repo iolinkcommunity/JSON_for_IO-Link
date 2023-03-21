@@ -4,18 +4,18 @@ info:
   version: 0.0.2
   description: >
     This is the _AsyncAPI_ specification of MQTT topics which are published by the IO-Link Master.
-  termsOfService: 'https://www.io-link.com'
+  termsOfService: "https://www.io-link.com"
   contact:
-    name: 'IO-Link Community'
+    name: "IO-Link Community"
     email: info@io-link.com
-    url: 'http://www.io-link.com'
+    url: "http://www.io-link.com"
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 defaultContentType: application/json
 servers:
   broker:
-    url: 'api.iolink.com:{port}'
+    url: "api.iolink.com:{port}"
     protocol: mqtt
     protocolVersion: 3.1.1
     description: broker to connect to io-link master
@@ -23,16 +23,16 @@ servers:
       - user-password: []
     variables:
       host:
-        default: 'iolmaster.io-link.com'
+        default: "iolmaster.io-link.com"
       basePath:
         default: iolink/v1
       port:
         enum:
-          - '1883'
-          - '8883'
-        default: '1883'
+          - "1883"
+          - "8883"
+        default: "1883"
   iol-master:
-    url: '{host}:{port}'
+    url: "{host}:{port}"
     # url: 'api.iolink.com:{port}'
     protocol: mqtt
     protocolVersion: 3.1.1
@@ -41,45 +41,45 @@ servers:
       - user-password: []
     variables:
       host:
-        default: 'iolmaster.io-link.com'
+        default: "iolmaster.io-link.com"
       # basePath:
       #   default: iolink/v1
       port:
         enum:
-          - '1883'
-          - '8883'
-        default: '1883'
+          - "1883"
+          - "8883"
+        default: "1883"
 channels:
   /{deviceAlias}/processdata:
     servers:
-      - 'iol-master'
+      - "iol-master"
     parameters:
       deviceAlias:
         description: Id of the user.
         schema:
-          $ref: './schemas.yaml#/deviceAlias'
+          $ref: "./schemas.yaml#/deviceAlias"
     publish:
       summary: Inform about environmental lighting conditions for a particular streetlight.
       operationId: deviceProcessData
       message:
         name: LightMeasured
         payload:
-          $ref: './schemas.yaml#/processDataValue'
+          $ref: "./schemas.yaml#/processDataValue"
   /{deviceAlias}/events:
     servers:
-      - 'iol-master'
+      - "iol-master"
     parameters:
       deviceAlias:
         description: Id of the user.
         schema:
-          $ref: './schemas.yaml#/deviceAlias'
+          $ref: "./schemas.yaml#/deviceAlias"
     publish:
       summary: Inform about environmental lighting conditions for a particular streetlight.
       operationId: deviceEvent
       message:
         name: LightMeasured
         payload:
-          $ref: './schemas.yaml#/processDataValue'
+          $ref: "./schemas.yaml#/processDataValue"
 components:
   securitySchemes:
     user-password:
