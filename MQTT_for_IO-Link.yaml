@@ -59,10 +59,10 @@ channels:
         schema:
           $ref: "./schemas.yaml#/deviceAlias"
     publish:
-      summary: Inform about environmental lighting conditions for a particular streetlight.
+      summary: Provides process data from connected iolink device.
       operationId: deviceProcessData
       message:
-        name: LightMeasured
+        name: ProcessData
         payload:
           $ref: "./schemas.yaml#/processDataValue"
   /{deviceAlias}/events:
@@ -74,10 +74,10 @@ channels:
         schema:
           $ref: "./schemas.yaml#/deviceAlias"
     publish:
-      summary: Inform about environmental lighting conditions for a particular streetlight.
+      summary: Informs about occurred events of the connected iolink device.
       operationId: deviceEvent
       message:
-        name: LightMeasured
+        name: Event
         payload:
           $ref: "./schemas.yaml#/processDataValue"
 components:
