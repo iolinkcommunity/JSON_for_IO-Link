@@ -3082,6 +3082,32 @@ paths:
 
 components:
   schemas:
+    parameterName:
+      type: string
+      description: |
+        Parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
+        Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
+        Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
+        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used.\
+        Rule 3: Leading numbers shall be prefixed with “_“.  \
+        Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
+        Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
+        Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
+      minLength: 1
+      maxLength: 71
+    subParameterName:
+      type: string
+      description: |
+        Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
+        Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
+        Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
+        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used. \
+        Rule 3: Leading numbers shall be prefixed with “_“. \
+        Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
+        Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
+        Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
+      minLength: 1
+      maxLength: 71
     cycleTime:
       type: object
       required:
@@ -3170,11 +3196,9 @@ components:
             - parameterName
           properties:
             parameterName:
-              type: string
-              example: Direct_Parameters_1
+              $ref: "#/components/schemas/parameterName"
             subParameterName:
-              type: string
-              example: Min_Cycle_Time
+              $ref: "#/components/schemas/subParameterName"
         - type: object
           required:
             - index
@@ -3469,13 +3493,9 @@ components:
                   - parameterName
                 properties:
                   parameterName:
-                    type: string
-                    minLength: 1
-                    maxLength: 71
+                    $ref: "#/components/schemas/parameterName"
                   subParameterName:
-                    type: string
-                    minLength: 1
-                    maxLength: 71
+                    $ref: "#/components/schemas/subParameterName"
           content:
             $ref: "#/components/schemas/deviceParameterValueGetPost"
     deviceBlockParameterizationPostParametersAnswer:
@@ -3505,13 +3525,9 @@ components:
                   - parameterName
                 properties:
                   parameterName:
-                    type: string
-                    minLength: 1
-                    maxLength: 71
+                    $ref: "#/components/schemas/parameterName"
                   subParameterName:
-                    type: string
-                    minLength: 1
-                    maxLength: 71
+                    $ref: "#/components/schemas/subParameterName"
           result:
             type: object
             required:
@@ -3629,11 +3645,15 @@ components:
               ipAddress:
                 type: string
                 format: ipv4
+                pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
               subnetMask:
                 type: string
+                format: ipv4
+                pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
               standardGateway:
                 type: string
                 format: ipv4
+                pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
       example:
         ethIpv4:
           - ipConfiguration: MANUAL
@@ -5045,9 +5065,7 @@ components:
             minimum: 0
             maximum: 65535
           parameterName:
-            type: string
-            minLength: 1
-            maxLength: 71
+            $ref: "#/components/schemas/parameterName"
           subindexAccessSupported:
             type: boolean
             description: only for complex parameters (records or arrays) required. Not allowed for simple parameters
@@ -5074,9 +5092,7 @@ components:
             minimum: 1
             maximum: 255
           subParameterName:
-            type: string
-            minLength: 1
-            maxLength: 71
+            $ref: "#/components/schemas/subParameterName"
       example:
         - subIndex: 1
           subParameterName: Master_command
@@ -5332,9 +5348,15 @@ components:
     parameterName:
       name: parameterName
       in: path
-      description: >-
-        Parameter name. Comes from the IODD but might be reformatted according
-        to the JSON mapping specification.
+      description: |
+        Parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
+        Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
+        Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
+        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used. \
+        Rule 3: Leading numbers shall be prefixed with “_“. \
+        Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
+        Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
+        Rule 6: The naming of ArrayT elements is “element_{subindex}”.
       schema:
         type: string
         minLength: 1
@@ -5343,9 +5365,15 @@ components:
     subParameterName:
       name: subParameterName
       in: path
-      description: >-
-        Sub-parameter name. Comes from the IODD but might be reformatted
-        according to the JSON mapping specification.
+      description: |
+        Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
+        Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
+        Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
+        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used. \
+        Rule 3: Leading numbers shall be prefixed with “_“. \
+        Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
+        Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
+        Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
       schema:
         type: string
         minLength: 1
