@@ -1,4 +1,4 @@
-asyncapi: 2.3.0
+asyncapi: 2.5.0
 info:
   title: MQTT for IO-Link Topics
   version: 0.0.1
@@ -36,11 +36,6 @@ channels:
         schema:
           type: string
           example: iomaster_nr1
-      deviceId:
-        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
-        schema:
-          type: string
-          example: port1
     subscribe:
       message:
         $ref: "#/components/messages/connection"
@@ -235,7 +230,7 @@ components:
         properties:
           vendorName:
             type: string
-            default: Murrelektronik"
+            default: Murrelektronik
           vendorId:
             type: number
             default: 303
@@ -245,7 +240,7 @@ components:
             default: "http://www.murrelektronik.com"
           productName:
             type: string
-            example: Impact67 PN DIO12 IOL4 IRT 7/8" 5pin
+            example: Impact67 PN DIO12 IOL4 IRT 7/8 5pin
           orderCode:
             type: string
             example: 55132
