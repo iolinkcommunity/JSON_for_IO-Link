@@ -4,13 +4,13 @@ info:
   version: 0.0.1
   description: >
     This is the _AsyncAPI_ specification of MQTT topics by the IO-Link consortium.
-  termsOfService: 'https://www.io-link.com'
+  termsOfService: "https://www.io-link.com"
   contact:
     name: Markus Rentschler
     email: markus.rentschler@murrelektronik.de
 servers:
   broker:
-    url: 'api.iolink.com:{port}'
+    url: "api.iolink.com:{port}"
     protocol: mqtt
     description: central mqtt Broker
     security:
@@ -18,11 +18,11 @@ servers:
     variables:
       port:
         enum:
-          - '1883'
-          - '8883'
-        default: '1883'
+          - "1883"
+          - "8883"
+        default: "1883"
 channels:
-  '{originatorId}/connection':
+  "{originatorId}/connection":
     description: >-
       Topic that publishes online/offline state of the gateway, send at
       startup/"birth" and as "lastwill"
@@ -38,12 +38,12 @@ channels:
           example: iomaster_nr1
     subscribe:
       message:
-        $ref: '#/components/messages/connection'
+        $ref: "#/components/messages/connection"
       bindings:
         mqtt:
           qos: 1
           retain: true
-  '{originatorId}/asset':
+  "{originatorId}/asset":
     description: >-
       publishes asset (e.g. gateway) nameplate information, send at startup or
       onChange
@@ -59,12 +59,12 @@ channels:
           example: iomaster_nr1
     subscribe:
       message:
-        $ref: '#/components/messages/nameplate'
+        $ref: "#/components/messages/nameplate"
       bindings:
         mqtt:
           qos: 1
           retain: true
-  '{originatorId}/health':
+  "{originatorId}/health":
     description: publishes gateway health state
     parameters:
       originatorId:
@@ -78,12 +78,12 @@ channels:
           example: iomaster_nr1
     subscribe:
       message:
-        $ref: '#/components/messages/gatewayhealth'
+        $ref: "#/components/messages/gatewayhealth"
       bindings:
         mqtt:
           qos: 1
           retain: true
-  '{originatorId}/{deviceId}(/event)/asset':
+  "{originatorId}/{deviceId}(/event)/asset":
     description: >-
       publishes asset (e.g. device) nameplate information, send at connection
       startup (new connection)
@@ -98,19 +98,19 @@ channels:
           type: string
           example: iomaster_nr1
       deviceId:
-        description: 'Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)'
+        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
           example: port1
     subscribe:
       message:
-        $ref: '#/components/messages/nameplate_iolink'
+        $ref: "#/components/messages/nameplate_iolink"
       bindings:
         mqtt:
           qos: 1
           retain: true
-  '{originatorId}/{deviceId}(/event)/status':
-    description: 'publishes the port status, send at startup/onChange'
+  "{originatorId}/{deviceId}(/event)/status":
+    description: "publishes the port status, send at startup/onChange"
     parameters:
       originatorId:
         description: >-
@@ -122,18 +122,18 @@ channels:
           type: string
           example: iomaster_nr1
       deviceId:
-        description: 'Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)'
+        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
           example: port1
     subscribe:
       message:
-        $ref: '#/components/messages/portstatus'
+        $ref: "#/components/messages/portstatus"
       bindings:
         mqtt:
           qos: 1
           retain: true
-  '{originatorId}/{deviceId}(/event)/health':
+  "{originatorId}/{deviceId}(/event)/health":
     description: health data of the device
     parameters:
       originatorId:
@@ -146,18 +146,18 @@ channels:
           type: string
           example: iomaster_nr1
       deviceId:
-        description: 'Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)'
+        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
           example: port1
     subscribe:
       message:
-        $ref: '#/components/messages/devicehealth'
+        $ref: "#/components/messages/devicehealth"
       bindings:
         mqtt:
           qos: 1
           retain: true
-  '{originatorId}/{deviceId}/processData':
+  "{originatorId}/{deviceId}/processData":
     parameters:
       originatorId:
         description: >-
@@ -169,20 +169,20 @@ channels:
           type: string
           example: iomaster_nr1
       deviceId:
-        description: 'Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)'
+        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
           example: port1
     subscribe:
       message:
         oneOf:
-          - $ref: '#/components/messages/processdata_IOLink'
-          - $ref: '#/components/messages/processdata_Misc'
+          - $ref: "#/components/messages/processdata_IOLink"
+          - $ref: "#/components/messages/processdata_Misc"
       bindings:
         mqtt:
           qos: 1
           retain: true
-  '{originatorId}/{deviceId}/events':
+  "{originatorId}/{deviceId}/events":
     description: >-
       eventlog of the io link device, see
       "iolink/v1/devices/{deviceAlias}/events"
@@ -197,13 +197,13 @@ channels:
           type: string
           example: iomaster_nr1
       deviceId:
-        description: 'Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)'
+        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
           example: port1
     subscribe:
       message:
-        $ref: '#/components/messages/deviceEvents'
+        $ref: "#/components/messages/deviceEvents"
       bindings:
         mqtt:
           qos: 1
@@ -237,7 +237,7 @@ components:
           vendorUrl:
             type: string
             format: url
-            default: 'http://www.murrelektronik.com'
+            default: "http://www.murrelektronik.com"
           productName:
             type: string
             example: Impact67 PN DIO12 IOL4 IRT 7/8 5pin
@@ -253,7 +253,7 @@ components:
             description: >-
               Unique product identifier and link to product catalogue
               (https://product.murrelektronik.com/{productCode}/{orderCode}/{serialNumber})
-            example: 'https://product.murrelektronik.com/XYZ/512345/01234567'
+            example: "https://product.murrelektronik.com/XYZ/512345/01234567"
           hardwareRevision:
             type: string
             example: 7
@@ -280,7 +280,7 @@ components:
             description: Location description of the device or system
             example: Factory ABC Hall 123
           ethIpv4:
-            $ref: '#/components/schemas/networkConfiguration'
+            $ref: "#/components/schemas/networkConfiguration"
     gatewayhealth:
       summary: diagnostic health information of the gateway.
       tags:
@@ -295,9 +295,9 @@ components:
             type: string
             description: Error message describing the error ocurred.
           health:
-            $ref: '#/components/schemas/namurHealth'
+            $ref: "#/components/schemas/namurHealth"
           healthState:
-            $ref: '#/components/schemas/namurHealthState'
+            $ref: "#/components/schemas/namurHealthState"
         example:
           health: NORMAL_0
           healthState: 100
@@ -422,7 +422,7 @@ components:
           vendorUrl:
             type: string
             format: url
-            default: 'http://www.murrelektronik.com'
+            default: "http://www.murrelektronik.com"
           productName:
             type: string
           orderCode:
@@ -442,10 +442,10 @@ components:
         example:
           vendorName: Murrelektronik
           vendorId: 303
-          vendorUrl: 'http://www.murrelektronik.com/'
+          vendorUrl: "http://www.murrelektronik.com/"
           orderCode: 55132
           productName: Impact67 PN DIO12 IOL4 IRT 7/8" 5pin
-          serialNumber: '123456789'
+          serialNumber: "123456789"
           hardwareRevision: 1.0.0
           softwareRevision: 1.0.1
     devicehealth:
@@ -459,9 +459,9 @@ components:
         type: object
         properties:
           health:
-            $ref: '#/components/schemas/namurHealth'
+            $ref: "#/components/schemas/namurHealth"
           healthState:
-            $ref: '#/components/schemas/namurHealthState'
+            $ref: "#/components/schemas/namurHealthState"
           errors:
             type: object
             properties:
@@ -512,7 +512,7 @@ components:
       tags:
         - name: device
       payload:
-        $ref: '#/components/schemas/deviceEvents'
+        $ref: "#/components/schemas/deviceEvents"
     processdata_IOLink:
       summary: >-
         Read the process data values (input and output) from the specified
@@ -520,7 +520,7 @@ components:
       tags:
         - name: device
       payload:
-        $ref: '#/components/schemas/deviceProcessDataValueIOLINK'
+        $ref: "#/components/schemas/deviceProcessDataValueIOLINK"
     processdata_Misc:
       summary: >-
         Read the process data values (input and output) from the specified
@@ -528,7 +528,7 @@ components:
       tags:
         - name: device
       payload:
-        $ref: '#/components/schemas/deviceProcessDataValueMisc'
+        $ref: "#/components/schemas/deviceProcessDataValueMisc"
   schemas:
     eventOrigin:
       type: string
@@ -558,14 +558,14 @@ components:
             - direction
           properties:
             direction:
-              $ref: '#/components/schemas/content'
+              $ref: "#/components/schemas/content"
       oneOf:
         - type: object
           required:
             - interval
           properties:
             interval:
-              $ref: '#/components/schemas/cycleTime'
+              $ref: "#/components/schemas/cycleTime"
         - type: object
           required:
             - onChange
@@ -638,7 +638,7 @@ components:
               type: integer
       example:
         connectionStatus: CONNECTION_ACCEPTED
-        serverAddress: 'http://broker-address.com'
+        serverAddress: "http://broker-address.com"
         upTime: 1050
     deviceProcessDataValueIOLINK:
       type: object
@@ -653,9 +653,9 @@ components:
         configured as digital output.
       properties:
         getData:
-          $ref: '#/components/schemas/processDataValue'
+          $ref: "#/components/schemas/processDataValue"
         setData:
-          $ref: '#/components/schemas/processDataValue'
+          $ref: "#/components/schemas/processDataValue"
     processDataValue:
       type: object
       properties:
@@ -673,8 +673,8 @@ components:
                 Process data validity
             value:
               anyOf:
-                - $ref: '#/components/schemas/deviceByteArrayTypeValue'
-                - $ref: '#/components/schemas/deviceSimpleTypeValue'
+                - $ref: "#/components/schemas/deviceByteArrayTypeValue"
+                - $ref: "#/components/schemas/deviceSimpleTypeValue"
               description: |
                 Process data value
         cqValue:
@@ -738,14 +738,14 @@ components:
         - message
       properties:
         time:
-          $ref: '#/components/schemas/eventTime'
+          $ref: "#/components/schemas/eventTime"
         severity:
-          $ref: '#/components/schemas/eventSeverity'
+          $ref: "#/components/schemas/eventSeverity"
         message:
           required:
             - code
             - mode
-          $ref: '#/components/schemas/eventObject'
+          $ref: "#/components/schemas/eventObject"
     eventObject:
       type: object
       properties:
@@ -816,7 +816,7 @@ components:
         absolute time or a relative time. Both formats are defined in DIN ISO
         8601.
       type: string
-      example: '2021-05-18T07:31:54.123Z'
+      example: "2021-05-18T07:31:54.123Z"
     namurHealthState:
       type: integer
       maximum: 100
@@ -870,7 +870,7 @@ components:
             - custom
     macAddress:
       type: string
-      example: 'FE:AB:3A:55:33:11'
+      example: "FE:AB:3A:55:33:11"
     valueUnitObject:
       type: object
       properties:
@@ -894,21 +894,21 @@ components:
             description: Name of the interface.
             example: eth0
           ipConfiguration:
-            $ref: '#/components/schemas/ipConfiguration'
+            $ref: "#/components/schemas/ipConfiguration"
           ipAddress:
-            $ref: '#/components/schemas/ipAddress'
+            $ref: "#/components/schemas/ipAddress"
           subnetMask:
-            $ref: '#/components/schemas/subnetMask'
+            $ref: "#/components/schemas/subnetMask"
           standardGateway:
-            $ref: '#/components/schemas/standardGateway'
+            $ref: "#/components/schemas/standardGateway"
           dnsServer:
-            $ref: '#/components/schemas/dnsServer'
+            $ref: "#/components/schemas/dnsServer"
           macAddress:
-            $ref: '#/components/schemas/macAddress'
+            $ref: "#/components/schemas/macAddress"
           ifSpeed:
             type: array
             items:
-              $ref: '#/components/schemas/valueUnitObject'
+              $ref: "#/components/schemas/valueUnitObject"
           ifOperStatus:
             type: array
             items:
