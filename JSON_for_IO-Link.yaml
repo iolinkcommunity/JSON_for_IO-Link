@@ -3,12 +3,24 @@ info:
   version: 1.1.0
   title: JSON for IO-Link Specification
   description: >-
-    This is an openapi specification for IO-Link gateways, masters and devices. You can find out more about IO-Link
-    at [http://www.io-link.com](http://www.io-link.com)
 
     # Description
-
+    
+    This is an openapi specification for IO-Link gateways, masters and devices. You can find out more about IO-Link
+    at [http://www.io-link.com](http://www.io-link.com)
+    
     * Draft for version 1.1.0
+    
+    # Specification Reference URIs:
+    
+    >  [JSON Integration for IO-Link - Draft V2.0](http://www.io-link.com/io-link/10.222/V2.0)
+      
+    >  [JSON Integration for IO-Link V1.0](http://www.io-link.com/io-link/10.222/V1.0)
+      
+    >  [IO-Link Interface and System Specification V1.13](http://www.io-link.com/io-link/10.002/V1.13)
+      
+    >  [IO-Link Wireless System Extensions V1.1](http://www.io-link.com/io-link/10.122/V1.1)
+    
 
     # Disclaimer:
 
@@ -25,7 +37,9 @@ info:
 
 
     >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
-
+  
+    ---
+    
   contact:
     email: info@io-link.com
   license:
@@ -315,48 +329,6 @@ paths:
               example:
                 code: 141
                 message: "Unknown SESSIONID"
-  "/specs":
-    get:
-      operationId: GetSpecs
-      tags:
-        - general
-      summary: Read the version information as list of specification references.
-      description: >-
-        This command is mandatory.
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  required:
-                    - specUri
-                properties:
-                  specUri:
-                    type: string
-                  specDesc:
-                    type: string
-              examples:
-                IO-Link_with_Profinet:
-                  value:
-                    - specUri: "http://www.io-link.com/io-link/10.222/V1.0"
-                      specDesc: "JSON Integration for IO-Link V1.0"
-                    - specUri: "http://www.io-link.com/io-link/10.002/V1.13"
-                      specDesc: "IO-Link Interface and System Specification V1.13"
-                    - specUri: "http://profibus.com/profinet/2.722/V2.4MU2"
-                      specDesc: "Application Layer protocol for decentralized periphery - Technical Specification for PROFINET IO"
-                    - specUri: "http://profibus.com/profinet/2.712/V2.4MU2"
-                      specDesc: "Application Layer services for decentralized periphery - Technical Specification for PROFINET IO"
-                IO-Link_Wireless:
-                  value:
-                    - specUri: "http://www.io-link.com/io-link/10.222/V2.0"
-                      specDesc: "JSON Integration for IO-Link - Draft V2.0"
-                    - specUri: "http://www.io-link.com/io-link/10.002/V1.13"
-                      specDesc: "IO-Link Interface and System Specification V1.13"
-                    - specUri: "http://www.io-link.com/io-link/10.122/V1.1"
-                      specDesc: "IO-Link Wireless System Extensions V1.1"
   "/gateways":
     get:
       operationId: GetGateways
