@@ -3973,9 +3973,6 @@ components:
         blockList:
           type: object
           properties:
-            "2402":
-              type: boolean
-              default: false
             "2403":
               type: boolean
               default: false
@@ -5454,7 +5451,6 @@ components:
             "track_4": 0
             "track_5": 0
           blockList:
-            "2402": false
             "2403": false
             "2404": false
             "2405": false
