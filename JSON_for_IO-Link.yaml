@@ -5,14 +5,14 @@ info:
   description: >-
 
     # Description
-    
+
     This is an openapi specification for IO-Link gateways, masters and devices. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
-    
+
     * Draft for version 1.1.0
-    
+
     # Specification Reference URIs:
-    
+
     >  [JSON Integration for IO-Link - Draft V2.0](http://www.io-link.com/io-link/10.222/V2.0)
       
     >  [JSON Integration for IO-Link V1.0](http://www.io-link.com/io-link/10.222/V1.0)
@@ -20,7 +20,7 @@ info:
     >  [IO-Link Interface and System Specification V1.13](http://www.io-link.com/io-link/10.002/V1.13)
       
     >  [IO-Link Wireless System Extensions V1.1](http://www.io-link.com/io-link/10.122/V1.1)
-    
+
 
     # Disclaimer:
 
@@ -37,9 +37,9 @@ info:
 
 
     >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
-  
+
     ---
-    
+
   contact:
     email: info@io-link.com
   license:
@@ -447,15 +447,18 @@ paths:
                 Multiple ethernet interfaces:
                   value:
                     ethIpv4:
-                      - ipConfiguration: MANUAL
+                      - ifName: eth0
+                        ipConfiguration: MANUAL
                         ipAddress: 192.168.1.13
                         subnetMask: 255.255.255.0
                         standardGateway: 192.168.1.1
-                      - ipConfiguration: MANUAL
+                      - ifName: eth1
+                        ipConfiguration: MANUAL
                         ipAddress: 192.168.2.10
                         subnetMask: 255.255.255.0
                         standardGateway: 192.168.2.1
-                      - ipConfiguration: DHCP
+                      - ifName: eth2
+                        ipConfiguration: DHCP
                         ipAddress: 192.168.200.7
                         subnetMask: 255.255.255.0
                         standardGateway: 192.168.200.1
@@ -490,15 +493,18 @@ paths:
               Multiple ethernet interfaces:
                 value:
                   ethIpv4:
-                    - ipConfiguration: MANUAL
+                    - ifName: eth0
+                      ipConfiguration: MANUAL
                       ipAddress: 192.168.1.13
                       subnetMask: 255.255.255.0
                       standardGateway: 192.168.1.1
-                    - ipConfiguration: MANUAL
+                    - ifName: eth1
+                      ipConfiguration: MANUAL
                       ipAddress: 192.168.2.10
                       subnetMask: 255.255.255.0
                       standardGateway: 192.168.2.1
-                    - ipConfiguration: DHCP
+                    - ifName: eth2
+                      ipConfiguration: DHCP
       responses:
         "204":
           description: Successful operation
@@ -3612,6 +3618,8 @@ components:
             required:
               - ipConfiguration
             properties:
+              ifName:
+                type: string
               ipConfiguration:
                 $ref: "#/components/schemas/ipConfiguration"
               ipAddress:
@@ -3628,7 +3636,8 @@ components:
                 pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
       example:
         ethIpv4:
-          - ipConfiguration: MANUAL
+          - ifName: "eth0"
+            ipConfiguration: MANUAL
             ipAddress: 192.168.1.13
             subnetMask: 255.255.255.0
             standardGateway: 192.168.1.1
