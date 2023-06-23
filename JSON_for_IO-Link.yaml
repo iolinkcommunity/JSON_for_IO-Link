@@ -1057,7 +1057,7 @@ paths:
       tags:
         - iodds
       summary: Delete a specific IODD representation.
-      description: Delete a specific IODD representation.
+      description: Delete a specific IODD representation and all related artifacts.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1080,12 +1080,13 @@ paths:
       operationId: GetIoddsFile
       tags:
         - iodds
-      summary: Get a specific IODD. Optional.
-      description: All query parameters are mandatory.
+      summary: Get a specific IODD or other IODD artifacts like device image. Optional.
+      description: Get a specific IODD or other IODD artifacts like device image.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
         - $ref: "#/components/parameters/revision"
+        - $ref: "#/components/parameters/artifact"
       responses:
         "200":
           description: Successful operation
@@ -1094,6 +1095,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/ioddFile"
               example: "IODD XML file"
+            img/png:
+              schema:
+                $ref: "#/components/schemas/ioddFile"
+              example: "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"
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
         "403":
@@ -1119,6 +1124,10 @@ paths:
             schema:
               $ref: "#/components/schemas/ioddFile"
             example: "IODD XML file"
+          application/zip:
+            schema:
+              $ref: "#/components/schemas/ioddArchive"
+            example: "IODD in archive format provided by the IODD finder"
       responses:
         "204":
           description: Successful operation
@@ -3060,6 +3069,15 @@ paths:
 
 components:
   schemas:
+    artifact:
+      type: string
+      description: IODD Artifacts like device, vendor images
+      enum:
+        - XML
+        - DeviceIcon
+        - DeviceSymbol
+        - VendorLogo
+      default: XML
     parameterName:
       type: string
       description: |
@@ -5140,8 +5158,16 @@ components:
           enum:
             - "1.0"
             - "1.1"
+        availableArtifacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/artifact"
     ioddFile:
-      description: The IODD XML file.
+      description: The IODD XML file or other IODD artifacts.
+      type: string
+      format: binary
+    ioddArchive:
+      description: The IODD in archive format (e.g. IODD Finder) containing XML file and device images.
       type: string
       format: binary
     ioddsGet:
@@ -5159,6 +5185,7 @@ components:
           version: "2.1"
           releaseDate: "2015-01-02"
           ioLinkRevision: "1.1"
+          availableArtifacts: [XML, DeviceIcon, DeviceSymbol, VendorLogo]
     iolinkErrorObject:
       type: object
       required:
@@ -5189,11 +5216,18 @@ components:
 
   #---------------------------------------------------------------------------
   parameters:
+    artifact:
+      name: artifact
+      description: IO-Link IODD Artifacts
+      required: false
+      in: query
+      schema:
+        $ref: "#/components/schemas/artifact"
     vendorId:
       name: vendorId
       in: query
       description: IO-Link VendorID
-      required: false
+      required: true
       schema:
         type: integer
         minimum: 0
@@ -5202,7 +5236,7 @@ components:
       name: deviceId
       in: query
       description: IO-Link DeviceID
-      required: false
+      required: true
       schema:
         type: integer
         minimum: 1
@@ -5211,7 +5245,7 @@ components:
       name: revision
       in: query
       description: IO-Link Revision
-      required: false
+      required: true
       schema:
         type: string
         enum:
