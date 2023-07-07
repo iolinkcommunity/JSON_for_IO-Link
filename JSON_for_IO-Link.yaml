@@ -4418,22 +4418,23 @@ components:
             - ScanEnded
         scanResults:
           type: array
-          properties:
-            slotType:
-              type: string
-              enum:
-                - "SSLOT"
-                - "DSLOT"
-            uniqueId:
-              type: string
-              minLength: 26
-              maxLength: 26
-            ioLinkRevision:
-              type: string
-              enum:
-                - "1.1"
-            lastSeen:
-              $ref: "#/components/schemas/eventTime"
+          items:
+            properties:
+              slotType:
+                type: string
+                enum:
+                  - "SSLOT"
+                  - "DSLOT"
+              uniqueId:
+                type: string
+                minLength: 26
+                maxLength: 26
+              ioLinkRevision:
+                type: string
+                enum:
+                  - "1.1"
+              lastSeen:
+                $ref: "#/components/schemas/eventTime"
       example:
         scanStatus: ScanEnded
         scanResults:
