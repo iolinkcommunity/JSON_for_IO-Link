@@ -4948,7 +4948,7 @@ components:
                   oneOf:
                     - $ref: "#/components/schemas/deviceByteArrayTypeValue"
                     - $ref: "#/components/schemas/deviceSimpleTypeValue"
-                    - $ref: "#/components/schemas/deviceComplexTypeValue"
+                    - $ref: "#/components/schemas/deviceComplexTypeValueProcessData"
                 unit:
                   $ref: "#/components/schemas/deviceSimpleTypeValueUnit"
               description: >
@@ -5023,6 +5023,14 @@ components:
           $ref: "#/components/schemas/deviceSimpleTypeValue"
         unit:
           $ref: "#/components/schemas/deviceSimpleTypeValueUnit"
+    deviceComplexTypeEntryProcessData:
+      type: object
+      description: The entry for a complex iodd type
+      properties:
+        value:
+          $ref: "#/components/schemas/deviceSimpleTypeValue"
+        unit:
+          $ref: "#/components/schemas/deviceSimpleTypeValueUnit"
     deviceSimpleTypeValueUnit:
       type: string
       description: The unit for the simple type number value in SI format.
@@ -5033,6 +5041,13 @@ components:
       description: The value (with complex type) in iodd format.
       additionalProperties:
         $ref: "#/components/schemas/deviceComplexTypeEntry"
+    deviceComplexTypeValueProcessData:
+      type: object
+      minProperties: 1
+      maxProperties: 255
+      description: The value (with complex type) in iodd format.
+      additionalProperties:
+        $ref: "#/components/schemas/deviceComplexTypeEntryProcessData"
     deviceParametersGet:
       type: array
       items:
