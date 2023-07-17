@@ -2476,12 +2476,11 @@ paths:
                     unit: "cm"
                 "format=iodd, complex type":
                   value:
-                    value:
-                      Distance:
-                        value: 15
-                        unit: "cm"
-                      Quality:
-                        value: 12
+                    Distance:
+                      value: 15
+                      unit: "cm"
+                    Quality:
+                      value: 12
         "400": # code 305, 306, 307, 311, 601
           $ref: "#/components/responses/HTTP_400"
         "403":
@@ -2522,12 +2521,11 @@ paths:
                   unit: "cm"
               "payload as iodd, complex type":
                 value:
-                  value:
-                    Distance:
-                      value: 15
-                      unit: "cm"
-                    Quality:
-                      value: 12
+                  Distance:
+                    value: 15
+                    unit: "cm"
+                  Quality:
+                    value: 12
       responses:
         "204":
           description: Successful operation
@@ -2571,12 +2569,11 @@ paths:
                     unit: "cm"
                 "format=iodd, complex type":
                   value:
-                    value:
-                      Distance:
-                        value: 15
-                        unit: "cm"
-                      Quality:
-                        value: 12
+                    Distance:
+                      value: 15
+                      unit: "cm"
+                    Quality:
+                      value: 12
 
         "400": # code 305, 306, 307, 311, 601
           $ref: "#/components/responses/HTTP_400"
@@ -2614,12 +2611,11 @@ paths:
                   unit: "cm"
               "format=iodd, complex type":
                 value:
-                  value:
-                    Distance:
-                      value: 15
-                      unit: "cm"
-                    Quality:
-                      value: 12
+                  Distance:
+                    value: 15
+                    unit: "cm"
+                  Quality:
+                    value: 12
       responses:
         "204":
           description: Successful operation
@@ -2724,10 +2720,9 @@ paths:
                       - 25
                 format=iodd:
                   value:
-                    value:
-                      Distance:
-                        value: 15.2
-                        unit: "cm"
+                    Distance:
+                      value: 15.2
+                      unit: "cm"
         "400": # code 305, 306, 307, 311, 601
           $ref: "#/components/responses/HTTP_400"
         "403":
@@ -5092,8 +5087,6 @@ components:
             - $ref: "#/components/schemas/deviceComplexTypeValue"
         unit:
           $ref: "#/components/schemas/deviceSimpleTypeValueUnit"
-      required:
-        - value
     deviceParameterSubindexValueGetPost:
       type: object
       properties:
@@ -5104,8 +5097,6 @@ components:
             - $ref: "#/components/schemas/deviceComplexTypeValue"
         unit:
           $ref: "#/components/schemas/deviceSimpleTypeValueUnit"
-      required:
-        - value
     deviceBlockParameterizationPost:
       type: object
       required:
