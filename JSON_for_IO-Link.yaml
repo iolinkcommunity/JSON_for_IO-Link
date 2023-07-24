@@ -1030,7 +1030,7 @@ paths:
         Get a list of all IODD (representations) that are available on the Gateway.
       description: >-
         Only one version of an IODD is stored on the webserver at the same time
-        for one vendorId-deviceId-ioLinkRevision-combination.
+        for one vendorId-deviceId-iolinkRevision-combination.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1797,7 +1797,7 @@ paths:
                 IO-Link:
                   value:
                     statusInfo: "DEVICE_ONLINE"
-                    ioLinkRevision: "1.1"
+                    iolinkRevision: "1.1"
                     transmissionRate: COM2
                     masterCycleTime:
                       value: 2.3
@@ -1808,7 +1808,7 @@ paths:
                     portQualityInfo:
                       pdInValid: true
                       pdOutValid: true
-                    ioLinkRevision: "1.1"
+                    iolinkRevision: "1.1"
                     inputDataLength: 2
                     outputDataLength: 2
                     vendorId: 888
@@ -1973,7 +1973,7 @@ paths:
                     header:
                       vendorId: 15
                       deviceId: 65253
-                      ioLinkRevision: "1.1"
+                      iolinkRevision: "1.1"
                       parameterChecksum: 123456
                     content: >-
                       TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
@@ -2008,7 +2008,7 @@ paths:
                   header:
                     vendorId: 15
                     deviceId: 65253
-                    ioLinkRevision: "1.1"
+                    iolinkRevision: "1.1"
                   content: >-
                     TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
               Empty Data Storage:
@@ -3772,7 +3772,7 @@ components:
       required:
         - vendorId
         - deviceId
-        - ioLinkRevision
+        - iolinkRevision
         - vendorName
         - productName
       type: object
@@ -3785,7 +3785,7 @@ components:
           type: integer
           minimum: 1
           maximum: 16777215
-        ioLinkRevision:
+        iolinkRevision:
           type: string
           enum:
             - "1.0"
@@ -3841,7 +3841,7 @@ components:
       example:
         vendorId: 26
         deviceId: 8389226
-        ioLinkRevision: "1.1"
+        iolinkRevision: "1.1"
         vendorName: SICK AG
         vendorText: Sensor Intelligence.
         productName: SLG-2
@@ -4423,7 +4423,7 @@ components:
               type: string
               minLength: 26
               maxLength: 26
-            ioLinkRevision:
+            iolinkRevision:
               type: string
               enum:
                 - "1.1"
@@ -4434,11 +4434,11 @@ components:
         scanResults:
           - slotType: SSLOT
             uniqueId: 03:78:00:00:01:32:50:60:46
-            ioLinkRevision: "1.1"
+            iolinkRevision: "1.1"
             lastSeen: "2022-12-01T08:42:23.314Z"
           - slotType: DSLOT
             uniqueId: 03:78:00:00:01:32:50:60:47
-            ioLinkRevision: "1.1"
+            iolinkRevision: "1.1"
             lastSeen: "2022-12-01T09:42:23.314Z"
 
     mastersScanPost: # TODO: IOLW
@@ -4529,7 +4529,7 @@ components:
             - NOT_AVAILABLE # NOT_AVAILABLE
             - PORT_POWER_OFF # PORT_POWER_OFF
             - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
-        ioLinkRevision:
+        iolinkRevision:
           description: >-
             Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
             OPERATE.
@@ -4896,7 +4896,7 @@ components:
               required:
                 - vendorId
                 - deviceId
-                - ioLinkRevision
+                - iolinkRevision
               properties:
                 vendorId:
                   type: integer
@@ -4906,7 +4906,7 @@ components:
                   type: integer
                   minimum: 1
                   maximum: 16777215
-                ioLinkRevision:
+                iolinkRevision:
                   type: string
                   enum:
                     - "1.0"
@@ -5116,7 +5116,7 @@ components:
         - deviceId
         - version
         - releaseDate
-        - ioLinkRevision
+        - iolinkRevision
       properties:
         vendorId:
           type: number
@@ -5126,7 +5126,7 @@ components:
           type: string
         releaseDate:
           type: string
-        ioLinkRevision:
+        iolinkRevision:
           type: string
           enum:
             - "1.0"
@@ -5144,12 +5144,12 @@ components:
           deviceId: 4567
           version: "4.3"
           releaseDate: "2018-01-02"
-          ioLinkRevision: "1.1"
+          iolinkRevision: "1.1"
         - vendorId: 4321
           deviceId: 8765
           version: "2.1"
           releaseDate: "2015-01-02"
-          ioLinkRevision: "1.1"
+          iolinkRevision: "1.1"
     iolinkErrorObject:
       type: object
       required:
