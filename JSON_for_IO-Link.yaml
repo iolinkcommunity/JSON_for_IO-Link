@@ -2238,7 +2238,7 @@ paths:
                 ? "Format=byteArray, CQ in IO-Link (only input), IQ in digital output"
                 : value:
                     getData:
-                      ioLink:
+                      iolink:
                         valid: true
                         value:
                           - 12
@@ -2249,7 +2249,7 @@ paths:
                 ? "Format=iodd, CQ in IO-Link (input and output), IQ in digital input"
                 : value:
                     getData:
-                      ioLink:
+                      iolink:
                         valid: true
                         value:
                           Distance:
@@ -2259,7 +2259,7 @@ paths:
                             value: 12
                       iqValue: true
                     setData:
-                      ioLink:
+                      iolink:
                         valid: true
                         value:
                           Buzzer:
@@ -2291,7 +2291,7 @@ paths:
             examples:
               ? "format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output"
               : value:
-                  ioLink:
+                  iolink:
                     valid: true
                     value:
                       - 15
@@ -2343,7 +2343,7 @@ paths:
               examples:
                 ? "Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input"
                 : value:
-                    ioLink:
+                    iolink:
                       valid: true
                       value:
                         - 12
@@ -2352,7 +2352,7 @@ paths:
                     iqValue: true
                 "Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
                   value:
-                    ioLink:
+                    iolink:
                       valid: true
                       value:
                         Distance:
@@ -4924,7 +4924,7 @@ components:
     processDataValue:
       type: object
       properties:
-        ioLink:
+        iolink:
           description: Process data in IO-Link mode
           allOf:
             - type: object
@@ -4960,7 +4960,7 @@ components:
             (false - 0 V, true - 24 V)
       example:
         "format=byteArray, pin4=IO-Link, pin2=sio":
-          ioLink:
+          iolink:
             valid: true
             value:
               - 15
@@ -4983,7 +4983,7 @@ components:
       description: >
         The cqValue is present in the 'getData' object if the CQ (pin4) is configured as
         digital input. The cqValue is present in the 'setData' object if the CQ (pin4)
-        is configured as digital output. The ioLink is present either in the
+        is configured as digital output. The iolink is present either in the
         'getData' or 'setData' or both objects if the CQ (pin4) is configured to IO-Link mode.
         The iqValue is present in the 'getData' object if the IQ (pin2) is configured as
         digital input. The iqValue is present in the 'setData' object if the IQ (pin4)
