@@ -182,6 +182,8 @@ tags:
 paths:
   '/gateway/identification':
     get:
+      description: Read the identification data of the Gateway
+      operationId: getGateywayIdentification
       tags:
         - gateway
       summary: Read the identification of the Gateway.
@@ -199,7 +201,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -210,12 +212,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
   '/gateway/capabilities':
     get:
+      description: Read the capatibities of the Gateway
+      operationId: getGateywayCapabilities
       tags:
         - gateway
       summary: Read the capabilities of the Gateway.
@@ -233,7 +237,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -244,7 +248,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -254,6 +258,7 @@ paths:
         - gateway
       summary: Read the network configuration of the Gateway.
       description: Read the actual active configuration of the IO-Link Gateway. The Gateway may support multiple IPv4 interfaces
+      operationId: getGatewayConfiguration
       responses:
         '200':
           description: Successful operation
@@ -292,7 +297,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -303,11 +308,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
     post:
+      description: Write a new network configuration of the Gateway
+      operationId: postGatewayConfiguration
       tags:
         - gateway
       summary: Write the network configuration of the Gateway.
@@ -351,47 +358,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                201:
+                "201":
                   value:
                     code: 201
                     message: JSON parsing failed
-                202:
+                "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                203:
+                "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                204:
+                "204":
                       value:
                         code: 204
                         message: Enumeration value unknown
-                205:
+                "205":
                       value:
                         code: 205
                         message: JSON data value out of range
-                206:
+                "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                208:
+                "208":
                   value:
                     code: 208
                     message: POST request without content
-                701:
+                "701":
                   value:
                     code: 701
                     message: Data set incomplete
-                702:
+                "702":
                   value:
                     code: 702
                     message: Data set not applicable
-                703:
+                "703":
                   value:
                     code: 703
                     message: Data set combination incompatible
@@ -403,7 +410,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -414,7 +421,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -424,6 +431,7 @@ paths:
         - gateway
       summary: Reset the Gateway including all Masters. Optional.
       description: Invoke a reset of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog
+      operationId: postGatewayReset
       responses:
         '204':
           description: Successful operation
@@ -434,7 +442,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
@@ -445,7 +453,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -456,7 +464,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -466,6 +474,7 @@ paths:
         - gateway
       summary: Reboot the Gateway including all Masters. Optional.
       description: Invoke a reboot of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog
+      operationId: postGatewayReboot
       responses:
         '204':
           description: Successful operation
@@ -476,7 +485,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
@@ -487,7 +496,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -498,7 +507,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -510,6 +519,7 @@ paths:
       description: >
         Each Gateway shall have an Event Log object containing the events of the devices, ports and 
         the masters. The content of the Event Log can be read by getting the object “Gateway Event Log”
+      operationId: getGatewayEvents
       parameters:
         - $ref: '#/components/parameters/eventOrigin'
         - $ref: '#/components/parameters/eventMasterNumber'
@@ -618,11 +628,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                305:
+                "305":
                   value:
                     code: 305
                     message: Query parameter name invalid
-                306:
+                "306":
                   value:
                     code: 306
                     message: Query parameter value invalid
@@ -633,7 +643,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -644,7 +654,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -654,6 +664,8 @@ paths:
         - mqtt
       summary: >-
         Read the MQTT configuration of the Gateway.
+      description: Read the MQTT configuraiton of the Gateway
+      operationId: getMqttConfiguration
       responses:
         '200':
           description: Successful operation
@@ -684,7 +696,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -695,7 +707,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
@@ -706,7 +718,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -717,7 +729,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                106:
+                "106":
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -726,6 +738,8 @@ paths:
         - mqtt
       summary: >-
         Update the MQTT configuration of the Gateway.
+      description: Update the MQTT configuration of the Gateway.
+      operationId: postMqttConfiguration
       requestBody:
         required: true
         content:
@@ -758,47 +772,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                201:
+                "201":
                   value:
                     code: 201
                     message: JSON parsing failed
-                202:
+                "202":
                   value:
                     code: 202
                     message: JSON data value invalid
-                203:
+                "203":
                   value:
                     code: 203
                     message: JSON data type invalid
-                204:
+                "204":
                   value:
                     code: 204
                     message: Enumeration value unknown
-                205:
+                "205":
                   value:
                     code: 205
                     message: JSON data value out of range
-                206:
+                "206":
                   value:
                     code: 206
                     message: JSON data value out of bounds
-                208:
+                "208":
                   value:
                     code: 208
                     message: POST request without content
-                701:
+                "701":
                   value:
                     code: 701
                     message: Data set incomplete
-                702:
+                "702":
                   value:
                     code: 702
                     message: Data set not applicable
-                703:
+                "703":
                   value:
                     code: 703
                     message: Data set combination incompatible
@@ -809,7 +823,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -820,7 +834,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
@@ -831,7 +845,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -842,7 +856,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                106:
+                "106":
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -851,6 +865,8 @@ paths:
       tags:
         - mqtt
       summary: Get the list of MQTT topics.
+      description: Get the list of MQTT topics.
+      operationId: GetMqttTopics
       responses:
         '200':
           description: Successful operation
@@ -875,7 +891,7 @@ paths:
                   topicName: Sensor34/event
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
-                  event: null
+                  event: {}
                 - topicId: 3
                   topicName: PD
                   qos: 0_ONLY_ONCE
@@ -891,7 +907,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -902,7 +918,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
@@ -913,7 +929,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -924,7 +940,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                106:
+                "106":
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -932,6 +948,8 @@ paths:
       tags:
         - mqtt
       summary: Create a new MQTT topic.
+      description: Create a new MQTT topic.
+      operationId: postMqttTopics
       requestBody:
         required: true
         content:
@@ -968,45 +986,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                201:
+                "201":
                   value:
                     code: 201
                     message: JSON parsing failed
-                202:
+                "202":
                   value:
                     code: 202
                     message: JSON data value invalid
-                203:
+                "203":
                   value:
                     code: 203
                     message: JSON data type invalid
-                204:
+                "204":
                   value:
                     code: 204
                     message: Enumeration value unknown
-                205:
+                "205":
                   value:
                     code: 205
                     message: JSON data value out of range
-                206:
+                "206":
                   value:
                     code: 206
                     message: JSON data value out of bounds
-                208:
+                "208":
                   value:
                     code: 208
                     message: POST request without content
-                701:
+                "701":
                   value:
                     code: 701
                     message: Data set incomplete
-                702:
+                "702":
                   value:
                     code: 702
+                    message: Data set not applicable
         '403':
           description: Forbidden
           content:
@@ -1014,7 +1033,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1025,7 +1044,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
@@ -1036,7 +1055,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -1047,7 +1066,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                106:
+                "106":
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1056,6 +1075,8 @@ paths:
       tags:
         - mqtt
       summary: Get one MQTT topic.
+      description: Get one MQTT topic
+      operationId: getMqttTopicsTopicId
       parameters:
         - $ref: '#/components/parameters/mqttTopicId'
       responses:
@@ -1092,7 +1113,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1103,11 +1124,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
-                301:
+                "301":
                   value:
                     code: 301
                     message: Resource not found
@@ -1118,7 +1139,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -1129,7 +1150,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                106:
+                "106":
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1137,6 +1158,8 @@ paths:
       tags:
         - mqtt
       summary: Delete a specific MQTT topic.
+      description: Delete a specific MQTT topic.
+      operationId: deleteMqttTopicsTopicsId
       parameters:
         - $ref: '#/components/parameters/mqttTopicId'
       responses:
@@ -1149,7 +1172,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
@@ -1160,7 +1183,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1171,11 +1194,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
-                301:
+                "301":
                   value:
                     code: 301
                     message: Resource not found
@@ -1186,7 +1209,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -1197,7 +1220,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                106:
+                "106":
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1206,6 +1229,8 @@ paths:
       tags:
         - mqtt
       summary: Read the connection status of the MQTT client to the MQTT server.
+      description: Read the connection status of the MQTT client to the MQTT server.
+      operationId: GetMqttConnectionstatus
       responses:
         '200':
           description: Successful operation
@@ -1253,7 +1278,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                106:
+                "106":
                   value:
                     code: 106
                     message: MQTT feature not supported
@@ -1266,6 +1291,7 @@ paths:
       description: >-
         Only one version of an IODD is stored on the webserver at the same time
         for one vendorId-deviceId-ioLinkRevision-combination.
+      operationId: getIodds
       parameters:
         - $ref: '#/components/parameters/vendorId'
         - $ref: '#/components/parameters/deviceId'
@@ -1284,11 +1310,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                305:
+                "305":
                   value:
                     code: 305
                     message: Query parameter name invalid
-                306:
+                "306":
                   value:
                     code: 306
                     message: Query parameter value invalid
@@ -1299,7 +1325,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1310,7 +1336,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
@@ -1321,7 +1347,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -1332,7 +1358,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1340,6 +1366,8 @@ paths:
       tags:
         - iodds
       summary: Delete a specific IODD representation.
+      description: Delete a specific IODD representation.
+      operationId: deleteIodds
       parameters:
         - $ref: '#/components/parameters/vendorId'
         - $ref: '#/components/parameters/deviceId'
@@ -1354,15 +1382,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                305:
+                "305":
                   value:
                     code: 305
                     message: Query parameter name invalid
-                306:
+                "306":
                   value:
                     code: 306
                     message: Query parameter value invalid
@@ -1373,7 +1401,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1384,11 +1412,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
-                301:
+                "301":
                   value:
                     code: 301
                     message: Resource not found
@@ -1399,7 +1427,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -1410,7 +1438,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1420,6 +1448,7 @@ paths:
         - iodds
       summary: Get a specific IODD. Optional.
       description: All query parameters are mandatory.
+      operationId: getIoddsFile
       parameters:
         - $ref: '#/components/parameters/vendorId'
         - $ref: '#/components/parameters/deviceId'
@@ -1432,7 +1461,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ioddFile'
               example:
-                - IODD XML file
+                "IODD XML file"
         '400':
           description: Forbidden
           content:
@@ -1440,11 +1469,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                305:
+                "305":
                   value:
                     code: 305
                     message: Query parameter name invalid
-                306:
+                "306":
                   value:
                     code: 306
                     message: Query parameter value invalid
@@ -1455,7 +1484,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1466,11 +1495,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
-                301:
+                "301":
                   value:
                     code: 301
                     message: Resource not found
@@ -1481,7 +1510,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
@@ -1492,7 +1521,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1503,6 +1532,7 @@ paths:
       description: >
         It is not needed to specify the identification data for this action as the
         parser can read this information.
+      operationId: postIoddsFile
       requestBody:
         required: true
         content:
@@ -1510,7 +1540,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ioddFile'
             example:
-              - IODD XML file
+              "IODD XML file"
       responses:
         '204':
           description: Successful operation
@@ -1521,23 +1551,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                208:
+                "208":
                   value:
                     code: 208
                     message: POST request without content
-                603:
+                "603":
                   value:
                     code: 603
                     message: IODD upload failed. IODD XML invalid
-                604:
+                "604":
                   value:
                     code: 604
                     message: IODD upload failed. CRC error
-                605:
+                "605":
                   value:
                     code: 605
                     message: IODD upload failed. Parsing error
@@ -1548,7 +1578,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1559,7 +1589,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
@@ -1570,11 +1600,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                602:
+                "602":
                   value:
                     code: 602
                     message: IODD upload failed. Not enough memory
@@ -1585,7 +1615,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -1596,6 +1626,10 @@ paths:
       summary: >-
         Read all the available masterNumber keys with the corresponding
         identification information.
+      description: >- 
+        Read all the available masterNumber keys with the corresponding
+        identification information.
+      operationId: getMasters
       responses:
         '200':
           description: Successful operation
@@ -1610,7 +1644,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1621,11 +1655,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -1634,6 +1668,8 @@ paths:
       tags:
         - masters
       summary: Read the capabilities of the Master.
+      description: Read the capabilities of the Master.
+      operationId: getMastersMasterNumberCapabilities
       parameters:
         - $ref: '#/components/parameters/masterNumber'
       responses:
@@ -1650,7 +1686,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1661,7 +1697,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
@@ -1672,11 +1708,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                    value:
                     code: 102
                     message: Internal communication error
@@ -1685,6 +1721,8 @@ paths:
       tags:
         - masters
       summary: Read the identification of the Master.
+      description: Read the identification of the Master.
+      operationId: getMastersMasterNumberIdentification
       parameters:
         - $ref: '#/components/parameters/masterNumber'
       responses:
@@ -1701,7 +1739,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1712,7 +1750,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
@@ -1723,11 +1761,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -1735,6 +1773,8 @@ paths:
       tags:
         - masters
       summary: Write application specific identification to a Master.
+      description: Write application specific identification to a Master.
+      operationId: postMastersMasterNumberIdentification
       parameters:
         - $ref: '#/components/parameters/masterNumber'
       requestBody:
@@ -1759,27 +1799,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                201:
+                "201":
                   value:
                     code: 201
                     message: JSON parsing failed
-                202:
+                "202":
                   value:
                     code: 202
                     message: JSON data value invalid
-                203:
+                "203":
                   value:
                     code: 203
                     message: JSON data type invalid
-                206:
+                "206":
                   value:
                     code: 206
                     message: JSON data value out of bounds
-                208:
+                "208":
                   value:
                     code: 208
                     message: POST request without content
@@ -1790,7 +1830,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1801,7 +1841,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
@@ -1812,11 +1852,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -1825,6 +1865,9 @@ paths:
       tags:
         - ports
       summary: Read all the available portNumber keys with the corresponding identification information.
+      description: >-
+        Read all the available portNumber keys with the corresponding identification information.
+      operationId: getMastersMasterNumberPorts
       parameters:
         - $ref: '#/components/parameters/masterNumber'
       responses:
@@ -1855,10 +1898,10 @@ paths:
                   - portNumber: 2
                     statusInfo: "DEVICE_ONLINE"
                     deviceAlias: "Pressure_Sensor"
-                  - portnumber: 3
+                  - portNumber: 3
                     statusInfo: "DIGITAL_INPUT_C/Q"
                     deviceAlias: "Switching_Sensor"
-                  - portnumber: 4
+                  - portNumber: 4
                     statusInfo: "DEACTIVATED"
                     deviceAlias: "Empty_port"
         '403':
@@ -1868,7 +1911,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1879,7 +1922,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
@@ -1890,11 +1933,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -1903,6 +1946,8 @@ paths:
       tags:
         - ports
       summary: Read the capability information of the specified port.
+      description: Read the capability information of the specified port.
+      operationId: getMastersMasterNumberPortsPortNumberCapabilities
       parameters:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
@@ -1920,7 +1965,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1931,11 +1976,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
-                303:
+                "303":
                   value:
                     code: 303
                     message: portNumber not found
@@ -1946,11 +1991,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -1959,6 +2004,8 @@ paths:
       tags:
         - ports
       summary: Read the actual status of the selected port.
+      description: Read the actual status of the selected port.
+      operationId: getMastersMasterNumberPortsPortNumberStatus
       parameters:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
@@ -1976,7 +2023,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -1987,11 +2034,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
-                303:
+                "303":
                   value:
                     code: 303
                     message: portNumber not found
@@ -2002,11 +2049,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -2018,6 +2065,8 @@ paths:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
       summary: Read the actual configuration of the specified port.
+      description: Read the actual configuration of the specified port.
+      operationId: getMastersMasterNumberPortsPortNumberConfiguration
       responses:
         '200':
           description: Successful operation
@@ -2032,7 +2081,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -2043,11 +2092,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
-                303:
+                "303":
                   value:
                     code: 303
                     message: portNumber not found
@@ -2058,11 +2107,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -2070,6 +2119,8 @@ paths:
       tags:
         - ports
       summary: Write the configuration of the specified port.
+      description: Write the configuration of the specified port.
+      operationId: postMastersMasterNumbersPortsPortNumberConfiguration
       parameters:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
@@ -2110,47 +2161,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                201:
+                "201":
                   value:
                     code: 201
                     message: JSON parsing failed
-                202:
+                "202":
                   value:
                     code: 202
                     message: JSON data value invalid
-                203:
+                "203":
                   value:
                     code: 203
                     message: JSON data type invalid
-                204:
+                "204":
                   value:
                     code: 204
                     message: Enumeration value unknown
-                205:
+                "205":
                   value:
                     code: 205
                     message: JSON data value out of range
-                207:
+                "207":
                   value:
                     code: 207
                     message: deviceAlias is not unique
-                208:
+                "208":
                   value:
                     code: 208
                     message: POST request without content
-                701:
+                "701":
                   value:
                     code: 701
                     message: Data set incomplete
-                702:
+                "702":
                   value:
                     code: 702
                     message: Data set not applicable
-                703:
+                "703":
                   value:
                     code: 703
                     message: Data set combination incompatible
@@ -2161,7 +2212,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -2172,11 +2223,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
-                303:
+                "303":
                   value:
                     code: 303
                     message: portNumber not found
@@ -2187,11 +2238,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -2203,6 +2254,8 @@ paths:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
       summary: Read the Data Storage content of a specific port.
+      description: Read the Data Storage content of a specific port.
+      operationId: getMastersMasterNumberPortsPortNumberDatastorage
       responses:
         '200':
           description: Successful operation
@@ -2211,7 +2264,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/dataStorageGetPost'
               examples:
-                Data Storage with valid content:
+                "Data Storage with valid content":
                   value:
                     header:
                       vendorId: 15
@@ -2219,7 +2272,7 @@ paths:
                       ioLinkRevision: '1.1'
                     content: >-
                       TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
-                Empty Data Storage:
+                "Empty Data Storage":
                   value:
                     header: {}
                     content: ''
@@ -2230,7 +2283,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -2241,11 +2294,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
-                303:
+                "303":
                   value:
                     code: 303
                     message: portNumber not found
@@ -2256,11 +2309,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -2271,6 +2324,8 @@ paths:
         - $ref: '#/components/parameters/masterNumber'
         - $ref: '#/components/parameters/portNumber'
       summary: Write the Data Storage content to a specific port.
+      description: Write the Data Storage content to a specific port.
+      operationId: postMastersMasterNumberPortsPortNumberDatastorage
       requestBody:
         required: true
         content:
@@ -2300,43 +2355,43 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                104:
+                "104":
                   value:
                     code: 104
                     message: Action locked by another client
-                201:
+                "201":
                   value:
                     code: 201
                     message: JSON parsing failed
-                202:
+                "202":
                   value:
                     code: 202
                     message: JSON data value invalid
-                203:
+                "203":
                   value:
                     code: 203
                     message: JSON data type invalid
-                204:
+                "204":
                   value:
                     code: 204
                     message: Enumeration value unknown
-                205:
+                "205":
                   value:
                     code: 205
                     message: JSON data value out of range
-                206:
+                "206":
                   value:
                     code: 206
                     message: JSON data value out of bounds
-                208:
+                "208":
                   value:
                     code: 208
                     message: POST request without content
-                401:
+                "401":
                   value:
-                    msgcode: 401
+                    code: 401
                     message: Data storage mismatch
-                701:
+                "701":
                   value:
                     code: 701
                     message: Data set incomplete
@@ -2347,7 +2402,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                150:
+                "150":
                   value:
                     code: 150
                     message: Permission denied
@@ -2358,11 +2413,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                302:
+                "302":
                   value:
                     code: 302
                     message: masterNumber not found
-                303:
+                "303":
                   value:
                     code: 303
                     message: portNumber not found
@@ -2373,11 +2428,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                101:
+                "101":
                   value:
                     code: 101
                     message: Internal server error
-                102:
+                "102":
                   value:
                     code: 102
                     message: Internal communication error
@@ -2386,6 +2441,9 @@ paths:
       tags:
         - devices
       summary: Get all available deviceAlias keys and the location by Master number and Port number.
+      description: >-
+        Get all available deviceAlias keys and the location by Master number and Port number.
+      operationId: getDevices
       responses:
         '200':
           description: Successful operation
@@ -2428,7 +2486,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -2439,11 +2497,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -2452,6 +2510,8 @@ paths:
       tags:
         - devices
       summary: Read the capabilities from the specific Device.
+      description: Read the capabilities from the specific Device.
+      operationId: GetDevicesDeviceAliasCapabilities
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
       responses:
@@ -2465,7 +2525,7 @@ paths:
                 minimumCycleTime:
                   value: 2.3
                   unit: ms
-                  supportedProfiles: [10, 32770]
+                supportedProfiles: [10, 32770]
         '400':
           description: Bad request
           content:
@@ -2473,7 +2533,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
@@ -2484,7 +2544,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -2495,11 +2555,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                304:
+                "304":
                   value:
                     code: 304
                     message: deviceAlias not found
-                308:
+                "308":
                   value:
                     code: 308
                     message: IO-Link Device is not accessible
@@ -2527,6 +2587,7 @@ paths:
         *Implementation hint*: You have to request the ISDU values of
         applicationSpecificTag, locationTag and functionTag (if they are
         supported by the device).
+      operationId: getDevicesDeviceAliasIdentification
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
       responses:
@@ -2543,7 +2604,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
@@ -2554,7 +2615,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -2565,11 +2626,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                304:
+                "304":
                   value:
                     code: 304
                     message: deviceAlias not found
-                308:
+                "308":
                   value:
                     code: 308
                     message: IO-Link Device is not accessible
@@ -2580,11 +2641,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -2592,6 +2653,9 @@ paths:
       tags:
         - devices
       summary: Write application specific identification to the Device.
+      description: >-
+        Write application specific identification to the Device.
+      operationId: postDevicesDeviceAliasIdentification
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
       requestBody:
@@ -2616,31 +2680,31 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    104:
+                    "104":
                       value:
                         code: 104
                         message: Action locked by another client
-                    201:
+                    "201":
                       value:
                         code: 201
                         message: JSON parsing failed
-                    202:
+                    "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                    203:
+                    "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                    206:
+                    "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    208:
+                    "208":
                       value:
                         code: 208
                         message: POST request without content
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
@@ -2651,7 +2715,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -2662,19 +2726,19 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
@@ -2685,11 +2749,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -2698,6 +2762,9 @@ paths:
       tags:
         - devices
       summary: Read the process data values (input and output) from the specified Device.
+      description: >-
+        Read the process data values (input and output) from the specified Device.
+      operationId: getDevicesDeviceAliasProcessdataValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/format'
@@ -2744,15 +2811,15 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -2763,7 +2830,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -2774,15 +2841,15 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
@@ -2808,7 +2875,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -2816,6 +2883,8 @@ paths:
       tags:
         - devices
       summary: Write the process data output values to the specified Device.
+      description: Write the process data output values to the specified Device.
+      operationId: postDevicesDeviceAliasProcessdataValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
       requestBody:
@@ -2854,75 +2923,75 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    104:
+                    "104":
                       value:
                         code: 104
                         message: Action locked by another client
-                    201:
+                    "201":
                       value:
                         code: 201
                         message: JSON parsing failed
-                    202:
+                    "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                    203:
+                    "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                    204:
+                    "204":
                       value:
                         code: 204
                         message: Enumeration value unknown
-                    205:
+                    "205":
                       value:
                         code: 205
                         message: JSON data value out of range
-                    206:
+                    "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    208:
+                    "208":
                       value:
                         code: 208
                         message: POST request without content
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
-                        msgcode: 306
+                        code: 306
                         message: Query parameter value invalid
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    501:
+                    "501":
                       value:
                         code: 501
                         message: I/Q is not configured as DIGITAL_OUTPUT
-                    502:
+                    "502":
                       value:
                         code: 502
                         message: C/Q is not configured as DIGITAL_OUTPUT
-                    503:
+                    "503":
                       value:
                         code: 503
                         message: IO-Link Device has no output process data
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    701:
+                    "701":
                       value:
                         code: 701
                         message: Data set incomplete
-                    702:
+                    "702":
                       value:
                         code: 702
                         message: Data set not applicable
-                    703:
+                    "703":
                       value:
                         code: 703
                         message: Data set combination incompatible
@@ -2933,7 +3002,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -2944,15 +3013,15 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
@@ -2963,11 +3032,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                  101:
+                  "101":
                     value:
                       code: 101
                       message: Internal server error
-                  102:
+                  "102":
                     value:
                       code: 102
                       message: Internal communication error
@@ -2978,7 +3047,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -2988,6 +3057,9 @@ paths:
         - devices
       summary: >-
         Read the process data input values from the specified Device.
+      description: >-
+        Read the process data input values from the specified Device.
+      operationId: getDevicesDeviceAliasProcessdataGetdataValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/format'
@@ -3026,15 +3098,15 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -3045,7 +3117,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -3056,15 +3128,15 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
@@ -3090,7 +3162,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -3100,6 +3172,9 @@ paths:
         - devices
       summary: >-
         Read the process data output values from the specified Device.
+      description: >-
+        Read the process data output values from the specified Device.
+      operationId: DevicesDeviceAliasProcessdataSetdataValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/format'
@@ -3160,19 +3235,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                103:
+                "103":
                   value:
                     code: 103
                     message: Operation not supported
-                304:
+                "304":
                   value:
                     code: 304
                     message: deviceAlias not found
-                308:
+                "308":
                   value:
                     code: 308
                     message: IO-Link Device is not accessible
-                503:
+                "503":
                       value:
                         code: 503
                         message: IO-Link Device has no output process data
@@ -3198,7 +3273,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -3209,6 +3284,10 @@ paths:
       summary: >-
         Read all available parameter indices and parameter names from the specific Device.
         IODD support is required.
+      description: >-
+        Read all available parameter indices and parameter names from the specific Device.
+        IODD support is required.
+      operationId: getDevicesDeviceAliasProcessdataSetdataValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
       responses:
@@ -3225,15 +3304,15 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 305
                         message: Query parameter value invalid
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -3244,7 +3323,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -3255,11 +3334,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
@@ -3270,11 +3349,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -3285,7 +3364,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -3294,6 +3373,9 @@ paths:
       tags:
         - devices
       summary: Read a parameter value from the specific Device with the given index.
+      description: >-
+        Read a parameter value from the specific Device with the given index.
+      operationId: getDevicesDeviceAliasParametersIndexValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
@@ -3307,14 +3389,11 @@ paths:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
                 format=byteArray:
-                  value: {
-                      "value": [
-                        0,
-                        156,
-                        125,
-                        25
-                      ]
-                    }
+                  value:  
+                    - 0
+                    - 156
+                    - 125
+                    - 25
                 'format=iodd, simple type':
                   value:
                     value: 15.2
@@ -3331,23 +3410,23 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -3358,7 +3437,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -3369,23 +3448,23 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
@@ -3396,11 +3475,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -3411,7 +3490,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -3419,6 +3498,9 @@ paths:
       tags:
         - devices
       summary: Write a parameter value with the given index to the specified Device.
+      description: >-
+        Write a parameter value with the given index to the specified Device.
+      operationId: postDevicesDeviceAliasParametersIndexValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'     
@@ -3430,14 +3512,11 @@ paths:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
               'payload as byteArray':
-                value: {
-                  "value": [
-                    0,
-                    156,
-                    125,
-                    25
-                  ]
-                }
+                value:
+                  - 0
+                  - 156
+                  - 125
+                  - 25
               'payload as iodd, simple type':
                 value:
                   value: 15.2
@@ -3457,63 +3536,63 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    104:
+                    "104":
                       value:
                         code: 104
                         message: Action locked by another client
-                    201:
+                    "201":
                       value:
                         code: 201
                         message: JSON parsing failed
-                    202:
+                    "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                    203:
+                    "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                    204:
+                    "204":
                       value:
                         code: 204
                         message: Enumeration value unknown
-                    205:
+                    "205":
                       value:
                         code: 205
                         message: JSON data value out of range
-                    206:
+                    "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    208:
+                    "208":
                       value:
                         code: 208
                         message: POST request without content
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    701:
+                    "701":
                       value:
                         code: 701
                         message: Data set incomplete
@@ -3524,7 +3603,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -3535,19 +3614,19 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
@@ -3558,11 +3637,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -3573,7 +3652,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -3584,6 +3663,10 @@ paths:
       summary: >-
         Read a parameter value from the specific Device by parameter name.
         IODD support is required.
+      description: >-
+        Read a parameter value from the specific Device by parameter name.
+        IODD support is required.
+      operationId: getDevicesDeviceAliasParametersParameterNameValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
@@ -3597,14 +3680,11 @@ paths:
                 $ref: '#/components/schemas/deviceParameterValueGetPost'
               examples:
                 format=byteArray:
-                  value: {
-                    "value": [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
-                  }
+                  value:
+                    - 0
+                    - 156
+                    - 125
+                    - 25
                 'format=iodd, simple type':
                   value:
                     value: 15.2
@@ -3621,23 +3701,23 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -3648,7 +3728,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -3659,27 +3739,27 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
-                    312:
+                    "312":
                       value:
                         code: 312
                         message: IO-Link parameter name is not unique
@@ -3690,11 +3770,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -3705,7 +3785,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported 
@@ -3715,6 +3795,10 @@ paths:
       summary: >-
         Write a parameter value by name to the specified Device.IODD support is required.
         IODD support is required.
+      description: >- 
+        Write a parameter value by name to the specified Device.IODD support is required.
+        IODD support is required.
+      operationId: postDevicesDeviceAliasParametersParameterNameValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
@@ -3726,14 +3810,11 @@ paths:
               $ref: '#/components/schemas/deviceParameterValueGetPost'
             examples:
               format=byteArray:
-                value: {
-                  "value": [
-                    0,
-                    156,
-                    125,
-                    25
-                  ]
-                }
+                value:
+                  - 0
+                  - 156
+                  - 125
+                  - 25
               'format=iodd, simple type':
                 value:
                   value: 15.2
@@ -3753,51 +3834,51 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    104:
+                    "104":
                       value:
                         code: 104
                         message: Action locked by another client
-                    201:
+                    "201":
                       value:
                         code: 201
                         message: JSON parsing failed
-                    202:
+                    "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                    203:
+                    "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                    204:
+                    "204":
                       value:
                         code: 204
                         message: Enumeration value unknown
-                    205:
+                    "205":
                       value:
                         code: 205
                         message: JSON data value out of range
-                    206:
+                    "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    208:
+                    "208":
                       value:
                         code: 208
                         message: POST request without content
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    701:
+                    "701":
                       value:
                         code: 701
                         message: Data set incomplete
@@ -3808,7 +3889,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -3819,27 +3900,27 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
-                    312:
+                    "312":
                       value:
                         code: 312
                         message: IO-Link parameter name is not unique
@@ -3850,11 +3931,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -3865,7 +3946,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -3876,6 +3957,10 @@ paths:
       summary: >-
         Read all available parameter sub-indices and sub-parameter names from the specific Device.
         IODD support is required.
+      description: >-
+        Read all available parameter sub-indices and sub-parameter names from the specific Device.
+        IODD support is required.
+      operationId: getDevicesDeviceAliasParametersIndexSubindices
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
@@ -3893,7 +3978,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -3904,7 +3989,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -3915,19 +4000,19 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
@@ -3938,11 +4023,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -3953,7 +4038,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -3964,6 +4049,10 @@ paths:
       summary: >-
         Read all available parameter sub-indices and sub-parameter names from the specific Device (referenced by parameter name).
         IODD support is required.
+      description: >-
+        Read all available parameter sub-indices and sub-parameter names from the specific Device (referenced by parameter name).
+        IODD support is required.
+      operationId: getDevicesDeviceAliasParametersParameterNameSubindices
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
@@ -3981,7 +4070,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -3992,7 +4081,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -4003,15 +4092,15 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    312:
+                    "312":
                       value:
                         code: 312
                         message: IO-Link parameter name is not unique
@@ -4022,11 +4111,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -4037,7 +4126,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -4047,6 +4136,9 @@ paths:
         - devices
       summary: >-
         Read a parameter value from the specific Device with the given index and subindex.
+      description: >-
+        Read a parameter value from the specific Device with the given index and subindex.
+      operationId: getDevicesDeviceAliasPArametersIndexSubindicesSubindexValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
@@ -4061,14 +4153,11 @@ paths:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
               examples:
                 format=byteArray:
-                  value: {
-                    "value": [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
-                  }
+                  value:
+                    - 0
+                    - 156
+                    - 125
+                    - 25
                 format=iodd:
                   value:
                     value: 15.2
@@ -4079,23 +4168,23 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -4106,7 +4195,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -4117,23 +4206,23 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
@@ -4144,11 +4233,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -4159,7 +4248,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -4168,6 +4257,9 @@ paths:
         - devices
       summary: >-
         Write the parameter with the given index and subindex.
+      description: >-
+        Write the parameter with the given index and subindex.
+      operationId: postDevicesDeviceAliasPArametersIndexSubindicesSubindexValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/index'
@@ -4180,14 +4272,11 @@ paths:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
             examples:
               format=byteArray:
-                value: {
-                  "value": [
-                    0,
-                    156,
-                    125,
-                    25
-                  ]
-                }
+                value:
+                  - 0
+                  - 156
+                  - 125
+                  - 25
               format=iodd:
                 value:
                   value: 15.2
@@ -4201,51 +4290,51 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    104:
+                    "104":
                       value:
                         code: 104
                         message: Action locked by another client
-                    201:
+                    "201":
                       value:
                         code: 201
                         message: JSON parsing failed
-                    202:
+                    "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                    203:
+                    "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                    204:
+                    "204":
                       value:
                         code: 204
                         message: Enumeration value unknown
-                    205:
+                    "205":
                       value:
                         code: 205
                         message: JSON data value out of range
-                    206:
+                    "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    208:
+                    "208":
                       value:
                         code: 208
                         message: POST request without content
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD is not availabl
-                    701:
+                    "701":
                       value:
                         code: 701
                         message: Data set incomplete
@@ -4256,7 +4345,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -4267,23 +4356,23 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
@@ -4294,11 +4383,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -4309,7 +4398,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -4320,6 +4409,10 @@ paths:
       summary: >-
         Read a parameter value from the specific Device by parameter name and subname.
         IODD support is required.
+      description: >-
+        Read a parameter value from the specific Device by parameter name and subname.
+        IODD support is required.
+      operationId: getDevicesDeviceAliasParametersParameterNameSubindicesSubParameterNameValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
@@ -4334,14 +4427,11 @@ paths:
                 $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
               examples:
                 format=byteArray:
-                  value: {
-                    "value": [
-                      0,
-                      156,
-                      125,
-                      25
-                    ]
-                  }
+                  value:
+                    - 0
+                    - 156
+                    - 125
+                    - 25
                 format=iodd:
                   value:
                     value: 15.2
@@ -4352,23 +4442,23 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
@@ -4379,7 +4469,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -4390,27 +4480,27 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
-                    312:
+                    "312":
                       value:
                         code: 312
                         message: IO-Link parameter name is not unique
@@ -4421,11 +4511,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -4436,7 +4526,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -4446,6 +4536,10 @@ paths:
       summary: >-
         Write a parameter value to the specific Device by the parameter name and subname.
         IODD support is required.
+      description: >-
+        Write a parameter value to the specific Device by the parameter name and subname.
+        IODD support is required.
+      operationId: postDevicesDeviceAliasParametersParameterNameSubindicesSubParameterNameValue
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/parameterName'
@@ -4458,14 +4552,11 @@ paths:
               $ref: '#/components/schemas/deviceParameterSubindexValueGetPost'
             examples:
               format=byteArray:
-                value: {
-                  "value": [
-                    0,
-                    156,
-                    125,
-                    25
-                  ]
-                }
+                value:
+                    - 0
+                    - 156
+                    - 125
+                    - 25
               format=iodd:
                 value:
                   value: 15.2
@@ -4479,55 +4570,55 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    104:
+                    "104":
                       value:
                         code: 104
                         message: Action locked by another client
-                    201:
+                    "201":
                       value:
                         code: 201
                         message: JSON parsing failed
-                    202:
+                    "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                    203:
+                    "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                    204:
+                    "204":
                       value:
                         code: 204
                         message: Enumeration value unknown
-                    205:
+                    "205":
                       value:
                         code: 205
                         message: JSON data value out of range
-                    206:
+                    "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    208:
+                    "208":
                       value:
                         code: 208
                         message: POST request without content
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    701:
+                    "701":
                       value:
                         code: 701
                         message: Data set incomplete
@@ -4538,7 +4629,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -4549,27 +4640,27 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    309:
+                    "309":
                       value:
                         code: 309
                         message: IO-Link parameter not found
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
-                    312:
+                    "312":
                       value:
                         code: 312
                         message: IO-Link parameter name is not unique
@@ -4580,11 +4671,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -4595,7 +4686,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -4605,6 +4696,9 @@ paths:
         - devices
       summary: >-
         Write or read one or more parameters using the block parameterization method.
+      description: >-
+        Write or read one or more parameters using the block parameterization method.
+      operationId: postDevicesDeviceAliasBlockparameterization
       parameters:
         - $ref: '#/components/parameters/deviceAlias'
         - $ref: '#/components/parameters/format'
@@ -4678,7 +4772,6 @@ paths:
                       result:
                         parameterExchangeResult: READ_SUCCESS
                         content:
-                          value:
                             - 15
                             - 232
                             - 22
@@ -4688,7 +4781,6 @@ paths:
                       result:
                         parameterExchangeResult: READ_SUCCESS
                         content:
-                          value:
                             - 23
                             - 149
                             - 206
@@ -4746,14 +4838,14 @@ paths:
                         parameterExchangeResult: WRITE_SUCCESS
                 'write, format=byteArray, with error':
                   value:
-                    - address:
+                    - identifier:
                         index: 123
                       result:
                         parameterExchangeResult: ERROR
                         iolinkError:
                           code: 32816
                           message: Parameter value out of range
-                    - address:
+                    - identifier:
                         index: 233
                       result:
                         parameterExchangeResult: ERROR
@@ -4767,67 +4859,67 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    104:
+                    "104":
                       value:
                         code: 104
                         message: Action locked by another client
-                    201:
+                    "201":
                       value:
                         code: 201
                         message: JSON parsing failed
-                    202:
+                    "202":
                       value:
                         code: 202
                         message: JSON data value invalid
-                    203:
+                    "203":
                       value:
                         code: 203
                         message: JSON data type invalid
-                    204:
+                    "204":
                       value:
                         code: 204
                         message: Enumeration value unknown
-                    205:
+                    "205":
                       value:
                         code: 205
                         message: JSON data value out of range
-                    206:
+                    "206":
                       value:
                         code: 206
                         message: JSON data value out of bounds
-                    208:
+                    "208":
                       value:
                         code: 208
                         message: POST request without content
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
-                    307:
+                    "307":
                       value:
                         code: 307
                         message: Port is not configured to IO-Link
-                    311:
+                    "311":
                       value:
                         code: 311
                         message: IO-Link parameter access error
-                    601:
+                    "601":
                       value:
                         code: 601
                         message: IODD (representation) for this IO-Link device is not available
-                    701:
+                    "701":
                       value:
                         code: 701
                         message: Data set incomplete
-                    702:
+                    "702":
                       value:
                         code: 702
                         message: Data set not applicable
-                    703:
+                    "703":
                       value:
                         code: 703
                         message: Data set combination incompatible
@@ -4838,7 +4930,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -4849,19 +4941,19 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    103:
+                    "103":
                       value:
                         code: 103
                         message: Operation not supported
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
-                    308:
+                    "308":
                       value:
                         code: 308
                         message: IO-Link Device is not accessible
-                    310:
+                    "310":
                       value:
                         code: 310
                         message: IO-Link parameter access not supported by the device
@@ -4872,11 +4964,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -4887,7 +4979,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorObject'
               examples:
-                105:
+                "105":
                   value:
                     code: 105
                     message: IODD feature not supported
@@ -4900,6 +4992,9 @@ paths:
         - $ref: '#/components/parameters/eventTop'
         - $ref: '#/components/parameters/eventBottom'
       summary:  Reading the EventLog filtered for a specific Device.
+      description: >-
+        Reading the EventLog filtered for a specific Device.
+      operationId: getDevicesDevicesAliasEvents
       responses:
         '200':
           description: >-
@@ -4916,11 +5011,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    305:
+                    "305":
                       value:
                         code: 305
                         message: Query parameter name invalid
-                    306:
+                    "306":
                       value:
                         code: 306
                         message: Query parameter value invalid
@@ -4931,7 +5026,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    150:
+                    "150":
                       value:
                         code: 150
                         message: Permission denied
@@ -4942,7 +5037,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    304:
+                    "304":
                       value:
                         code: 304
                         message: deviceAlias not found
@@ -4953,11 +5048,11 @@ paths:
                 schema:
                   $ref: '#/components/schemas/errorObject'
                 examples:
-                    101:
+                    "101":
                       value:
                         code: 101
                         message: Internal server error
-                    102:
+                    "102":
                       value:
                         code: 102
                         message: Internal communication error
@@ -5357,8 +5452,8 @@ components:
             deviceAlias: Temperature_sensor_1
           message:
             code: 16912
-            mode: APPEARED
-            text: Device temperature over-run – Clear source of heat
+            mode: APPEARS
+            text: Device temperature over-run - Clear source of heat
     gatewayIdentificationGet:
       type: object
       required:
@@ -5469,9 +5564,6 @@ components:
               description: Unique deviceAlias.
         - oneOf:
             - type: object
-              required:
-                - event
-                - processData
               properties:
                 event:
                   $ref: '#/components/schemas/event'
@@ -5839,10 +5931,11 @@ components:
                   maximum: 16777215
                 ioLinkRevision:
                   type: string
-                  enum:
-                    - '1.0'
-                    - '1.1'
-            - type: object
+                  enum: ['1.0', '1.1']
+            - type: object # empty object
+              additionalProperties: false
+              minProperties: 0
+              maxProperties: 0
         content:
           description: Base64 coded DS data Ojects. Max size = 2KB*1.33.
           type: string
@@ -5916,17 +6009,12 @@ components:
     deviceProcessDataValuePost:
       $ref: '#/components/schemas/processDataValue'
     deviceByteArrayTypeValue:
-      type: object
-      required:
-        - value
-      properties:
-        value:
-          type: array
-          description: The value in byteArray format.
-          items:
-            type: number
-            minimum: 0
-            maximum: 255
+      type: array
+      description: The value in byteArray format.
+      items:
+        type: number
+        minimum: 0
+        maximum: 255
     deviceSimpleTypeValue:
       type: object
       properties:
@@ -6174,12 +6262,6 @@ components:
       description: Value format in response document
       schema:
         $ref: '#/components/schemas/format'
-    content:
-      name: content
-      in: query
-      description: Process data element(s) in respose document
-      schema:
-        $ref: '#/components/schemas/content'
     index:
       name: index
       in: path
@@ -6212,20 +6294,3 @@ components:
       schema:
         type: string
       required: true
-  responses:
-    errorResponse:
-      description: Error
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: integer
-              message:
-                type: string
-              iolError:
-                type: integer
