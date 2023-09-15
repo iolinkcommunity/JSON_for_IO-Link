@@ -5201,7 +5201,7 @@ components:
     revision:
       name: revision
       in: query
-      description: IO-Link Revision
+      description: schemaVersion of the IODD
       required: false
       schema:
         type: string
