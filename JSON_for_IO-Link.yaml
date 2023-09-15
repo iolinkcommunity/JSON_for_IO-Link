@@ -180,22 +180,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - version
-                properties:
-                  version:
-                    type: string
-                  additionalInfo:
-                    type: string
+                $ref: "#/components/schemas/apiversion"
               examples:
-                "mandatory":
-                  value:
-                    version: 1.0.0
-                "optional addition":
-                  value:
-                    version: 1.0.0
-                    additionalInfo: 1.2.3-feature-xyz
+                mandatory:
+                  $ref: "#/components/examples/exampleApiVersionMandatory"
+                optional:
+                  $ref: "#/components/examples/exampleApiVersionOptional"
         "403":
           description: Forbidden
           content:
@@ -2095,37 +2085,10 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  required:
-                    - deviceAlias
-                    - masterNumber
-                    - portNumber
-                  properties:
-                    deviceAlias:
-                      type: string
-                      minLength: 1
-                      maxLength: 32
-                    masterNumber:
-                      type: integer
-                      minimum: 1
-                    portNumber:
-                      type: integer
-                      minimum: 1
+                $ref: "#/components/schemas/devices"
+              examples:
                 example:
-                  - deviceAlias: DT35
-                    masterNumber: 1
-                    portNumber: 1
-                  - deviceAlias: TAD081
-                    masterNumber: 1
-                    portNumber: 2
-                  - deviceAlias: BNI_IOL
-                    masterNumber: 1
-                    portNumber: 3
-                  - deviceAlias: master1port4
-                    masterNumber: 1
-                    portNumber: 4
+                  $ref: "#/components/examples/devices"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
@@ -2146,11 +2109,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/deviceCapabilitiesGet"
-              example:
-                minimumCycleTime:
-                  value: 2.3
-                  unit: ms
-                supportedProfiles: [10, 32770]
+              examples:
+                example:
+                  $ref: "#/components/examples/deviceCapabilities"
         "400": # code 307
           $ref: "#/components/responses/HTTP_400"
         "403":
@@ -2866,56 +2827,14 @@ paths:
             schema:
               $ref: "#/components/schemas/deviceBlockParameterizationPost"
             examples:
-              "read, format=byteArray":
-                value:
-                  direction: READ
-                  parameters:
-                    - identifier:
-                        index: 15
-                    - identifier:
-                        index: 65
-                        subIndex: 2
-              "read, format=iodd":
-                value:
-                  direction: READ
-                  parameters:
-                    - identifier:
-                        parameterName: Application_tag
-                    - identifier:
-                        parameterName: Distance
-                        subParameterName: Quality
-              "write, format=byteArray":
-                value:
-                  direction: WRITE
-                  parameters:
-                    - identifier:
-                        index: 123
-                      content:
-                        value:
-                          - 15
-                          - 232
-                          - 22
-                    - identifier:
-                        index: 233
-                        subIndex: 2
-                      content:
-                        value:
-                          - 23
-                          - 149
-                          - 206
-              "write, format=iodd":
-                value:
-                  direction: WRITE
-                  parameters:
-                    - identifier:
-                        parameterName: Application_tag
-                      content:
-                        value: "Level 2, row 3"
-                    - identifier:
-                        parameterName: Hysteresis
-                        subParameterName: Channel_B
-                      content:
-                        value: 123
+              read, format=byteArray:
+                $ref: "#/components/examples/deviceBlockParameterizationPostReadByteArray"
+              read, format=iodd:
+                $ref: "#/components/examples/deviceBlockParameterizationPostReadIodd"
+              write, format=byteArray:
+                $ref: "#/components/examples/deviceBlockParameterizationPostWriteByteArray"
+              write, format=iodd:
+                $ref: "#/components/examples/deviceBlockParameterizationPostWriteIodd"
       responses:
         "200":
           description: Successful operation
@@ -2924,95 +2843,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/deviceBlockParameterizationPostParametersAnswer"
               examples:
-                "read, format=byteArray":
-                  value:
-                    - identifier:
-                        index: 123
-                      result:
-                        parameterExchangeResult: READ_SUCCESS
-                        content:
-                          value:
-                            - 15
-                            - 232
-                            - 22
-                    - identifier:
-                        index: 233
-                        subIndex: 2
-                      result:
-                        parameterExchangeResult: READ_SUCCESS
-                        content:
-                          value:
-                            - 23
-                            - 149
-                            - 206
-                "read, format=iodd":
-                  value:
-                    - identifier:
-                        parameterName: Application_tag
-                      result:
-                        parameterExchangeResult: READ_SUCCESS
-                        content:
-                          value: "Level 2, row 3"
-                    - identifier:
-                        parameterName: Hysteresis
-                        subParameterName: Channel_B
-                      result:
-                        parameterExchangeResult: READ_SUCCESS
-                        content:
-                          value: 123
-                "read, format=byteArray with error":
-                  value:
-                    - identifier:
-                        index: 123
-                      result:
-                        parameterExchangeResult: ERROR
-                        iolinkError:
-                          code: 32802
-                          message: Service temporarily not available – Device control
-                    - identifier:
-                        index: 233
-                      result:
-                        parameterExchangeResult: ERROR
-                        iolinkError:
-                          code: 32803
-                          message: Access denied
-                "write, format=byteArray":
-                  value:
-                    - identifier:
-                        index: 123
-                      result:
-                        parameterExchangeResult: WRITE_SUCCESS
-                    - identifier:
-                        index: 233
-                      result:
-                        parameterExchangeResult: WRITE_SUCCESS
-                "write, format=iodd":
-                  value:
-                    - identifier:
-                        parameterName: Application_tag
-                      result:
-                        parameterExchangeResult: WRITE_SUCCESS
-                    - identifier:
-                        parameterName: Hysteresis
-                        subParameterName: Channel_B
-                      result:
-                        parameterExchangeResult: WRITE_SUCCESS
-                "write, format=byteArray, with error":
-                  value:
-                    - identifier:
-                        index: 123
-                      result:
-                        parameterExchangeResult: ERROR
-                        iolinkError:
-                          code: 32816
-                          message: Parameter value out of range
-                    - identifier:
-                        index: 233
-                      result:
-                        parameterExchangeResult: ERROR
-                        iolinkError:
-                          code: 32817
-                          message: Parameter value above limit
+                read, format=byteArray:
+                  $ref: "#/components/examples/deviceBlockParameterizationPostParametersAnswerReadByteArray"
+                read, format=iodd:
+                  $ref: "#/components/examples/deviceBlockParameterizationPostParametersAnswerReadIodd"
+                read, format=byteArray, with error:
+                  $ref: "#/components/examples/deviceBlockParameterizationPostParametersAnswerReadByteArrayError"
+                write, format=byteArray:
+                  $ref: "#/components/examples/deviceBlockParameterizationPostParametersAnswerWriteByteArray"
+                write, format=iodd:
+                  $ref: "#/components/examples/deviceBlockParameterizationPostParametersAnswerWriteIodd"
+                write, format=byteArray, with error:
+                  $ref: "#/components/examples/deviceBlockParameterizationPostParametersAnswerWriteByteArrayError"
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 311, 601, 701, 702, 703
           $ref: "#/components/responses/HTTP_400"
         "403":
@@ -3055,6 +2897,34 @@ paths:
 
 components:
   schemas:
+    apiversion:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: string
+        additionalInfo:
+          type: string
+    devices:
+      type: array
+      items:
+        type: object
+        required:
+          - deviceAlias
+          - masterNumber
+          - portNumber
+        properties:
+          deviceAlias:
+            type: string
+            minLength: 1
+            maxLength: 32
+          masterNumber:
+            type: integer
+            minimum: 1
+          portNumber:
+            type: integer
+            minimum: 1
     parameterName:
       type: string
       description: |
@@ -3756,10 +3626,10 @@ components:
         serverAddress: "http://broker-address.com"
         upTime: 1050
     deviceCapabilitiesGet:
+      type: object
       required:
         - minimumCycleTime
         - supportedProfiles
-      type: object
       properties:
         minimumCycleTime:
           $ref: "#/components/schemas/cycleTime"
@@ -5573,3 +5443,188 @@ components:
               value:
                 code: 107
                 message: "Service temporarily unavailable"
+  examples:
+    exampleApiVersionMandatory:
+      description: Mandatory
+      value:
+        version: 1.0.0
+    exampleApiVersionOptional:
+      description: Optional
+      value:
+        version: 1.0.0
+        additionalInfo: 1.2.3-feature-xyz
+    devices:
+      value:
+        - deviceAlias: DT35
+          masterNumber: 1
+          portNumber: 1
+        - deviceAlias: TAD081
+          masterNumber: 1
+          portNumber: 2
+        - deviceAlias: BNI_IOL
+          masterNumber: 1
+          portNumber: 3
+        - deviceAlias: master1port4
+          masterNumber: 1
+          portNumber: 4
+    deviceBlockParameterizationPostReadByteArray:
+      description: "Read block parameter in byte array format."
+      value:
+        direction: READ
+        parameters:
+          - identifier:
+              index: 15
+          - identifier:
+              index: 65
+              subIndex: 2
+
+    deviceBlockParameterizationPostReadIodd:
+      description: "Read block parameter in IODD format. IODD needs to be uploaded to the gateway before."
+      value:
+        direction: READ
+        parameters:
+          - identifier:
+              parameterName: Application_tag
+          - identifier:
+              parameterName: Distance
+              subParameterName: Quality
+
+    deviceBlockParameterizationPostWriteByteArray:
+      description: "Write block parameter in byte array format."
+      value:
+        direction: WRITE
+        parameters:
+          - identifier:
+              index: 123
+            content:
+              value:
+                - 15
+                - 232
+                - 22
+          - identifier:
+              index: 233
+              subIndex: 2
+            content:
+              value:
+                - 23
+                - 149
+                - 206
+
+    deviceBlockParameterizationPostWriteIodd:
+      description: "Write block parameter in IODD format. IODD needs to be uploaded to the gateway before."
+      value:
+        direction: WRITE
+        parameters:
+          - identifier:
+              parameterName: Application_tag
+            content:
+              value: "Level 2, row 3"
+          - identifier:
+              parameterName: Hysteresis
+              subParameterName: Channel_B
+            content:
+              value: 123
+
+    deviceBlockParameterizationPostParametersAnswerReadByteArray:
+      value:
+        - identifier:
+            index: 123
+          result:
+            parameterExchangeResult: READ_SUCCESS
+            content:
+              value:
+                - 15
+                - 232
+                - 22
+        - identifier:
+            index: 233
+            subIndex: 2
+          result:
+            parameterExchangeResult: READ_SUCCESS
+            content:
+              value:
+                - 23
+                - 149
+                - 206
+
+    deviceBlockParameterizationPostParametersAnswerReadIodd:
+      description: "read, format=iodd"
+      value:
+        - identifier:
+            parameterName: Application_tag
+          result:
+            parameterExchangeResult: READ_SUCCESS
+            content:
+              value: "Level 2, row 3"
+        - identifier:
+            parameterName: Hysteresis
+            subParameterName: Channel_B
+          result:
+            parameterExchangeResult: READ_SUCCESS
+            content:
+              value: 123
+    deviceBlockParameterizationPostParametersAnswerReadByteArrayError:
+      description: "read, format=byteArray, with error"
+      value:
+        - identifier:
+            index: 123
+          result:
+            parameterExchangeResult: ERROR
+            iolinkError:
+              code: 32802
+              message: Service temporarily not available – Device control
+        - identifier:
+            index: 233
+          result:
+            parameterExchangeResult: ERROR
+            iolinkError:
+              code: 32803
+              message: Access denied
+
+    deviceBlockParameterizationPostParametersAnswerWriteByteArray:
+      description: "write, format=byteArray"
+      value:
+        - identifier:
+            index: 123
+          result:
+            parameterExchangeResult: WRITE_SUCCESS
+        - identifier:
+            index: 233
+          result:
+            parameterExchangeResult: WRITE_SUCCESS
+    deviceBlockParameterizationPostParametersAnswerWriteIodd:
+      description: "write, format=iodd"
+      value:
+        - identifier:
+            parameterName: Application_tag
+          result:
+            parameterExchangeResult: WRITE_SUCCESS
+        - identifier:
+            parameterName: Hysteresis
+            subParameterName: Channel_B
+          result:
+            parameterExchangeResult: WRITE_SUCCESS
+    deviceBlockParameterizationPostParametersAnswerWriteByteArrayError:
+      description: "write, format=byteArray, with error"
+      value:
+        - identifier:
+            index: 123
+          result:
+            parameterExchangeResult: ERROR
+            iolinkError:
+              code: 32816
+              message: Parameter value out of range
+        - identifier:
+            index: 233
+          result:
+            parameterExchangeResult: ERROR
+            iolinkError:
+              code: 32817
+              message: Parameter value above limit
+
+    deviceCapabilities:
+      value:
+        minimumCycleTime:
+          value: 2.3
+          unit: ms
+        supportedProfiles: [10, 32770]
