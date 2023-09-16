@@ -1279,7 +1279,7 @@ paths:
       tags:
         - masters
       summary: Read the actual configuration of the specified Master.
-      description: Read the actual configuration of the specified Master, all master configuration items assembled together in a single data object.
+      description: Read the actual configuration of the specified Master.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -5391,36 +5391,10 @@ components:
     exampleMasterConfiguration:
       summary: IO-Link Master
       value:   
-           - "/masters/1/ports/1/configuration":
-              mode: IOLINK_MANUAL
-              validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-              cycleTime:
-                value: 2.3
-                unit: ms
-              vendorId: 26
-              deviceId: 333
-              iqConfiguration: DIGITAL_INPUT
-              deviceAlias: Distance_sensor_1
-           - "/masters/1/ports/1/datastorage":  
-              header:
-                vendorId: 26
-                deviceId: 333
-                ioLinkRevision: '1.1'
-                content: TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
-           - "/masters/1/ports/2/configuration":
-              mode: IOLINK_AUTOSTART
-              validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-              cycleTime:
-                value: 2.3
-                unit: ms
-                vendorId: 15
-                deviceId: 65253
-              iqConfiguration: DIGITAL_INPUT
 
     exampleWirelessMasterConfiguration:
       summary: Wireless IO-Link Master
       value:  
-         - "/masters/1/configuration":      
             masterId: 5
             advancedConnectivity:
               "ahtEnable": false
