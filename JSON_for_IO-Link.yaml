@@ -9,6 +9,7 @@ info:
     This is an openapi specification for IO-Link gateways, masters and devices. You can find out more about IO-Link
     at [http://www.io-link.com](http://www.io-link.com)
 
+
     * Draft for version 1.1.0
 
     # Specification Reference URIs:
@@ -22,6 +23,7 @@ info:
     >  [IO-Link Wireless System Extensions V1.1](http://www.io-link.com/io-link/10.122/V1.1)
       
     >  [Web of Things (WoT) Thing Description 1.1](https://www.w3.org/2022/wot/td/v1.1)
+
 
     # Disclaimer:
 
@@ -80,6 +82,7 @@ paths:
   ################################################################################
   # general
   ################################################################################
+
   "/":
     get:
       tags:
@@ -302,53 +305,6 @@ paths:
                     code: 101
                     message: Internal server error
 
-  "/gateways":
-    get:
-      operationId: GetGateways
-      tags:
-        - general
-      summary: Read the known IO-Link gateways as list of URLs.
-      description: >-
-        This command is optional.
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  required:
-                    - gatewayUrl
-                  properties:
-                    gatewayUrl:
-                      type: string
-                    masterNumber:
-                      type: integer
-                      minimum: 1
-                    portNumber:
-                      type: integer
-                      minimum: 1
-              examples:
-                self:
-                  value:
-                    - gatewayAlias: gateway1
-                      gatewayUrl: "http://gateway1"
-                multiple:
-                  value:
-                    - gatewayAlias: gateway1
-                      gatewayUrl: "http://gateway1"
-                    - gatewayAlias: gatewayXYZ
-                      gatewayUrl: "http://gatewayXYZ"
-                    - gatewayAlias: BNI_IOL
-                      gatewayUrl: "https://BNI_IOL/"
-                    - gatewayAlias: master_ABC
-                      gatewayUrl: "https://192.168.88.191"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
   ################################################################################
   # gateway
   ################################################################################
@@ -968,6 +924,7 @@ paths:
           $ref: "#/components/responses/HTTP_500"
         "501":
           $ref: "#/components/responses/HTTP_501"
+
   "/mqtt/connectionstatus":
     get:
       operationId: GetMqttConnectionstatus
