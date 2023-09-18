@@ -3077,6 +3077,7 @@ components:
         - DeviceIcon
         - DeviceSymbol
         - VendorLogo
+        - zip
       default: XML
     parameterName:
       type: string
