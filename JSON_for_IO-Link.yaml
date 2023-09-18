@@ -5235,13 +5235,14 @@ components:
     revision:
       name: revision
       in: query
-      description: IO-Link Revision
-      required: true
+      description: schemaVersion of the IODD
+      required: false
       schema:
         type: string
         enum:
           - "1.0"
           - "1.1"
+          - "1.0.1"
     mqttTopicId:
       name: topicId
       in: path
