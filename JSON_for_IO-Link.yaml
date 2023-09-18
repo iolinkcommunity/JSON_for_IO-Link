@@ -1099,6 +1099,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ioddFile"
               example: "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJaSURBVDhPPVPPS3JRED0+LVGpIMUfSCW2iVLEiEytv6IWgiLtFNwJbVp9EP0DIogtol0LEaV2QovWSbgQdCFGLbIgBDW08sftzvTpgcu77905c2bOnaeaTCZCAiqVitcU1WoV39/f2NzchE6n42/TOMkBxuMxERmNRkMcHByIxcVF4XQ6xfr6urDZbMLj8YhcLvc/SggSU6Yq6XQaW1tbCAaDiEQirGIymbC6uor5+XmcnJzg6OiIY7k6ypDP5xGPx+FwOPDw8MCHLpeLyRqNht8J7XYbfr8fV1dXf0SLxcIBT09PnJ3Q6XSwsbGBtbU1fieQ0svLC25ubqAQu9froVgsMun8/BwXFxdYWlqC7AvPz89MkPl5Wa1Wbkut1Wr/HR8f4/DwEMlkEtfX17i/v8dgMEA4HMbX1xcqlcqsErVajff3dyi1Wo0NCYVCuL29BZVtNBqRyWSQSCSwvb2N4XD4Z4hcVB2RVbJZshf9fh96vZ6D9vb28Pr6inK5zK6ORiMmtVotnJ6eIpVKQSEFCjYYDNwD4efnB4VCAfv7+3h7e+NvlOjs7AyxWAwfHx9QvF4vDcFsKqiXUqmEx8dH7pdaILdpH41GuW9yG81mU5jNZiHLE7u7u8Ln8/HTbrcLqSzzCSGvgJ/SbZ6qbDYr+B5pUsi5hYWFmTKVS3tSJkxNpGuiCphIBzs7O2wQHZBZiqKg2+1CVoDLy0vIqjhBvV7H8vIy+O8gBQLZT5dOMzo3N8fKNGbkwcrKCu7u7mYmsuJUgfD5+cmOyt7ZbSIEAgG43W4+J5IQAr+h1V0CntKWLwAAAABJRU5ErkJggg=="
+            application/zip:
+              schema:
+                $ref: "#/components/schemas/ioddArchive"
+              example: "IODD in archive format provided by the IODD finder"
+
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
         "403":
