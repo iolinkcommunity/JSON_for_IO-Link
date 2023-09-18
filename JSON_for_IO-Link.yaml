@@ -3053,6 +3053,56 @@ paths:
         "500":
           $ref: "#/components/responses/HTTP_500"
 
+  "/devices/{deviceAlias}/firmware/update":
+    post:
+      operationId: PostDevicesDeviceAliasFirmwareUpdate
+      tags:
+        - devices
+      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+      description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+      responses:
+        "200":
+          description: >-
+            Successful operation. Device firmware has been updated.
+        "400": # code 305, 306
+          $ref: "#/components/responses/HTTP_400"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          $ref: "#/components/responses/HTTP_404"
+        "500":
+          $ref: "#/components/responses/HTTP_500"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/deviceFirmwareUpdatePost"
+
+  "/devices/{deviceAlias}/firmware/status":
+    get:
+      operationId: GetDevicesDeviceAliasFirmwareUpdateStatus
+      tags:
+        - devices
+      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+      responses:
+        "200":
+          description: >-
+            Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/deviceFirmwareUpdateStatusGet"
+        "400": # code 305, 306
+          $ref: "#/components/responses/HTTP_400"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          $ref: "#/components/responses/HTTP_404"
+        "500":
+          $ref: "#/components/responses/HTTP_500"
+
 components:
   schemas:
     parameterName:
@@ -3516,6 +3566,39 @@ components:
                 $ref: "#/components/schemas/deviceParameterValueGetPost"
               iolinkError:
                 $ref: "#/components/schemas/iolinkErrorObject"
+    deviceFirmwareUpdatePost:
+      type: object
+      properties:
+        iolfwfile:
+          type: string
+          format: binary
+          description: IOLFW File for the device
+      required:
+        - iolfwfile
+    deviceFirmwareUpdateStatusGet:
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: >-
+            Indicates if a firmware update is currently in progress.
+        stage:
+          type: string
+          description: >-
+            Indicates the current stage of the firmware update.
+          enum:
+            - PREPARATION
+            - DOWNLOAD
+            - VALIDATION
+            - UPDATE
+            - FINISHED
+        progress:
+          type: number
+          description: >-
+            Indicates the progress of the firmware update in percent.
+          minimum: 0
+          maximum: 100
+
     deviceEventsGet:
       type: array
       items:
