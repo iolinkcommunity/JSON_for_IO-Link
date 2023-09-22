@@ -5,12 +5,13 @@ info:
   description: >-
 
     # Description
-
-    This is an openapi specification for IO-Link gateways, masters and devices. You can find out more about IO-Link
-    at [http://www.io-link.com](http://www.io-link.com)
+    
+    This is an [openapi specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md) for IO-Link gateways, masters and devices. 
+    You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
 
 
     * Draft for version 1.1.0
+    * The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
 
     # Specification Reference URIs:
 
@@ -960,7 +961,7 @@ paths:
         Get a list of all IODD (representations) that are available on the Gateway.
       description: >-
         Only one version of an IODD is stored on the webserver at the same time
-        for one vendorId-deviceId-ioLinkRevision-combination.
+        for one vendorId-deviceId-iolinkRevision-combination.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -987,7 +988,7 @@ paths:
       tags:
         - iodds
       summary: Delete a specific IODD representation.
-      description: Delete a specific IODD representation.
+      description: Delete a specific IODD representation and all related artifacts.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1010,12 +1011,13 @@ paths:
       operationId: GetIoddsFile
       tags:
         - iodds
-      summary: Get a specific IODD. Optional.
-      description: All query parameters are mandatory.
+      summary: Get a specific IODD or other IODD artifacts like device image. Optional.
+      description: Get a specific IODD or other IODD artifacts like device image.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
         - $ref: "#/components/parameters/revision"
+        - $ref: "#/components/parameters/artifact"
       responses:
         "200":
           description: Successful operation
@@ -1024,6 +1026,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/ioddFile"
               example: "IODD XML file"
+            img/png:
+              schema:
+                $ref: "#/components/schemas/ioddFile"
+              example: "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJaSURBVDhPPVPPS3JRED0+LVGpIMUfSCW2iVLEiEytv6IWgiLtFNwJbVp9EP0DIogtol0LEaV2QovWSbgQdCFGLbIgBDW08sftzvTpgcu77905c2bOnaeaTCZCAiqVitcU1WoV39/f2NzchE6n42/TOMkBxuMxERmNRkMcHByIxcVF4XQ6xfr6urDZbMLj8YhcLvc/SggSU6Yq6XQaW1tbCAaDiEQirGIymbC6uor5+XmcnJzg6OiIY7k6ypDP5xGPx+FwOPDw8MCHLpeLyRqNht8J7XYbfr8fV1dXf0SLxcIBT09PnJ3Q6XSwsbGBtbU1fieQ0svLC25ubqAQu9froVgsMun8/BwXFxdYWlqC7AvPz89MkPl5Wa1Wbkut1Wr/HR8f4/DwEMlkEtfX17i/v8dgMEA4HMbX1xcqlcqsErVajff3dyi1Wo0NCYVCuL29BZVtNBqRyWSQSCSwvb2N4XD4Z4hcVB2RVbJZshf9fh96vZ6D9vb28Pr6inK5zK6ORiMmtVotnJ6eIpVKQSEFCjYYDNwD4efnB4VCAfv7+3h7e+NvlOjs7AyxWAwfHx9QvF4vDcFsKqiXUqmEx8dH7pdaILdpH41GuW9yG81mU5jNZiHLE7u7u8Ln8/HTbrcLqSzzCSGvgJ/SbZ6qbDYr+B5pUsi5hYWFmTKVS3tSJkxNpGuiCphIBzs7O2wQHZBZiqKg2+1CVoDLy0vIqjhBvV7H8vIy+O8gBQLZT5dOMzo3N8fKNGbkwcrKCu7u7mYmsuJUgfD5+cmOyt7ZbSIEAgG43W4+J5IQAr+h1V0CntKWLwAAAABJRU5ErkJggg=="
+            application/zip:
+              schema:
+                $ref: "#/components/schemas/ioddArchive"
+              example: "IODD in archive format provided by the IODD finder"
+
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
         "403":
@@ -1049,6 +1060,10 @@ paths:
             schema:
               $ref: "#/components/schemas/ioddFile"
             example: "IODD XML file"
+          application/zip:
+            schema:
+              $ref: "#/components/schemas/ioddArchive"
+            example: "IODD in archive format provided by the IODD finder"
       responses:
         "204":
           description: Successful operation
@@ -1209,7 +1224,7 @@ paths:
         "500":
           $ref: "#/components/responses/HTTP_500"
 
-  "/masters/{masterNumber}/configuration": #TODO: wireles
+  "/masters/{masterNumber}/configuration": 
     get:
       operationId: GetMastersMasterNumberConfiguration
       tags:
@@ -1227,101 +1242,9 @@ paths:
                 $ref: "#/components/schemas/mastersConfigurationGetPost"
               examples:
                 IO-Link:
-                  value:
+                  $ref: "#/components/examples/exampleMasterConfiguration"
                 IO-Link_Wireless:
-                  value:
-                    masterId: 5
-                    advancedConnectivity:
-                      "ahtEnable": false
-                    pairingTimeout:
-                      value: 25
-                      unit: s
-                    serviceTrackNumber: 1
-                    serviceTrackMode: CYCLIC
-                    trackTxPower:
-                      "track_1": 31
-                      "track_2": 31
-                      "track_3": 31
-                      "track_4": 0
-                      "track_5": 0
-                    blockList:
-                      "2402": false
-                      "2403": false
-                      "2404": false
-                      "2405": false
-                      "2406": false
-                      "2407": false
-                      "2408": false
-                      "2409": false
-                      "2410": false
-                      "2411": false
-                      "2412": false
-                      "2413": false
-                      "2414": false
-                      "2415": false
-                      "2416": false
-                      "2417": false
-                      "2418": false
-                      "2419": false
-                      "2420": false
-                      "2421": false
-                      "2422": false
-                      "2423": false
-                      "2424": false
-                      "2425": false
-                      "2426": false
-                      "2427": false
-                      "2428": false
-                      "2429": false
-                      "2430": false
-                      "2431": false
-                      "2432": false
-                      "2433": false
-                      "2434": false
-                      "2435": false
-                      "2436": false
-                      "2437": false
-                      "2438": false
-                      "2439": false
-                      "2440": false
-                      "2441": false
-                      "2442": false
-                      "2443": false
-                      "2444": false
-                      "2445": false
-                      "2446": false
-                      "2447": false
-                      "2448": false
-                      "2449": false
-                      "2450": false
-                      "2451": false
-                      "2452": false
-                      "2453": false
-                      "2454": false
-                      "2455": false
-                      "2456": false
-                      "2457": false
-                      "2458": false
-                      "2459": false
-                      "2460": false
-                      "2461": false
-                      "2462": false
-                      "2463": false
-                      "2464": false
-                      "2465": false
-                      "2466": false
-                      "2467": false
-                      "2468": false
-                      "2469": false
-                      "2470": false
-                      "2471": false
-                      "2472": false
-                      "2473": false
-                      "2474": false
-                      "2475": false
-                      "2476": false
-                      "2477": false
-                      "2478": false
+                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"                
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
@@ -1342,101 +1265,9 @@ paths:
               $ref: "#/components/schemas/mastersConfigurationGetPost"
             examples:
               IO-Link:
-                value:
+                  $ref: "#/components/examples/exampleMasterConfiguration"
               IO-Link_Wireless:
-                value:
-                  masterId: 5
-                  advancedConnectivity:
-                    "ahtEnable": false
-                  pairingTimeout:
-                    value: 25
-                    unit: s
-                  serviceTrackNumber: 1
-                  serviceTrackMode: CYCLIC
-                  trackTxPower:
-                    "track_1": 31
-                    "track_2": 31
-                    "track_3": 31
-                    "track_4": 0
-                    "track_5": 0
-                  blockList:
-                    "2402": false
-                    "2403": false
-                    "2404": false
-                    "2405": false
-                    "2406": false
-                    "2407": false
-                    "2408": false
-                    "2409": false
-                    "2410": false
-                    "2411": false
-                    "2412": false
-                    "2413": false
-                    "2414": false
-                    "2415": false
-                    "2416": false
-                    "2417": false
-                    "2418": false
-                    "2419": false
-                    "2420": false
-                    "2421": false
-                    "2422": false
-                    "2423": false
-                    "2424": false
-                    "2425": false
-                    "2426": false
-                    "2427": false
-                    "2428": false
-                    "2429": false
-                    "2430": false
-                    "2431": false
-                    "2432": false
-                    "2433": false
-                    "2434": false
-                    "2435": false
-                    "2436": false
-                    "2437": false
-                    "2438": false
-                    "2439": false
-                    "2440": false
-                    "2441": false
-                    "2442": false
-                    "2443": false
-                    "2444": false
-                    "2445": false
-                    "2446": false
-                    "2447": false
-                    "2448": false
-                    "2449": false
-                    "2450": false
-                    "2451": false
-                    "2452": false
-                    "2453": false
-                    "2454": false
-                    "2455": false
-                    "2456": false
-                    "2457": false
-                    "2458": false
-                    "2459": false
-                    "2460": false
-                    "2461": false
-                    "2462": false
-                    "2463": false
-                    "2464": false
-                    "2465": false
-                    "2466": false
-                    "2467": false
-                    "2468": false
-                    "2469": false
-                    "2470": false
-                    "2471": false
-                    "2472": false
-                    "2473": false
-                    "2474": false
-                    "2475": false
-                    "2476": false
-                    "2477": false
-                    "2478": false
+                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"                
       responses:
         "204":
           description: Successful operation
@@ -1727,7 +1558,7 @@ paths:
                 IO-Link:
                   value:
                     statusInfo: "DEVICE_ONLINE"
-                    ioLinkRevision: "1.1"
+                    iolinkRevision: "1.1"
                     transmissionRate: COM2
                     masterCycleTime:
                       value: 2.3
@@ -1738,7 +1569,7 @@ paths:
                     portQualityInfo:
                       pdInValid: true
                       pdOutValid: true
-                    ioLinkRevision: "1.1"
+                    iolinkRevision: "1.1"
                     inputDataLength: 2
                     outputDataLength: 2
                     vendorId: 888
@@ -1903,7 +1734,7 @@ paths:
                     header:
                       vendorId: 15
                       deviceId: 65253
-                      ioLinkRevision: "1.1"
+                      iolinkRevision: "1.1"
                       parameterChecksum: 123456
                     content: >-
                       TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
@@ -1938,7 +1769,7 @@ paths:
                   header:
                     vendorId: 15
                     deviceId: 65253
-                    ioLinkRevision: "1.1"
+                    iolinkRevision: "1.1"
                   content: >-
                     TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
               Empty Data Storage:
@@ -2168,7 +1999,7 @@ paths:
                 ? "Format=byteArray, CQ in IO-Link (only input), IQ in digital output"
                 : value:
                     getData:
-                      ioLink:
+                      iolink:
                         valid: true
                         value:
                           - 12
@@ -2179,7 +2010,7 @@ paths:
                 ? "Format=iodd, CQ in IO-Link (input and output), IQ in digital input"
                 : value:
                     getData:
-                      ioLink:
+                      iolink:
                         valid: true
                         value:
                           Distance:
@@ -2189,7 +2020,7 @@ paths:
                             value: 12
                       iqValue: true
                     setData:
-                      ioLink:
+                      iolink:
                         valid: true
                         value:
                           Buzzer:
@@ -2221,7 +2052,7 @@ paths:
             examples:
               ? "format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output"
               : value:
-                  ioLink:
+                  iolink:
                     valid: true
                     value:
                       - 15
@@ -2273,7 +2104,7 @@ paths:
               examples:
                 ? "Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input"
                 : value:
-                    ioLink:
+                    iolink:
                       valid: true
                       value:
                         - 12
@@ -2282,7 +2113,7 @@ paths:
                     iqValue: true
                 "Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
                   value:
-                    ioLink:
+                    iolink:
                       valid: true
                       value:
                         Distance:
@@ -2985,6 +2816,16 @@ paths:
 
 components:
   schemas:
+    artifact:
+      type: string
+      description: IODD Artifacts like device, vendor images
+      enum:
+        - XML
+        - DeviceIcon
+        - DeviceSymbol
+        - VendorLogo
+        - zip
+      default: XML
     parameterName:
       type: string
       description: |
@@ -3702,7 +3543,7 @@ components:
       required:
         - vendorId
         - deviceId
-        - ioLinkRevision
+        - iolinkRevision
         - vendorName
         - productName
       type: object
@@ -3715,7 +3556,7 @@ components:
           type: integer
           minimum: 1
           maximum: 16777215
-        ioLinkRevision:
+        iolinkRevision:
           type: string
           enum:
             - "1.0"
@@ -3771,7 +3612,7 @@ components:
       example:
         vendorId: 26
         deviceId: 8389226
-        ioLinkRevision: "1.1"
+        iolinkRevision: "1.1"
         vendorName: SICK AG
         vendorText: Sensor Intelligence.
         productName: SLG-2
@@ -4091,9 +3932,6 @@ components:
         blockList:
           type: object
           properties:
-            "2402":
-              type: boolean
-              default: false
             "2403":
               type: boolean
               default: false
@@ -4353,7 +4191,7 @@ components:
               type: string
               minLength: 26
               maxLength: 26
-            ioLinkRevision:
+            iolinkRevision:
               type: string
               enum:
                 - "1.1"
@@ -4364,11 +4202,11 @@ components:
         scanResults:
           - slotType: SSLOT
             uniqueId: 03:78:00:00:01:32:50:60:46
-            ioLinkRevision: "1.1"
+            iolinkRevision: "1.1"
             lastSeen: "2022-12-01T08:42:23.314Z"
           - slotType: DSLOT
             uniqueId: 03:78:00:00:01:32:50:60:47
-            ioLinkRevision: "1.1"
+            iolinkRevision: "1.1"
             lastSeen: "2022-12-01T09:42:23.314Z"
 
     mastersScanPost: # TODO: IOLW
@@ -4459,7 +4297,7 @@ components:
             - NOT_AVAILABLE # NOT_AVAILABLE
             - PORT_POWER_OFF # PORT_POWER_OFF
             - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
-        ioLinkRevision:
+        iolinkRevision:
           description: >-
             Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
             OPERATE.
@@ -4826,7 +4664,7 @@ components:
               required:
                 - vendorId
                 - deviceId
-                - ioLinkRevision
+                - iolinkRevision
               properties:
                 vendorId:
                   type: integer
@@ -4836,7 +4674,7 @@ components:
                   type: integer
                   minimum: 1
                   maximum: 16777215
-                ioLinkRevision:
+                iolinkRevision:
                   type: string
                   enum:
                     - "1.0"
@@ -4854,7 +4692,7 @@ components:
     processDataValue:
       type: object
       properties:
-        ioLink:
+        iolink:
           description: Process data in IO-Link mode
           allOf:
             - type: object
@@ -4890,7 +4728,7 @@ components:
             (false - 0 V, true - 24 V)
       example:
         "format=byteArray, pin4=IO-Link, pin2=sio":
-          ioLink:
+          iolink:
             valid: true
             value:
               - 15
@@ -4913,7 +4751,7 @@ components:
       description: >
         The cqValue is present in the 'getData' object if the CQ (pin4) is configured as
         digital input. The cqValue is present in the 'setData' object if the CQ (pin4)
-        is configured as digital output. The ioLink is present either in the
+        is configured as digital output. The iolink is present either in the
         'getData' or 'setData' or both objects if the CQ (pin4) is configured to IO-Link mode.
         The iqValue is present in the 'getData' object if the IQ (pin2) is configured as
         digital input. The iqValue is present in the 'setData' object if the IQ (pin4)
@@ -5046,7 +4884,7 @@ components:
         - deviceId
         - version
         - releaseDate
-        - ioLinkRevision
+        - iolinkRevision
       properties:
         vendorId:
           type: number
@@ -5056,13 +4894,21 @@ components:
           type: string
         releaseDate:
           type: string
-        ioLinkRevision:
+        iolinkRevision:
           type: string
           enum:
             - "1.0"
             - "1.1"
+        availableArtifacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/artifact"
     ioddFile:
-      description: The IODD XML file.
+      description: The IODD XML file or other IODD artifacts.
+      type: string
+      format: binary
+    ioddArchive:
+      description: The IODD in archive format (e.g. IODD Finder) containing XML file and device images.
       type: string
       format: binary
     ioddsGet:
@@ -5074,12 +4920,13 @@ components:
           deviceId: 4567
           version: "4.3"
           releaseDate: "2018-01-02"
-          ioLinkRevision: "1.1"
+          iolinkRevision: "1.1"
         - vendorId: 4321
           deviceId: 8765
           version: "2.1"
           releaseDate: "2015-01-02"
-          ioLinkRevision: "1.1"
+          iolinkRevision: "1.1"
+          availableArtifacts: [XML, DeviceIcon, DeviceSymbol, VendorLogo]          
     iolinkErrorObject:
       type: object
       required:
@@ -5110,11 +4957,18 @@ components:
 
   #---------------------------------------------------------------------------
   parameters:
+    artifact:
+      name: artifact
+      description: IO-Link IODD Artifacts
+      required: false
+      in: query
+      schema:
+        $ref: "#/components/schemas/artifact"
     vendorId:
       name: vendorId
       in: query
       description: IO-Link VendorID
-      required: false
+      required: true
       schema:
         type: integer
         minimum: 0
@@ -5123,7 +4977,7 @@ components:
       name: deviceId
       in: query
       description: IO-Link DeviceID
-      required: false
+      required: true
       schema:
         type: integer
         minimum: 1
@@ -5131,13 +4985,14 @@ components:
     revision:
       name: revision
       in: query
-      description: IO-Link Revision
+      description: schemaVersion of the IODD
       required: false
       schema:
         type: string
         enum:
           - "1.0"
           - "1.1"
+          - "1.0.1"
     mqttTopicId:
       name: topicId
       in: path
@@ -5503,3 +5358,104 @@ components:
               value:
                 code: 107
                 message: "Service temporarily unavailable"
+                
+  examples: # reusable examples
+    exampleMasterConfiguration:
+      summary: IO-Link Master
+      value:   
+
+    exampleWirelessMasterConfiguration:
+      summary: Wireless IO-Link Master
+      value:  
+            masterId: 5
+            advancedConnectivity:
+              "ahtEnable": false
+            pairingTimeout:
+              value: 25
+              unit: s
+            serviceTrackNumber: 1
+            serviceTrackMode: CYCLIC
+            trackTxPower:
+              "track_1": 31
+              "track_2": 31
+              "track_3": 31
+              "track_4": 0
+              "track_5": 0
+            blockList:
+              "2403": false
+              "2404": false
+              "2405": false
+              "2406": false
+              "2407": false
+              "2408": false
+              "2409": false
+              "2410": false
+              "2411": false
+              "2412": false
+              "2413": false
+              "2414": false
+              "2415": false
+              "2416": false
+              "2417": false
+              "2418": false
+              "2419": false
+              "2420": false
+              "2421": false
+              "2422": false
+              "2423": false
+              "2424": false
+              "2425": false
+              "2426": false
+              "2427": false
+              "2428": false
+              "2429": false
+              "2430": false
+              "2431": false
+              "2432": false
+              "2433": false
+              "2434": false
+              "2435": false
+              "2436": false
+              "2437": false
+              "2438": false
+              "2439": false
+              "2440": false
+              "2441": false
+              "2442": false
+              "2443": false
+              "2444": false
+              "2445": false
+              "2446": false
+              "2447": false
+              "2448": false
+              "2449": false
+              "2450": false
+              "2451": false
+              "2452": false
+              "2453": false
+              "2454": false
+              "2455": false
+              "2456": false
+              "2457": false
+              "2458": false
+              "2459": false
+              "2460": false
+              "2461": false
+              "2462": false
+              "2463": false
+              "2464": false
+              "2465": false
+              "2466": false
+              "2467": false
+              "2468": false
+              "2469": false
+              "2470": false
+              "2471": false
+              "2472": false
+              "2473": false
+              "2474": false
+              "2475": false
+              "2476": false
+              "2477": false
+              "2478": false                    
+                
