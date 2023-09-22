@@ -5,10 +5,12 @@ info:
   description: >-
 
     # Description
- 
+    
     This is an [openapi specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md) for IO-Link gateways, masters and devices. 
     You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
-       * Draft for version 1.1.0
+
+    * Draft for version 1.1.0
+    * The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
 
     # Specification Reference URIs:
 
