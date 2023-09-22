@@ -1058,7 +1058,7 @@ paths:
       tags:
         - iodds
       summary: Delete a specific IODD representation.
-      description: Delete a specific IODD representation.
+      description: Delete a specific IODD representation and all related artifacts.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1081,12 +1081,13 @@ paths:
       operationId: GetIoddsFile
       tags:
         - iodds
-      summary: Get a specific IODD. Optional.
-      description: All query parameters are mandatory.
+      summary: Get a specific IODD or other IODD artifacts like device image. Optional.
+      description: Get a specific IODD or other IODD artifacts like device image.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
         - $ref: "#/components/parameters/revision"
+        - $ref: "#/components/parameters/artifact"
       responses:
         "200":
           description: Successful operation
@@ -1095,6 +1096,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/ioddFile"
               example: "IODD XML file"
+            img/png:
+              schema:
+                $ref: "#/components/schemas/ioddFile"
+              example: "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJaSURBVDhPPVPPS3JRED0+LVGpIMUfSCW2iVLEiEytv6IWgiLtFNwJbVp9EP0DIogtol0LEaV2QovWSbgQdCFGLbIgBDW08sftzvTpgcu77905c2bOnaeaTCZCAiqVitcU1WoV39/f2NzchE6n42/TOMkBxuMxERmNRkMcHByIxcVF4XQ6xfr6urDZbMLj8YhcLvc/SggSU6Yq6XQaW1tbCAaDiEQirGIymbC6uor5+XmcnJzg6OiIY7k6ypDP5xGPx+FwOPDw8MCHLpeLyRqNht8J7XYbfr8fV1dXf0SLxcIBT09PnJ3Q6XSwsbGBtbU1fieQ0svLC25ubqAQu9froVgsMun8/BwXFxdYWlqC7AvPz89MkPl5Wa1Wbkut1Wr/HR8f4/DwEMlkEtfX17i/v8dgMEA4HMbX1xcqlcqsErVajff3dyi1Wo0NCYVCuL29BZVtNBqRyWSQSCSwvb2N4XD4Z4hcVB2RVbJZshf9fh96vZ6D9vb28Pr6inK5zK6ORiMmtVotnJ6eIpVKQSEFCjYYDNwD4efnB4VCAfv7+3h7e+NvlOjs7AyxWAwfHx9QvF4vDcFsKqiXUqmEx8dH7pdaILdpH41GuW9yG81mU5jNZiHLE7u7u8Ln8/HTbrcLqSzzCSGvgJ/SbZ6qbDYr+B5pUsi5hYWFmTKVS3tSJkxNpGuiCphIBzs7O2wQHZBZiqKg2+1CVoDLy0vIqjhBvV7H8vIy+O8gBQLZT5dOMzo3N8fKNGbkwcrKCu7u7mYmsuJUgfD5+cmOyt7ZbSIEAgG43W4+J5IQAr+h1V0CntKWLwAAAABJRU5ErkJggg=="
+            application/zip:
+              schema:
+                $ref: "#/components/schemas/ioddArchive"
+              example: "IODD in archive format provided by the IODD finder"
+
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
         "403":
@@ -1120,6 +1130,10 @@ paths:
             schema:
               $ref: "#/components/schemas/ioddFile"
             example: "IODD XML file"
+          application/zip:
+            schema:
+              $ref: "#/components/schemas/ioddArchive"
+            example: "IODD in archive format provided by the IODD finder"
       responses:
         "204":
           description: Successful operation
@@ -2872,6 +2886,16 @@ paths:
 
 components:
   schemas:
+    artifact:
+      type: string
+      description: IODD Artifacts like device, vendor images
+      enum:
+        - XML
+        - DeviceIcon
+        - DeviceSymbol
+        - VendorLogo
+        - zip
+      default: XML
     parameterName:
       type: string
       description: |
@@ -4945,8 +4969,16 @@ components:
           enum:
             - "1.0"
             - "1.1"
+        availableArtifacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/artifact"
     ioddFile:
-      description: The IODD XML file.
+      description: The IODD XML file or other IODD artifacts.
+      type: string
+      format: binary
+    ioddArchive:
+      description: The IODD in archive format (e.g. IODD Finder) containing XML file and device images.
       type: string
       format: binary
     ioddsGet:
@@ -4964,6 +4996,7 @@ components:
           version: "2.1"
           releaseDate: "2015-01-02"
           iolinkRevision: "1.1"
+          availableArtifacts: [XML, DeviceIcon, DeviceSymbol, VendorLogo]          
     iolinkErrorObject:
       type: object
       required:
@@ -4994,11 +5027,18 @@ components:
 
   #---------------------------------------------------------------------------
   parameters:
+    artifact:
+      name: artifact
+      description: IO-Link IODD Artifacts
+      required: false
+      in: query
+      schema:
+        $ref: "#/components/schemas/artifact"
     vendorId:
       name: vendorId
       in: query
       description: IO-Link VendorID
-      required: false
+      required: true
       schema:
         type: integer
         minimum: 0
@@ -5007,7 +5047,7 @@ components:
       name: deviceId
       in: query
       description: IO-Link DeviceID
-      required: false
+      required: true
       schema:
         type: integer
         minimum: 1
