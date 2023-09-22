@@ -5,9 +5,9 @@ info:
   description: >-
 
     # Description
-
-    This is an openapi specification for IO-Link gateways, masters and devices. You can find out more about IO-Link
-    at [http://www.io-link.com](http://www.io-link.com)
+    
+    This is an [openapi specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md) for IO-Link gateways, masters and devices. 
+    You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
 
     * Draft for version 1.1.0
     * The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
@@ -1280,7 +1280,7 @@ paths:
         "500":
           $ref: "#/components/responses/HTTP_500"
 
-  "/masters/{masterNumber}/configuration": #TODO: wireles
+  "/masters/{masterNumber}/configuration": 
     get:
       operationId: GetMastersMasterNumberConfiguration
       tags:
@@ -1298,101 +1298,9 @@ paths:
                 $ref: "#/components/schemas/mastersConfigurationGetPost"
               examples:
                 IO-Link:
-                  value:
+                  $ref: "#/components/examples/exampleMasterConfiguration"
                 IO-Link_Wireless:
-                  value:
-                    masterId: 5
-                    advancedConnectivity:
-                      "ahtEnable": false
-                    pairingTimeout:
-                      value: 25
-                      unit: s
-                    serviceTrackNumber: 1
-                    serviceTrackMode: CYCLIC
-                    trackTxPower:
-                      "track_1": 31
-                      "track_2": 31
-                      "track_3": 31
-                      "track_4": 0
-                      "track_5": 0
-                    blockList:
-                      "2402": false
-                      "2403": false
-                      "2404": false
-                      "2405": false
-                      "2406": false
-                      "2407": false
-                      "2408": false
-                      "2409": false
-                      "2410": false
-                      "2411": false
-                      "2412": false
-                      "2413": false
-                      "2414": false
-                      "2415": false
-                      "2416": false
-                      "2417": false
-                      "2418": false
-                      "2419": false
-                      "2420": false
-                      "2421": false
-                      "2422": false
-                      "2423": false
-                      "2424": false
-                      "2425": false
-                      "2426": false
-                      "2427": false
-                      "2428": false
-                      "2429": false
-                      "2430": false
-                      "2431": false
-                      "2432": false
-                      "2433": false
-                      "2434": false
-                      "2435": false
-                      "2436": false
-                      "2437": false
-                      "2438": false
-                      "2439": false
-                      "2440": false
-                      "2441": false
-                      "2442": false
-                      "2443": false
-                      "2444": false
-                      "2445": false
-                      "2446": false
-                      "2447": false
-                      "2448": false
-                      "2449": false
-                      "2450": false
-                      "2451": false
-                      "2452": false
-                      "2453": false
-                      "2454": false
-                      "2455": false
-                      "2456": false
-                      "2457": false
-                      "2458": false
-                      "2459": false
-                      "2460": false
-                      "2461": false
-                      "2462": false
-                      "2463": false
-                      "2464": false
-                      "2465": false
-                      "2466": false
-                      "2467": false
-                      "2468": false
-                      "2469": false
-                      "2470": false
-                      "2471": false
-                      "2472": false
-                      "2473": false
-                      "2474": false
-                      "2475": false
-                      "2476": false
-                      "2477": false
-                      "2478": false
+                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"                
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
@@ -1413,101 +1321,9 @@ paths:
               $ref: "#/components/schemas/mastersConfigurationGetPost"
             examples:
               IO-Link:
-                value:
+                  $ref: "#/components/examples/exampleMasterConfiguration"
               IO-Link_Wireless:
-                value:
-                  masterId: 5
-                  advancedConnectivity:
-                    "ahtEnable": false
-                  pairingTimeout:
-                    value: 25
-                    unit: s
-                  serviceTrackNumber: 1
-                  serviceTrackMode: CYCLIC
-                  trackTxPower:
-                    "track_1": 31
-                    "track_2": 31
-                    "track_3": 31
-                    "track_4": 0
-                    "track_5": 0
-                  blockList:
-                    "2402": false
-                    "2403": false
-                    "2404": false
-                    "2405": false
-                    "2406": false
-                    "2407": false
-                    "2408": false
-                    "2409": false
-                    "2410": false
-                    "2411": false
-                    "2412": false
-                    "2413": false
-                    "2414": false
-                    "2415": false
-                    "2416": false
-                    "2417": false
-                    "2418": false
-                    "2419": false
-                    "2420": false
-                    "2421": false
-                    "2422": false
-                    "2423": false
-                    "2424": false
-                    "2425": false
-                    "2426": false
-                    "2427": false
-                    "2428": false
-                    "2429": false
-                    "2430": false
-                    "2431": false
-                    "2432": false
-                    "2433": false
-                    "2434": false
-                    "2435": false
-                    "2436": false
-                    "2437": false
-                    "2438": false
-                    "2439": false
-                    "2440": false
-                    "2441": false
-                    "2442": false
-                    "2443": false
-                    "2444": false
-                    "2445": false
-                    "2446": false
-                    "2447": false
-                    "2448": false
-                    "2449": false
-                    "2450": false
-                    "2451": false
-                    "2452": false
-                    "2453": false
-                    "2454": false
-                    "2455": false
-                    "2456": false
-                    "2457": false
-                    "2458": false
-                    "2459": false
-                    "2460": false
-                    "2461": false
-                    "2462": false
-                    "2463": false
-                    "2464": false
-                    "2465": false
-                    "2466": false
-                    "2467": false
-                    "2468": false
-                    "2469": false
-                    "2470": false
-                    "2471": false
-                    "2472": false
-                    "2473": false
-                    "2474": false
-                    "2475": false
-                    "2476": false
-                    "2477": false
-                    "2478": false
+                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"                
       responses:
         "204":
           description: Successful operation
@@ -4162,9 +3978,6 @@ components:
         blockList:
           type: object
           properties:
-            "2402":
-              type: boolean
-              default: false
             "2403":
               type: boolean
               default: false
@@ -5575,3 +5388,104 @@ components:
               value:
                 code: 107
                 message: "Service temporarily unavailable"
+                
+  examples: # reusable examples
+    exampleMasterConfiguration:
+      summary: IO-Link Master
+      value:   
+
+    exampleWirelessMasterConfiguration:
+      summary: Wireless IO-Link Master
+      value:  
+            masterId: 5
+            advancedConnectivity:
+              "ahtEnable": false
+            pairingTimeout:
+              value: 25
+              unit: s
+            serviceTrackNumber: 1
+            serviceTrackMode: CYCLIC
+            trackTxPower:
+              "track_1": 31
+              "track_2": 31
+              "track_3": 31
+              "track_4": 0
+              "track_5": 0
+            blockList:
+              "2403": false
+              "2404": false
+              "2405": false
+              "2406": false
+              "2407": false
+              "2408": false
+              "2409": false
+              "2410": false
+              "2411": false
+              "2412": false
+              "2413": false
+              "2414": false
+              "2415": false
+              "2416": false
+              "2417": false
+              "2418": false
+              "2419": false
+              "2420": false
+              "2421": false
+              "2422": false
+              "2423": false
+              "2424": false
+              "2425": false
+              "2426": false
+              "2427": false
+              "2428": false
+              "2429": false
+              "2430": false
+              "2431": false
+              "2432": false
+              "2433": false
+              "2434": false
+              "2435": false
+              "2436": false
+              "2437": false
+              "2438": false
+              "2439": false
+              "2440": false
+              "2441": false
+              "2442": false
+              "2443": false
+              "2444": false
+              "2445": false
+              "2446": false
+              "2447": false
+              "2448": false
+              "2449": false
+              "2450": false
+              "2451": false
+              "2452": false
+              "2453": false
+              "2454": false
+              "2455": false
+              "2456": false
+              "2457": false
+              "2458": false
+              "2459": false
+              "2460": false
+              "2461": false
+              "2462": false
+              "2463": false
+              "2464": false
+              "2465": false
+              "2466": false
+              "2467": false
+              "2468": false
+              "2469": false
+              "2470": false
+              "2471": false
+              "2472": false
+              "2473": false
+              "2474": false
+              "2475": false
+              "2476": false
+              "2477": false
+              "2478": false                    
+                
