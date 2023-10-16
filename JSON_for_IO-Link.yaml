@@ -4807,6 +4807,10 @@ components:
           portNumber:
             type: integer
             minimum: 1
+          ioddFileName:
+            type: string
+            minLength: 1
+            maxLength: 64
       example:
         - deviceAlias: DT35
           masterNumber: 1
@@ -4820,6 +4824,7 @@ components:
         - deviceAlias: master1port4
           masterNumber: 1
           portNumber: 4
+          ioddFileName: vendorname-devicename-20231016-IODD1.1.xml
     deviceProcessDataValueGet:
       type: object
       description: >
