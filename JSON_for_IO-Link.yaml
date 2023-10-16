@@ -4772,7 +4772,7 @@ components:
                 valid:
                   type: boolean
                   description: >
-                    Process data validity in case of incoming process data see PQI (Table E.10 - IO-Link Interface and System Specification V1.13). The valid flag is required but not evaluated for output process data and it is not an equivalent to OE (Table E.11 IO-Link Interface and System Specification V1.13)
+                    Process data validity in case of incoming process data see PQI (Table E.10 - IO-Link Interface and System Specification V1.13). The valid flag is required but not evaluated for output process data and it is not equivalent to OE (Table E.11 IO-Link Interface and System Specification V1.13)
             - type: object
               required:
                 - value
