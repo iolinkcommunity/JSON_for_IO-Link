@@ -4982,6 +4982,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/artifact"
+        ioddFileName:
+          type: string
     ioddFile:
       description: The IODD XML file or other IODD artifacts.
       type: string
@@ -5006,6 +5008,7 @@ components:
           releaseDate: "2015-01-02"
           iolinkRevision: "1.1"
           availableArtifacts: [XML, DeviceIcon, DeviceSymbol, VendorLogo]
+          ioddFileName: vendorname-devicename-20231016-IODD1.1.xml
     iolinkErrorObject:
       type: object
       required:
