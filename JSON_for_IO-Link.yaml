@@ -4772,7 +4772,7 @@ components:
                 valid:
                   type: boolean
                   description: >
-                    Process data validity
+                    Process data validity in case of incoming process data. The valid flag is equired but not evaluated for output process data.
             - type: object
               required:
                 - value
