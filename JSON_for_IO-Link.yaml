@@ -3590,6 +3590,16 @@ components:
             - VALIDATION
             - UPDATE
             - FINISHED
+        message:
+          type: string
+          description: >-
+            Status message according to BLOB Transfer & Firmware Update Specification Version 1.1 September 2019  (Table 19 – Error displays of FW-Update tools).
+          example: Selected file is not a firmware update file
+        action:
+          type: string
+          description: >-
+            Indicates the action to be taken by the user.
+          example: Look for a file with extension .iolfw
         progress:
           type: number
           description: >-
