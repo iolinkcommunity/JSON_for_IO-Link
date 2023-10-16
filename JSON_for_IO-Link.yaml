@@ -3053,7 +3053,29 @@ paths:
         "500":
           $ref: "#/components/responses/HTTP_500"
 
-  "/devices/{deviceAlias}/firmware/update":
+  "/devices/{deviceAlias}/fwupdate":
+    get:
+      operationId: GetDevicesDeviceAliasFirmwareUpdateStatus
+      tags:
+        - devices
+      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+      responses:
+        "200":
+          description: >-
+            Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/deviceFirmwareUpdateStatusGet"
+        "400": # code 305, 306
+          $ref: "#/components/responses/HTTP_400"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          $ref: "#/components/responses/HTTP_404"
+        "500":
+          $ref: "#/components/responses/HTTP_500"
     post:
       operationId: PostDevicesDeviceAliasFirmwareUpdate
       tags:
@@ -3078,30 +3100,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: "#/components/schemas/deviceFirmwareUpdatePost"
-
-  "/devices/{deviceAlias}/firmware/status":
-    get:
-      operationId: GetDevicesDeviceAliasFirmwareUpdateStatus
-      tags:
-        - devices
-      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
-      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
-      responses:
-        "200":
-          description: >-
-            Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/deviceFirmwareUpdateStatusGet"
-        "400": # code 305, 306
-          $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
 
 components:
   schemas:
