@@ -4810,7 +4810,7 @@ components:
           ioddFileName:
             type: string
             minLength: 1
-            maxLength: 64
+            maxLength: 128
       example:
         - deviceAlias: DT35
           masterNumber: 1
