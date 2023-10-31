@@ -3083,10 +3083,10 @@ paths:
       summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
       description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
       responses:
-        "200":
+        "204":
           description: >-
             Successful operation. Device firmware has been updated.
-        "400": # code 305, 306
+        "400": # code 107
           $ref: "#/components/responses/HTTP_400"
         "403":
           $ref: "#/components/responses/HTTP_403"
@@ -5455,6 +5455,11 @@ components:
               value:
                 code: 104
                 message: Action locked by another client
+            "107":
+              description: Error during device firmware update
+              value:
+                code: 107
+                message: Read /devices/{deviceAlias}/fwupdate to get more information about the status.
             "201":
               description: Error while parsing the incoming JSON object
               value:
