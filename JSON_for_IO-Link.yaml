@@ -5258,8 +5258,8 @@ components:
             "150":
               description: due to user management restrictions
               value:
-                code: 140
-                message: Invalid credentials
+                code: 150
+                message: Permission denied
     HTTP_404:
       description: Not found
       content:
