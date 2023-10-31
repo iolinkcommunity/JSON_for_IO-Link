@@ -3601,7 +3601,7 @@ components:
         action:
           type: string
           description: >-
-            Indicates the action to be taken by the user.
+            Indicates the action to be taken by the user according to BLOB Transfer & Firmware Update Specification Version 1.1 September 2019  (Table 19 – Error displays of FW-Update tools).
           example: Look for a file with extension .iolfw
         progress:
           type: number
