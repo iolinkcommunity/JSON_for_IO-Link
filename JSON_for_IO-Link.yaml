@@ -3567,6 +3567,9 @@ components:
     deviceFirmwareUpdatePost:
       type: object
       properties:
+        password:
+          type: string
+          description: password for updating the device if required
         iolfwfile:
           type: string
           format: binary
@@ -5658,14 +5661,3 @@ components:
               value:
                 code: 106
                 message: MQTT feature not supported
-    HTTP_503:
-      description: Service unavailable
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/errorObject"
-          examples:
-            "107":
-              value:
-                code: 107
-                message: "Service temporarily unavailable"
