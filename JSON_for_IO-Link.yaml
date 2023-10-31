@@ -319,6 +319,10 @@ paths:
         - gateway
       summary: Write the configuration of the Gateway.
       description: Write the configuration of the Gateway.
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -369,6 +373,10 @@ paths:
         - gateway
       summary: Reset the Gateway including all Masters. Optional.
       description: Invoke a reset of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog.
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       responses:
         "204":
           description: Successful operation
@@ -386,6 +394,10 @@ paths:
         - gateway
       summary: Reboot the Gateway including all Masters. Optional.
       description: Invoke a reboot of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       responses:
         "204":
           description: Successful operation
@@ -525,6 +537,10 @@ paths:
         - $ref: "#/components/parameters/eventdeviceAlias"
         - $ref: "#/components/parameters/eventTop"
         - $ref: "#/components/parameters/eventBottom"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       responses:
         "200":
           description: Successful operation
@@ -586,6 +602,10 @@ paths:
       summary: >-
         Update the MQTT configuration of the Gateway.
       description: Update the MQTT configuration of the Gateway.
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -693,6 +713,10 @@ paths:
         - mqtt
       summary: Create a new MQTT topic.
       description: Create a new MQTT topic.
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -829,6 +853,10 @@ paths:
       description: Delete a specific MQTT topic.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       responses:
         "204":
           description: Successful operation
@@ -910,6 +938,10 @@ paths:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
         - $ref: "#/components/parameters/revision"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       responses:
         "204":
           description: Successful operation
@@ -970,6 +1002,10 @@ paths:
       description: >
         It is not needed to specify the identification data for this action as the
         parser can read this information.
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -1117,6 +1153,10 @@ paths:
       description: Write application specific identification to a Master.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -1174,6 +1214,10 @@ paths:
       description: Write the configuration of the specified Master.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -1269,6 +1313,10 @@ paths:
         - masters
       summary: To start a scan of the specified Wireless-Master.
       description: To start a scan of the specified Wireless-Master.
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
@@ -1568,6 +1616,10 @@ paths:
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -1674,6 +1726,10 @@ paths:
         - $ref: "#/components/parameters/portNumber"
       summary: Write the Data Storage content to a specific port.
       description: Write the Data Storage content to a specific port.
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -1715,6 +1771,10 @@ paths:
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -1872,6 +1932,10 @@ paths:
       description: Write application specific identification to the Device.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -1960,6 +2024,10 @@ paths:
       description: Write the process data output values to the specified Device.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -2178,6 +2246,10 @@ paths:
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/index"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -2273,6 +2345,10 @@ paths:
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterName"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -2421,6 +2497,10 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/index"
         - $ref: "#/components/parameters/subindex"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -2499,6 +2579,10 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterName"
         - $ref: "#/components/parameters/subParameterName"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
@@ -2537,6 +2621,10 @@ paths:
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/format"
+      security:
+        - basicAuth: []
+        - bearerAuth: []
+        - oauth2: [Maintenance]
       requestBody:
         required: true
         content:
