@@ -83,89 +83,6 @@ paths:
   ################################################################################
   # general
   ################################################################################
-
-  "/":
-    get:
-      tags:
-        - general
-      summary: This endpoint provides information about the security mechanisms to be used for interactions
-      description: >-
-        Returns the available security mechanisms that must be used for interactions according to the  [WoT definitions](https://www.w3.org/TR/wot-thing-description11/)
-      operationId: getRootInfo
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              examples:
-                "no_security":
-                  description: no authorization or other access control mechanisms are used
-                  value:
-                    "@context": https://www.w3.org/2022/wot/td/v1.1
-                    securityDefinitions:
-                      nosec_sc:
-                        scheme: nosec
-                    security:
-                      - nosec_sc
-                "basic_security":
-                  description: Unencrypted username and password sent with every request [RFC7617].
-                  value:
-                    "@context": https://www.w3.org/2022/wot/td/v1.1
-                    securityDefinitions:
-                      basic_sc:
-                        scheme: basic
-                        in: header
-                    security: basic_sc
-                "bearer_security":
-                  description: Bearer Token [RFC6750] security used independently of OAuth2. Base URI and relative links to the login and logout endpoints are provided.
-                  value:
-                    "@context": https://www.w3.org/2022/wot/td/v1.1
-                    securityDefinitions:
-                      bearer_sc:
-                        scheme: bearer
-                        in: header
-                        format: jws
-                        scopes:
-                          - Operator
-                          - Maintenance
-                          - Specialist
-                    security: basic_sc
-                    base: https://iolmaster.io-link.com
-                    links:
-                      - href: /auth/login
-                        rel: login
-                      - href: /auth/logout
-                        rel: logout
-                "oauth2_security":
-                  description: OAuth 2.0 authentication security configuration for systems conformant with [RFC6749] and [RFC8252]
-                  value:
-                    "@context": https://www.w3.org/2022/wot/td/v1.1
-                    securityDefinitions:
-                      oauth2_sc:
-                        scheme: oauth2
-                        flow: client
-                        token: https://example.com/token
-                        scopes:
-                          - Operator
-                          - Maintenance
-                    security: oauth2_sc
-                "proxy_security":
-                  description: Digest authentication on a proxy combined with bearer token authentication on the IO-Link gateway
-                  value:
-                    "@context": https://www.w3.org/2022/wot/td/v1.1
-                    securityDefinitions:
-                      proxy_sc:
-                        scheme: digest
-                        proxy: https://portal.example.com/
-                      bearer_sc:
-                        scheme: bearer
-                        in: header
-                        format: jwt
-                        alg: ES256
-                        authorization: https://authserver.example.com:8443/
-                    security:
-                      - proxy_sc
-                      - bearer_sc
   "/openapi":
     get:
       tags:
@@ -4954,7 +4871,22 @@ components:
           minLength: 1
         iolinkError:
           $ref: "#/components/schemas/iolinkErrorObject"
-
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://id.sick.com/auth/realms/sickservices/protocol/openid-connect/token
+          authorizationUrl: https://id.sick.com/auth/realms/sickservices/protocol/openid-connect/auth
+          scopes:
+            Maintenance: priviledged access for reading and writing all endpoints
   #---------------------------------------------------------------------------
   parameters:
     artifact:
