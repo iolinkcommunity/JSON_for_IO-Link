@@ -5,7 +5,7 @@ info:
   description: >-
 
     # Description
-    
+
     This is an [openapi specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md) for IO-Link gateways, masters and devices. 
     You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
 
@@ -99,25 +99,25 @@ paths:
             application/json:
               examples:
                 "no_security":
-                  description: no authorization or other access control mechanisms are used                
+                  description: no authorization or other access control mechanisms are used
                   value:
                     "@context": https://www.w3.org/2022/wot/td/v1.1
                     securityDefinitions:
                       nosec_sc:
                         scheme: nosec
                     security:
-                    - nosec_sc           
+                      - nosec_sc
                 "basic_security":
-                  description: Unencrypted username and password sent with every request [RFC7617]. 
+                  description: Unencrypted username and password sent with every request [RFC7617].
                   value:
                     "@context": https://www.w3.org/2022/wot/td/v1.1
                     securityDefinitions:
                       basic_sc:
                         scheme: basic
                         in: header
-                    security: basic_sc            
+                    security: basic_sc
                 "bearer_security":
-                  description: Bearer Token [RFC6750] security used independently of OAuth2. Base URI and relative links to the login and logout endpoints are provided.               
+                  description: Bearer Token [RFC6750] security used independently of OAuth2. Base URI and relative links to the login and logout endpoints are provided.
                   value:
                     "@context": https://www.w3.org/2022/wot/td/v1.1
                     securityDefinitions:
@@ -126,19 +126,19 @@ paths:
                         in: header
                         format: jws
                         scopes:
-                        - Operator 
-                        - Maintenance
-                        - Specialist
+                          - Operator
+                          - Maintenance
+                          - Specialist
                     security: basic_sc
-                    base: https://iolmaster.io-link.com                    
+                    base: https://iolmaster.io-link.com
                     links:
-                        - href: /auth/login
-                          rel: login
-                        - href: /auth/logout
-                          rel: logout
+                      - href: /auth/login
+                        rel: login
+                      - href: /auth/logout
+                        rel: logout
                 "oauth2_security":
                   description: OAuth 2.0 authentication security configuration for systems conformant with [RFC6749] and [RFC8252]
-                  value:                          
+                  value:
                     "@context": https://www.w3.org/2022/wot/td/v1.1
                     securityDefinitions:
                       oauth2_sc:
@@ -146,9 +146,9 @@ paths:
                         flow: client
                         token: https://example.com/token
                         scopes:
-                        - Operator 
-                        - Maintenance
-                    security: oauth2_sc                          
+                          - Operator
+                          - Maintenance
+                    security: oauth2_sc
                 "proxy_security":
                   description: Digest authentication on a proxy combined with bearer token authentication on the IO-Link gateway
                   value:
@@ -164,8 +164,8 @@ paths:
                         alg: ES256
                         authorization: https://authserver.example.com:8443/
                     security:
-                    - proxy_sc
-                    - bearer_sc                  
+                      - proxy_sc
+                      - bearer_sc
   "/openapi":
     get:
       tags:
@@ -231,7 +231,7 @@ paths:
                         { "name": "tbd", "url": "http://www.io-link.com" },
                       ...: "to be continued",
                     }
-        "403":
+        "401":
           description: Forbidden
           content:
             application/json:
@@ -283,7 +283,7 @@ paths:
                   value:
                     version: 1.0.0
                     additionalInfo: 1.2.3-feature-xyz
-        "403":
+        "401":
           description: Forbidden
           content:
             application/json:
@@ -323,8 +323,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/gatewayIdentificationGet"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/gateway/capabilities":
@@ -341,8 +341,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/gatewayCapabilitiesGet"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/gateway/configuration":
@@ -392,8 +392,8 @@ paths:
                         ipAddress: 192.168.200.7
                         subnetMask: 255.255.255.0
                         standardGateway: 192.168.200.1
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
     post:
@@ -440,8 +440,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 206,208, 701,702,703
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -457,8 +457,8 @@ paths:
           description: Successful operation
         "400": # code 104
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -474,8 +474,8 @@ paths:
           description: Successful operation
         "400": # code 104
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -591,8 +591,8 @@ paths:
                         text: Device hardware fault – Device exchange
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
     delete:
@@ -613,8 +613,8 @@ paths:
           description: Successful operation
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -653,8 +653,8 @@ paths:
                 Inactive client:
                   value:
                     clientMode: "INACTIVE"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -696,8 +696,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 701, 702, 703
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -762,8 +762,8 @@ paths:
                     interval:
                       value: 10
                       unit: ms
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -828,8 +828,8 @@ paths:
                 type: integer
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 701, 702
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -896,8 +896,8 @@ paths:
                       interval:
                         value: 1000
                         unit: ms
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -917,8 +917,8 @@ paths:
           description: Successful operation
         "400": # code 104
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -940,8 +940,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/mqttConnectionStatusGet"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -975,8 +975,8 @@ paths:
                 $ref: "#/components/schemas/ioddsGet"
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -998,8 +998,8 @@ paths:
           description: Successful operation
         "400": # code 104, 305, 306
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1037,8 +1037,8 @@ paths:
 
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1069,8 +1069,8 @@ paths:
           description: Successful operation
         "400": # code 104, 208, 603, 604, 605
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500": # code 101, 602
@@ -1097,8 +1097,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/identificationMasters"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/masters/{masterNumber}/capabilities":
@@ -1127,8 +1127,8 @@ paths:
                 IO-Link_Wireless:
                   value:
                     numberOfPorts: 40
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1186,8 +1186,8 @@ paths:
                     applicationSpecificTag: "***"
                     locationTag: "***"
                     functionTag: "***"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1217,14 +1217,14 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 206, 208
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
-  "/masters/{masterNumber}/configuration": 
+  "/masters/{masterNumber}/configuration":
     get:
       operationId: GetMastersMasterNumberConfiguration
       tags:
@@ -1244,9 +1244,9 @@ paths:
                 IO-Link:
                   $ref: "#/components/examples/exampleMasterConfiguration"
                 IO-Link_Wireless:
-                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"                
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
     post:
@@ -1265,9 +1265,9 @@ paths:
               $ref: "#/components/schemas/mastersConfigurationGetPost"
             examples:
               IO-Link:
-                  $ref: "#/components/examples/exampleMasterConfiguration"
+                $ref: "#/components/examples/exampleMasterConfiguration"
               IO-Link_Wireless:
-                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"                
+                $ref: "#/components/examples/exampleWirelessMasterConfiguration"
       responses:
         "204":
           description: Successful operation
@@ -1300,8 +1300,8 @@ paths:
                   value:
                     code: 208
                     message: POST request without content
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -1321,8 +1321,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/mastersTrackstatusGet"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -1342,8 +1342,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/mastersScanGet"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
     post:
@@ -1392,8 +1392,8 @@ paths:
                   value:
                     code: 208
                     message: POST request without content
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -1443,8 +1443,8 @@ paths:
                     - portNumber: 4
                       statusInfo: "DEACTIVATED"
                       deviceAlias: "Empty_port"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1466,8 +1466,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/mastersPortsQualityallGet"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1530,8 +1530,8 @@ paths:
                 IO-Link_Wireless:
                   value:
                     portType: WIRELESS_MASTER
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1578,8 +1578,8 @@ paths:
                       base: FreeRunning
                     wMasterCycleTimeIn:
                       base: FreeRunning
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1636,8 +1636,8 @@ paths:
                       base: FreeRunning
                     uniqueId: 03:78:00:00:01:32:50:60:46
                     deviceAlias: Port_X01
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1705,8 +1705,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 207, 208, 701, 702, 703
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1742,8 +1742,8 @@ paths:
                   value:
                     header: {}
                     content: ""
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1781,8 +1781,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 401, 701
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1809,8 +1809,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 207, 208, 701, 702, 703
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1833,8 +1833,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/mastersPortsQualityGet"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1887,8 +1887,8 @@ paths:
                   - deviceAlias: master1port4
                     masterNumber: 1
                     portNumber: 4
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/devices/{deviceAlias}/capabilities":
@@ -1914,8 +1914,8 @@ paths:
                 supportedProfiles: [10, 32770]
         "400": # code 307
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1941,8 +1941,8 @@ paths:
                 $ref: "#/components/schemas/deviceIdentificationGet"
         "400": # code 307
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1972,8 +1972,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 206, 208, 307
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2027,8 +2027,8 @@ paths:
                             value: 5
         "400": # code 305, 306, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2074,8 +2074,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 501, 502, 503, 601, 701, 702, 703
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2124,8 +2124,8 @@ paths:
                     iqValue: true
         "400": # code 305, 306, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2166,8 +2166,8 @@ paths:
                           value: false
         "400": # code 305, 306, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2195,8 +2195,8 @@ paths:
                 $ref: "#/components/schemas/deviceParametersGet"
         "400": # code 305, 306, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2243,8 +2243,8 @@ paths:
                       value: 12
         "400": # code 305, 306, 307, 311, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2291,8 +2291,8 @@ paths:
           description: Successful operation
         "400": # code 103, 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 311, 601, 701
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2337,8 +2337,8 @@ paths:
 
         "400": # code 305, 306, 307, 311, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2381,8 +2381,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2411,8 +2411,8 @@ paths:
                 $ref: "#/components/schemas/deviceSubParametersGet"
         "400": # code 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2441,8 +2441,8 @@ paths:
                 $ref: "#/components/schemas/deviceSubParametersGet"
         "400": # code 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2485,8 +2485,8 @@ paths:
                       unit: "cm"
         "400": # code 305, 306, 307, 311, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2522,8 +2522,8 @@ paths:
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2562,8 +2562,8 @@ paths:
 
         "400": # code 305, 306, 307, 311, 601
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2600,8 +2600,8 @@ paths:
           description: Successful operation
         "400": # code 103, 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2776,8 +2776,8 @@ paths:
                           message: Parameter value above limit
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 311, 601, 701, 702, 703
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2807,8 +2807,8 @@ paths:
                 $ref: "#/components/schemas/deviceEventsGet"
         "400": # code 305, 306
           $ref: "#/components/responses/HTTP_400"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -4926,7 +4926,7 @@ components:
           version: "2.1"
           releaseDate: "2015-01-02"
           iolinkRevision: "1.1"
-          availableArtifacts: [XML, DeviceIcon, DeviceSymbol, VendorLogo]          
+          availableArtifacts: [XML, DeviceIcon, DeviceSymbol, VendorLogo]
     iolinkErrorObject:
       type: object
       required:
@@ -5245,7 +5245,11 @@ components:
                 code: 703
                 message: Data set combination incompatible
     HTTP_401:
-      description: Unauthorized
+      description: Authentication information is missing or invalid
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
       content:
         application/json:
           schema:
@@ -5256,18 +5260,6 @@ components:
               value:
                 code: 140
                 message: Invalid credentials
-    HTTP_403:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/errorObject"
-          examples:
-            "150":
-              description: due to user management restrictions
-              value:
-                code: 150
-                message: Permission denied
     HTTP_404:
       description: Not found
       content:
@@ -5358,104 +5350,103 @@ components:
               value:
                 code: 107
                 message: "Service temporarily unavailable"
-                
+
   examples: # reusable examples
     exampleMasterConfiguration:
       summary: IO-Link Master
-      value:   
+      value:
 
     exampleWirelessMasterConfiguration:
       summary: Wireless IO-Link Master
-      value:  
-            masterId: 5
-            advancedConnectivity:
-              "ahtEnable": false
-            pairingTimeout:
-              value: 25
-              unit: s
-            serviceTrackNumber: 1
-            serviceTrackMode: CYCLIC
-            trackTxPower:
-              "track_1": 31
-              "track_2": 31
-              "track_3": 31
-              "track_4": 0
-              "track_5": 0
-            blockList:
-              "2403": false
-              "2404": false
-              "2405": false
-              "2406": false
-              "2407": false
-              "2408": false
-              "2409": false
-              "2410": false
-              "2411": false
-              "2412": false
-              "2413": false
-              "2414": false
-              "2415": false
-              "2416": false
-              "2417": false
-              "2418": false
-              "2419": false
-              "2420": false
-              "2421": false
-              "2422": false
-              "2423": false
-              "2424": false
-              "2425": false
-              "2426": false
-              "2427": false
-              "2428": false
-              "2429": false
-              "2430": false
-              "2431": false
-              "2432": false
-              "2433": false
-              "2434": false
-              "2435": false
-              "2436": false
-              "2437": false
-              "2438": false
-              "2439": false
-              "2440": false
-              "2441": false
-              "2442": false
-              "2443": false
-              "2444": false
-              "2445": false
-              "2446": false
-              "2447": false
-              "2448": false
-              "2449": false
-              "2450": false
-              "2451": false
-              "2452": false
-              "2453": false
-              "2454": false
-              "2455": false
-              "2456": false
-              "2457": false
-              "2458": false
-              "2459": false
-              "2460": false
-              "2461": false
-              "2462": false
-              "2463": false
-              "2464": false
-              "2465": false
-              "2466": false
-              "2467": false
-              "2468": false
-              "2469": false
-              "2470": false
-              "2471": false
-              "2472": false
-              "2473": false
-              "2474": false
-              "2475": false
-              "2476": false
-              "2477": false
-              "2478": false                    
-                
+      value:
+        masterId: 5
+        advancedConnectivity:
+          "ahtEnable": false
+        pairingTimeout:
+          value: 25
+          unit: s
+        serviceTrackNumber: 1
+        serviceTrackMode: CYCLIC
+        trackTxPower:
+          "track_1": 31
+          "track_2": 31
+          "track_3": 31
+          "track_4": 0
+          "track_5": 0
+        blockList:
+          "2403": false
+          "2404": false
+          "2405": false
+          "2406": false
+          "2407": false
+          "2408": false
+          "2409": false
+          "2410": false
+          "2411": false
+          "2412": false
+          "2413": false
+          "2414": false
+          "2415": false
+          "2416": false
+          "2417": false
+          "2418": false
+          "2419": false
+          "2420": false
+          "2421": false
+          "2422": false
+          "2423": false
+          "2424": false
+          "2425": false
+          "2426": false
+          "2427": false
+          "2428": false
+          "2429": false
+          "2430": false
+          "2431": false
+          "2432": false
+          "2433": false
+          "2434": false
+          "2435": false
+          "2436": false
+          "2437": false
+          "2438": false
+          "2439": false
+          "2440": false
+          "2441": false
+          "2442": false
+          "2443": false
+          "2444": false
+          "2445": false
+          "2446": false
+          "2447": false
+          "2448": false
+          "2449": false
+          "2450": false
+          "2451": false
+          "2452": false
+          "2453": false
+          "2454": false
+          "2455": false
+          "2456": false
+          "2457": false
+          "2458": false
+          "2459": false
+          "2460": false
+          "2461": false
+          "2462": false
+          "2463": false
+          "2464": false
+          "2465": false
+          "2466": false
+          "2467": false
+          "2468": false
+          "2469": false
+          "2470": false
+          "2471": false
+          "2472": false
+          "2473": false
+          "2474": false
+          "2475": false
+          "2476": false
+          "2477": false
+          "2478": false
