@@ -242,6 +242,8 @@ paths:
                 $ref: "#/components/schemas/gatewayIdentificationGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/gateway/capabilities":
@@ -260,6 +262,8 @@ paths:
                 $ref: "#/components/schemas/gatewayCapabilitiesGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/gateway/configuration":
@@ -311,6 +315,8 @@ paths:
                         standardGateway: 192.168.200.1
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
     post:
@@ -363,6 +369,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -384,6 +392,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -405,6 +415,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -522,6 +534,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
     delete:
@@ -548,6 +562,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -588,6 +604,8 @@ paths:
                     clientMode: "INACTIVE"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -635,6 +653,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -701,6 +721,8 @@ paths:
                       unit: ms
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -771,6 +793,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -839,6 +863,8 @@ paths:
                         unit: ms
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -864,6 +890,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -887,6 +915,8 @@ paths:
                 $ref: "#/components/schemas/mqttConnectionStatusGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -922,6 +952,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -949,6 +981,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -988,6 +1022,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1024,6 +1060,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500": # code 101, 602
@@ -1052,6 +1090,8 @@ paths:
                 $ref: "#/components/schemas/identificationMasters"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/masters/{masterNumber}/capabilities":
@@ -1082,6 +1122,8 @@ paths:
                     numberOfPorts: 40
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1141,6 +1183,8 @@ paths:
                     functionTag: "***"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1176,6 +1220,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1204,6 +1250,8 @@ paths:
                   $ref: "#/components/examples/exampleWirelessMasterConfiguration"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
     post:
@@ -1263,6 +1311,8 @@ paths:
                     message: POST request without content
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -1284,6 +1334,8 @@ paths:
                 $ref: "#/components/schemas/mastersTrackstatusGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -1305,6 +1357,8 @@ paths:
                 $ref: "#/components/schemas/mastersScanGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
     post:
@@ -1359,6 +1413,8 @@ paths:
                     message: POST request without content
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
 
@@ -1410,6 +1466,8 @@ paths:
                       deviceAlias: "Empty_port"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1433,6 +1491,8 @@ paths:
                 $ref: "#/components/schemas/mastersPortsQualityallGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1497,6 +1557,8 @@ paths:
                     portType: WIRELESS_MASTER
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1545,6 +1607,8 @@ paths:
                       base: FreeRunning
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1603,6 +1667,8 @@ paths:
                     deviceAlias: Port_X01
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1676,6 +1742,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1713,6 +1781,8 @@ paths:
                     content: ""
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1756,6 +1826,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1788,6 +1860,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1812,6 +1886,8 @@ paths:
                 $ref: "#/components/schemas/mastersPortsQualityGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1866,6 +1942,8 @@ paths:
                     portNumber: 4
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
   "/devices/{deviceAlias}/capabilities":
@@ -1893,6 +1971,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1920,6 +2000,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -1955,6 +2037,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2010,6 +2094,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2061,6 +2147,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2111,6 +2199,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2153,6 +2243,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2182,6 +2274,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2230,6 +2324,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2282,6 +2378,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2328,6 +2426,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2376,6 +2476,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2406,6 +2508,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2436,6 +2540,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2480,6 +2586,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2521,6 +2629,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2561,6 +2671,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2603,6 +2715,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2783,6 +2897,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -2814,6 +2930,8 @@ paths:
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "404":
           $ref: "#/components/responses/HTTP_404"
         "500":
@@ -5270,6 +5388,18 @@ components:
         WWW_Authenticate:
           schema:
             type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorObject"
+          examples:
+            "150":
+              description: due to user management restrictions
+              value:
+                code: 150
+                message: Permission denied
+    HTTP_403:
+      description: Authentication information is not sufficient to access the resource
       content:
         application/json:
           schema:
