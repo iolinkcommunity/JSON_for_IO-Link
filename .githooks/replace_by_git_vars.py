@@ -78,9 +78,6 @@ if verbose:
 lines = open(input_file).readlines()
 changed = False
 with open(output_file, "w") as fh:
-    fh.write('<!---\n')  # https://stackoverflow.com/a/4829998/2714285
-    fh.write("This file is auto-generate by a github hook please modify " + input_file + " if you don't want to lose your work\n")
-    fh.write('-->\n')
     for line in lines:
         new_line = line
         for entry in git_vars:

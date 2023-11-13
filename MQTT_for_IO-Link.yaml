@@ -24,26 +24,21 @@ servers:
     variables:
       host:
         default: "iolmaster.io-link.com"
-      basePath:
-        default: iolink/v1
       port:
         enum:
           - "1883"
           - "8883"
         default: "1883"
   iol-master:
-    url: "{host}:{port}"
-    # url: 'api.iolink.com:{port}'
+    url: "{iolmaster}:{port}"
     protocol: mqtt
     protocolVersion: 3.1.1
     description: io-link master as MQTT client
     security:
       - user-password: []
     variables:
-      host:
-        default: "iolmaster.io-link.com"
-      # basePath:
-      #   default: iolink/v1
+      iolmaster:
+        default: "192.168.0.1"
       port:
         enum:
           - "1883"
@@ -58,6 +53,10 @@ channels:
         description: Id of the user.
         schema:
           $ref: "./schemas.yaml#/deviceAlias"
+      mqtt-iol-master:
+        description: Master addrees.
+        schema:
+          $ref: "./schemas.yaml#/mqtt-iol-master"
     publish:
       summary: Provides process data from connected iolink device.
       operationId: deviceProcessData
@@ -79,7 +78,7 @@ channels:
       message:
         name: Event
         payload:
-          $ref: "./schemas.yaml#/processDataValue"
+          $ref: "./schemas.yaml#/deviceEvent"
 components:
   securitySchemes:
     user-password:
