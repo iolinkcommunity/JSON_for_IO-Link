@@ -1,6 +1,3 @@
-<!---
-This file is auto-generate by a github hook please modify README.md if you don't want to lose your work
--->
 # JSON_for_IO-Link
 
 JSON serialization for IO-Link data.
