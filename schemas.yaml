@@ -1,4 +1,11 @@
 schemas:
+  deviceAlias:
+    type: string
+    description: Unique deviceAlias.
+    minLength: 1
+    maxLength: 32
+    pattern: "^[a-zA-Z0-9_]{1,32}$"
+    example: master1port1
   parameterName:
     type: string
     description: |
@@ -263,12 +270,7 @@ schemas:
         type: integer
         minimum: 1
       deviceAlias:
-        description: >-
-          This property is mandatory for IO-Link Device Events. Should not be
-          used for other log entries.
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/deviceAlias"
   eventObject:
     type: object
     properties:
@@ -1825,26 +1827,7 @@ schemas:
         description: >
           IO-Link cable IQ (pin2) level if it is used as digital input or output.
           (false - 0 V, true - 24 V)
-    example:
-      "format=byteArray, pin4=IO-Link, pin2=sio":
-        iolink:
-          valid: true
-          value:
-            - 15
-            - 123
-            - 126
-            - 236
-        iqValue: true
-      "format=iodd, pin4=IO-Link, pin2=deactivated/not available":
-        iolink:
-          valid: true
-          value:
-            Valve_1:
-              value: true
-            Valve_2:
-              value: false
-      "format=byteArray/iodd, pin4=sio, pin2=deactivated/not available":
-        cqValue: false
+  
   deviceProcessDataValueGet:
     type: object
     description: >
@@ -2203,9 +2186,8 @@ schemas:
     tags:
       - name: device
     type: array
-
     payload:
-      $ref: "./schemas/deviceEvents"
+      $ref: "#/schemas/deviceEvent"
   deviceEvent:
     type: object
     required:
@@ -2222,7 +2204,7 @@ schemas:
           - code
           - mode
         allOf:
-          - $ref: "#/eventObject"
+          - $ref: "#/schemas/eventObject"
   devicehealth:
     summary: contains the health information of the device.
     tags:
@@ -2317,21 +2299,21 @@ schemas:
           description: Name of the interface.
           example: eth0
         ipConfiguration:
-          $ref: "#/ipConfiguration"
+          $ref: "#/schemas/ipConfiguration"
         ipAddress:
-          $ref: "#/ipAddress"
+          $ref: "#/schemas/ipAddress"
         subnetMask:
-          $ref: "#/subnetMask"
+          $ref: "#/schemas/subnetMask"
         standardGateway:
-          $ref: "#/standardGateway"
+          $ref: "#/schemas/standardGateway"
         dnsServer:
-          $ref: "#/dnsServer"
+          $ref: "#/schemas/dnsServer"
         macAddress:
-          $ref: "#/macAddress"
+          $ref: "#/schemas/macAddress"
         ifSpeed:
           type: array
           items:
-            $ref: "#/valueUnitObject"
+            $ref: "#/schemas/valueUnitObject"
         ifOperStatus:
           type: array
           items:
@@ -3426,8 +3408,3 @@ schemas:
         type: string
         minLength: 1
         maxLength: 32
-  deviceAlias:
-    type: string
-    description: Unique deviceAlias.
-    minLength: 1
-    maxLength: 32

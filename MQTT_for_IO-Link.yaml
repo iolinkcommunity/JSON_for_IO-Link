@@ -1,9 +1,9 @@
 asyncapi: 2.6.0
 info:
-  title: MQTT for IO-Link Topics
+  title: MQTT for IO-Link Master
   version: 0.0.2
   description: >
-    This is the _AsyncAPI_ specification of MQTT topics which are published by the IO-Link Master.
+    This is the _AsyncAPI_ specification of MQTT which are published by the IO-Link Master.
   termsOfService: "https://www.io-link.com"
   contact:
     name: "IO-Link Community"
@@ -14,30 +14,15 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 defaultContentType: application/json
 servers:
-  broker:
-    url: "api.iolink.com:{port}"
-    protocol: mqtt
-    protocolVersion: 3.1.1
-    description: broker to connect to io-link master
-    security:
-      - user-password: []
-    variables:
-      host:
-        default: "iolmaster.io-link.com"
-      port:
-        enum:
-          - "1883"
-          - "8883"
-        default: "1883"
   iol-master:
-    url: "{iolmaster}:{port}"
+    url: "{iolm-ip}:{port}"
     protocol: mqtt
     protocolVersion: 3.1.1
     description: io-link master as MQTT client
     security:
       - user-password: []
     variables:
-      iolmaster:
+      iolm-ip:
         default: "192.168.0.1"
       port:
         enum:
@@ -64,6 +49,13 @@ channels:
         name: ProcessData
         payload:
           $ref: "./schemas.yaml#/schemas/processDataValue"
+        examples:
+          - payload:
+              $ref: "./examples.yaml#/examples/processDataValue/byteArray"
+          - payload:
+              $ref: "./examples.yaml#/examples/processDataValue/iodd"
+          - payload:
+              $ref: "./examples.yaml#/examples/processDataValue/sio"
   /{deviceAlias}/events:
     servers:
       - "iol-master"
