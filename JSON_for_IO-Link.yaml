@@ -694,21 +694,10 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/mqttConfigurationGetPost"
               examples:
-                Active client:
-                  value:
-                    clientMode: "ACTIVE"
-                    serverAddress: 192.168.2.1:1883/mqttbroker
-                    username: iolink_json
-                    password: "1234"
-                    lastwill:
-                      topic: process_data
-                      message: Process data transfer stopped.
-                      qos: 0_ONLY_ONCE
-                      retain: true
-                    keepAliveTime: 10
-                Inactive client:
-                  value:
-                    clientMode: "INACTIVE"
+                Active Client:
+                  $ref: "./examples.yaml#/examples/mqttConfig/activeClient"
+                Inactive Client:
+                  $ref: "./examples.yaml#/examples/mqttConfig/inactiveClient"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":

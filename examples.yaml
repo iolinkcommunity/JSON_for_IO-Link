@@ -47,3 +47,19 @@ examples:
             standardGateway: 192.168.2.1
           - ifName: eth2
             ipConfiguration: DHCP
+  mqttConfig:
+    activeClient:
+      value:
+        clientMode: "ACTIVE"
+        serverAddress: 192.168.2.1:1883/mqttbroker
+        username: iolink_json
+        password: "1234"
+        lastwill:
+          topic: process_data
+          message: Process data transfer stopped.
+          qos: 0_ONLY_ONCE
+          retain: true
+        keepAliveTime: 10
+    inactiveClient:
+      value:
+        clientMode: "INACTIVE"
