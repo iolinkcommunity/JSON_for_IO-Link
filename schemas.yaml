@@ -6,6 +6,12 @@ schemas:
     maxLength: 32
     pattern: "^[a-zA-Z0-9_]{1,32}$"
     example: master1port1
+  originatorId:
+    type: string
+    description:
+      Shall be the unique identifier of the originator and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
+      DNS name, IP address or MAC address of the device hosting the MQTT publisher.
+    example: master1
   parameterName:
     type: string
     description: |
@@ -543,6 +549,13 @@ schemas:
             type: boolean
       keepAliveTime:
         type: integer
+      clientId:
+        type: string
+        description:
+          MQTT Client identifier to address and identify the iolink master as MQTT client. It needs to be unique within the MQTT network.
+          Since this parameter is optional, default value shall be set internally to a unique value (e.g. master name + MAC).
+      originatorId:
+        $ref: "#/schemas/originatorId"
   mqttConfigurationTopic:
     allOf:
       - type: object

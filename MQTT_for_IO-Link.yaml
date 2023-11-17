@@ -30,12 +30,14 @@ servers:
           - "8883"
         default: "1883"
 channels:
-  /{deviceAlias}/processdata:
+  /{originatorId}/{deviceAlias}/processdata:
     servers:
       - "iol-master"
     parameters:
+      originatorId:
+        schema:
+          $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
-        description: Id of the user.
         schema:
           $ref: "./schemas.yaml#/schemas/deviceAlias"
       mqtt-iol-master:
@@ -56,12 +58,14 @@ channels:
               $ref: "./examples.yaml#/examples/processDataValue/iodd"
           - payload:
               $ref: "./examples.yaml#/examples/processDataValue/sio"
-  /{deviceAlias}/events:
+  /{originatorId}/{deviceAlias}/events:
     servers:
       - "iol-master"
     parameters:
+      originatorId:
+        schema:
+          $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
-        description: Id of the user.
         schema:
           $ref: "./schemas.yaml#/schemas/deviceAlias"
     publish:
