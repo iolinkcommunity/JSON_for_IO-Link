@@ -52,18 +52,18 @@ channels:
       deviceAlias:
         description: Id of the user.
         schema:
-          $ref: "./schemas.yaml#/deviceAlias"
+          $ref: "./schemas.yaml#/schemas/deviceAlias"
       mqtt-iol-master:
         description: Master addrees.
         schema:
-          $ref: "./schemas.yaml#/mqtt-iol-master"
+          $ref: "./schemas.yaml#/schemas/mqtt-iol-master"
     publish:
       summary: Provides process data from connected iolink device.
       operationId: deviceProcessData
       message:
         name: ProcessData
         payload:
-          $ref: "./schemas.yaml#/processDataValue"
+          $ref: "./schemas.yaml#/schemas/processDataValue"
   /{deviceAlias}/events:
     servers:
       - "iol-master"
@@ -71,14 +71,14 @@ channels:
       deviceAlias:
         description: Id of the user.
         schema:
-          $ref: "./schemas.yaml#/deviceAlias"
+          $ref: "./schemas.yaml#/schemas/deviceAlias"
     publish:
       summary: Informs about occurred events of the connected iolink device.
       operationId: deviceEvent
       message:
         name: Event
         payload:
-          $ref: "./schemas.yaml#/deviceEvent"
+          $ref: "./schemas.yaml#/schemas/deviceEvent"
 components:
   securitySchemes:
     user-password:
