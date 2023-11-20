@@ -5091,8 +5091,8 @@ components:
           tokenUrl: https://id.sick.com/auth/realms/sickservices/protocol/openid-connect/token
           authorizationUrl: https://id.sick.com/auth/realms/sickservices/protocol/openid-connect/auth
           scopes:
-            Maintenance: priviledged access for reading and writing all endpoints
-  #---------------------------------------------------------------------------
+            MaintenanceRole: priviledged access for reading and writing all endpoints
+            SpecialistRole: more priviledged access for advanced features like firmware update
   parameters:
     artifact:
       name: artifact
