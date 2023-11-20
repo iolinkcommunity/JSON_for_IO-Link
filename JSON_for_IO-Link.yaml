@@ -91,8 +91,7 @@ paths:
       summary: >-
         Get the OpenAPI interface description of the IO-Link Master.
       description: >-
-        Get the REST interface description of the IO-Link API as OpenAPI YAML
-        document.
+        Get the OpenAPI interface description of the IO-Link Master. The general OpenAPI description should be adjusted in regards of vendor specific characteristics like used security schemas, supported endpoints or additional information.
       responses:
         "200":
           description: Successful operation
