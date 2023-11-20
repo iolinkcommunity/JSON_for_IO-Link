@@ -3096,6 +3096,7 @@ paths:
           $ref: "#/components/responses/HTTP_500"
       requestBody:
         required: true
+        description: The firmware update file in iolfw format. The file must be provided as a multipart/form-data request including the `filename` as header parameter (see RFC7578).
         content:
           multipart/form-data:
             schema:
