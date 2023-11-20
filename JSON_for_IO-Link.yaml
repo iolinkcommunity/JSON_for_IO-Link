@@ -13,6 +13,8 @@ info:
     * Draft for version 1.1.0
     * The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
 
+    * **Security:** The defined security schemas are just examples and can be replaced by vendor specifics. The way of restricting requests is as well in the responsibility of the vendor. It is recommended to limit access to writable endpoint. This should prevent misconfiguration and breaking running systems.
+
     # Specification Reference URIs:
 
     >  [JSON Integration for IO-Link - Draft V2.0](http://www.io-link.com/io-link/10.222/V2.0)
@@ -5078,18 +5080,21 @@ components:
           $ref: "#/components/schemas/iolinkErrorObject"
   securitySchemes:
     basicAuth:
+      description: Basic authentication mechanism with user and password provided in the HTTP header.
       type: http
       scheme: basic
-    bearerAuth: # arbitrary name for the security scheme
+    bearerAuth:
+      description: Provide bearer token which is used in the HTTP header.
       type: http
       scheme: bearer
-      bearerFormat: JWT # optional, arbitrary value for documentation purposes
+      bearerFormat: JWT
     oauth2:
+      description: Standard OAUTH2 mechanism, tokenUrl and authorizationUrl need to be adjusted to the designated security infrastructure. The scopes are just used as examples and can be vendor specific.
       type: oauth2
       flows:
         authorizationCode:
-          tokenUrl: https://id.sick.com/auth/realms/sickservices/protocol/openid-connect/token
-          authorizationUrl: https://id.sick.com/auth/realms/sickservices/protocol/openid-connect/auth
+          tokenUrl: https://io-link-vendor.com/protocol/openid-connect/token
+          authorizationUrl: https://io-link-vendor.com/protocol/openid-connect/auth
           scopes:
             MaintenanceRole: priviledged access for reading and writing all endpoints
             SpecialistRole: more priviledged access for advanced features like firmware update
