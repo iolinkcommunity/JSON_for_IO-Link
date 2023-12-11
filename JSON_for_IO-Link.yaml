@@ -2961,6 +2961,8 @@ paths:
         - devices
       summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
       description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
       responses:
         "204":
           description: >-
