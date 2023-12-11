@@ -2937,6 +2937,8 @@ paths:
         - devices
       description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
       summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
       responses:
         "200":
           description: >-
