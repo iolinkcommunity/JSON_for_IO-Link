@@ -1,71 +1,51 @@
-asyncapi: 2.5.0
+asyncapi: 2.6.0
 info:
-  title: MQTT for IO-Link Topics
-  version: 0.0.1
+  title: MQTT for IO-Link Master
+  version: 0.0.3
   description: >
     This is the _AsyncAPI_ specification of MQTT topics by the IO-Link consortium.
   termsOfService: "https://www.io-link.com"
   contact:
-    name: Markus Rentschler
-    email: markus.rentschler@murrelektronik.de
+    name: "IO-Link Community"
+    email: info@io-link.com
+    url: "http://www.io-link.com"
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+defaultContentType: application/json
 servers:
-  broker:
-    url: "api.iolink.com:{port}"
+  iol-master:
+    url: "{iolm-ip}:{port}"
     protocol: mqtt
-    description: central mqtt Broker
+    protocolVersion: 3.1.1
+    description: io-link master as MQTT client
     security:
       - user-password: []
     variables:
+      iolm-ip:
+        default: "192.168.0.1"
       port:
         enum:
           - "1883"
           - "8883"
         default: "1883"
 channels:
-  "{originatorId}/connection":
-    description: >-
-      Topic that publishes online/offline state of the gateway, send at
-      startup/"birth" and as "lastwill"
-    parameters:
-      originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
-        schema:
-          type: string
-          example: iomaster_nr1
-    subscribe:
-      message:
-        $ref: "#/components/messages/connection"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
-  "{originatorId}/asset":
+  "{originatorId}/gateway/identification":
     description: >-
       publishes asset (e.g. gateway) nameplate information, send at startup or
       onChange
     parameters:
       originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
         schema:
-          type: string
-          example: iomaster_nr1
-    subscribe:
+          $ref: "./schemas.yaml#/schemas/originatorId"
+    publish:
       message:
-        $ref: "#/components/messages/nameplate"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
-  "{originatorId}/health":
-    description: publishes gateway health state
+        name: gatewayIdentification
+        payload:
+          $ref: "./schemas.yaml#/schemas/gatewayIdentificationGet"
+
+  "{originatorId}/gateway/events":
+    description: publishes gateway events
     parameters:
       originatorId:
         description: >-
@@ -76,14 +56,30 @@ channels:
         schema:
           type: string
           example: iomaster_nr1
-    subscribe:
+    publish:
       message:
-        $ref: "#/components/messages/gatewayhealth"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
-  "{originatorId}/{deviceId}(/event)/asset":
+        name: gatewayEvents
+        payload:
+          $ref: "./schemas.yaml#/schemas/gatewayIdentificationGet"
+
+  "{originatorId}/master/{masterNumber}/identification":
+    description: >-
+      publishes asset (e.g. gateway) nameplate information, send at startup or
+      onChange
+    parameters:
+      originatorId:
+        schema:
+          $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        schema:
+          $ref: "./schemas.yaml#/schemas/eventMasterNumber"
+    publish:
+      message:
+        name: gatewayIdentification
+        payload:
+          $ref: "./schemas.yaml#/schemas/masterIdentificationGet"
+
+  "{originatorId}/{deviceAlias}/identification":
     description: >-
       publishes asset (e.g. device) nameplate information, send at connection
       startup (new connection)
@@ -97,19 +93,18 @@ channels:
         schema:
           type: string
           example: iomaster_nr1
-      deviceId:
+      deviceAlias:
         description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
           example: port1
-    subscribe:
+    publish:
       message:
-        $ref: "#/components/messages/nameplate_iolink"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
-  "{originatorId}/{deviceId}(/event)/status":
+        name: deviceIdentification
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
+
+  "{originatorId}/{deviceAlias}/event":
     description: "publishes the port status, send at startup/onChange"
     parameters:
       originatorId:
@@ -121,7 +116,7 @@ channels:
         schema:
           type: string
           example: iomaster_nr1
-      deviceId:
+      deviceAlias:
         description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
@@ -133,8 +128,8 @@ channels:
         mqtt:
           qos: 1
           retain: true
-  "{originatorId}/{deviceId}(/event)/health":
-    description: health data of the device
+
+  "{originatorId}/{deviceAlias}/processData":
     parameters:
       originatorId:
         description: >-
@@ -145,44 +140,18 @@ channels:
         schema:
           type: string
           example: iomaster_nr1
-      deviceId:
+      deviceAlias:
         description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
           example: port1
-    subscribe:
+    publish:
       message:
-        $ref: "#/components/messages/devicehealth"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
-  "{originatorId}/{deviceId}/processData":
-    parameters:
-      originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
-        schema:
-          type: string
-          example: iomaster_nr1
-      deviceId:
-        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
-        schema:
-          type: string
-          example: port1
-    subscribe:
-      message:
-        oneOf:
-          - $ref: "#/components/messages/processdata_IOLink"
-          - $ref: "#/components/messages/processdata_Misc"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
-  "{originatorId}/{deviceId}/events":
+        name: processdata
+        payload:
+          $ref: "./schemas.yaml#/schemas/processDataValue"
+
+  "{originatorId}/{deviceAlias}/events":
     description: >-
       eventlog of the io link device, see
       "iolink/v1/devices/{deviceAlias}/events"
@@ -196,7 +165,7 @@ channels:
         schema:
           type: string
           example: iomaster_nr1
-      deviceId:
+      deviceAlias:
         description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
           type: string
@@ -491,7 +460,7 @@ components:
                         type: boolean
                       isWrongVendorId:
                         type: boolean
-                      isWrongDeviceId:
+                      isWrongdeviceAlias:
                         type: boolean
                       isWrongSerialNumber:
                         type: boolean
@@ -924,7 +893,7 @@ components:
       schema:
         type: string
         example: iomaster_nr1
-    deviceId:
+    deviceAlias:
       description: Id of the IO-Link device (e.g. port nr)
       schema:
         type: string
