@@ -5200,9 +5200,10 @@ components:
       name: deviceAlias
       in: path
       description: >-
-        Device Name configured with the port/configuration URL. Default Device
-        Name is 'masterNportM' where 'N' means the masterNumber and 'M' means
-        the portNumber.
+        Device name configured with the port/configuration URL. Default device
+        name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+        the portNumber. Even if a new device alias has been assigned, the device
+        can always be addressed via the default name. 
       schema:
         type: string
         minLength: 1
