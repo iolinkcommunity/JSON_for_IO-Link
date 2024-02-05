@@ -5063,14 +5063,14 @@ components:
     parameterIdent:
       name: parameterIdent
       in: path
-      description: Parameter access either via index or parametername.      
+      description: Parameter access either via index or parametername. Access via parametername requires IODD support.
       schema:
         $ref: "#/components/schemas/parameterIdent"
       required: true
     subParameterIdent:
       name: subParameterIdent
       in: path
-      description: Subparameter access either via subindex or subparametername.
+      description: Subparameter access either via subindex or subparametername. Access via subparametername requires IODD support.
       schema:
         $ref: "#/components/schemas/subParameterIdent"
       required: true
