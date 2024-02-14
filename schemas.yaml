@@ -1840,7 +1840,7 @@ schemas:
         description: >
           IO-Link cable IQ (pin2) level if it is used as digital input or output.
           (false - 0 V, true - 24 V)
-  
+
   deviceProcessDataValueGet:
     type: object
     description: >

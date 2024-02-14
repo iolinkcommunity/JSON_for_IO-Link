@@ -19,8 +19,6 @@ servers:
     protocol: mqtt
     protocolVersion: 3.1.1
     description: io-link master as MQTT client
-    security:
-      - user-password: []
     variables:
       iolm-ip:
         default: "192.168.0.1"
@@ -32,7 +30,7 @@ servers:
 channels:
   "{originatorId}/gateway/identification":
     description: >-
-      publishes asset (e.g. gateway) nameplate information, send at startup or
+      Publishes gateway nameplate information, send at startup or
       onChange
     parameters:
       originatorId:
@@ -48,23 +46,16 @@ channels:
     description: publishes gateway events
     parameters:
       originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
         schema:
-          type: string
-          example: iomaster_nr1
+          $ref: "./schemas.yaml#/schemas/originatorId"
     publish:
       message:
         name: gatewayEvents
         payload:
-          $ref: "./schemas.yaml#/schemas/gatewayIdentificationGet"
+          $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
 
   "{originatorId}/master/{masterNumber}/identification":
-    description: >-
-      publishes asset (e.g. gateway) nameplate information, send at startup or
+    description: publishes master identification data, send at startup or
       onChange
     parameters:
       originatorId:
@@ -75,71 +66,50 @@ channels:
           $ref: "./schemas.yaml#/schemas/eventMasterNumber"
     publish:
       message:
-        name: gatewayIdentification
+        name: masterIdentification
         payload:
           $ref: "./schemas.yaml#/schemas/masterIdentificationGet"
 
   "{originatorId}/{deviceAlias}/identification":
     description: >-
-      publishes asset (e.g. device) nameplate information, send at connection
+      publishes device identification, send at connection
       startup (new connection)
     parameters:
       originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
         schema:
-          type: string
-          example: iomaster_nr1
+          $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
-        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
-          type: string
-          example: port1
+          $ref: "./schemas.yaml#/schemas/deviceAlias"
     publish:
       message:
         name: deviceIdentification
         payload:
           $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
-
-  "{originatorId}/{deviceAlias}/event":
-    description: "publishes the port status, send at startup/onChange"
-    parameters:
-      originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
-        schema:
-          type: string
-          example: iomaster_nr1
-      deviceAlias:
-        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
-        schema:
-          type: string
-          example: port1
-    subscribe:
-      message:
-        $ref: "#/components/messages/portstatus"
       bindings:
         mqtt:
           qos: 1
           retain: true
 
+  "{originatorId}/{deviceAlias}/event":
+    description: "publishes the device events, send at startup/onChange"
+    parameters:
+      originatorId:
+        schema:
+          $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        schema:
+          $ref: "./schemas.yaml#/schemas/deviceAlias"
+    publish:
+      message:
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceEventsGet"
+
   "{originatorId}/{deviceAlias}/processData":
     parameters:
       originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
         schema:
-          type: string
-          example: iomaster_nr1
+          $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
         description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
         schema:
@@ -151,753 +121,16 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/processDataValue"
 
-  "{originatorId}/{deviceAlias}/events":
-    description: >-
-      eventlog of the io link device, see
-      "iolink/v1/devices/{deviceAlias}/events"
+  "{originatorId}/{portNumber}/status":
+    description: "publishes the port status, send at startup/onChange"
     parameters:
       originatorId:
-        description: >-
-          shall be the unique identifier of the originator and shall correspond
-          to the client id inside the MQTT message. It can be the ProductURI,
-          DNS name, IP address or MAC address of the device hosting the MQTT
-          publisher. By default the Hostname shall be used.
         schema:
-          type: string
-          example: iomaster_nr1
-      deviceAlias:
-        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
+          $ref: "./schemas.yaml#/schemas/originatorId"
+      portNumber:
         schema:
-          type: string
-          example: port1
-    subscribe:
+          $ref: "./schemas.yaml#/schemas/eventPortNumber"
+    publish:
       message:
-        $ref: "#/components/messages/deviceEvents"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
-components:
-  messages:
-    connection:
-      summary: onlinestate of the gateway
-      description: This will be issued as birth and lastwill message.
-      tags:
-        - name: gateway
-      payload:
-        type: string
-        enum:
-          - online
-          - offline
-        example: online
-    nameplate:
-      summary: contains the nameplate information of a gateway.
-      tags:
-        - name: gateway
-      payload:
-        type: object
-        properties:
-          vendorName:
-            type: string
-            default: Murrelektronik
-          vendorId:
-            type: number
-            default: 303
-          vendorUrl:
-            type: string
-            format: url
-            default: "http://www.murrelektronik.com"
-          productName:
-            type: string
-            example: Impact67 PN DIO12 IOL4 IRT 7/8 5pin
-          orderCode:
-            type: string
-            example: 55132
-          serialNumber:
-            type: string
-            example: 1234567
-          productUri:
-            type: string
-            format: url
-            description: >-
-              Unique product identifier and link to product catalogue
-              (https://product.murrelektronik.com/{productCode}/{orderCode}/{serialNumber})
-            example: "https://product.murrelektronik.com/XYZ/512345/01234567"
-          hardwareRevision:
-            type: string
-            example: 7
-          softwareRevision:
-            type: string
-            example: 1.2.3
-          deviceClass:
-            type: string
-            example: PN Profinet
-          nameOfStation:
-            type: string
-            description: Profinet station name
-            example: profinetstation
-          sysName:
-            type: string
-            description: Systemname
-            example: Device_123
-          sysContact:
-            type: string
-            description: contact person (eMail) for this device or system
-            example: service@murrelektronik.de
-          sysLocation:
-            type: string
-            description: Location description of the device or system
-            example: Factory ABC Hall 123
-          ethIpv4:
-            $ref: "#/components/schemas/networkConfiguration"
-    gatewayhealth:
-      summary: diagnostic health information of the gateway.
-      tags:
-        - name: gateway
-      payload:
-        type: object
-        required:
-          - health
-          - healthState
-        properties:
-          error:
-            type: string
-            description: Error message describing the error ocurred.
-          health:
-            $ref: "#/components/schemas/namurHealth"
-          healthState:
-            $ref: "#/components/schemas/namurHealthState"
-        example:
-          health: NORMAL_0
-          healthState: 100
-    portstatus:
-      summary: contains the status of the port.
-      tags:
-        - name: gateway
-      payload:
-        type: object
-        required:
-          - portNumber
-          - maxPowerSupply
-          - portType
-          - mode
-          - deviceAlias
-          - iqConfiguration
-        properties:
-          portNumber:
-            type: number
-            example: 1
-          maxPowerSupply:
-            type: object
-            required:
-              - value
-              - unit
-            properties:
-              value:
-                type: number
-                example: 0.3
-              unit:
-                type: string
-                example: A
-          portType:
-            type: string
-            enum:
-              - CLASS_A
-              - CLASS_B
-              - CLASS_A_WITH_PORT_POWER_OFF_ON
-              - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
-              - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
-              - FAILSAFE_PORT_B
-              - WIRELESS_MASTER
-            example: CLASS_A
-          mode:
-            type: string
-            enum:
-              - DEACTIVATED
-              - IOLINK_MANUAL
-              - IOLINK_AUTOSTART
-              - DIGITAL_INPUT
-              - DIGITAL_OUTPUT
-            example: DEACTIVATED
-          deviceAlias:
-            type: string
-            example: master1port1
-          iqConfiguration:
-            type: string
-            enum:
-              - NOT_SUPPORTED
-              - DIGITAL_INPUT
-              - DIGITAL_OUTPUT
-            example: DIGITAL_INPUT
-          validationAndBackup:
-            type: string
-            description: Used by the IO-Link Master just when portMode is IOLINK_MANUAL.
-            enum:
-              - NO_DEVICE_CHECK
-              - TYPE_COMPATIBLE_DEVICE_V1.0
-              - TYPE_COMPATIBLE_DEVICE_V1.1
-              - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-              - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-            example: NO_DEVICE_CHECK
-          cycleTime:
-            description: >-
-              Used by the IO-Link Master just when portMode is IOLINK_MANUAL or
-              IOLINK_AUTOSTART. Default value is 0 ms which means as fast as
-              possible
-            type: object
-            required:
-              - value
-              - unit
-            properties:
-              value:
-                type: number
-                example: 2.3
-              unit:
-                type: string
-                enum:
-                  - ms
-                example: ms
-          vendorId:
-            type: integer
-            minimum: 1
-            maximum: 65535
-            description: >-
-              Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
-              validationAndBackup is not NO_DEVICE_CHECK.
-            example: 1234
-          deviceId:
-            type: integer
-            minimum: 1
-            maximum: 16777215
-            description: >-
-              Used by the IO-Link Master just when portMode is IOLINK_MANUAL and
-              validationAndBackup is not NO_DEVICE_CHECK.
-            example: 15464
-    nameplate_iolink:
-      summary: contains the nameplate information of an IO-Link device.
-      description: |
-        This will be issued when an IO-Link device was detected.
-      tags:
-        - name: device
-      payload:
-        type: object
-        properties:
-          vendorName:
-            type: string
-            default: Murrelektronik
-          vendorId:
-            type: number
-            default: 303
-          vendorUrl:
-            type: string
-            format: url
-            default: "http://www.murrelektronik.com"
-          productName:
-            type: string
-          orderCode:
-            type: string
-          serialNumber:
-            type: string
-          productUri:
-            type: string
-            format: url
-            description: >-
-              Unique identifier and link to product catalogue
-              (https://product.murrelektronik.com/{productCode}/{orderCode}/{serialNumber})
-          hardwareRevision:
-            type: string
-          firmwareRevision:
-            type: string
-        example:
-          vendorName: Murrelektronik
-          vendorId: 303
-          vendorUrl: "http://www.murrelektronik.com/"
-          orderCode: 55132
-          productName: Impact67 PN DIO12 IOL4 IRT 7/8" 5pin
-          serialNumber: "123456789"
-          hardwareRevision: 1.0.0
-          softwareRevision: 1.0.1
-    devicehealth:
-      summary: contains the health information of the device.
-      tags:
-        - name: device
-      payload:
-        required:
-          - health
-          - healthState
-        type: object
-        properties:
-          health:
-            $ref: "#/components/schemas/namurHealth"
-          healthState:
-            $ref: "#/components/schemas/namurHealthState"
-          errors:
-            type: object
-            properties:
-              iolErrors:
-                type: object
-                properties:
-                  isIolWirebreak:
-                    type: boolean
-                  isIolShortCircuit:
-                    type: boolean
-                  isProcessDataInvalid:
-                    type: boolean
-                  isDataStorageFaulty:
-                    type: boolean
-                  isValidationFailure:
-                    type: boolean
-                  validationError:
-                    type: object
-                    properties:
-                      isWrongCycleTime:
-                        type: boolean
-                      isWrongIolinkRevision:
-                        type: boolean
-                      isWrongPdInLength:
-                        type: boolean
-                      isWrongPdOutLength:
-                        type: boolean
-                      isWrongVendorId:
-                        type: boolean
-                      isWrongdeviceAlias:
-                        type: boolean
-                      isWrongSerialNumber:
-                        type: boolean
-              isShortCircuitPin4:
-                type: boolean
-              isShortCircuitPin2:
-                type: boolean
-              isOverloadStatusPin4:
-                type: boolean
-              isOverloadStatusPin2:
-                type: boolean
-              isActuatorWarningPin4:
-                type: boolean
-              isActuatorWarningPin2:
-                type: boolean
-    deviceEvents:
-      summary: events
-      tags:
-        - name: device
-      payload:
-        $ref: "#/components/schemas/deviceEvents"
-    processdata_IOLink:
-      summary: >-
-        Read the process data values (input and output) from the specified
-        Device
-      tags:
-        - name: device
-      payload:
-        $ref: "#/components/schemas/deviceProcessDataValueIOLINK"
-    processdata_Misc:
-      summary: >-
-        Read the process data values (input and output) from the specified
-        Device.
-      tags:
-        - name: device
-      payload:
-        $ref: "#/components/schemas/deviceProcessDataValueMisc"
-  schemas:
-    eventOrigin:
-      type: string
-      enum:
-        - ALL
-        - GATEWAY
-        - MASTERS
-        - PORTS
-        - DEVICES
-      default: ALL
-    cycleTime:
-      type: object
-      required:
-        - value
-        - unit
-      properties:
-        value:
-          type: number
-        unit:
-          type: string
-          enum:
-            - ms
-    processData:
-      allOf:
-        - type: object
-          required:
-            - direction
-          properties:
-            direction:
-              $ref: "#/components/schemas/content"
-      oneOf:
-        - type: object
-          required:
-            - interval
-          properties:
-            interval:
-              $ref: "#/components/schemas/cycleTime"
-        - type: object
-          required:
-            - onChange
-          properties:
-            onChange:
-              type: boolean
-    content:
-      type: string
-      enum:
-        - getData
-        - setData
-        - getSetData
-      default: getData
-    mqttConfiguration:
-      type: object
-      required:
-        - clientMode
-      properties:
-        clientMode:
-          type: string
-        serverAddress:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-        lastWill:
-          type: object
-          required:
-            - topic
-            - message
-            - qos
-            - retain
-          properties:
-            topic:
-              type: string
-            message:
-              type: string
-            qos:
-              type: string
-              enum:
-                - 0_ONLY_ONCE
-                - 1_AT_LEAST_ONCE
-                - 2_EXACTLY_ONCE
-            retain:
-              type: boolean
-        keepAliveTime:
-          type: integer
-    mqttConnectionStatus:
-      allOf:
-        - type: object
-          required:
-            - connectionStatus
-            - serverAddress
-            - upTime
-          properties:
-            connectionStatus:
-              type: string
-              enum:
-                - CLIENT_INACTIVE
-                - CONNECTION_ACCEPTED
-                - UNACCEPTABLE_PROTOCOL_VERSION
-                - IDENTIFIER_REJECTED
-                - SERVER_UNAVAILABLE
-                - BAD_USERNAME_OR_PASSWORD
-                - NOT_AUTHORIZED
-            serverAddress:
-              type: string
-            upTime:
-              type: integer
-      example:
-        connectionStatus: CONNECTION_ACCEPTED
-        serverAddress: "http://broker-address.com"
-        upTime: 1050
-    deviceProcessDataValueIOLINK:
-      type: object
-      description: >
-        The cqValue is present in the 'getData' object if the CQ (pin4) is
-        configured as digital input. The cqValue is present in the 'setData'
-        object if the CQ (pin4) is configured as digital output. The ioLink is
-        present either in the 'getData' or 'setData' or both objects if the CQ
-        (pin4) is configured to IO-Link mode. The iqValue is present in the
-        'getData' object if the IQ (pin2) is configured as digital input. The
-        iqValue is present in the 'setData' object if the IQ (pin4) is
-        configured as digital output.
-      properties:
-        getData:
-          $ref: "#/components/schemas/processDataValue"
-        setData:
-          $ref: "#/components/schemas/processDataValue"
-    processDataValue:
-      type: object
-      properties:
-        ioLink:
-          type: object
-          description: |
-            Process data in IO-Link mode
-          required:
-            - valid
-            - value
-          properties:
-            valid:
-              type: boolean
-              description: |
-                Process data validity
-            value:
-              anyOf:
-                - $ref: "#/components/schemas/deviceByteArrayTypeValue"
-                - $ref: "#/components/schemas/deviceSimpleTypeValue"
-              description: |
-                Process data value
-        cqValue:
-          type: boolean
-          description: >
-            IO-Link cable CQ (pin4) level if it is used as digital input or
-            output (SIO mode). (false - 0 V, true - 24 V)
-          example: false
-        iqValue:
-          type: boolean
-          description: >
-            IO-Link cable IQ (pin2) level if it is used as digital input or
-            output. (false - 0 V, true - 24 V)
-          example: false
-    deviceProcessDataValueMisc:
-      type: object
-      description: |
-        "Messageblock for misc. messages (example)".
-      properties:
-        getData:
-          type: string
-          example: daten
-        setData:
-          type: string
-          example: daten
-    deviceByteArrayTypeValue:
-      type: object
-      required:
-        - value
-      properties:
-        value:
-          type: array
-          description: The value in byteArray format.
-          items:
-            type: number
-            minimum: 0
-            maximum: 255
-          example:
-            - 12
-            - 22
-            - 216
-    deviceSimpleTypeValue:
-      type: object
-      properties:
-        value:
-          oneOf:
-            - type: boolean
-            - type: string
-            - type: number
-          description: The value (with simple type) in iodd format.
-      required:
-        - value
-      example:
-        value: 15.2
-    deviceEvents:
-      type: object
-      required:
-        - time
-        - severity
-        - origin
-        - message
-      properties:
-        time:
-          $ref: "#/components/schemas/eventTime"
-        severity:
-          $ref: "#/components/schemas/eventSeverity"
-        message:
-          required:
-            - code
-            - mode
-          $ref: "#/components/schemas/eventObject"
-    eventObject:
-      type: object
-      properties:
-        code:
-          description: >-
-            IO-Link Port EventCode or IO-Link Device EventCode. This property is
-            mandatory for IO-Link Port Events or IO-Link Device Events.
-          type: number
-          example: 16912
-        mode:
-          description: >-
-            IO-Link Port Event Mode or IO-Link Device EventMode. This property
-            is mandatory for IO-Link Port Events or IO-Link Device Events.
-          type: string
-          enum:
-            - SINGLESHOT
-            - APPEARS
-            - DISAPPEARS
-          example: APPEARS
-        text:
-          type: string
-          example: Device temperature over-run – Clear source of heat
-    eventOriginObject:
-      type: object
-      properties:
-        gateway:
-          type: string
-          example: 1
-        masterNumber:
-          description: >-
-            This property is mandatory for IO-Link Master Events, IO-Link Port
-            Events and IO-Link Device Events. Should not be used for other log
-            entries.
-          type: integer
-          minimum: 1
-          example: 1
-        portNumber:
-          description: >-
-            This property is mandatory for IO-Link Port Events and IO-Link
-            Device Events. Should not be used for other log entries.
-          type: integer
-          minimum: 1
-          example: 1
-        deviceAlias:
-          description: >-
-            This property is mandatory for IO-Link Device Events. Should not be
-            used for other log entries.
-          type: string
-          example: Temperature_sensor_1
-    eventSeverity:
-      description: >-
-        Indicates the severity of the message. The IO-Link EventType
-        NOTIFICATION maps to NOTICE, WARNING to WARNING and ERROR to ERROR.
-      type: string
-      enum:
-        - EMERGENCY
-        - ALERT
-        - CRITICAL
-        - ERROR
-        - WARNING
-        - NOTICE
-        - INFO
-        - DEBUG
-      example: WARNING
-    eventTime:
-      description: >-
-        Timestamp (format defined in DIN ISO 8601). This field can give an
-        absolute time or a relative time. Both formats are defined in DIN ISO
-        8601.
-      type: string
-      example: "2021-05-18T07:31:54.123Z"
-    namurHealthState:
-      type: integer
-      maximum: 100
-      minimum: 0
-      description: >-
-        Reflects changing a meter for the health state as a result of
-        sub-optimal process and/or environmental conditions from 100 to 0
-    namurHealth:
-      type: string
-      enum:
-        - NORMAL_0
-        - FAILURE_1
-        - CHECK_FUNCTION_2
-        - OFF_SPEC_3
-        - MAINTENANCE_REQUIRED_4
-        - DIAGNOSIS_PASSIVE_5
-      description: >-
-        health indicates the status as defined by NAMUR recommendation NE107 as
-        an DeviceHealthEnumeration value.
-    ipConfiguration:
-      type: string
-      enum:
-        - MANUAL
-        - DHCP
-    ipAddress:
-      type: string
-      example: 192.168.1.13
-    subnetMask:
-      type: string
-      example: 255.255.255.0
-    standardGateway:
-      type: string
-      example: 192.168.1.1
-    dnsServer:
-      type: object
-      required:
-        - server
-        - configuration
-      properties:
-        server:
-          type: array
-          items:
-            type: string
-            example:
-              - 1.1.1.1
-              - 2.2.2.2
-        configuration:
-          type: string
-          enum:
-            - automatic
-            - custom
-    macAddress:
-      type: string
-      example: "FE:AB:3A:55:33:11"
-    valueUnitObject:
-      type: object
-      properties:
-        value:
-          type: integer
-        unit:
-          type: string
-    networkConfiguration:
-      type: array
-      items:
-        type: object
-        required:
-          - name
-          - ipConfiguration
-          - ipAddress
-          - subnetMask
-          - macAddress
-        properties:
-          name:
-            type: string
-            description: Name of the interface.
-            example: eth0
-          ipConfiguration:
-            $ref: "#/components/schemas/ipConfiguration"
-          ipAddress:
-            $ref: "#/components/schemas/ipAddress"
-          subnetMask:
-            $ref: "#/components/schemas/subnetMask"
-          standardGateway:
-            $ref: "#/components/schemas/standardGateway"
-          dnsServer:
-            $ref: "#/components/schemas/dnsServer"
-          macAddress:
-            $ref: "#/components/schemas/macAddress"
-          ifSpeed:
-            type: array
-            items:
-              $ref: "#/components/schemas/valueUnitObject"
-          ifOperStatus:
-            type: array
-            items:
-              type: string
-              example: linkUp
-  parameters:
-    originatorId:
-      description: >-
-        This is the unique identifier of the originator and shall correspond to
-        the client id inside the MQTT message. It can be the ProductURI, DNS
-        name, IP address or MAC address of the device hosting the MQTT
-        publisher. By default the Hostname shall be used.
-      schema:
-        type: string
-        example: iomaster_nr1
-    deviceAlias:
-      description: Id of the IO-Link device (e.g. port nr)
-      schema:
-        type: string
-        example: port1
-  securitySchemes:
-    user-password:
-      type: userPassword
+        payload:
+          $ref: "./schemas.yaml#/schemas/mastersPortsStatusGet"
