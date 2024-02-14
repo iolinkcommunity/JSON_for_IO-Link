@@ -1,0 +1,21 @@
+name: Merge async api specification
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build:
+    name: Run swagger-merger
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the repository
+      - uses: actions/checkout@v2
+
+      # install swagger-merger
+      - name: install swagger-merger
+        run: npm install -g swagger-merger
+
+      # Run swagger-merger
+      - name: Run swagger-merger
+        run: swagger-merger -i .\MQTT_for_IO-Link.yaml .\schemas.yaml .\examples.yaml -o MQTT_for_IO-Link_merged.yaml
