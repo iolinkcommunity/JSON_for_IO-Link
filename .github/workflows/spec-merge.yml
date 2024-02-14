@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Check out the repository
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
 
       # install swagger-merger
       - name: install swagger-merger
@@ -18,4 +18,4 @@ jobs:
 
       # Run swagger-merger
       - name: Run swagger-merger
-        run: swagger-merger -i .\MQTT_for_IO-Link.yaml .\schemas.yaml .\examples.yaml -o MQTT_for_IO-Link_merged.yaml
+        run: swagger-merger -i MQTT_for_IO-Link.yaml schemas.yaml examples.yaml -o MQTT_for_IO-Link_merged.yaml
