@@ -2692,11 +2692,11 @@ components:
         Parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
         Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
         Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
-        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used. \
-        Rule 3: Leading numbers shall be prefixed with “_“. \
+        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "\_". The following regex (/[^\w\n]/g) can be used. \
+        Rule 3: Leading numbers shall be prefixed with "\_". \
         Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
-        Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
-        Rule 6: The naming of ArrayT elements is “element_{subindex}”.
+        Rule 5: Naming according the scheme {name}\_{index} or {name}\_{subindex} is always allowed even if names are not duplicated. \
+        Rule 6: The naming of ArrayT elements is "element\_{subindex}"".
 
         Note: The parameter name may change with the IODD version. If it is used by the client for accessing parameters, it needs to be verified that it is the same used by the master. \
       minLength: 1
@@ -2713,14 +2713,14 @@ components:
     subParameterName:
       type: string
       description: |
-        Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
+        Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specifiation. \        
         Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
         Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
-        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used. \
-        Rule 3: Leading numbers shall be prefixed with “_“. \
+        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "\_". The following regex (/[^\w\n]/g) can be used. \
+        Rule 3: Leading numbers shall be prefixed with "\_". \
         Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
-        Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
-        Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
+        Rule 5: Naming according the scheme {name}\_{index} or {name}\_{subindex} is always allowed even if names are not duplicated. \
+        Rule 6: The naming of ArrayT elements is "element\_{subindex}"".
 
         Note: The parameter name may change with the IODD version. If it is used by the client for accessing parameters, it needs to be verified that it is the same used by the master. \
       minLength: 1
@@ -5009,7 +5009,7 @@ components:
         Device name configured with the port/configuration URL. Default device
         name is 'masterNportM' where 'N' means the masterNumber and 'M' means
         the portNumber. Even if a new device alias has been assigned, the device
-        can always be addressed via the default name. 
+        can always be addressed via the default name.
       schema:
         type: string
         minLength: 1
