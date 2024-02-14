@@ -3616,7 +3616,7 @@ components:
           required:
             - connectionStatus
             - serverAddress
-            - upTime
+            - mqttUpTime
           properties:
             connectionStatus:
               type: string
@@ -3630,7 +3630,8 @@ components:
                 - NOT_AUTHORIZED
             serverAddress:
               type: string
-            upTime:
+            mqttUpTime:
+              description: Duration of established MQTT connection
               type: integer
       example:
         connectionStatus: CONNECTION_ACCEPTED
