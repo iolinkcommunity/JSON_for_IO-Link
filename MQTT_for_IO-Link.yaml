@@ -36,7 +36,7 @@ channels:
       originatorId:
         schema:
           $ref: "./schemas.yaml#/schemas/originatorId"
-    publish:
+    subscribe:
       message:
         name: gatewayIdentification
         payload:
@@ -48,7 +48,7 @@ channels:
       originatorId:
         schema:
           $ref: "./schemas.yaml#/schemas/originatorId"
-    publish:
+    subscribe:
       message:
         name: gatewayEvents
         payload:
@@ -64,7 +64,7 @@ channels:
       masterNumber:
         schema:
           $ref: "./schemas.yaml#/schemas/eventMasterNumber"
-    publish:
+    subscribe:
       message:
         name: masterIdentification
         payload:
@@ -81,7 +81,7 @@ channels:
       deviceAlias:
         schema:
           $ref: "./schemas.yaml#/schemas/deviceAlias"
-    publish:
+    subscribe:
       message:
         name: deviceIdentification
         payload:
@@ -100,7 +100,7 @@ channels:
       deviceAlias:
         schema:
           $ref: "./schemas.yaml#/schemas/deviceAlias"
-    publish:
+    subscribe:
       message:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceEventsGet"
@@ -115,7 +115,7 @@ channels:
         schema:
           type: string
           example: port1
-    publish:
+    subscribe:
       message:
         name: processdata
         payload:
@@ -130,7 +130,7 @@ channels:
       portNumber:
         schema:
           $ref: "./schemas.yaml#/schemas/eventPortNumber"
-    publish:
+    subscribe:
       message:
         payload:
           $ref: "./schemas.yaml#/schemas/mastersPortsStatusGet"
