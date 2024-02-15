@@ -6,12 +6,16 @@ schemas:
     maxLength: 32
     pattern: "^[a-zA-Z0-9_]{1,32}$"
     example: master1port1
+  deviceAliasMqtt:
+    description: Unique deviceAlias.
+  portNumberMqtt:
+    description: Port number.
+  masterNumberMqtt:
+    description: Index of the master.    
   originatorId:
-    type: string
     description:
       Shall be the unique identifier of the originator and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
       DNS name, IP address or MAC address of the device hosting the MQTT publisher.
-    example: master1
   parameterName:
     type: string
     description: |
@@ -148,8 +152,8 @@ schemas:
       - PORTS
       - DEVICES
     default: ALL
-  eventMasterNumber:
-    type: integer
+  masterNumber:
+    description: Index of the master.
     minimum: 1
   eventPortNumber:
     type: integer
