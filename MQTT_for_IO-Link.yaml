@@ -1,12 +1,13 @@
-asyncapi: 2.6.0
+asyncapi: 3.0.0
 info:
   title: MQTT for IO-Link Master
   version: 0.0.3
   description: >
-    This is the _AsyncAPI_ specification of MQTT topics by the IO-Link consortium.
+    This is the _AsyncAPI_ specification of MQTT topics by the IO-Link
+    consortium.
   termsOfService: "https://www.io-link.com"
   contact:
-    name: "IO-Link Community"
+    name: IO-Link Community
     email: info@io-link.com
     url: "http://www.io-link.com"
   license:
@@ -15,57 +16,55 @@ info:
 defaultContentType: application/json
 servers:
   iol-master:
-    url: "{iolm-ip}:{port}"
+    host: "{iolm-ip}:{port}"
     protocol: mqtt
     protocolVersion: 3.1.1
     description: io-link master as MQTT client
     variables:
       iolm-ip:
-        default: "192.168.0.1"
+        default: 192.168.0.1
       port:
         enum:
           - "1883"
           - "8883"
         default: "1883"
+
 channels:
   "{originatorId}/gateway/identification":
+    address: "{originatorId}/gateway/identification"
     description: >-
       Publishes gateway nameplate information, send at startup or
       onChange
     parameters:
-      originatorId:
-        schema:
-          $ref: "./schemas.yaml#/schemas/originatorId"
-    subscribe:
-      message:
+      $ref: "./schemas.yaml#/schemas/originatorId"
+    messages:
+      subscribe.message:
         name: gatewayIdentification
         payload:
           $ref: "./schemas.yaml#/schemas/gatewayIdentificationGet"
 
   "{originatorId}/gateway/events":
+    address: "{originatorId}/gateway/events"
     description: publishes gateway events
     parameters:
-      originatorId:
-        schema:
-          $ref: "./schemas.yaml#/schemas/originatorId"
-    subscribe:
-      message:
+      $ref: "./schemas.yaml#/schemas/originatorId"
+    messages:
+      subscribe.message:
         name: gatewayEvents
         payload:
           $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
 
   "{originatorId}/master/{masterNumber}/identification":
+    address: "{originatorId}/master/{masterNumber}/identification"
     description: publishes master identification data, send at startup or
       onChange
     parameters:
       originatorId:
-        schema:
-          $ref: "./schemas.yaml#/schemas/originatorId"
+        $ref: "./schemas.yaml#/schemas/originatorId"
       masterNumber:
-        schema:
-          $ref: "./schemas.yaml#/schemas/eventMasterNumber"
-    subscribe:
-      message:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
+    messages:
+      subscribe.message:
         name: masterIdentification
         payload:
           $ref: "./schemas.yaml#/schemas/masterIdentificationGet"
@@ -76,47 +75,35 @@ channels:
       startup (new connection)
     parameters:
       originatorId:
-        schema:
-          $ref: "./schemas.yaml#/schemas/originatorId"
+        $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
-        schema:
-          $ref: "./schemas.yaml#/schemas/deviceAlias"
-    subscribe:
-      message:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+    messages:
+      subscribe.message:
         name: deviceIdentification
         payload:
           $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
-      bindings:
-        mqtt:
-          qos: 1
-          retain: true
 
   "{originatorId}/{deviceAlias}/event":
     description: "publishes the device events, send at startup/onChange"
     parameters:
       originatorId:
-        schema:
-          $ref: "./schemas.yaml#/schemas/originatorId"
+        $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
-        schema:
-          $ref: "./schemas.yaml#/schemas/deviceAlias"
-    subscribe:
-      message:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+    messages:
+      subscribe.message:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceEventsGet"
 
   "{originatorId}/{deviceAlias}/processData":
     parameters:
       originatorId:
-        schema:
-          $ref: "./schemas.yaml#/schemas/originatorId"
+        $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
-        description: "Id of the device (e.g.  (i.e. an IO-Link device, an IO-Port number)"
-        schema:
-          type: string
-          example: port1
-    subscribe:
-      message:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+    messages:
+      subscribe.message:
         name: processdata
         payload:
           $ref: "./schemas.yaml#/schemas/processDataValue"
@@ -125,12 +112,63 @@ channels:
     description: "publishes the port status, send at startup/onChange"
     parameters:
       originatorId:
-        schema:
-          $ref: "./schemas.yaml#/schemas/originatorId"
+        $ref: "./schemas.yaml#/schemas/originatorId"
       portNumber:
-        schema:
-          $ref: "./schemas.yaml#/schemas/eventPortNumber"
-    subscribe:
-      message:
+        $ref: "./schemas.yaml#/schemas/portNumberMqtt"
+    messages:
+      subscribe.message:
         payload:
           $ref: "./schemas.yaml#/schemas/mastersPortsStatusGet"
+operations:
+  "{originatorId}/gateway/identification.subscribe":
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1gateway~1identification"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1gateway~1identification/messages/subscribe.message
+  "{originatorId}/gateway/events.subscribe":
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1gateway~1events"
+    messages:
+      - $ref: "#/channels/{originatorId}~1gateway~1events/messages/subscribe.message"
+  "{originatorId}/master/{masterNumber}/identification.subscribe":
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1master~1{masterNumber}~1identification"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1master~1{masterNumber}~1identification/messages/subscribe.message
+  "{originatorId}/{deviceAlias}/identification.subscribe":
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1{deviceAlias}~1identification"
+    bindings:
+      mqtt:
+        qos: 1
+        retain: true
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1{deviceAlias}~1identification/messages/subscribe.message
+  "{originatorId}/{deviceAlias}/event.subscribe":
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1{deviceAlias}~1event"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1{deviceAlias}~1event/messages/subscribe.message
+  "{originatorId}/{deviceAlias}/processData.subscribe":
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1{deviceAlias}~1processData"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1{deviceAlias}~1processData/messages/subscribe.message
+  "{originatorId}/{portNumber}/status.subscribe":
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1{portNumber}~1status"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1{portNumber}~1status/messages/subscribe.message
