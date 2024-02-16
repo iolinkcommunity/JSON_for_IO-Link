@@ -11,11 +11,15 @@ schemas:
   portNumberMqtt:
     description: Port number.
   masterNumberMqtt:
-    description: Index of the master.    
+    description: Index of the master.
   originatorId:
     description:
       Shall be the unique identifier of the originator and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
       DNS name, IP address or MAC address of the device hosting the MQTT publisher.
+  parameterIdentMqtt:
+    description: Identifier of the parameter. It can be the parameterName or the index of the parameter.
+  subParameterIdentMqtt:
+    description: Identifier of the sub-parameter. It can be the sub-parameterName or the sub-index of the parameter.
   parameterName:
     type: string
     description: |

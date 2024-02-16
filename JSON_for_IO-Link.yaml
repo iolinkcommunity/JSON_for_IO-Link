@@ -5181,14 +5181,6 @@ components:
         type: integer
         minimum: 1
       required: true
-    trackNumber:
-      name: trackNumber
-      in: path
-      description: trackNumber identification number starting with 1
-      schema:
-        type: integer
-        minimum: 1
-      required: true
     portNumber:
       name: portNumber
       in: path
@@ -5531,17 +5523,6 @@ components:
               value:
                 code: 106
                 message: MQTT feature not supported
-    HTTP_503:
-      description: Service unavailable
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/errorObject"
-          examples:
-            "107":
-              value:
-                code: 107
-                message: "Service temporarily unavailable"
 
   examples: # reusable examples
     exampleMasterConfiguration:
