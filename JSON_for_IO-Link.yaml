@@ -2713,7 +2713,7 @@ components:
     subParameterName:
       type: string
       description: |
-        Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specifiation. \        
+        Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
         Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
         Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
         Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "\_". The following regex (/[^\w\n]/g) can be used. \
