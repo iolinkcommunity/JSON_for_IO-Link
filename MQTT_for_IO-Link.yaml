@@ -50,8 +50,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
 
-  "{originatorId}/master/{masterNumber}/identification":
-    address: "{originatorId}/master/{masterNumber}/identification"
+  "{originatorId}/masters/{masterNumber}/identification":
+    address: "{originatorId}/masters/{masterNumber}/identification"
     description: Publishes master identification data, send at connection startup/on change
     parameters:
       originatorId:
@@ -64,12 +64,14 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/masterIdentificationGet"
 
-  "{originatorId}/{portNumber}/status":
-    address: "{originatorId}/{portNumber}/status"
+  "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status":
+    address: "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status"
     description: Publishes the port status, send at connection startup/on change
     parameters:
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
       portNumber:
         $ref: "./schemas.yaml#/schemas/portNumberMqtt"
     messages:
@@ -78,8 +80,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/mastersPortsStatusGet"
 
-  "{originatorId}/{deviceAlias}/identification":
-    address: "{originatorId}/{deviceAlias}/identification"
+  "{originatorId}/devices/{deviceAlias}/identification":
+    address: "{originatorId}/devices/{deviceAlias}/identification"
     description: Publishes device identification, send at connection startup/on change
     parameters:
       originatorId:
@@ -92,8 +94,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
 
-  "{originatorId}/{deviceAlias}/event":
-    address: "{originatorId}/{deviceAlias}/event"
+  "{originatorId}/devices/{deviceAlias}/event":
+    address: "{originatorId}/devices/{deviceAlias}/event"
     description: Publishes device events, send at connection startup/on change
     parameters:
       originatorId:
@@ -106,8 +108,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceEventsGet"
 
-  "{originatorId}/{deviceAlias}/processData":
-    address: "{originatorId}/{deviceAlias}/processData"
+  "{originatorId}/devices/{deviceAlias}/processData":
+    address: "{originatorId}/devices/{deviceAlias}/processData"
     description: Publishes device process data, cyclically or on change
     parameters:
       originatorId:
@@ -120,8 +122,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/processDataValue"
 
-  "{originatorId}/{deviceAlias}/parameter/{parameterIdent}":
-    address: "{originatorId}/{deviceAlias}/parameter/{parameterIdent}"
+  "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}"
     description: Publishes device parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
     parameters:
       originatorId:
@@ -136,8 +138,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
 
-  "{originatorId}/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}":
-    address: "{originatorId}/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}"
+  ? "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}"
+  : address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}"
     description: Publishes device sub-parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
     parameters:
       originatorId:
@@ -154,8 +156,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
 
-  "{originatorId}/{deviceAlias}/parameter/request":
-    address: "{originatorId}/{deviceAlias}/parameter/request"
+  "{originatorId}/devices/{deviceAlias}/parameter/request":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/request"
     description: Listening to device parameter requests
     parameters:
       originatorId:
@@ -168,9 +170,9 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceBlockParameterizationPost"
 
-  "{originatorId}/{deviceAlias}/parameter/response":
-    address: "{originatorId}/{deviceAlias}/parameter/response"
-    description: Publishes device parameter response depending on the request {originatorId}/{deviceAlias}/parameter/request
+  "{originatorId}/devices/{deviceAlias}/parameter/response":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/response"
+    description: Publishes device parameter response depending on the request {originatorId}/devices/{deviceAlias}/parameter/request
     parameters:
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
@@ -196,64 +198,64 @@ operations:
       $ref: "#/channels/{originatorId}~1gateway~1events"
     messages:
       - $ref: "#/channels/{originatorId}~1gateway~1events/messages/publish.message"
-  "{originatorId}/master/{masterNumber}/identification.publish":
+  "{originatorId}/masters/{masterNumber}/identification.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1master~1{masterNumber}~1identification"
+      $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1identification"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1master~1{masterNumber}~1identification/messages/publish.message
+          #/channels/{originatorId}~1masters~1{masterNumber}~1identification/messages/publish.message
 
-  "{originatorId}/{portNumber}/status.publish":
+  "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1{portNumber}~1status"
+      $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1{portNumber}~1status/messages/publish.message
-  "{originatorId}/{deviceAlias}/identification.publish":
+          #/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status/messages/publish.message
+  "{originatorId}/devices/{deviceAlias}/identification.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1{deviceAlias}~1identification"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1identification"
     bindings:
       mqtt:
         qos: 1
         retain: true
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1{deviceAlias}~1identification/messages/publish.message
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1identification/messages/publish.message
   "{originatorId}/{deviceAlias}/event.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1{deviceAlias}~1event"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1event"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1{deviceAlias}~1event/messages/publish.message
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1event/messages/publish.message
   "{originatorId}/{deviceAlias}/processData.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1{deviceAlias}~1processData"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1processData"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1{deviceAlias}~1processData/messages/publish.message
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1processData/messages/publish.message
   "{originatorId}/{deviceAlias}/parameter/parameterIdent.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1{deviceAlias}~1parameter~1{parameterIdent}"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1{deviceAlias}~1parameter~1{parameterIdent}/messages/publish.message
-  ? "{originatorId}/{deviceAlias}/parameter/parameterIdent/subParameterIdent.publish"
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}/messages/publish.message
+  ? "{originatorId}/devices/{deviceAlias}/parameter/parameterIdent/subParameterIdent.publish"
   : action: send
     channel:
-      $ref: "#/channels/{originatorId}~1{deviceAlias}~1parameter~1{parameterIdent}~1{subParameterIdent}"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1{subParameterIdent}"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1{deviceAlias}~1parameter~1{parameterIdent}/messages/publish.message
-  "{originatorId}/{deviceAlias}/parameter/request.subscribe":
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}/messages/publish.message
+  "{originatorId}/devices/{deviceAlias}/parameter/request.subscribe":
     action: receive
     channel:
-      $ref: "#/channels/{originatorId}~1{deviceAlias}~1parameter~1request"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1request"
     reply:
       channel:
-        $ref: "#/channels/{originatorId}~1{deviceAlias}~1parameter~1response"
+        $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1response"
