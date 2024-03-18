@@ -94,8 +94,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
 
-  "{originatorId}/devices/{deviceAlias}/event":
-    address: "{originatorId}/devices/{deviceAlias}/event"
+  "{originatorId}/devices/{deviceAlias}/events":
+    address: "{originatorId}/devices/{deviceAlias}/events"
     description: Publishes device events, send at connection startup/on change
     parameters:
       originatorId:
@@ -108,8 +108,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceEventsGet"
 
-  "{originatorId}/devices/{deviceAlias}/processData":
-    address: "{originatorId}/devices/{deviceAlias}/processData"
+  "{originatorId}/devices/{deviceAlias}/processdata/value":
+    address: "{originatorId}/devices/{deviceAlias}/processdata/value"
     description: Publishes device process data, cyclically or on change
     parameters:
       originatorId:
@@ -122,8 +122,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/processDataValue"
 
-  "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}":
-    address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}"
+  "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/value":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/value"
     description: Publishes device parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
     parameters:
       originatorId:
@@ -138,8 +138,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
 
-  ? "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}"
-  : address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}"
+  ? "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value"
+  : address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value"
     description: Publishes device sub-parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
     parameters:
       originatorId:
@@ -156,28 +156,32 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
 
-  "{originatorId}/devices/{deviceAlias}/parameter/request":
-    address: "{originatorId}/devices/{deviceAlias}/parameter/request"
+  "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}"
     description: Listening to device parameter requests
     parameters:
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
         $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+      transactionId:
+        $ref: "./schemas.yaml#/schemas/transactionId"
     messages:
       publish.message:
         name: deviceRequestMessage
         payload:
           $ref: "./schemas.yaml#/schemas/deviceBlockParameterizationPost"
 
-  "{originatorId}/devices/{deviceAlias}/parameter/response":
-    address: "{originatorId}/devices/{deviceAlias}/parameter/response"
-    description: Publishes device parameter response depending on the request {originatorId}/devices/{deviceAlias}/parameter/request
+  "{originatorId}/devices/{deviceAlias}/parameter/response/{transactionId}":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/response/{transactionId}"
+    description: Publishes device parameter response depending on the request {originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}
     parameters:
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
       deviceAlias:
         $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+      transactionId:
+        $ref: "./schemas.yaml#/schemas/transactionId"
     messages:
       publish.message:
         name: deviceResponseMessage
@@ -227,35 +231,35 @@ operations:
   "{originatorId}/{deviceAlias}/event.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1event"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1events"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1devices~1{deviceAlias}~1event/messages/publish.message
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1events/messages/publish.message
   "{originatorId}/{deviceAlias}/processData.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1processData"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1devices~1{deviceAlias}~1processData/messages/publish.message
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value/messages/publish.message
   "{originatorId}/{deviceAlias}/parameter/parameterIdent.publish":
     action: send
     channel:
-      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}/messages/publish.message
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
   ? "{originatorId}/devices/{deviceAlias}/parameter/parameterIdent/subParameterIdent.publish"
   : action: send
     channel:
-      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1{subParameterIdent}"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1{subParameterIdent}~1value"
     messages:
       - $ref: >-
-          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}/messages/publish.message
-  "{originatorId}/devices/{deviceAlias}/parameter/request.subscribe":
-    action: receive
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
+  ? "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}.subscribe"
+  : action: receive
     channel:
-      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1request"
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1request~1{transactionId}"
     reply:
       channel:
-        $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1response"
+        $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1response~1{transactionId}"
