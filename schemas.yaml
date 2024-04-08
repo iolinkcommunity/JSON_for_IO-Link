@@ -1,6 +1,6 @@
 schemas:
   transactionId:
-    description: Unique identifier for the transaction in UUIDv4 format.
+    description: Unique identifier for the transaction in for example as UUIDv4.
   deviceAlias:
     type: string
     description: Unique deviceAlias.
