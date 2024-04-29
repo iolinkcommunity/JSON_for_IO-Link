@@ -664,6 +664,7 @@ paths:
                   $ref: "#/components/schemas/mqttConfigurationTopicGet"
               example:
                 - topicId: 1
+                  activated: true
                   topicName: Sensor34/processData
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: DT35
@@ -674,11 +675,13 @@ paths:
                       value: 10
                       unit: ms
                 - topicId: 2
+                  activated: true
                   topicName: Sensor34/event
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
                   event: {}
                 - topicId: 3
+                  activated: false
                   topicName: PD
                   qos: 0_ONLY_ONCE
                   deviceAlias: BNI_IOL
@@ -687,6 +690,7 @@ paths:
                     format: iodd
                     onChange: true
                 - topicId: 4
+                  activated: false
                   topicName: DT35_CycleTime
                   qos: 0_ONLY_ONCE
                   deviceAlias: DT35
@@ -696,6 +700,7 @@ paths:
                     format: iodd
                     onChange: true
                 - topicId: 5
+                  activated: true
                   topicName: deviceTemperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: master1port2
@@ -716,7 +721,7 @@ paths:
         "501":
           $ref: "#/components/responses/HTTP_501"
     post:
-      operationId: PostMqttTopicsTopicId
+      operationId: PostMqttTopics
       tags:
         - mqtt
       summary: Create a new MQTT topic.
@@ -730,6 +735,7 @@ paths:
             examples:
               Process Data:
                 value:
+                  activated: true
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: DT35
                   processData:
@@ -740,11 +746,13 @@ paths:
                       unit: ms
               Event:
                 value:
+                  activated: true
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
                   event: {}
               Parameter (Index):
                 value:
+                  activated: false
                   qos: 0_ONLY_ONCE
                   deviceAlias: master1port1
                   parameter:
@@ -755,6 +763,7 @@ paths:
                       unit: ms
               Parameter (ParameterName):
                 value:
+                  activated: true
                   topicName: deviceTemperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: AHM36A
@@ -803,6 +812,7 @@ paths:
                 Process Data:
                   value:
                     topicId: 1
+                    activated: true
                     topicName: PD input
                     qos: 1_AT_LEAST_ONCE
                     deviceAlias: DT35
@@ -815,6 +825,7 @@ paths:
                 Event:
                   value:
                     topicId: 2
+                    activated: true
                     topicName: Event
                     qos: 1_AT_LEAST_ONCE
                     deviceAlias: TAD081
@@ -822,6 +833,7 @@ paths:
                 Parameter (Index):
                   value:
                     topicId: 3
+                    activated: true
                     topicName: devvice/indexXY
                     qos: 0_ONLY_ONCE
                     deviceAlias: master1port1
@@ -834,6 +846,7 @@ paths:
                 Parameter (ParameterName):
                   value:
                     topicId: 5
+                    activated: true
                     topicName: deviceTemperature
                     qos: 0_ONLY_ONCE
                     deviceAlias: AHM36A
@@ -843,6 +856,90 @@ paths:
                       interval:
                         value: 1000
                         unit: ms
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          $ref: "#/components/responses/HTTP_404"
+        "500":
+          $ref: "#/components/responses/HTTP_500"
+        "501":
+          $ref: "#/components/responses/HTTP_501"
+    post:
+      operationId: PostMqttTopicsTopicId
+      parameters:
+        - $ref: "#/components/parameters/mqttTopicId"
+      tags:
+        - mqtt
+      summary: Change or deactivate one MQTT topic.
+      description: Change or deactivate one MQTT topic.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/mqttConfigurationTopicsTopicPost"
+            examples:
+              Deactivate Topic:
+                value:
+                  activated: false
+              Activate Topic:
+                value:
+                  activated: true
+              Process Data:
+                value:
+                  topicId: 1
+                  activated: true
+                  topicName: PD input
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: DT35
+                  processData:
+                    direction: getData
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+              Event:
+                value:
+                  topicId: 2
+                  activated: true
+                  topicName: Event
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: TAD081
+                  event: {}
+              Parameter (Index):
+                value:
+                  topicId: 3
+                  topicName: devvice/indexXY
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: master1port1
+                  parameter:
+                    index: 86
+                    format: byteArray
+                    interval:
+                      value: 10
+                      unit: ms
+              Parameter (ParameterName):
+                value:
+                  topicId: 5
+                  activated: true
+                  topicName: deviceTemperature
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: AHM36A
+                  parameter:
+                    parameterName: Temperature1
+                    format: iodd
+                    interval:
+                      value: 1000
+                      unit: ms
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -3373,6 +3470,12 @@ components:
             deviceAlias:
               type: string
               description: Unique deviceAlias.
+            activated:
+              type: boolean
+              description: >-
+                Indicates if the topic is activated. If the topic is not
+                activated, the device will not publish to this topic. 
+                In case the property is not provided, the topic will be activated.
         - oneOf:
             - type: object
               properties:
@@ -3406,6 +3509,29 @@ components:
         - $ref: "#/components/schemas/mqttConfigurationTopic"
       example:
         topicId: 1
+        topicName: PD input
+        qos: 1_AT_LEAST_ONCE
+        deviceAlias: DT35
+        processData:
+          direction: getData
+          format: iodd
+          interval:
+            value: 10
+            unit: ms
+    mqttConfigurationTopicsTopicPost:
+      anyOf:
+        - type: object
+          properties:
+            topicId:
+              type: integer
+        - type: object
+          properties:
+            topicName:
+              type: string
+        - $ref: "#/components/schemas/mqttConfigurationTopic"
+      example:
+        topicId: 1
+        activated: true
         topicName: PD input
         qos: 1_AT_LEAST_ONCE
         deviceAlias: DT35
