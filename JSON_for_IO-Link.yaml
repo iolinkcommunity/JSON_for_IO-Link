@@ -2672,16 +2672,6 @@ paths:
 
 components:
   schemas:
-    artifact:
-      type: string
-      description: IODD Artifacts like device, vendor images
-      enum:
-        - XML
-        - DeviceIcon
-        - DeviceSymbol
-        - VendorLogo
-        - zip
-      default: XML
     parameterIdent:
       oneOf:
         - $ref: "#/components/schemas/parameterName"
@@ -2982,6 +2972,7 @@ components:
         numberOfPorts:
           type: integer
           minimum: 1
+          maximum: 255
         maxPowerSupply:
           type: object
           required:
@@ -2994,12 +2985,15 @@ components:
             unit:
               type: string
               minLength: 1
+              maxLength: 32
     eventTime:
       description: >-
         Timestamp (format defined in DIN ISO 8601). This field can give an
         absolute time or a relative time. Both formats are defined in DIN ISO
         8601.
       type: string
+      minLength: 1
+      maxLength: 32
     eventSeverity:
       description: >-
         Indicates the severity of the message. The IO-Link EventType
@@ -3032,6 +3026,7 @@ components:
             Device Events. Should not be used for other log entries.
           type: integer
           minimum: 1
+          maximum: 255
         deviceAlias:
           description: >-
             This property is mandatory for IO-Link Device Events. Should not be
@@ -3079,38 +3074,6 @@ components:
             $ref: "#/components/schemas/eventOriginObject"
           message:
             $ref: "#/components/schemas/eventObject"
-    blockParameterizationPostParametersRequest:
-      type: array
-      minItems: 1
-      items:
-        type: object
-        required:
-          - identifier
-        properties:
-          identifier:
-            oneOf:
-              - type: object
-                required:
-                  - index
-                properties:
-                  index:
-                    type: integer
-                    minimum: 0
-                    maximum: 65535
-                  subIndex:
-                    type: integer
-                    minimum: 0
-                    maximum: 255
-              - type: object
-                required:
-                  - parameterName
-                properties:
-                  parameterName:
-                    $ref: "#/components/schemas/parameterName"
-                  subParameterName:
-                    $ref: "#/components/schemas/subParameterName"
-          content:
-            $ref: "#/components/schemas/deviceParameterValueGetPost"
     deviceBlockParameterizationPostParametersAnswer:
       type: array
       items:
@@ -3249,13 +3212,20 @@ components:
         macAddress:
           type: string
           pattern: "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
+          minLength: 1
+          maxLength: 17
         serialNumber:
           type: string
+          minLength: 1
+          maxLength: 16
         orderCode:
           type: string
+          minLength: 1
           maxLength: 64
         productName:
           type: string
+          minLength: 1
+          maxLength: 64
         productId:
           type: string
         hardwareRevision:
@@ -4831,7 +4801,7 @@ components:
             - WRITE
             - READ
         parameters:
-          $ref: "#/components/schemas/blockParameterizationPostParametersRequest"
+          $ref: "./schemas.yaml#/schemas/blockParameterizationPostParametersRequest"
     index:
       type: integer
       description: Index of ISDU variable
@@ -4862,7 +4832,7 @@ components:
         availableArtifacts:
           type: array
           items:
-            $ref: "#/components/schemas/artifact"
+            $ref: "./schemas.yaml#/schemas/artifact"
         ioddFileName:
           type: string
     ioddFile:
@@ -4944,7 +4914,7 @@ components:
       required: false
       in: query
       schema:
-        $ref: "#/components/schemas/artifact"
+        $ref: "./schemas.yaml#/schemas/artifact"
     vendorId:
       name: vendorId
       in: query

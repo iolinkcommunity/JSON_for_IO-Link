@@ -235,6 +235,7 @@ schemas:
       numberOfPorts:
         type: integer
         minimum: 1
+        maximum: 255
       maxPowerSupply:
         type: object
         required:
@@ -247,12 +248,15 @@ schemas:
           unit:
             type: string
             minLength: 1
+            maxLength: 32
   eventTime:
     description: >-
       Timestamp (format defined in DIN ISO 8601). This field can give an
       absolute time or a relative time. Both formats are defined in DIN ISO
       8601.
     type: string
+    minLength: 1
+    maxLength: 32
   eventSeverity:
     description: >-
       Indicates the severity of the message. The IO-Link EventType
@@ -285,6 +289,7 @@ schemas:
           Device Events. Should not be used for other log entries.
         type: integer
         minimum: 1
+        maximum: 255
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
   eventObject:
@@ -451,34 +456,58 @@ schemas:
       macAddress:
         type: string
         pattern: "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
+        minLength: 1
+        maxLength: 17
       serialNumber:
         type: string
+        minLength: 1
+        maxLength: 16
       orderCode:
         type: string
+        minLength: 1
         maxLength: 64
       productName:
         type: string
+        minLength: 1
+        maxLength: 64
       productId:
         type: string
       hardwareRevision:
         type: string
+        minLength: 1
         maxLength: 64
       firmwareRevision:
         type: string
+        minLength: 1
+        maxLength: 64
       vendorName:
         type: string
+        minLength: 1
+        maxLength: 64
       vendorUrl:
         type: string
+        minLength: 1
+        maxLength: 64
       manualUrl:
         type: string
+        minLength: 1
+        maxLength: 64
       productInstanceUri:
         type: string
+        minLength: 1
+        maxLength: 64
       applicationSpecificTag:
         type: string
+        minLength: 1
+        maxLength: 64
       locationTag:
         type: string
+        minLength: 1
+        maxLength: 64
       functionTag:
         type: string
+        minLength: 1
+        maxLength: 64
     example:
       macAddress: "00:02:72:CE:A6:49"
       serialNumber: "C134A746"
@@ -503,6 +532,8 @@ schemas:
           properties:
             ifName:
               type: string
+              minLength: 1
+              maxLength: 64
             ipConfiguration:
               $ref: "#/schemas/ipConfiguration"
             ipAddress:
@@ -531,12 +562,21 @@ schemas:
     properties:
       clientMode:
         type: string
+        enum:
+          - ACTIVE
+          - INACTIVE
       serverAddress:
         type: string
+        minLength: 1
+        maxLength: 64
       username:
         type: string
+        minLength: 1
+        maxLength: 64
       password:
         type: string
+        minLength: 1
+        maxLength: 64
       lastWill:
         type: object
         required:
@@ -547,6 +587,8 @@ schemas:
         properties:
           topic:
             type: string
+            minLength: 1
+            maxLength: 64
           message:
             type: string
           qos:
@@ -559,11 +601,15 @@ schemas:
             type: boolean
       keepAliveTime:
         type: integer
+        minimum: 1
+        maximum: 65535
       clientId:
         type: string
         description:
           MQTT Client identifier to address and identify the iolink master as MQTT client. It needs to be unique within the MQTT network.
           Since this parameter is optional, default value shall be set internally to a unique value (e.g. master name + MAC).
+        minLength: 1
+        maxLength: 64
       originatorId:
         $ref: "#/schemas/originatorId"
   mqttConfigurationTopic:
