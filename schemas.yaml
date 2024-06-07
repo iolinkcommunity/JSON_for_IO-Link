@@ -8,19 +8,19 @@ schemas:
     maxLength: 32
     pattern: "^[a-zA-Z0-9_]{1,32}$"
     example: master1port1
-  deviceAliasMqtt:
+  deviceAliasMqtt: # path parameter shall not contain a type according to async api spec
     description: Unique deviceAlias.
-  portNumberMqtt:
+  portNumberMqtt: # path parameter shall not contain a type according to async api spec
     description: Port number.
-  masterNumberMqtt:
+  masterNumberMqtt: # path parameter shall not contain a type according to async api spec
     description: Index of the master.
-  originatorId:
+  originatorId: # path parameter shall not contain a type according to async api spec
     description:
       Shall be the unique identifier of the originator and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
       DNS name, IP address or MAC address of the device hosting the MQTT publisher.
-  parameterIdentMqtt:
+  parameterIdentMqtt: # path parameter shall not contain a type according to async api spec
     description: Identifier of the parameter. It can be the parameterName or the index of the parameter.
-  subParameterIdentMqtt:
+  subParameterIdentMqtt: # path parameter shall not contain a type according to async api spec
     description: Identifier of the sub-parameter. It can be the sub-parameterName or the sub-index of the parameter.
   parameterName:
     type: string
@@ -34,7 +34,7 @@ schemas:
       Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
       Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
     minLength: 1
-    maxLength: 71
+    maxLength: 64
   subParameterName:
     type: string
     description: |
@@ -47,7 +47,7 @@ schemas:
       Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
       Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
     minLength: 1
-    maxLength: 71
+    maxLength: 64
   cycleTime:
     type: object
     required:
@@ -144,11 +144,9 @@ schemas:
           - index
         properties:
           index:
-            type: integer
-            example: 233
+            $ref: "#/schemas/index"
           subindex:
-            type: integer
-            example: 2
+            $ref: "#/schemas/subIndex"
   eventOrigin:
     type: string
     enum:
@@ -165,15 +163,41 @@ schemas:
     type: integer
     minimum: 1
   eventdeviceAlias:
-    type: string
-    minLength: 1
-    maxLength: 32
+    $ref: "#/schemas/deviceAlias"
   eventTop:
     type: integer
     minimum: 1
   eventBottom:
     type: integer
     minimum: 1
+  serialNumber:
+    type: string
+    minLength: 1
+  serialNumberDevice:
+    type: string
+    minLength: 1
+    maxLength: 16
+  vendorId:
+    type: integer
+    minimum: 1
+    maximum: 65535
+  vendorName:
+    type: string
+    minLength: 1
+    maxLength: 64
+  deviceId:
+    type: integer
+    minimum: 1
+    maximum: 16777215
+  productName:
+    type: string
+    minLength: 1
+    maxLength: 64
+  iolinkRevision:
+    type: string
+    enum:
+      - "1.0"
+      - "1.1"
   identificationMasters:
     type: array
     items:
@@ -182,12 +206,9 @@ schemas:
         - masterNumber
       properties:
         masterNumber:
-          type: integer
-          minimum: 1
+          $ref: "#/schemas/masterNumber"
         serialNumber:
-          type: string
-          minLength: 1
-          maxLength: 16
+          $ref: "#/schemas/serialNumber"
         locationTag:
           type: string
           minLength: 1
@@ -199,6 +220,11 @@ schemas:
       - masterNumber: 2
         serialNumber: 123A45B783
         locationTag: slotNumber 6
+  index:
+    type: integer
+    minimum: 0
+    maximum: 65535
+    example: 233
   masterIdentificationPost:
     type: object
     properties:
@@ -283,6 +309,7 @@ schemas:
           entries.
         type: integer
         minimum: 1
+        maximum: 255
       portNumber:
         description: >-
           This property is mandatory for IO-Link Port Events and IO-Link
@@ -314,6 +341,7 @@ schemas:
       text:
         type: string
         minLength: 1
+        maxLength: 255
   gatewayEventsGet:
     type: array
     items:
@@ -347,13 +375,9 @@ schemas:
                 - index
               properties:
                 index:
-                  type: integer
-                  minimum: 0
-                  maximum: 65535
+                  $ref: "#/schemas/index"
                 subIndex:
-                  type: integer
-                  minimum: 0
-                  maximum: 255
+                  $ref: "#/schemas/subIndex"
             - type: object
               required:
                 - parameterName
@@ -379,13 +403,9 @@ schemas:
                 - index
               properties:
                 index:
-                  type: integer
-                  minimum: 0
-                  maximum: 65535
+                  $ref: "#/schemas/index"
                 subIndex:
-                  type: integer
-                  minimum: 0
-                  maximum: 255
+                  $ref: "#/schemas/subIndex"
             - type: object
               required:
                 - parameterName
@@ -459,9 +479,7 @@ schemas:
         minLength: 1
         maxLength: 17
       serialNumber:
-        type: string
-        minLength: 1
-        maxLength: 16
+        $ref: "#/schemas/serialNumber"
       orderCode:
         type: string
         minLength: 1
@@ -481,9 +499,7 @@ schemas:
         minLength: 1
         maxLength: 64
       vendorName:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/vendorName"
       vendorUrl:
         type: string
         minLength: 1
@@ -626,8 +642,7 @@ schemas:
               - 1_AT_LEAST_ONCE
               - 2_EXACTLY_ONCE
           deviceAlias:
-            type: string
-            description: Unique deviceAlias.
+            $ref: "#/schemas/deviceAlias"
       - oneOf:
           - type: object
             properties:
@@ -719,18 +734,11 @@ schemas:
     type: object
     properties:
       vendorId:
-        type: integer
-        minimum: 1
-        maximum: 65535
+        $ref: "#/schemas/vendorId"
       deviceId:
-        type: integer
-        minimum: 1
-        maximum: 16777215
+        $ref: "#/schemas/deviceId"
       iolinkRevision:
-        type: string
-        enum:
-          - "1.0"
-          - "1.1"
+        $ref: "#/schemas/iolinkRevision"
       vendorName:
         description: Mandatory if the Device suports the ISDU.
         type: string
@@ -754,9 +762,7 @@ schemas:
         minLength: 1
         maxLength: 64
       serialNumber:
-        type: string
-        minLength: 1
-        maxLength: 16
+        $ref: "#/schemas/serialNumberDevice"
       hardwareRevision:
         type: string
         minLength: 1
@@ -1362,9 +1368,7 @@ schemas:
             minLength: 26
             maxLength: 26
           iolinkRevision:
-            type: string
-            enum:
-              - "1.1"
+            $ref: "#/schemas/iolinkRevision"
           lastSeen:
             $ref: "#/schemas/eventTime"
     example:
@@ -1471,10 +1475,7 @@ schemas:
         description: >-
           Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
           OPERATE.
-        type: string
-        enum:
-          - "1.0"
-          - "1.1"
+        $ref: "#/schemas/iolinkRevision"
       transmissionRate:
         description: >-
           Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
@@ -1845,10 +1846,7 @@ schemas:
                 minimum: 1
                 maximum: 16777215
               iolinkRevision:
-                type: string
-                enum:
-                  - "1.0"
-                  - "1.1"
+                $ref: "#/schemas/iolinkRevision"
               parameterChecksum:
                 type: integer
           - type: object # empty object
@@ -1858,7 +1856,6 @@ schemas:
       content:
         description: Base64 coded DS data Ojects. Max size = 2KB*1.33.
         type: string
-        # format: byte
   processDataValue:
     type: object
     properties:
@@ -1956,9 +1953,7 @@ schemas:
         - parameterName
       properties:
         index:
-          type: integer
-          minimum: 0
-          maximum: 65535
+          $ref: "#/schemas/index"
         parameterName:
           $ref: "#/schemas/parameterName"
         subindexAccessSupported:
@@ -1983,9 +1978,7 @@ schemas:
         - subParameterName
       properties:
         subIndex:
-          type: integer
-          minimum: 1
-          maximum: 255
+          $ref: "#/schemas/subIndex"
         subParameterName:
           $ref: "#/schemas/subParameterName"
     example:
@@ -2038,18 +2031,15 @@ schemas:
       - iolinkRevision
     properties:
       vendorId:
-        type: number
+        $ref: "#/schemas/vendorId"
       deviceId:
-        type: number
+        $ref: "#/schemas/deviceId"
       version:
         type: string
       releaseDate:
         type: string
       iolinkRevision:
-        type: string
-        enum:
-          - "1.0"
-          - "1.1"
+        $ref: "#/schemas/iolinkRevision"
       availableArtifacts:
         type: array
         items:
@@ -2091,6 +2081,7 @@ schemas:
       message:
         type: string
         minLength: 1
+        maxLength: 255
   errorObject:
     type: object
     required:
@@ -2171,9 +2162,7 @@ schemas:
           - Failsafe_Master
           - Wireless_Master
       serialNumber:
-        type: string
-        minLength: 1
-        maxLength: 16
+        $ref: "#/schemas/serialNumber"
       orderCode:
         type: string
         minLength: 1
@@ -2735,7 +2724,11 @@ schemas:
         "2477": false
         "2478": false
         "2479": false
-
+  subIndex:
+    type: integer
+    minimum: 0
+    maximum: 255
+    example: 12
   tracksStatisticsChannel:
     properties:
       trackNumber:
@@ -3477,3 +3470,91 @@ schemas:
         type: string
         minLength: 1
         maxLength: 32
+  deviceFirmwareUpdateStatusGet:
+    type: object
+    properties:
+      active:
+        type: boolean
+        description: >-
+          Indicates if a firmware update is currently in progress.
+      stage:
+        type: string
+        description: >-
+          Indicates the current stage of the firmware update.
+        enum:
+          - PREPARATION
+          - DOWNLOAD
+          - VALIDATION
+          - UPDATE
+          - FINISHED
+      message:
+        type: string
+        description: >-
+          Status message according to BLOB Transfer & Firmware Update Specification Version 1.1 September 2019  (Table 19 – Error displays of FW-Update tools).
+        example: Selected file is not a firmware update file
+      action:
+        type: string
+        description: >-
+          Indicates the action to be taken by the user according to BLOB Transfer & Firmware Update Specification Version 1.1 September 2019  (Table 19 – Error displays of FW-Update tools).
+        example: Look for a file with extension .iolfw
+      progress:
+        type: number
+        description: >-
+          Indicates the progress of the firmware update in percent.
+        minimum: 0
+        maximum: 100
+  deviceFirmwareUpdatePost:
+    type: object
+    properties:
+      password:
+        type: string
+        description: password for updating the device if required
+      iolfwfile:
+        type: string
+        format: binary
+        description: IOLFW File for the device
+    required:
+      - iolfwfile
+  devicesGet:
+    type: array
+    items:
+      type: object
+      description: >
+        Information about the device access parameter like master/ port number and the unique deviceAlias.
+      required:
+        - deviceAlias
+        - masterNumber
+        - portNumber
+      properties:
+        deviceAlias:
+          type: string
+          minLength: 1
+          maxLength: 32
+        masterNumber:
+          type: integer
+          minimum: 1
+        portNumber:
+          type: integer
+          minimum: 1
+        ioddFileName:
+          type: string
+          minLength: 1
+          maxLength: 128
+    example:
+      - deviceAlias: DT35
+        masterNumber: 1
+        portNumber: 1
+      - deviceAlias: TAD081
+        masterNumber: 1
+        portNumber: 2
+      - deviceAlias: BNI_IOL
+        masterNumber: 1
+        portNumber: 3
+      - deviceAlias: master1port4
+        masterNumber: 1
+        portNumber: 4
+        ioddFileName: vendorname-devicename-20231016-IODD1.1.xml
+  parameterIdent:
+    oneOf:
+      - $ref: "#/schemas/parameterName"
+      - $ref: "#/schemas/index"
