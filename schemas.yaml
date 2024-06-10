@@ -14,6 +14,11 @@ schemas:
     description: Port number.
   masterNumberMqtt: # path parameter shall not contain a type according to async api spec
     description: Index of the master.
+  serverAddressMqtt:
+    description: Serveraddress.
+    type: string
+    minLength: 1
+    maxLength: 64
   originatorId: # path parameter shall not contain a type according to async api spec
     description:
       Shall be the unique identifier of the originator and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
@@ -159,17 +164,19 @@ schemas:
   masterNumber:
     description: Index of the master.
     minimum: 1
-  eventPortNumber:
+  portNumber:
     type: integer
     minimum: 1
-  eventdeviceAlias:
-    $ref: "#/schemas/deviceAlias"
   eventTop:
     type: integer
     minimum: 1
   eventBottom:
     type: integer
     minimum: 1
+  orderCode:
+    type: string
+    minLength: 1
+    maxLength: 64
   serialNumber:
     type: string
     minLength: 1
@@ -182,6 +189,10 @@ schemas:
     minimum: 1
     maximum: 65535
   vendorName:
+    type: string
+    minLength: 1
+    maxLength: 64
+  vendorText:
     type: string
     minLength: 1
     maxLength: 64
@@ -198,6 +209,22 @@ schemas:
     enum:
       - "1.0"
       - "1.1"
+  tags:
+    type: string
+    minLength: 1
+    maxLength: 32
+  wirelessTrackNumber:
+    type: integer
+    minimum: 0
+    maximum: 31
+    default: 0
+  wirelessSlotNumber:
+    type: integer
+    minimum: 0
+    maximum: 7
+  wirelessBlockList:
+    type: boolean
+    default: false
   identificationMasters:
     type: array
     items:
@@ -225,21 +252,20 @@ schemas:
     minimum: 0
     maximum: 65535
     example: 233
+  subIndex:
+    type: integer
+    minimum: 0
+    maximum: 255
+    example: 12
   masterIdentificationPost:
     type: object
     properties:
       applicationSpecificTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       locationTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       functionTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
   gatewayCapabilitiesGet:
     required:
       - ioddSupported
@@ -259,9 +285,7 @@ schemas:
     type: object
     properties:
       numberOfPorts:
-        type: integer
-        minimum: 1
-        maximum: 255
+        $ref: "#/schemas/portNumber"
       maxPowerSupply:
         type: object
         required:
@@ -307,16 +331,12 @@ schemas:
           This property is mandatory for IO-Link Master Events, IO-Link Port
           Events and IO-Link Device Events. Should not be used for other log
           entries.
-        type: integer
-        minimum: 1
-        maximum: 255
+        $ref: "#/schemas/masterNumber"
       portNumber:
         description: >-
           This property is mandatory for IO-Link Port Events and IO-Link
           Device Events. Should not be used for other log entries.
-        type: integer
-        minimum: 1
-        maximum: 255
+        $ref: "#/schemas/portNumber"
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
   eventObject:
@@ -474,16 +494,11 @@ schemas:
       - vendorName
     properties:
       macAddress:
-        type: string
-        pattern: "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
-        minLength: 1
-        maxLength: 17
+        $ref: "#/schemas/macAddress"
       serialNumber:
         $ref: "#/schemas/serialNumber"
       orderCode:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/orderCode"
       productName:
         type: string
         minLength: 1
@@ -513,17 +528,11 @@ schemas:
         minLength: 1
         maxLength: 64
       applicationSpecificTag:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/tags"
       locationTag:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/tags"
       functionTag:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/tags"
     example:
       macAddress: "00:02:72:CE:A6:49"
       serialNumber: "C134A746"
@@ -553,17 +562,11 @@ schemas:
             ipConfiguration:
               $ref: "#/schemas/ipConfiguration"
             ipAddress:
-              type: string
-              format: ipv4
-              pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
+              $ref: "#/schemas/ipAddress"
             subnetMask:
-              type: string
-              format: ipv4
-              pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
+              $ref: "#/schemas/subnetMask"
             standardGateway:
-              type: string
-              format: ipv4
-              pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
+              $ref: "#/schemas/standardGateway"
     example:
       ethIpv4:
         - ifName: "eth0"
@@ -582,9 +585,7 @@ schemas:
           - ACTIVE
           - INACTIVE
       serverAddress:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/serverAddressMqtt"
       username:
         type: string
         minLength: 1
@@ -704,7 +705,7 @@ schemas:
               - BAD_USERNAME_OR_PASSWORD
               - NOT_AUTHORIZED
           serverAddress:
-            type: string
+            $ref: "#/schemas/serverAddressMqtt"
           upTime:
             type: integer
     example:
@@ -741,18 +742,14 @@ schemas:
         $ref: "#/schemas/iolinkRevision"
       vendorName:
         description: Mandatory if the Device suports the ISDU.
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/vendorName"
       vendorText:
-        type: string
+        $ref: "#/schemas/vendorText"
       vendorUrl:
         type: string
       productName:
         description: Mandatory if the Device suports the ISDU.
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/productName"
       productId:
         type: string
         minLength: 1
@@ -774,17 +771,11 @@ schemas:
       ioddUri:
         type: string
       applicationSpecificTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       locationTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       functionTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
     example:
       vendorId: 26
       deviceId: 8389226
@@ -809,19 +800,13 @@ schemas:
     type: object
     properties:
       applicationSpecificTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
         example: Fallback light switch
       locationTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
         example: Down under
       functionTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
         example: Check start of belt
   portCapabilitiesGet:
     type: object
@@ -902,16 +887,12 @@ schemas:
         description: >-
           required if portMode is IOLINK_MANUAL and
           validationAndBackup is not NO_DEVICE_CHECK.
-        type: integer
-        minimum: 1
-        maximum: 65535
+        $ref: "#/schemas/vendorId"
       deviceId:
         description: >-
           required if portMode is IOLINK_MANUAL and
           validationAndBackup is not NO_DEVICE_CHECK.
-        type: integer
-        minimum: 1
-        maximum: 16777215
+        $ref: "#/schemas/deviceId"
       iqConfiguration:
         description: >-
           iqConfiguration is not supported in IO-Link Wireless.
@@ -921,20 +902,16 @@ schemas:
           - DIGITAL_INPUT
           - DIGITAL_OUTPUT
       deviceAlias:
-        type: string
+        $ref: "#/schemas/deviceAlias"
       slotNumber:
         description: >-
           slot number of the Wireless-Device (Wireless Master only).
-        type: integer
-        minimum: 0
-        maximum: 7
+        $ref: "#/schemas/wirelessSlotNumber"
       trackNumber:
         description: >-
           track number of the Wireless-Device, maximum depends on the number of 
           available tracks on the Wireless-Master (Wireless Master only).
-        type: integer
-        minimum: 1
-        maximum: 5
+        $ref: "#/schemas/wirelessTrackNumber"
       deviceTxPower:
         description: >-
           transmission power of the Wireless-Device (Wireless Master only).
@@ -1029,7 +1006,7 @@ schemas:
 
   mastersConfigurationGetPost: # TODO: IOLW
     properties:
-      wMasterId:
+      wMasterId: #ToDo roeseko What masterId is this? Same as in identification object?
         description: >-
           Master identifier for connection with Wireless-Devices.
         type: integer
@@ -1064,10 +1041,7 @@ schemas:
       serviceTrackNumber:
         description: >-
           W-Track number used for service requests (Scan/Pairing/Roaming).
-        type: integer
-        minimum: 1
-        maximum: 5
-        default: 1
+        $ref: "#/schemas/wirelessTrackNumber"
       serviceTrackMode:
         description: >-
           Mode of the service track.
@@ -1081,261 +1055,170 @@ schemas:
         type: object
         properties:
           "track_1":
-            type: integer
-            minimum: 0
-            maximum: 31
-            default: 0
+            $ref: "#/schemas/wirelessTrackNumber"
           "track_2":
-            type: integer
-            minimum: 0
-            maximum: 31
-            default: 0
+            $ref: "#/schemas/wirelessTrackNumber"
           "track_3":
-            type: integer
-            minimum: 0
-            maximum: 31
-            default: 0
+            $ref: "#/schemas/wirelessTrackNumber"
           "track_4":
-            type: integer
-            minimum: 0
-            maximum: 31
-            default: 0
+            $ref: "#/schemas/wirelessTrackNumber"
           "track_5":
-            type: integer
-            minimum: 0
-            maximum: 31
-            default: 0
+            $ref: "#/schemas/wirelessTrackNumber"
       blockList:
         type: object
         properties:
           "2403":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2404":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2405":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2406":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2407":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2408":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2409":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2410":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2411":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2412":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2413":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2414":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2415":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2416":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2417":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2418":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2419":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2420":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2421":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2422":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2423":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2424":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2425":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2426":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2427":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2428":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2429":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2430":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2431":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2432":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2433":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2434":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2435":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2436":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2437":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2438":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2439":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2440":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2441":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2442":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2443":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2444":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2445":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2446":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2447":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2448":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2449":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2450":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2451":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2452":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2453":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2454":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2455":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2456":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2457":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2458":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2459":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2460":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2461":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2462":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2463":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2464":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2465":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2466":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2467":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2468":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2469":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2470":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2471":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2472":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2473":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2474":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2475":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2476":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2477":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2478":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
   mastersPortsPairingPost: # TODO: IOLW
     properties:
       portPairing:
@@ -1402,9 +1285,9 @@ schemas:
         - deviceAlias
       properties:
         portNumber:
-          type: number
+          $ref: "#/schemas/portNumber"
         deviceAlias:
-          type: string
+          $ref: "#/schemas/deviceAlias"
         statusInfo:
           type: string
           enum: # see Terminology in V.113, Table E.4 PortStatusList
@@ -1421,16 +1304,12 @@ schemas:
         slotNumber:
           description: >-
             slot number of the Wireless-Device (Wireless Master only).
-          type: integer
-          minimum: 0
-          maximum: 7
+          $ref: "#/schemas/wirelessSlotNumber"
         trackNumber:
           description: >-
             track number of the Wireless-Device, maximum depends on the number of 
             available tracks on the Wireless-Master (Wireless Master only).
-          type: integer
-          minimum: 1
-          maximum: 5
+          $ref: "#/schemas/wirelessTrackNumber"
         slotType:
           description: >-
             Single Slot or Double Slot (Wireless Master only).
@@ -1444,17 +1323,11 @@ schemas:
           type: object
           properties:
             vendorId:
-              type: integer
-              minimum: 1
-              maximum: 65535
+              $ref: "#/schemas/vendorId"
             deviceId:
-              type: integer
-              minimum: 1
-              maximum: 16777215
+              $ref: "#/schemas/deviceId"
             productName:
-              type: string
-              minLength: 1
-              maxLength: 64
+              $ref: "#/schemas/productName"
 
   mastersPortsStatusGet: # TODO: IOLW
     properties:
@@ -1567,7 +1440,7 @@ schemas:
       type: object
       properties:
         trackNumber:
-          type: number
+          $ref: "#/schemas/wirelessTrackNumber"
         Mode:
           type: string
           enum:
@@ -1594,7 +1467,7 @@ schemas:
       type: object
       properties:
         portNumber:
-          type: number
+          $ref: "#/schemas/portNumber"
         lqiMaster:
           type: integer
           minimum: 0
@@ -1690,16 +1563,12 @@ schemas:
         description: >-
           required if the port's mode is IOLINK_MANUAL and validationAndBackup is
           not NO_DEVICE_CHECK.
-        type: integer
-        minimum: 1
-        maximum: 65535
+        $ref: "#/schemas/vendorId"
       deviceId:
         description: >-
           required if the port's mode is IOLINK_MANUAL and validationAndBackup is
           not NO_DEVICE_CHECK.
-        type: integer
-        minimum: 1
-        maximum: 16777215
+        $ref: "#/schemas/deviceId"
       iqConfiguration:
         description: >-
           iqConfiguration is not supported in IO-Link Wireless.
@@ -1712,22 +1581,16 @@ schemas:
           - ANALOG_OUTPUT
           - POWER_2
       deviceAlias:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/deviceAlias"
       slotNumber:
         description: >-
           slot number of the Wireless-Device (Wireless Master only).
-        type: integer
-        minimum: 0
-        maximum: 7
+        $ref: "#/schemas/wirelessSlotNumber"
       trackNumber:
         description: >-
           track number of the Wireless-Device, maximum depends on the number of 
           available tracks on the Wireless-Master (Wireless Master only).
-        type: integer
-        minimum: 1
-        maximum: 5
+        $ref: "#/schemas/wirelessTrackNumber"
       deviceTxPower:
         description: >-
           transmission power of the Wireless-Device (Wireless Master only).
@@ -1838,13 +1701,9 @@ schemas:
               - iolinkRevision
             properties:
               vendorId:
-                type: integer
-                minimum: 1
-                maximum: 65535
+                $ref: "#/schemas/vendorId"
               deviceId:
-                type: integer
-                minimum: 1
-                maximum: 16777215
+                $ref: "#/schemas/deviceId"
               iolinkRevision:
                 $ref: "#/schemas/iolinkRevision"
               parameterChecksum:
@@ -2035,9 +1894,9 @@ schemas:
       deviceId:
         $ref: "#/schemas/deviceId"
       version:
-        type: string
+        $ref: "#/schemas/ioddDescriptionText"
       releaseDate:
-        type: string
+        $ref: "#/schemas/ioddDescriptionText"
       iolinkRevision:
         $ref: "#/schemas/iolinkRevision"
       availableArtifacts:
@@ -2048,6 +1907,16 @@ schemas:
     description: The IODD XML file or other IODD artifacts.
     type: string
     format: binary
+  ioddDescriptionText:
+    description: The decription text from IODD For all others Description/@textId.
+    type: string
+    minLength: 1
+    maxLength: 255
+  ioddNameDescription:
+    decription: The decription text from IODD For all Name/@textId
+    type: string
+    minLength: 1
+    maxLength: 64
   ioddArchive:
     description: The IODD in archive format (e.g. IODD Finder) containing XML file and device images.
     type: string
@@ -2079,9 +1948,7 @@ schemas:
         minimum: 0
         maximum: 65535
       message:
-        type: string
-        minLength: 1
-        maxLength: 255
+        $ref: "#/schemas/ioddDescriptionText"
   errorObject:
     type: object
     required:
@@ -2092,18 +1959,23 @@ schemas:
         type: integer
         minimum: 0
       message:
-        type: string
-        minLength: 1
+        $ref: "#/schemas/ioddDescriptionText"
       iolinkError:
         $ref: "#/schemas/iolinkErrorObject"
   ipAddress:
     type: string
+    format: ipv4
+    pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
     example: 192.168.1.13
   subnetMask:
     type: string
+    format: ipv4
+    pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
     example: 255.255.255.0
   standardGateway:
     type: string
+    format: ipv4
+    pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
     example: 192.168.1.1
   dnsServer:
     type: object
@@ -2125,6 +1997,9 @@ schemas:
           - custom
   macAddress:
     type: string
+    pattern: "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
+    minLength: 1
+    maxLength: 17
     example: "FE:AB:3A:55:33:11"
   valueUnitObject:
     type: object
@@ -2142,13 +2017,9 @@ schemas:
     type: object
     properties:
       vendorName:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/vendorName"
       vendorId:
-        type: integer
-        minimum: 1
-        maximum: 65535
+        $ref: "#/schemas/vendorId"
       masterId:
         type: integer
         minimum: 1
@@ -2164,9 +2035,7 @@ schemas:
       serialNumber:
         $ref: "#/schemas/serialNumber"
       orderCode:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/orderCode"
       productName:
         type: string
         minLength: 1
@@ -2194,17 +2063,11 @@ schemas:
       gsdUri:
         type: string
       applicationSpecificTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       locationTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       functionTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
     example:
       vendorName: Vendor GmbH
       vendorId: 26
@@ -2227,17 +2090,11 @@ schemas:
     type: object
     properties:
       applicationSpecificTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       locationTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       functionTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
 
   deviceEvents:
     summary: events
@@ -2379,7 +2236,7 @@ schemas:
             example: "linkUp"
   masterConfiguration:
     properties:
-      masterId:
+      masterId: #ToDo roeseko What masterId is this? Same as in identification object?
         type: integer
         minimum: 1
         maximum: 29
@@ -2406,239 +2263,161 @@ schemas:
           - all
         properties:
           "2402":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2403":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2404":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2405":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2406":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2407":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2408":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2409":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2410":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2411":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2412":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2413":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2414":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2415":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2416":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2417":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2418":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2419":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2420":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2421":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2422":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2423":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2424":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2425":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2426":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2427":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2428":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2429":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2430":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2431":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2432":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2433":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2434":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2435":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2436":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2437":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2438":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2439":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2440":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2441":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2442":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2443":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2444":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2445":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2446":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2447":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2448":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2449":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2450":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2451":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2452":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2453":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2454":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2455":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2456":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2457":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2458":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2459":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2460":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2461":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2462":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2463":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2464":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2465":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2466":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2467":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2468":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2469":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2470":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2471":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2472":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2473":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2474":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2475":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2476":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2477":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2478":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
           "2479":
-            type: boolean
-            default: false
+            $ref: "#/schemas/wirelessBlockList"
     example:
       masterId: 5
       ahtEnable: false
@@ -2724,23 +2503,16 @@ schemas:
         "2477": false
         "2478": false
         "2479": false
-  subIndex:
-    type: integer
-    minimum: 0
-    maximum: 255
-    example: 12
   tracksStatisticsChannel:
     properties:
       trackNumber:
-        type: integer
-        minimum: 1
-        maximum: 5
+        $ref: "#/schemas/wirelessTrackNumber"
       channelErrors:
         type: object
         # required:  # @todo wireles
         #   - all
         properties:
-          "2402":
+          "2402": # ToDo roeseko What is mean by this value? Is this the error code for this channel?
             type: integer
             minimum: 0
             maximum: 65535 # 0 to 100, 65535 means no data available
@@ -3167,221 +2939,6 @@ schemas:
       trackMode: CYCLIC
       txPower: 20
 
-  # wirelessPortConfigurationGet: # @todo wireles
-  #   properties:
-  #     portMode:
-  #       type: string
-  #       enum:
-  #         - DEACTIVATED
-  #         - CYCLIC
-  #         - ROAMING
-  #     validationBackup:
-  #       type: string
-  #       enum:
-  #         - NO_DEVICE_CHECK
-  #         - TYPE_COMPATIBLE_DEVICE_V1.1
-  #         - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-  #         - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-  #     vendorId:
-  #       type: integer
-  #       minimum: 1
-  #       maximum: 65535
-  #     deviceId:
-  #       type: integer
-  #       minimum: 1
-  #       maximum: 16777215
-  #     portCycleTime:
-  #       type: object
-  #       required:
-  #         - value
-  #         - unit
-  #       properties:
-  #         value:
-  #           type: integer
-  #           minimum: 0      ## 0 means Freerunning
-  #           maximum: 315    ## Step size 5ms
-  #         unit:
-  #           type: string
-  #           enum:
-  #             - ms
-  #     trackNumber:
-  #       type: integer
-  #       minimum: 1
-  #       maximum: 5
-  #     slotNumber:
-  #       type: integer
-  #       minimum: 0
-  #       maximum: 7
-  #     slotType:
-  #       type: string
-  #       enum:
-  #         - "SSLOT"
-  #         - "DSLOT"
-  #     maxRetry:
-  #       type: integer
-  #       minimum: 2
-  #       maximum: 31
-  #     imaTime:
-  #       type: object
-  #       required:
-  #         - base
-  #         - multiplier
-  #       properties:
-  #         base:
-  #           type: string
-  #           enum:
-  #             - "1664us"
-  #             - "5ms"
-  #             - "1s"
-  #             - "1min"
-  #         multiplier:
-  #           type: integer
-  #           minimum: 1
-  #           maximum: 255
-  #     deviceTxPower:
-  #       type: integer
-  #       minimum: 0
-  #       maximum: 31
-  #     lowPowerDevice:
-  #       type: string
-  #       enum:
-  #         - "NORMAL"
-  #         - "LOW_POWER"
-  #     maxPDSegLength:
-  #       type: integer
-  #       minimum: 0
-  #       maximum: 32
-  #     uniqueId:
-  #       type: string
-  #     deviceAlias:
-  #       type: string
-  #   example:
-  #     portMode: CYCLIC
-  #     validationBackup: TYPE_COMPATIBLE_DEVICE_V1.1
-  #     vendorId: 888
-  #     deviceId: 1
-  #     portCycleTime:
-  #       value: 0
-  #       unit: ms
-  #     trackNumber: 5
-  #     slotNumber: 1
-  #     slotType: SSLOT
-  #     maxRetry: 20
-  #     imaTime:
-  #       base: 1664us
-  #       multiplier: 60
-  #     deviceTxPower: 31
-  #     lowPowerDevice: NORMAL
-  #     maxPDSegLength: 0
-  #     uniqueId: 03:78:00:00:01:32:50:60:46
-  #     deviceAlias: "Port_X01"
-
-  # wirelessPortConfigurationPost: # @todo wireles
-  #   properties:
-  #     portMode:
-  #       type: string
-  #       enum:
-  #         - DEACTIVATED
-  #         - CYCLIC
-  #         - ROAMING
-  #     validationBackup:
-  #       type: string
-  #       enum:
-  #         - NO_DEVICE_CHECK
-  #         - TYPE_COMPATIBLE_DEVICE_V1.1
-  #         - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-  #         - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-  #     vendorId:
-  #       type: integer
-  #       minimum: 1
-  #       maximum: 65535
-  #     deviceId:
-  #       type: integer
-  #       minimum: 1
-  #       maximum: 16777215
-  #     portCycleTime:
-  #       type: object
-  #       required:
-  #         - value
-  #         - unit
-  #       properties:
-  #         value:
-  #           type: integer
-  #           minimum: 0      ## 0 means Freerunning
-  #           maximum: 315    ## Step size 5ms
-  #         unit:
-  #           type: string
-  #           enum:
-  #             - ms
-  #     trackNumber:
-  #       type: integer
-  #       minimum: 1
-  #       maximum: 5
-  #     slotNumber:
-  #       type: integer
-  #       minimum: 0
-  #       maximum: 7
-  #     slotType:
-  #       type: string
-  #       enum:
-  #         - "SSLOT"
-  #         - "DSLOT"
-  #     maxRetry:
-  #       type: integer
-  #       minimum: 2
-  #       maximum: 31
-  #     imaTime:
-  #       type: object
-  #       required:
-  #         - base
-  #         - multiplier
-  #       properties:
-  #         base:
-  #           type: string
-  #           enum:
-  #             - "1664us"
-  #             - "5ms"
-  #             - "1s"
-  #             - "1min"
-  #         multiplier:
-  #           type: integer
-  #           minimum: 1
-  #           maximum: 255
-  #     deviceTxPower:
-  #       type: integer
-  #       minimum: 0
-  #       maximum: 31
-  #     lowPowerDevice:
-  #       type: string
-  #       enum:
-  #         - "NORMAL"
-  #         - "LOW_POWER"
-  #     maxPDSegLength:
-  #       type: integer
-  #       minimum: 0
-  #       maximum: 32
-  #     uniqueId:
-  #       type: string
-  #   example:
-  #     portMode: CYCLIC
-  #     validationBackup: TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
-  #     vendorId: 888
-  #     deviceId: 1
-  #     portCycleTime:
-  #       value: 0    ##Or FreeRunning
-  #       unit: ms
-  #     trackNumber: 5
-  #     slotNumber: 1
-  #     slotType: SSLOT
-  #     maxRetry: 20
-  #     imaTime:
-  #       base: 1664us
-  #       multiplier: 60
-  #     deviceTxPower: 31
-  #     lowPowerDevice: NORMAL
-  #     maxPDSegLength: 0
-  #     uniqueId: 03:78:00:00:01:32:50:60:46
-
   mqtt-iol-master:
     type: string
     description: The MQTT topic for the IO-Link Master.
@@ -3405,13 +2962,9 @@ schemas:
     type: object
     properties:
       vendorName:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/vendorName"
       vendorId:
-        type: integer
-        minimum: 1
-        maximum: 65535
+        $ref: "#/schemas/vendorId"
       masterId:
         type: integer
         minimum: 1
@@ -3429,13 +2982,9 @@ schemas:
         minLength: 1
         maxLength: 16
       orderCode:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/orderCode"
       productName:
-        type: string
-        minLength: 1
-        maxLength: 64
+        $ref: "#/schemas/productName"
       productId:
         type: string
         minLength: 1
@@ -3459,17 +3008,11 @@ schemas:
       descriptionFileUri:
         type: string
       applicationSpecificTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       locationTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
       functionTag:
-        type: string
-        minLength: 1
-        maxLength: 32
+        $ref: "#/schemas/tags"
   deviceFirmwareUpdateStatusGet:
     type: object
     properties:
@@ -3527,15 +3070,11 @@ schemas:
         - portNumber
       properties:
         deviceAlias:
-          type: string
-          minLength: 1
-          maxLength: 32
+          $ref: "#/schemas/deviceAlias"
         masterNumber:
-          type: integer
-          minimum: 1
+          $ref: "#/schemas/masterNumber"
         portNumber:
-          type: integer
-          minimum: 1
+          $ref: "#/schemas/portNumber"
         ioddFileName:
           type: string
           minLength: 1
