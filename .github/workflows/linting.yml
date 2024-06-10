@@ -15,5 +15,5 @@ jobs:
       # Run Spectral
       - uses: stoplightio/spectral-action@latest
         with:
-          file_glob: 'JSON_for_IO-Link.yaml'
-          spectral_ruleset: spectral.yaml
+          file_glob: "JSON_for_IO-Link.yaml"
+          spectral_ruleset: .spectral.yaml

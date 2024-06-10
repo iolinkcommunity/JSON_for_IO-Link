@@ -2191,16 +2191,16 @@ paths:
         "501":
           $ref: "#/components/responses/HTTP_501"
 
-  "/devices/{deviceAlias}/parameters/{index}/value":
+  "/devices/{deviceAlias}/parameters/{parameterIdent}/value":
     get:
-      operationId: GetDevicesDeviceAliasParametersIndexValue
+      operationId: GetDevicesDeviceAliasParametersValue
       tags:
         - devices
-      summary: Read a parameter value from the specific Device with the given index.
-      description: Read a parameter value from the specific Device with the given index.
+      summary: Read a parameter value from the specific Device with the given index or parametername depending on the path parameter.
+      description: Read a parameter value from the specific Device with the given index or parametername depending on the path parameter.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/index"
+        - $ref: "#/components/parameters/parameterIdent"
         - $ref: "#/components/parameters/format"
       responses:
         "200":
@@ -2242,14 +2242,14 @@ paths:
           $ref: "#/components/responses/HTTP_501"
 
     post:
-      operationId: PostDevicesDeviceAliasParametersIndexValue
+      operationId: PostDevicesDeviceAliasParametersValue
       tags:
         - devices
-      summary: Write a parameter value with the given index to the specified Device.
-      description: Write a parameter value with the given index to the specified Device.
+      summary: Write a parameter value with the given index or parametername depending on the path parameter to the specified Device.
+      description: Write a parameter value with the given index or parametername depending on the path parameter to the specified Device.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/index"
+        - $ref: "#/components/parameters/parameterIdent"
       requestBody:
         required: true
         content:
@@ -2291,103 +2291,9 @@ paths:
         "501":
           $ref: "#/components/responses/HTTP_501"
 
-  "/devices/{deviceAlias}/parameters/{parameterName}/value":
+  "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices":
     get:
-      operationId: GetDevicesDeviceAliasParametersValue
-      tags:
-        - devices
-      summary: >-
-        Read a parameter value from the specific Device by parameter name.
-        IODD support is required.
-      description: Read a parameter value from the specific Device by parameter name. IODD support is required.
-      parameters:
-        - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/parameterName"
-        - $ref: "#/components/parameters/format"
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/deviceParameterValueGetPost"
-              examples:
-                format=byteArray:
-                  value: { "value": [0, 156, 125, 25] }
-                "format=iodd, simple type":
-                  value:
-                    value: 15.2
-                    unit: "cm"
-                "format=iodd, complex type":
-                  value:
-                    Distance:
-                      value: 15
-                      unit: "cm"
-                    Quality:
-                      value: 12
-
-        "400": # code 305, 306, 307, 311, 601
-          $ref: "#/components/responses/HTTP_400"
-        "401":
-          $ref: "#/components/responses/HTTP_401"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
-        "501":
-          $ref: "#/components/responses/HTTP_501"
-    post:
-      operationId: PostDevicesDeviceAliasParametersValue
-      tags:
-        - devices
-      summary: >-
-        Write a parameter value by name to the specified Device.IODD support is required.
-        IODD support is required.
-      description: Write a parameter value by name to the specified Device.IODD support is required. IODD support is required.
-      parameters:
-        - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/parameterName"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/deviceParameterValueGetPost"
-            examples:
-              format=byteArray:
-                value: { "value": [0, 156, 125, 25] }
-              "format=iodd, simple type":
-                value:
-                  value: 15.2
-                  unit: "cm"
-              "format=iodd, complex type":
-                value:
-                  Distance:
-                    value: 15
-                    unit: "cm"
-                  Quality:
-                    value: 12
-      responses:
-        "204":
-          description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
-          $ref: "#/components/responses/HTTP_400"
-        "401":
-          $ref: "#/components/responses/HTTP_401"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
-        "501":
-          $ref: "#/components/responses/HTTP_501"
-
-  "/devices/{deviceAlias}/parameters/{index}/subindices":
-    get:
-      operationId: GetDevicesDeviceAliasParametersIndexSubindices
+      operationId: GetDevicesDeviceAliasParametersSubindices
       tags:
         - devices
       summary: >-
@@ -2396,7 +2302,7 @@ paths:
       description: Read all available parameter sub-indices and sub-parameter names from the specific Device. IODD support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/index"
+        - $ref: "#/components/parameters/parameterIdent"
       responses:
         "200":
           description: Successful operation
@@ -2417,50 +2323,18 @@ paths:
         "501":
           $ref: "#/components/responses/HTTP_501"
 
-  "/devices/{deviceAlias}/parameters/{parameterName}/subindices":
-    get:
-      operationId: GetDevicesDeviceAliasParametersSubindices
+  ? "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices/{subParameterIdent}/value"
+  : get:
+      operationId: GetDevicesDeviceAliasParametersSubindicesValue
       tags:
         - devices
       summary: >-
-        Read all available parameter sub-indices and sub-parameter names from the specific Device (referenced by parameter name).
-        IODD support is required.
-      description: Read all available parameter sub-indices and sub-parameter names from the specific Device (referenced by parameter name). IODD support is required.
+        Read a parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
+      description: Read a parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/parameterName"
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/deviceSubParametersGet"
-        "400": # code 601
-          $ref: "#/components/responses/HTTP_400"
-        "401":
-          $ref: "#/components/responses/HTTP_401"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
-        "501":
-          $ref: "#/components/responses/HTTP_501"
-
-  "/devices/{deviceAlias}/parameters/{index}/subindices/{subindex}/value":
-    get:
-      operationId: GetDevicesDeviceAliasParametersSubindicesSubindexValue
-      tags:
-        - devices
-      summary: >-
-        Read a parameter value from the specific Device with the given index and subindex.
-      description: Read a parameter value from the specific Device with the given index and subindex.
-      parameters:
-        - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/index"
-        - $ref: "#/components/parameters/subindex"
+        - $ref: "#/components/parameters/parameterIdent"
+        - $ref: "#/components/parameters/subParameterIdent"
         - $ref: "#/components/parameters/format"
       responses:
         "200":
@@ -2495,16 +2369,16 @@ paths:
         "501":
           $ref: "#/components/responses/HTTP_501"
     post:
-      operationId: PostDevicesDeviceAliasParametersSubindicesSubindexValue
+      operationId: PostDevicesDeviceAliasParametersSubindicesValue
       tags:
         - devices
       summary: >-
-        Write the parameter with the given index and subindex.
-      description: Write the parameter with the given index and subindex.
+        Write the parameter with the given index/subindex or parametername/sub-parameter name.
+      description: Write the parameter with the given index/subindex or parametername/sub-parameter name.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/index"
-        - $ref: "#/components/parameters/subindex"
+        - $ref: "#/components/parameters/parameterIdent"
+        - $ref: "#/components/parameters/subParameterIdent"
       requestBody:
         required: true
         content:
@@ -2522,88 +2396,6 @@ paths:
         "204":
           description: Successful operation
         "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
-          $ref: "#/components/responses/HTTP_400"
-        "401":
-          $ref: "#/components/responses/HTTP_401"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
-        "501":
-          $ref: "#/components/responses/HTTP_501"
-
-  ? "/devices/{deviceAlias}/parameters/{parameterName}/subindices/{subParameterName}/value"
-  : get:
-      operationId: GetDevicesDeviceAliasParametersSubindicesValue
-      tags:
-        - devices
-      summary: >-
-        Read a parameter value from the specific Device by parameter name and subname.
-        IODD support is required.
-      description: Read a parameter value from the specific Device by parameter name and subname. IODD support is required.
-      parameters:
-        - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/parameterName"
-        - $ref: "#/components/parameters/subParameterName"
-        - $ref: "#/components/parameters/format"
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/deviceParameterSubindexValueGetPost"
-              examples:
-                format=byteArray:
-                  value: { "value": [0, 156, 125, 25] }
-                format=iodd:
-                  value:
-                    value: 15.2
-                    unit: "cm"
-
-        "400": # code 305, 306, 307, 311, 601
-          $ref: "#/components/responses/HTTP_400"
-        "401":
-          $ref: "#/components/responses/HTTP_401"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
-        "501":
-          $ref: "#/components/responses/HTTP_501"
-    post:
-      operationId: PostDevicesDeviceAliasParametersSubindicesValue
-      tags:
-        - devices
-      summary: >-
-        Write a parameter value to the specific Device by the parameter name and subname.
-        IODD support is required.
-      description: Write a parameter value to the specific Device by the parameter name and subname. IODD support is required.
-      parameters:
-        - $ref: "#/components/parameters/deviceAlias"
-        - $ref: "#/components/parameters/parameterName"
-        - $ref: "#/components/parameters/subParameterName"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/deviceParameterSubindexValueGetPost"
-            examples:
-              format=byteArray:
-                value: { "value": [0, 156, 125, 25] }
-              format=iodd:
-                value:
-                  value: 15.2
-                  unit: "cm"
-      responses:
-        "204":
-          description: Successful operation
-        "400": # code 103, 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
           $ref: "#/components/responses/HTTP_400"
         "401":
           $ref: "#/components/responses/HTTP_401"
@@ -2890,19 +2682,34 @@ components:
         - VendorLogo
         - zip
       default: XML
+    parameterIdent:
+      oneOf:
+        - $ref: "#/components/schemas/parameterName"
+        - $ref: "#/components/schemas/index"
     parameterName:
       type: string
       description: |
         Parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
         Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
         Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
-        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "\_". The following regex (/[^\w\n]/g) can be used.\
-        Rule 3: Leading numbers shall be prefixed with "\_".  \
+        Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "\_". The following regex (/[^\w\n]/g) can be used. \
+        Rule 3: Leading numbers shall be prefixed with "\_". \
         Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
         Rule 5: Naming according the scheme {name}\_{index} or {name}\_{subindex} is always allowed even if names are not duplicated. \
-        Rule 6: The naming of ArrayT elements is "element\_{subindex}". \
+        Rule 6: The naming of ArrayT elements is "element\_{subindex}"".
+
+        Note: The parameter name may change with the IODD version. If it is used by the client for accessing parameters, it needs to be verified that it is the same used by the master. \
       minLength: 1
       maxLength: 71
+    subParameterIdent:
+      oneOf:
+        - $ref: "#/components/schemas/subParameterName"
+        - $ref: "#/components/schemas/subindex"
+    subindex:
+      type: integer
+      description: Subindex of ISDU variable with the given index
+      minimum: 0
+      maximum: 255
     subParameterName:
       type: string
       description: |
@@ -2913,7 +2720,9 @@ components:
         Rule 3: Leading numbers shall be prefixed with "\_". \
         Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
         Rule 5: Naming according the scheme {name}\_{index} or {name}\_{subindex} is always allowed even if names are not duplicated. \
-        Rule 6: The naming of ArrayT elements is "element\_{subindex}". \
+        Rule 6: The naming of ArrayT elements is "element\_{subindex}"".
+
+        Note: The parameter name may change with the IODD version. If it is used by the client for accessing parameters, it needs to be verified that it is the same used by the master. \
       minLength: 1
       maxLength: 71
     cycleTime:
@@ -5027,6 +4836,11 @@ components:
             - READ
         parameters:
           $ref: "#/components/schemas/blockParameterizationPostParametersRequest"
+    index:
+      type: integer
+      description: Index of ISDU variable
+      minimum: 0
+      maximum: 65535
     ioddIdentification:
       type: object
       required:
@@ -5193,9 +5007,10 @@ components:
       name: deviceAlias
       in: path
       description: >-
-        Device Name configured with the port/configuration URL. Default Device
-        Name is 'masterNportM' where 'N' means the masterNumber and 'M' means
-        the portNumber.
+        Device name configured with the port/configuration URL. Default device
+        name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+        the portNumber. Even if a new device alias has been assigned, the device
+        can always be addressed via the default name.
       schema:
         type: string
         minLength: 1
@@ -5247,26 +5062,8 @@ components:
       description: Value format in response document
       schema:
         $ref: "#/components/schemas/format"
-    index:
-      name: index
-      in: path
-      description: Index of ISDU variable
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 65535
-      required: true
-    subindex:
-      name: subindex
-      in: path
-      description: Subindex of ISDU variable with the given index
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 255
-      required: true
-    parameterName:
-      name: parameterName
+    parameterIdent:
+      name: parameterIdent
       in: path
       description: |
         Parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
@@ -5280,12 +5077,10 @@ components:
 
         Note: The parameter name may change with the IODD version. If it is used by the client for accessing parameters, it needs to be verified that it is the same used by the master. \
       schema:
-        type: string
-        minLength: 1
-        maxLength: 71
+        $ref: "#/components/schemas/parameterIdent"
       required: true
-    subParameterName:
-      name: subParameterName
+    subParameterIdent:
+      name: subParameterIdent
       in: path
       description: |
         Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
@@ -5299,9 +5094,7 @@ components:
 
         Note: The parameter name may change with the IODD version. If it is used by the client for accessing parameters, it needs to be verified that it is the same used by the master. \
       schema:
-        type: string
-        minLength: 1
-        maxLength: 71
+        $ref: "#/components/schemas/subParameterIdent"
       required: true
   responses:
     HTTP_400:
