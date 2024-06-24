@@ -1006,7 +1006,7 @@ schemas:
 
   mastersConfigurationGetPost: # TODO: IOLW
     properties:
-      wMasterId: #ToDo roeseko What masterId is this? Same as in identification object?
+      wMasterId: #TODO roeseko What masterId is this? Same as in identification object?
         description: >-
           Master identifier for connection with Wireless-Devices.
         type: integer
@@ -2236,7 +2236,7 @@ schemas:
             example: "linkUp"
   masterConfiguration:
     properties:
-      masterId: #ToDo roeseko What masterId is this? Same as in identification object?
+      masterId: #TODO roeseko What masterId is this? Same as in identification object?
         type: integer
         minimum: 1
         maximum: 29
@@ -2509,10 +2509,10 @@ schemas:
         $ref: "#/schemas/wirelessTrackNumber"
       channelErrors:
         type: object
-        # required:  # @todo wireles
+        # required:  # @TODO wireles
         #   - all
         properties:
-          "2402": # ToDo roeseko What is mean by this value? Is this the error code for this channel?
+          "2402": # TODO roeseko What is mean by this value? Is this the error code for this channel?
             type: integer
             minimum: 0
             maximum: 65535 # 0 to 100, 65535 means no data available
