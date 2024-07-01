@@ -5886,6 +5886,15 @@ components:
               enum: [150]
             message:
               enum: ["Permission denied"]
+    errorObject_151:
+      allOf:
+        - $ref: "#/components/schemas/errorObject"
+        - type: object
+          properties:
+            code:
+              enum: [151]
+            message:
+              enum: ["Authentication information is missing or invalid"]
     errorObject_201:
       allOf:
         - $ref: "#/components/schemas/errorObject"
@@ -6344,25 +6353,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/errorObject"
-          examples:
-            "150":
-              description: due to user management restrictions
-              value:
-                code: 150
-                message: Permission denied
+            $ref: "#/components/schemas/errorObject_151"
     HTTP_403:
       description: Authentication information is not sufficient to access the resource
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/errorObject"
-          examples:
-            "150":
-              description: due to user management restrictions
-              value:
-                code: 150
-                message: Permission denied
+            $ref: "#/components/schemas/errorObject_150"
 
   examples: # reusable examples
     exampleMasterConfiguration:
