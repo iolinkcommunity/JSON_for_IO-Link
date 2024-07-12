@@ -574,6 +574,76 @@ schemas:
           ipAddress: 192.168.1.13
           subnetMask: 255.255.255.0
           standardGateway: 192.168.1.1
+
+  voltageObject:
+    type: object
+    properties:
+      value:
+        type: number
+        minimum: 0
+        example: 24
+      unit:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: "V"
+  currentObject:
+    type: object
+    properties:
+      value:
+        type: number
+        minimum: 0
+        example: 0.5
+      unit:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: "A"
+  gatewayMonitor:
+    type: object
+    properties:
+      voltage:
+        type: object
+        properties:
+          primaryVoltage:
+            $ref: "#/schemas/voltageObject"
+          secondaryVoltage:
+            $ref: "#/schemas/voltageObject"
+      current:
+        type: object
+        properties:
+          primaryCurrent:
+            $ref: "#/schemas/currentObject"
+          secondaryCurrent:
+            $ref: "#/schemas/currentObject"
+  portMonitor:
+    type: object
+    properties:
+      voltage:
+        type: object
+        properties:
+          primaryVoltage:
+            $ref: "#/schemas/voltageObject"
+          secondaryVoltage:
+            $ref: "#/schemas/voltageObject"
+          cqVoltage:
+            $ref: "#/schemas/voltageObject"
+          iqVoltage:
+            $ref: "#/schemas/voltageObject"
+      current:
+        type: object
+        properties:
+          primaryCurrent:
+            $ref: "#/schemas/currentObject"
+          secondaryCurrent:
+            $ref: "#/schemas/currentObject"
+          cqCurrent:
+            $ref: "#/schemas/currentObject"
+          iqCurrent:
+            $ref: "#/schemas/currentObject"
+      wirelessQuality:
+        $ref: "#/schemas/wirelessPortQuality"
+
   mqttConfigurationGetPost:
     type: object
     required:
@@ -1461,40 +1531,30 @@ schemas:
         Mode: ROAMING
         txPower: 31
 
-  mastersPortsQualityallGet: # TODO: IOLW
-    type: array
-    items:
-      type: object
-      properties:
-        portNumber:
-          $ref: "#/schemas/portNumber"
-        lqiMaster:
-          type: integer
-          minimum: 0
-          maximum: 100
-        rssiMaster:
-          type: integer
-          minimum: -128
-          maximum: 20
-        lqiDevice:
-          type: integer
-          minimum: 0
-          maximum: 100
-        rssiDevice:
-          type: integer
-          minimum: -128
-          maximum: 20
+  wirelessPortQuality:
+    type: object
+    properties:
+      lqiMaster:
+        type: integer
+        minimum: 0
+        maximum: 100
+      rssiMaster:
+        type: integer
+        minimum: -128
+        maximum: 20
+      lqiDevice:
+        type: integer
+        minimum: 0
+        maximum: 100
+      rssiDevice:
+        type: integer
+        minimum: -128
+        maximum: 20
     example:
-      - portNumber: 1
-        lqiMaster: 100
-        rssiMaster: -40
-        lqiDevice: 100
-        rssiDevice: -39
-      - portNumber: 2
-        lqiMaster: 100
-        rssiMaster: -60
-        lqiDevice: 100
-        rssiDevice: -61
+      lqiMaster: 100
+      rssiMaster: -40
+      lqiDevice: 100
+      rssiDevice: -39
 
   mastersPortsQualityGet: # TODO: IOLW
     properties:

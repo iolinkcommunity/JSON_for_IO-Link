@@ -556,6 +556,27 @@ paths:
           $ref: "#/components/responses/HTTP_403"
         "500":
           $ref: "#/components/responses/HTTP_500"
+  "/gateway/monitor":
+    get:
+      operationId: GetGatewayMonitor
+      tags:
+        - gateway
+      summary: Read current and voltage values of the Gateway.
+      description: Read current and voltage values of the primary and secondary rail of the Gateway.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/gatewayMonitor"
+
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          $ref: "#/components/responses/HTTP_500"
 
   ################################################################################
   # mqtt
@@ -1431,31 +1452,6 @@ paths:
         "500":
           $ref: "#/components/responses/HTTP_500"
 
-  "/masters/{masterNumber}/ports/qualityall":
-    get:
-      operationId: GetMastersMasterNumberPortsQuality
-      tags:
-        - ports
-      parameters:
-        - $ref: "#/components/parameters/masterNumber"
-      summary: Read the link quality and the RSSI of all used Wireless-Ports (Wireless-Device and Wireless-Master).
-      description: Read the link quality and the RSSI of all used Wireless-Ports (Wireless-Device and Wireless-Master).
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "./schemas.yaml#/schemas/mastersPortsQualityallGet"
-        "401":
-          $ref: "#/components/responses/HTTP_401"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500":
-          $ref: "#/components/responses/HTTP_500"
-
   "/masters/{masterNumber}/ports/{portNumber}/capabilities":
     get:
       operationId: GetMastersMasterNumberPortsPortNumberCapabilities
@@ -1818,23 +1814,23 @@ paths:
         "500":
           $ref: "#/components/responses/HTTP_500"
 
-  "/masters/{masterNumber}/ports/{portNumber}/quality":
+  "/masters/{masterNumber}/ports/{portNumber}/monitor":
     get:
-      operationId: GetMastersMasterNumberPortsPortNumberQuality
+      operationId: GetMastersMasterNumberPortsPortNumberMonitor
       tags:
         - ports
+      summary: Read the actual current, voltage and wireless information from a port.
+      description: Read the actual current, voltage and wireless information from a port.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
-      summary: Read the link quality and the RSSI of the specified Wireless-Port (Wireless-Device and Wireless-Master).
-      description: Read the link quality and the RSSI of the specified Wireless-Port (Wireless-Device and Wireless-Master).
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/mastersPortsQualityGet"
+                $ref: "./schemas.yaml#/schemas/portMonitor"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -1843,7 +1839,6 @@ paths:
           $ref: "#/components/responses/HTTP_404"
         "500":
           $ref: "#/components/responses/HTTP_500"
-
   ################################################################################
   # devices
   ################################################################################
@@ -2833,7 +2828,7 @@ components:
         minimum: 0
         maximum: 255
       required: true
-    
+
   responses:
     HTTP_400:
       description: Bad request
