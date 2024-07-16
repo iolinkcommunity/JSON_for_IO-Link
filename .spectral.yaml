@@ -1,0 +1,5 @@
+# Linting rules
+extends: ["spectral:oas", "spectral:asyncapi"]
+# rules:
+# oas3-unused-component: off
+# path-params: off # to disable error: path-params  Paths "/devices/{deviceAlias}/parameters/{index}/value" and "/devices/{deviceAlias}/parameters/{parameterName}/value" must not be equivalent.
