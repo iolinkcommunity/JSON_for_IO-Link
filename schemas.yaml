@@ -287,18 +287,7 @@ schemas:
       numberOfPorts:
         $ref: "#/schemas/portNumber"
       maxPowerSupply:
-        type: object
-        required:
-          - value
-          - unit
-        properties:
-          value:
-            type: number
-            minimum: 0
-          unit:
-            type: string
-            minLength: 1
-            maxLength: 32
+        $ref: "#/schemas/currentObject"
   eventTime:
     description: >-
       Timestamp (format defined in DIN ISO 8601). This field can give an
@@ -903,15 +892,7 @@ schemas:
       maxPowerSupply:
         description: >-
           maxPowerSupply is not supported in IO-Link Wireless.
-        type: object
-        required:
-          - value
-          - unit
-        properties:
-          value:
-            type: number
-          unit:
-            type: string
+        $ref: "#/schemas/currentObject"
 
   portConfigurationGet:
     type: object
