@@ -2780,13 +2780,13 @@ components:
     eventMasterNumber:
       name: masterNumber
       in: query
-      description: masterNumber is only applicable with origin=MASTERS and origin=PORTS
+      description: masterNumber is not applicable with origin=GATEWAY
       schema:
         $ref: "./schemas.yaml#/schemas/masterNumber"
     eventPortNumber:
       name: portNumber
       in: query
-      description: portnumber is only applicable with origin=PORTS
+      description: portnumber is not applicable with origin=GATEWAY or origin=MASTERS
       schema:
         $ref: "./schemas.yaml#/schemas/portNumber"
     eventdeviceAlias:
