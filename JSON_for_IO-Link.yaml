@@ -664,7 +664,7 @@ paths:
                   $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicGet"
               example:
                 - topicId: 1
-                  activated: true
+                  activate: true
                   topicName: Sensor34/processData
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: DT35
@@ -675,13 +675,13 @@ paths:
                       value: 10
                       unit: ms
                 - topicId: 2
-                  activated: true
+                  activate: true
                   topicName: Sensor34/event
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
                   event: {}
                 - topicId: 3
-                  activated: false
+                  activate: false
                   topicName: PD
                   qos: 0_ONLY_ONCE
                   deviceAlias: BNI_IOL
@@ -690,7 +690,7 @@ paths:
                     format: iodd
                     onChange: true
                 - topicId: 4
-                  activated: false
+                  activate: false
                   topicName: DT35_CycleTime
                   qos: 0_ONLY_ONCE
                   deviceAlias: DT35
@@ -700,7 +700,7 @@ paths:
                     format: iodd
                     onChange: true
                 - topicId: 5
-                  activated: true
+                  activate: true
                   topicName: deviceTemperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: master1port2
@@ -735,7 +735,7 @@ paths:
             examples:
               Process Data:
                 value:
-                  activated: true
+                  activate: true
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: DT35
                   processData:
@@ -746,13 +746,13 @@ paths:
                       unit: ms
               Event:
                 value:
-                  activated: true
+                  activate: true
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
                   event: {}
               Parameter (Index):
                 value:
-                  activated: false
+                  activate: false
                   qos: 0_ONLY_ONCE
                   deviceAlias: master1port1
                   parameter:
@@ -763,7 +763,7 @@ paths:
                       unit: ms
               Parameter (ParameterName):
                 value:
-                  activated: true
+                  activate: true
                   topicName: deviceTemperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: AHM36A
@@ -812,7 +812,7 @@ paths:
                 Process Data:
                   value:
                     topicId: 1
-                    activated: true
+                    activate: true
                     topicName: PD input
                     qos: 1_AT_LEAST_ONCE
                     deviceAlias: DT35
@@ -825,7 +825,7 @@ paths:
                 Event:
                   value:
                     topicId: 2
-                    activated: true
+                    activate: true
                     topicName: Event
                     qos: 1_AT_LEAST_ONCE
                     deviceAlias: TAD081
@@ -833,7 +833,7 @@ paths:
                 Parameter (Index):
                   value:
                     topicId: 3
-                    activated: true
+                    activate: true
                     topicName: devvice/indexXY
                     qos: 0_ONLY_ONCE
                     deviceAlias: master1port1
@@ -846,7 +846,7 @@ paths:
                 Parameter (ParameterName):
                   value:
                     topicId: 5
-                    activated: true
+                    activate: true
                     topicName: deviceTemperature
                     qos: 0_ONLY_ONCE
                     deviceAlias: AHM36A
@@ -879,18 +879,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/mqttConfigurationTopicsTopicPost"
+              $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicsTopicPost"
             examples:
               Deactivate Topic:
                 value:
-                  activated: false
+                  activate: false
               Activate Topic:
                 value:
-                  activated: true
+                  activate: true
               Process Data:
                 value:
                   topicId: 1
-                  activated: true
+                  activate: true
                   topicName: PD input
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: DT35
@@ -903,7 +903,7 @@ paths:
               Event:
                 value:
                   topicId: 2
-                  activated: true
+                  activate: true
                   topicName: Event
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
@@ -923,7 +923,7 @@ paths:
               Parameter (ParameterName):
                 value:
                   topicId: 5
-                  activated: true
+                  activate: true
                   topicName: deviceTemperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: AHM36A
@@ -2930,7 +2930,6 @@ components:
         minimum: 0
         maximum: 255
       required: true
-    
   responses:
     HTTP_400:
       description: Bad request
