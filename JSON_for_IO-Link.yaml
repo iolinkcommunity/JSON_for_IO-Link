@@ -2252,7 +2252,7 @@ paths:
       tags:
         - ports
       summary: Read the actual current, voltage and wireless information from a port.
-      description: Read the actual current, voltage and wireless information from a port.
+      description: Read the actual current, voltage and wireless information from a port. The response object can vary depending on the port configuration or port type.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
