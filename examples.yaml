@@ -1,0 +1,75 @@
+examples:
+  processDataValue:
+    byteArray:
+      iolink: #"format=byteArray, pin4=IO-Link, pin2=sio"
+        valid: true
+        value:
+          - 15
+          - 123
+          - 126
+          - 236
+      iqValue: true
+    iodd:
+      iolink: #"format=iodd, pin4=IO-Link, pin2=deactivated/not available"
+        valid: true
+        value:
+          Valve_1:
+            value: true
+          Valve_2:
+            value: false
+    sio:
+      cqValue: false #"format=byteArray/iodd, pin4=sio, pin2=deactivated/not available"
+  
+  gatewayConfig:
+    Manual:
+      value:
+        ethIpv4:
+          - ipConfiguration: MANUAL
+            ipAddress: 192.168.1.13
+            subnetMask: 255.255.255.0
+            standardGateway: 192.168.1.1
+    DHCP:
+      value:
+        ethIpv4:
+          - ipConfiguration: DHCP
+    Multiple_ethernet_interfaces:
+      value:
+        ethIpv4:
+          - ifName: eth0
+            ipConfiguration: MANUAL
+            ipAddress: 192.168.1.13
+            subnetMask: 255.255.255.0
+            standardGateway: 192.168.1.1
+          - ifName: eth1
+            ipConfiguration: MANUAL
+            ipAddress: 192.168.2.10
+            subnetMask: 255.255.255.0
+            standardGateway: 192.168.2.1
+          - ifName: eth2
+            ipConfiguration: DHCP
+  mqttConfig:
+    activeClient:
+      value:
+        clientMode: "ACTIVE"
+        serverAddress: 192.168.2.1:1883/mqttbroker
+        username: iolink_json
+        password: "1234"
+        lastwill:
+          topic: process_data
+          message: Process data transfer stopped.
+          qos: 0_ONLY_ONCE
+          retain: true
+        keepAliveTime: 10
+    inactiveClient:
+      value:
+        clientMode: "INACTIVE"
+  gatewayIdentification:
+    value:
+      macAddress: "00:02:72:CE:A6:49"
+      serialNumber: "C134A746"
+      productId: "TMP34Z"
+      vendorName: "SensorCompany"
+      productName: "FlowSensor34"
+      hardwareRevision: "V3.45"
+      firmwareRevision: "V1.30"
+      productInstanceUri: "sensor.tmp.23.com"
