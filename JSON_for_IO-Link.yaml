@@ -3569,7 +3569,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: "./schemas.yaml#/schemas/deviceFirmwareUpdatePost"
-
 components:
   securitySchemes:
     basicAuth:
@@ -3728,7 +3727,7 @@ components:
         minimum: 0
         maximum: 255
       required: true
-    
+
   responses:
     HTTP_401:
       description: Authentication information is missing or invalid
