@@ -155,27 +155,15 @@ paths:
                       ...: "to be continued",
                     }
         "401":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "./schemas.yaml#/schemas/errorObject"
-              examples:
-                "150":
-                  value:
-                    code: 150
-                    message: Permission denied
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/errorObject"
-              examples:
-                "101":
-                  value:
-                    code: 101
-                    message: Internal server error
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
   /apiversion:
     get:
       tags:
@@ -207,27 +195,15 @@ paths:
                     version: 1.0.0
                     additionalInfo: 1.2.3-feature-xyz
         "401":
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "./schemas.yaml#/schemas/errorObject"
-              examples:
-                "150":
-                  value:
-                    code: 150
-                    message: Permission denied
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
         "500":
-          description: Internal server error
+          description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/errorObject"
-              examples:
-                "101":
-                  value:
-                    code: 101
-                    message: Internal server error
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
 
   ################################################################################
   # gateway
@@ -251,7 +227,12 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+  
   "/gateway/capabilities":
     get:
       operationId: PostGatewayCapabilities
@@ -271,7 +252,12 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
   "/gateway/configuration":
     get:
       operationId: GetGatewayConfiguration
@@ -324,7 +310,12 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
     post:
       operationId: PostGatewayConfiguration
       tags:
@@ -367,14 +358,33 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 206,208, 701,702,703
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
 
   "/gateway/reset":
     post:
@@ -386,14 +396,22 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_104"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
 
   "/gateway/reboot":
     post:
@@ -405,14 +423,22 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_104"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
 
   "/gateway/events":
     get:
@@ -524,14 +550,24 @@ paths:
                         code: 20480
                         mode: APPEARS
                         text: Device hardware fault – Device exchange
-        "400": # code 305, 306
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
     delete:
       operationId: DeleteGatewayEvents
       tags:
@@ -548,14 +584,24 @@ paths:
       responses:
         "200":
           description: Successful operation
-        "400": # code 305, 306
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
 
   ################################################################################
   # mqtt
@@ -597,11 +643,23 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
 
     post:
       operationId: PostMqttConfiguration
@@ -635,17 +693,45 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 701, 702, 703
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
-          $ref: "#/components/responses/HTTP_500"
-
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
   "/mqtt/topics":
     get:
       operationId: GetMqttTopics
@@ -710,11 +796,23 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
     post:
       operationId: PostMqttTopicsTopicId
       tags:
@@ -771,18 +869,44 @@ paths:
             application/json:
               schema:
                 type: integer
-        "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 701, 702
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
   "/mqtt/topics/{topicId}":
     get:
       operationId: GetMqttTopicsTopicId
@@ -848,11 +972,25 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
     delete:
       operationId: DeleteMqttTopicsTopicId
       tags:
@@ -864,19 +1002,36 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_104"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
-
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
   "/mqtt/connectionstatus":
     get:
       operationId: GetMqttConnectionstatus
@@ -896,11 +1051,23 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
 
   ################################################################################
   # iodds
@@ -926,18 +1093,36 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/ioddsGet"
-        "400": # code 305, 306
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
     delete:
       operationId: DeleteIodds
       tags:
@@ -951,18 +1136,39 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 305, 306
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
   "/iodds/file":
     get:
       operationId: GetIoddsFile
@@ -992,18 +1198,38 @@ paths:
                 $ref: "./schemas.yaml#/schemas/ioddArchive"
               example: "IODD in archive format provided by the IODD finder"
 
-        "400": # code 305, 306
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
     post:
       operationId: PostIoddsFile
       tags:
@@ -1026,18 +1252,41 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 208, 603, 604, 605
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_603"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_604"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_605"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
-        "500": # code 101, 602
-          $ref: "#/components/responses/HTTP_500"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_602"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   ################################################################################
   # masters
@@ -1063,7 +1312,13 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/masters/{masterNumber}/capabilities":
     get:
       operationId: GetMastersMasterNumberCapabilities
@@ -1095,9 +1350,19 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/masters/{masterNumber}/identification":
     get:
       operationId: GetMastersMasterNumberIdentification
@@ -1156,9 +1421,19 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
       operationId: PostMastersMasterNumberIdentification
       tags:
@@ -1182,17 +1457,36 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 206, 208
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
         "500":
-          $ref: "#/components/responses/HTTP_500"
-
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/masters/{masterNumber}/configuration":
     get:
       operationId: GetMastersMasterNumberConfiguration
@@ -1219,7 +1513,13 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
       operationId: PostMastersMasterNumberConfiguration
       tags:
@@ -1246,37 +1546,26 @@ paths:
           description: Bad request
           content:
             application/json:
-              examples:
-                "104":
-                  value:
-                    code: 104
-                    message: Action locked by another client
-                "201":
-                  value:
-                    code: 201
-                    message: JSON parsing failed
-                "202":
-                  value:
-                    code: 202
-                    message: JSON data value invalid
-                "203":
-                  value:
-                    code: 203
-                    message: JSON data type invalid
-                "206":
-                  value:
-                    code: 206
-                    message: JSON data value out of bounds
-                "208":
-                  value:
-                    code: 208
-                    message: POST request without content
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/masters/{masterNumber}/trackstatus": #TODO: wireles
     get:
@@ -1299,7 +1588,13 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/masters/{masterNumber}/scan": #TODO: wireles
     get:
@@ -1322,7 +1617,13 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
       operationId: PostMastersMasterNumberScan
       tags:
@@ -1344,37 +1645,26 @@ paths:
           description: Bad request
           content:
             application/json:
-              examples:
-                "104":
-                  value:
-                    code: 104
-                    message: Action locked by another client
-                "201":
-                  value:
-                    code: 201
-                    message: JSON parsing failed
-                "202":
-                  value:
-                    code: 202
-                    message: JSON data value invalid
-                "203":
-                  value:
-                    code: 203
-                    message: JSON data type invalid
-                "206":
-                  value:
-                    code: 206
-                    message: JSON data value out of bounds
-                "208":
-                  value:
-                    code: 208
-                    message: POST request without content
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   ################################################################################
   # ports
@@ -1427,9 +1717,19 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/masters/{masterNumber}/ports/qualityall":
     get:
@@ -1452,9 +1752,19 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/masters/{masterNumber}/ports/{portNumber}/capabilities":
     get:
@@ -1518,9 +1828,21 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/masters/{masterNumber}/ports/{portNumber}/status":
     get:
@@ -1568,9 +1890,21 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/masters/{masterNumber}/ports/{portNumber}/configuration":
     get:
       operationId: GetMastersMasterNumberPortsPortNumberConfiguration
@@ -1628,9 +1962,21 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
       operationId: PostMastersMasterNumberPortsPortNumberConfiguration
       tags:
@@ -1692,16 +2038,43 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 207, 208, 701, 702, 703
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_207"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/masters/{masterNumber}/ports/{portNumber}/datastorage":
     get:
       operationId: GetMastersMasterNumberPortsPortNumberDatastorages
@@ -1743,9 +2116,21 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
       operationId: PostMastersMasterNumberPortsPortNumberDatastorages
       tags:
@@ -1777,16 +2162,42 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 401, 701
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_401"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/masters/{masterNumber}/ports/{portNumber}/pairing":
     post:
@@ -1807,16 +2218,43 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 207, 208, 701, 702, 703
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_207"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/masters/{masterNumber}/ports/{portNumber}/quality":
     get:
@@ -1840,10 +2278,21 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
-          $ref: "#/components/responses/HTTP_500"
-
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   ################################################################################
   # devices
   ################################################################################
@@ -1866,7 +2315,13 @@ paths:
         "403":
           $ref: "#/components/responses/HTTP_403"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/devices/{deviceAlias}/capabilities":
     get:
       operationId: GetDevicesDeviceAliasCapabilities
@@ -1888,16 +2343,32 @@ paths:
                   value: 2.3
                   unit: ms
                 supportedProfiles: [10, 32770]
-        "400": # code 307
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_307"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/devices/{deviceAlias}/identification":
     get:
       operationId: GetDevicesDeviceAliasidentification
@@ -1917,16 +2388,32 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
-        "400": # code 307
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_307"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
       operationId: PostDevicesDeviceAliasidentification
       tags:
@@ -1950,16 +2437,41 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 206, 208, 307
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/devices/{deviceAlias}/processdata/value":
     get:
       operationId: GetDevicesDeviceAliasProcessData
@@ -2007,18 +2519,42 @@ paths:
                         value:
                           Buzzer:
                             value: 5
-        "400": # code 305, 306, 601
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
     post:
       operationId: PostDevicesDeviceAliasProcessData
       tags:
@@ -2056,18 +2592,57 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 501, 502, 503, 601, 701, 702, 703
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_501"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_502"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_503"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   "/devices/{deviceAlias}/processdata/getdata/value":
     get:
@@ -2108,18 +2683,42 @@ paths:
                         Quality:
                           value: 12
                     iqValue: true
-        "400": # code 305, 306, 601
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   "/devices/{deviceAlias}/processdata/setdata/value":
     get:
@@ -2152,18 +2751,43 @@ paths:
                           value: true
                         Valve_2:
                           value: false
-        "400": # code 305, 306, 601
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_503"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   "/devices/{deviceAlias}/parameters":
     get:
@@ -2183,18 +2807,41 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/deviceParametersGet"
-        "400": # code 305, 306, 601
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   "/devices/{deviceAlias}/parameters/{parameterIdent}/value":
     get:
@@ -2233,18 +2880,47 @@ paths:
                       unit: "cm"
                     Quality:
                       value: 12
-        "400": # code 305, 306, 307, 311, 601
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
     post:
       operationId: PostDevicesDeviceAliasParametersValue
@@ -2283,18 +2959,57 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 103, 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 311, 601, 701
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices":
     get:
@@ -2315,18 +3030,41 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/deviceSubParametersGet"
-        "400": # code 601
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_601"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   ? "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices/{subParameterIdent}/value"
   : get:
@@ -2361,18 +3099,47 @@ paths:
                     Distance:
                       value: 15.2
                       unit: "cm"
-        "400": # code 305, 306, 307, 311, 601
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
     post:
       operationId: PostDevicesDeviceAliasParametersSubindicesValue
       tags:
@@ -2400,18 +3167,55 @@ paths:
       responses:
         "204":
           description: Successful operation
-        "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 307, 311, 601, 701
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   "/devices/{deviceAlias}/blockparameterization":
     post:
@@ -2578,18 +3382,56 @@ paths:
                         iolinkError:
                           code: 32817
                           message: Parameter value above limit
-        "400": # code 104, 201, 202, 203, 204, 205, 206, 208, 305, 306, 307, 311, 601, 701, 702, 703
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
         "501":
-          $ref: "#/components/responses/HTTP_501"
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
 
   "/devices/{deviceAlias}/events":
     get:
@@ -2611,16 +3453,32 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/deviceEventsGet"
-        "400": # code 305, 306
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_304"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
   "/devices/{deviceAlias}/fwupdate":
     get:
@@ -2639,14 +3497,32 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/deviceFirmwareUpdateStatusGet"
-        "400": # code 305, 306
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_307"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
       operationId: PostDevicesDeviceAliasFirmwareUpdate
       tags:
@@ -2659,14 +3535,33 @@ paths:
         "204":
           description: >-
             Successful operation. Device firmware has been updated.
-        "400": # code 107
-          $ref: "#/components/responses/HTTP_400"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_107"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
         "404":
-          $ref: "#/components/responses/HTTP_404"
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
         "500":
-          $ref: "#/components/responses/HTTP_500"
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
       requestBody:
         required: true
         description: The firmware update file in iolfw format. The file must be provided as a multipart/form-data request including the `filename` as header parameter (see RFC7578).
@@ -2834,118 +3729,6 @@ components:
       required: true
 
   responses:
-    HTTP_400:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: "./schemas.yaml#/schemas/errorObject"
-          examples:
-            "104":
-              description: Fieldbus controller or another gateway protocol has claimed priority
-              value:
-                code: 104
-                message: Action locked by another client
-            "107":
-              description: Error during device firmware update
-              value:
-                code: 107
-                message: Read /devices/{deviceAlias}/fwupdate to get more information about the status.
-            "201":
-              description: Error while parsing the incoming JSON object
-              value:
-                code: 201
-                message: JSON parsing failed
-            "202":
-              description: Error while parsing a specific JSON value, e.g. a malformed IP address
-              value:
-                code: 202
-                message: JSON data value invalid
-            "203":
-              description: e.g. string instead of number
-              value:
-                code: 203
-                message: JSON data type invalid
-            "204":
-              value:
-                code: 204
-                message: Enumeration value unknown
-            "205":
-              description: Exceeds the minimum or maximum value
-              value:
-                code: 205
-                message: JSON data value out of range
-            "206":
-              description: An array or string was accessed exceeding its maximum length
-              value:
-                code: 206
-                message: JSON data value out of bounds
-            "208":
-              value:
-                code: 208
-                message: POST or PUT request without content
-            "305":
-              value:
-                code: 305
-                message: Query parameter name invalid
-            "306":
-              value:
-                code: 306
-                message: Query parameter value invalid
-            "307":
-              value:
-                code: 307
-                message: Port is not configured to IO-Link
-            "311":
-              value:
-                code: 311
-                message: IO-Link parameter access error
-            "401":
-              value:
-                code: 401
-                message: Data storage mismatch
-            "501":
-              value:
-                code: 501
-                message: I/Q is not configured as DIGITAL_OUTPUT
-            "502":
-              value:
-                code: 502
-                message: C/Q is not configured as DIGITAL_OUTPUT
-            "503":
-              value:
-                code: 503
-                message: IO-Link Device has no output process data
-            "601":
-              value:
-                code: 601
-                message: IODD (representation) for this IO-Link device is not available
-            "603":
-              value:
-                code: 603
-                message: IODD upload failed. IODD XML invalid
-            "604":
-              value:
-                code: 604
-                message: IODD upload failed. CRC error
-            "605":
-              value:
-                code: 605
-                message: IODD upload failed. Parsing error
-            "701":
-              value:
-                code: 701
-                message: Data set incomplete
-            "702":
-              description: whole data set is rejected
-              value:
-                code: 702
-                message: Data set not applicable
-            "703":
-              description: whole data set is rejected
-              value:
-                code: 703
-                message: Data set combination incompatible
     HTTP_401:
       description: Authentication information is missing or invalid
       headers:
@@ -2955,104 +3738,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: "./schemas.yaml#/schemas/errorObject"
-          examples:
-            "150":
-              description: due to user management restrictions
-              value:
-                code: 150
-                message: Permission denied
+            $ref: "./schemas.yaml#/schemas/errorObject_151"
     HTTP_403:
       description: Authentication information is not sufficient to access the resource
       content:
         application/json:
           schema:
-            $ref: "./schemas.yaml#/schemas/errorObject"
-          examples:
-            "150":
-              description: due to user management restrictions
-              value:
-                code: 150
-                message: Permission denied
-    HTTP_404:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: "./schemas.yaml#/schemas/errorObject"
-          examples:
-            "103":
-              value:
-                code: 103
-                message: Operation not supported
-            "301":
-              description: e.g. wrong URL
-              value:
-                code: 301
-                message: Resource not found
-            "302":
-              value:
-                code: 302
-                message: masterNumber not found
-            "303":
-              value:
-                code: 303
-                message: portNumber not found
-            "304":
-              value:
-                code: 304
-                message: deviceAlias not found
-            "308":
-              description: e.g. not connected or communication error
-              value:
-                code: 308
-                message: IO-Link Device is not accessible
-            "309":
-              value:
-                code: 309
-                message: IO-Link Parameter not found
-            "310":
-              value:
-                code: 310
-                message: IO-Link parameter access not supported by the Device
-            "312":
-              value:
-                code: 312
-                message: IO-Link parameter name is not unique
-    HTTP_500:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: "./schemas.yaml#/schemas/errorObject"
-          examples:
-            "101":
-              value:
-                code: 101
-                message: Internal server error
-            "102":
-              value:
-                code: 102
-                message: Internal communication error
-            "602":
-              value:
-                code: 602
-                message: IODD upload failed. Not enough memory
-    HTTP_501:
-      description: Not Implemented
-      content:
-        application/json:
-          schema:
-            $ref: "./schemas.yaml#/schemas/errorObject"
-          examples:
-            "105":
-              value:
-                code: 105
-                message: IODD feature not supported
-            "106":
-              value:
-                code: 106
-                message: MQTT feature not supported
+            $ref: "./schemas.yaml#/schemas/errorObject_150"
 
   examples: # reusable examples
     exampleMasterConfiguration:
