@@ -1985,8 +1985,6 @@ schemas:
         minimum: 0
       message:
         $ref: "#/schemas/ioddDescriptionText"
-      iolinkError:
-        $ref: "#/schemas/iolinkErrorObject"
   ipAddress:
     type: string
     format: ipv4
@@ -3122,3 +3120,376 @@ schemas:
     oneOf:
       - $ref: "#/schemas/parameterName"
       - $ref: "#/schemas/index"
+  errorObject_101:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [101]
+          message:
+            enum: ["Internal server error"]
+  errorObject_102:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [102]
+          message:
+            enum: ["Internal communication error"]
+  errorObject_103:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [103]
+          message:
+            enum: ["Operation not supported"]
+  errorObject_104:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [104]
+          message:
+            enum: ["Action locked by another client"]
+  errorObject_105:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [105]
+          message:
+            enum: ["IODD feature not supported"]
+  errorObject_106:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [106]
+          message:
+            enum: ["MQTT feature not supported"]
+  errorObject_107:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [107]
+          message:
+            enum: ["Error during device firmware update"]
+  errorObject_150:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [150]
+          message:
+            enum: ["Permission denied"]
+  errorObject_151:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [151]
+          message:
+            enum: ["Authentication information is missing or invalid"]
+  errorObject_201:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [201]
+          message:
+            enum: ["JSON parsing failed"]
+  errorObject_202:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [202]
+          message:
+            enum: ["JSON data value invalid"]
+  errorObject_203:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [203]
+          message:
+            enum: ["JSON data type invalid"]
+  errorObject_204:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [204]
+          message:
+            enum: ["Enumeration value unknown"]
+  errorObject_205:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [205]
+          message:
+            enum: ["JSON data value out of range"]
+  errorObject_206:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [206]
+          message:
+            enum: ["JSON data value out of bounds"]
+  errorObject_207:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [207]
+          message:
+            enum: ["deviceAlias is not unique"]
+  errorObject_208:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [208]
+          message:
+            enum: ["POST request without content"]
+  errorObject_301:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [301]
+          message:
+            enum: ["Resource not found"]
+  errorObject_302:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [302]
+          message:
+            enum: ["masterNumber not found"]
+  errorObject_303:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [303]
+          message:
+            enum: ["portNumber not found"]
+  errorObject_304:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [304]
+          message:
+            enum: ["deviceAlias not found"]
+  errorObject_305:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [305]
+          message:
+            enum: ["Query parameter name invalid"]
+  errorObject_306:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [306]
+          message:
+            enum: ["Query parameter value invalid"]
+  errorObject_307:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [307]
+          message:
+            enum: ["Port is not configured to IO-Link"]
+  errorObject_308:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [308]
+          message:
+            enum: ["IO-Link Device is not accessible"]
+  errorObject_309:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [309]
+          message:
+            enum: ["IO-Link parameter not found"]
+  errorObject_310:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [310]
+          message:
+            enum: ["IO-Link parameter access not supported by the device"]
+  errorObject_311:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [311]
+          message:
+            enum: ["IO-Link parameter access error"]
+          iolinkError:
+            $ref: "#/schemas/iolinkErrorObject"
+        required:
+          - iolinkError
+  errorObject_312:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [312]
+          message:
+            enum: ["IO-Link parameter name is not unique"]
+  errorObject_401:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [401]
+          message:
+            enum: ["Data storage mismatch"]
+  errorObject_501:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [501]
+          message:
+            enum: ["I/Q is not configured as DIGITAL_OUTPUT"]
+  errorObject_502:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [502]
+          message:
+            enum: ["C/Q is not configured as DIGITAL_OUTPUT"]
+  errorObject_503:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [503]
+          message:
+            enum: ["IO-Link Device has no output process data"]
+  errorObject_601:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [601]
+          message:
+            enum: ["IODD (representation) for this IO-Link device is not available"]
+  errorObject_602:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [602]
+          message:
+            enum: ["IODD upload failed. Not enough memory"]
+  errorObject_603:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [603]
+          message:
+            enum: ["IODD upload failed. IODD XML invalid"]
+  errorObject_604:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [604]
+          message:
+            enum: ["IODD upload failed. CRC error"]
+  errorObject_605:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [605]
+          message:
+            enum: ["IODD upload failed. Parsing error"]
+  errorObject_701:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [701]
+          message:
+            enum: ["Data set incomplete"]
+  errorObject_702:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [702]
+          message:
+            enum: ["Data set not applicable"]
+  errorObject_703:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [703]
+          message:
+            enum: ["Data set combination incompatible"]
