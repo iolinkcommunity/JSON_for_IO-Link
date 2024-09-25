@@ -701,6 +701,8 @@ schemas:
           - qos
           - deviceAlias
         properties:
+          activate:
+            type: boolean
           qos:
             type: string
             enum:
@@ -725,6 +727,29 @@ schemas:
           topicName:
             type: string
       - $ref: "#/schemas/mqttConfigurationTopic"
+  mqttConfigurationTopicsTopicPost:
+    anyOf:
+      - type: object
+        properties:
+          topicId:
+            type: integer
+      - type: object
+        properties:
+          topicName:
+            type: string
+      - $ref: "#/schemas/mqttConfigurationTopic"
+    example:
+      topicId: 1
+      activate: true
+      topicName: PD input
+      qos: 1_AT_LEAST_ONCE
+      deviceAlias: DT35
+      processData:
+        direction: getData
+        format: iodd
+        interval:
+          value: 10
+          unit: ms
   mqttConfigurationTopicGet:
     allOf:
       - type: object
