@@ -3586,8 +3586,8 @@ paths:
       operationId: GetDevicesDeviceAliasFirmwareUpdateStatus
       tags:
         - devices
-      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
-      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Device FW Update support is required.
+      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Device FW Update support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
@@ -3628,8 +3628,8 @@ paths:
       operationId: PostDevicesDeviceAliasFirmwareUpdate
       tags:
         - devices
-      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
-      description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
+      description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
