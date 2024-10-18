@@ -76,9 +76,9 @@ tags:
   - name: gateway
     description: Access to parameters of the JSON gateway
   - name: mqtt
-    description: Access to the parameters of the MQTT client
+    description: Access to the parameters of the MQTT client. Optional.
   - name: iodds
-    description: Access to the IODDs
+    description: Access to the IODDs. Optional.
   - name: masters
     description: Access to parameters of the IO-Link master itself
   - name: ports
@@ -406,6 +406,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -433,6 +439,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -607,7 +619,7 @@ paths:
       operationId: GetGatewayMonitor
       tags:
         - gateway
-      summary: Read current and voltage values of the Gateway.
+      summary: Read current and voltage values of the Gateway. Optional.
       description: Read current and voltage values of the primary and secondary rail of the Gateway.
       responses:
         "200":
@@ -616,11 +628,16 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/gatewayMonitor"
-
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -1723,6 +1740,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -1752,6 +1775,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -1793,6 +1822,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -2346,6 +2381,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -2362,7 +2398,7 @@ paths:
       operationId: GetMastersMasterNumberPortsPortNumberMonitor
       tags:
         - ports
-      summary: Read the actual current, voltage and wireless information from a port.
+      summary: Read the actual current, voltage and wireless information from a port. Optional.
       description: Read the actual current, voltage and wireless information from a port. The response object can vary depending on the port configuration or port type.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
@@ -2384,6 +2420,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -3586,8 +3623,8 @@ paths:
       operationId: GetDevicesDeviceAliasFirmwareUpdateStatus
       tags:
         - devices
+      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Optional.
       description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
-      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
@@ -3628,7 +3665,7 @@ paths:
       operationId: PostDevicesDeviceAliasFirmwareUpdate
       tags:
         - devices
-      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Optional.
       description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
