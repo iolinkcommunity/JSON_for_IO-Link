@@ -257,6 +257,19 @@ schemas:
     minimum: 0
     maximum: 255
     example: 12
+  statusInfo:
+    type: string
+    enum: # see Terminology in V.113, Table E.4 PortStatusList
+      - COMMUNICATION_LOST # NO_DEVICE
+      - DEACTIVATED # DEACTIVATED
+      - INCORRECT_DEVICE # PORT_DIAG
+      - DEVICE_STARTING #
+      - DEVICE_ONLINE # OPERATE
+      - DIGITAL_INPUT_C/Q # DI_CQ
+      - DIGITAL_OUTPUT_C/Q # DO_CQ
+      - NOT_AVAILABLE # NOT_AVAILABLE
+      - PORT_POWER_OFF # PORT_POWER_OFF
+      - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
   masterIdentificationPost:
     type: object
     properties:
@@ -494,6 +507,7 @@ schemas:
         maxLength: 64
       productId:
         type: string
+        minLength: 1
       hardwareRevision:
         type: string
         minLength: 1
@@ -1357,59 +1371,68 @@ schemas:
     example:
       txPower: 31
 
-  mastersPortsGet: # TODO: IOLW
+  portObject:
+    type: object
+    required:
+      - portNumber
+      - statusInfo
+      - deviceAlias
+    properties:
+      portNumber:
+        $ref: "#/schemas/portNumber"
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
+      statusInfo:
+        $ref: "#/schemas/statusInfo"
+      deviceInfo:
+        description: >-
+          Wireless Master only.
+        type: object
+        properties:
+          vendorId:
+            $ref: "#/schemas/vendorId"
+          deviceId:
+            $ref: "#/schemas/deviceId"
+          productName:
+            $ref: "#/schemas/productName"
+
+  portWirelessObject:
+    allOf:
+      - $ref: "#/schemas/portObject"
+      - type: object
+        required:
+          - slotNumber
+          - trackNumber
+          - slotType
+        properties:
+          slotNumber:
+            description: >-
+              slot number of the Wireless-Device (Wireless Master only).
+            $ref: "#/schemas/wirelessSlotNumber"
+          trackNumber:
+            description: >-
+              track number of the Wireless-Device, maximum depends on the number of 
+              available tracks on the Wireless-Master (Wireless Master only).
+            $ref: "#/schemas/wirelessTrackNumber"
+          slotType:
+            description: >-
+              Single Slot or Double Slot (Wireless Master only).
+            type: string
+            enum:
+              - "SSLOT"
+              - "DSLOT"
+
+  mastersPortsGet:
+    name: masterPortSchema
     type: array
     items:
-      type: object
-      required:
-        - portNumber
-        - statusInfo
-        - deviceAlias
-      properties:
-        portNumber:
-          $ref: "#/schemas/portNumber"
-        deviceAlias:
-          $ref: "#/schemas/deviceAlias"
-        statusInfo:
-          type: string
-          enum: # see Terminology in V.113, Table E.4 PortStatusList
-            - COMMUNICATION_LOST # NO_DEVICE
-            - DEACTIVATED # DEACTIVATED
-            - INCORRECT_DEVICE # PORT_DIAG
-            - DEVICE_STARTING #
-            - DEVICE_ONLINE # OPERATE
-            - DIGITAL_INPUT_C/Q # DI_CQ
-            - DIGITAL_OUTPUT_C/Q # DO_CQ
-            - NOT_AVAILABLE # NOT_AVAILABLE
-            - PORT_POWER_OFF # PORT_POWER_OFF
-            - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
-        slotNumber:
-          description: >-
-            slot number of the Wireless-Device (Wireless Master only).
-          $ref: "#/schemas/wirelessSlotNumber"
-        trackNumber:
-          description: >-
-            track number of the Wireless-Device, maximum depends on the number of 
-            available tracks on the Wireless-Master (Wireless Master only).
-          $ref: "#/schemas/wirelessTrackNumber"
-        slotType:
-          description: >-
-            Single Slot or Double Slot (Wireless Master only).
-          type: string
-          enum:
-            - "SSLOT"
-            - "DSLOT"
-        deviceInfo:
-          description: >-
-            Wireless Master only.
-          type: object
-          properties:
-            vendorId:
-              $ref: "#/schemas/vendorId"
-            deviceId:
-              $ref: "#/schemas/deviceId"
-            productName:
-              $ref: "#/schemas/productName"
+      $ref: "#/schemas/portObject"
+
+  mastersPortsGetWireless:
+    name: masterWirelessPortSchema
+    type: array
+    items:
+      $ref: "#/schemas/portWirelessObject"
 
   mastersPortsStatusGet: # TODO: IOLW
     properties:

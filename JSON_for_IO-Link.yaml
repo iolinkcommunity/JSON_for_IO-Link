@@ -1854,7 +1854,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/mastersPortsGet"
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsGet"
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsGetWireless"
               examples:
                 IO-Link:
                   value:
