@@ -1389,8 +1389,7 @@ paths:
         - iodds
       summary: Store or update an IODD.
       description: >
-        It is not needed to specify the identification data for this action as the
-        parser can read this information.
+        The assignment of an IODD to a device shall be done by matching vendor and device id. Only one IODD per vendor and device id is allowed. In case IODD with vendor and device id is already present on the gateway, this file should be replaced by the new one. This endpoint is mandatory, if IODD feature is supported.
       requestBody:
         required: true
         content:
