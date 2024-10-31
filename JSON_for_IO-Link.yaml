@@ -1645,7 +1645,7 @@ paths:
       tags:
         - masters
       summary: Read the actual configuration of the specified Master.
-      description: Read the actual configuration of the specified Master.
+      description: Read the actual configuration of the specified Master. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1656,8 +1656,6 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/mastersConfigurationGetPost"
               examples:
-                IO-Link:
-                  $ref: "#/components/examples/exampleMasterConfiguration"
                 IO-Link_Wireless:
                   $ref: "#/components/examples/exampleWirelessMasterConfiguration"
         "401":
@@ -1677,7 +1675,7 @@ paths:
       tags:
         - masters
       summary: Write the configuration of the specified Master.
-      description: Write the configuration of the specified Master.
+      description: Write the configuration of the specified Master. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
@@ -1719,13 +1717,13 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
-  "/masters/{masterNumber}/trackstatus": #TODO: wireles
+  "/masters/{masterNumber}/trackstatus":
     get:
       operationId: GetMastersMasterNumberTrackstatus
       tags:
         - masters
       summary: Read the actual Track status of the specified Wireless-Master.
-      description: Read the actual Track status of the specified Wireless-Master.
+      description: Read the actual Track status of the specified Wireless-Master. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1754,13 +1752,13 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
-  "/masters/{masterNumber}/scan": #TODO: wireles
+  "/masters/{masterNumber}/scan":
     get:
       operationId: GetMastersMasterNumberScan
       tags:
         - masters
       summary: Read the actual scan results of the specified Wireless-Master.
-      description: Read the actual scan results of the specified Wireless-Master.
+      description: Read the actual scan results of the specified Wireless-Master. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1793,7 +1791,7 @@ paths:
       tags:
         - masters
       summary: To start a scan of the specified Wireless-Master.
-      description: To start a scan of the specified Wireless-Master.
+      description: To start a scan of the specified Wireless-Master. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
@@ -2342,7 +2340,7 @@ paths:
       tags:
         - ports
       summary: To pair a Wireless-Device with the specified Wireless-Port.
-      description: To pair a Wireless-Device with the specified Wireless-Port.
+      description: To pair a Wireless-Device with the specified Wireless-Port. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
@@ -2400,7 +2398,7 @@ paths:
       tags:
         - ports
       summary: Read the actual current, voltage and wireless information from a port. Optional.
-      description: Read the actual current, voltage and wireless information from a port. The response object can vary depending on the port configuration or port type.
+      description: Read the actual current, voltage and wireless information from a port. The response object can vary depending on the port configuration or port type. This endpoint providing the wireless quality is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
