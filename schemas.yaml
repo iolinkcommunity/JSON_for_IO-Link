@@ -1343,22 +1343,20 @@ schemas:
             - uniqueId
             - iolinkRevision
             - lastSeen
-          items:
-          type: object
           properties:
-              slotType:
-                type: string
-                enum:
-                  - "SSLOT"
-                  - "DSLOT"
-              uniqueId:
-                type: string
-                minLength: 26
-                maxLength: 26
-              iolinkRevision:
-                $ref: "#/schemas/iolinkRevision"
-              lastSeen:
-                $ref: "#/schemas/eventTime"
+            slotType:
+              type: string
+              enum:
+                - "SSLOT"
+                - "DSLOT"
+            uniqueId:
+              type: string
+              minLength: 26
+              maxLength: 26
+            iolinkRevision:
+              $ref: "#/schemas/iolinkRevision"
+            lastSeen:
+              $ref: "#/schemas/eventTime"
     example:
       scanStatus: ScanEnded
       scanResults:
@@ -1432,13 +1430,11 @@ schemas:
               - "DSLOT"
 
   mastersPortsGet:
-    name: masterPortSchema
     type: array
     items:
       $ref: "#/schemas/portObject"
 
   mastersPortsGetWireless:
-    name: masterWirelessPortSchema
     type: array
     items:
       $ref: "#/schemas/portWirelessObject"

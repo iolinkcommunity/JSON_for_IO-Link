@@ -69,7 +69,7 @@ security:
   - {}
   - basicAuth: []
   - bearerAuth: []
-  - oauth2: [MaintenanceRole]
+  - oauth2: [Maintenance]
 tags:
   - name: general
     description: Access to general informations
