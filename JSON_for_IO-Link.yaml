@@ -620,7 +620,7 @@ paths:
       tags:
         - gateway
       summary: Read current and voltage values of the Gateway. Optional.
-      description: Read current and voltage values of the primary and secondary rail of the Gateway.
+      description: Read current and voltage values of the primary and secondary rail of the Gateway. This feature is optional.
       responses:
         "200":
           description: Successful operation
@@ -709,7 +709,7 @@ paths:
         - mqtt
       summary: >-
         Update the MQTT configuration of the Gateway.
-      description: Update the MQTT configuration of the Gateway.
+      description: Update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
         required: true
         content:
@@ -780,7 +780,7 @@ paths:
       tags:
         - mqtt
       summary: Get the list of MQTT topics.
-      description: Get the list of MQTT topics.
+      description: Get the list of MQTT topics. This endpoint is mandatory, if MQTT feature is supported.
       responses:
         "200":
           description: Successful operation
@@ -865,7 +865,7 @@ paths:
       tags:
         - mqtt
       summary: Create a new MQTT topic.
-      description: Create a new MQTT topic.
+      description: Create a new MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
         required: true
         content:
@@ -964,7 +964,7 @@ paths:
       tags:
         - mqtt
       summary: Get one MQTT topic.
-      description: Get one MQTT topic.
+      description: Get one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -1053,7 +1053,7 @@ paths:
       tags:
         - mqtt
       summary: Change or deactivate one MQTT topic.
-      description: Change or deactivate one MQTT topic.
+      description: Change or deactivate one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
         required: true
         content:
@@ -1149,7 +1149,7 @@ paths:
       tags:
         - mqtt
       summary: Delete a specific MQTT topic.
-      description: Delete a specific MQTT topic.
+      description: Delete a specific MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -1191,7 +1191,7 @@ paths:
       tags:
         - mqtt
       summary: Read the connection status of the MQTT client to the MQTT server.
-      description: Read the connection status of the MQTT client to the MQTT server.
+      description: Read the connection status of the MQTT client to the MQTT server. This endpoint is mandatory, if MQTT feature is supported.
       responses:
         "200":
           description: Successful operation
@@ -1233,8 +1233,7 @@ paths:
       summary: >-
         Get a list of all IODD (representations) that are available on the Gateway.
       description: >-
-        Only one version of an IODD is stored on the webserver at the same time
-        for one vendorId-deviceId-iolinkRevision-combination.
+        Only one version of an IODD is stored on the webserver at the same time for one vendorId-deviceId-iolinkRevision-combination. This endpoint is mandatory, if IODD feature is supported.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1281,7 +1280,7 @@ paths:
       tags:
         - iodds
       summary: Delete a specific IODD representation.
-      description: Delete a specific IODD representation and all related artifacts.
+      description: Delete a specific IODD representation and all related artifacts. This endpoint is mandatory, if IODD feature is supported.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1328,7 +1327,7 @@ paths:
       tags:
         - iodds
       summary: Get a specific IODD or other IODD artifacts like device image. Optional.
-      description: Get a specific IODD or other IODD artifacts like device image.
+      description: Get a specific IODD or other IODD artifacts like device image. This feature is optional.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1723,7 +1722,7 @@ paths:
       tags:
         - masters
       summary: Read the actual Track status of the specified Wireless-Master.
-      description: Read the actual Track status of the specified Wireless-Master. This endpoint is mandatory, if wireless feature is supported.
+      description: Read the actual Track status of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1758,7 +1757,7 @@ paths:
       tags:
         - masters
       summary: Read the actual scan results of the specified Wireless-Master.
-      description: Read the actual scan results of the specified Wireless-Master. This endpoint is mandatory, if wireless feature is supported.
+      description: Read the actual scan results of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1791,7 +1790,7 @@ paths:
       tags:
         - masters
       summary: To start a scan of the specified Wireless-Master.
-      description: To start a scan of the specified Wireless-Master. This endpoint is mandatory, if wireless feature is supported.
+      description: To start a scan of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
@@ -2240,10 +2239,10 @@ paths:
                 Empty Data Storage:
                   value:
                     header:
-                      vendorId: 26
-                      deviceId: 65253
+                      vendorId: 0
+                      deviceId: 0
                       iolinkRevision: "1.1"
-                      parameterChecksum: 123456
+                      parameterChecksum: 0
                     content: >-
                       ''
         "401":

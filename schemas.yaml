@@ -1801,9 +1801,13 @@ schemas:
               - iolinkRevision
             properties:
               vendorId:
-                $ref: "#/schemas/vendorId"
+                type: integer
+                minimum: 0
+                maximum: 65535
               deviceId:
-                $ref: "#/schemas/deviceId"
+                type: integer
+                minimum: 0
+                maximum: 16777215
               iolinkRevision:
                 $ref: "#/schemas/iolinkRevision"
               parameterChecksum:
