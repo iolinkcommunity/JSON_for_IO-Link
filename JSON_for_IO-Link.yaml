@@ -1684,8 +1684,6 @@ paths:
             schema:
               $ref: "./schemas.yaml#/schemas/mastersConfigurationGetPost"
             examples:
-              IO-Link:
-                $ref: "#/components/examples/exampleMasterConfiguration"
               IO-Link_Wireless:
                 $ref: "#/components/examples/exampleWirelessMasterConfiguration"
       responses:
