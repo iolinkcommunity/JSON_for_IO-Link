@@ -295,12 +295,20 @@ schemas:
   masterCapabilitiesGet:
     required:
       - numberOfPorts
+      - maxPowerSupply
     type: object
     properties:
       numberOfPorts:
         $ref: "#/schemas/portNumber"
       maxPowerSupply:
         $ref: "#/schemas/currentObject"
+  masterCapabilitiesGetWireless:
+    required:
+      - numberOfPorts
+    type: object
+    properties:
+      numberOfPorts:
+        $ref: "#/schemas/portNumber"
   eventTime:
     description: >-
       Timestamp (format defined in DIN ISO 8601). This field can give an
@@ -1100,9 +1108,9 @@ schemas:
         minLength: 26
         maxLength: 26
 
-  mastersConfigurationGetPost: # TODO: IOLW
+  mastersConfigurationGetPost:
     properties:
-      wMasterId: #TODO roeseko What masterId is this? Same as in identification object?
+      wMasterId:
         description: >-
           Master identifier for connection with Wireless-Devices.
         type: integer
@@ -1315,7 +1323,7 @@ schemas:
             $ref: "#/schemas/wirelessBlockList"
           "2478":
             $ref: "#/schemas/wirelessBlockList"
-  mastersPortsPairingPost: # TODO: IOLW
+  mastersPortsPairingPost:
     properties:
       portPairing:
         type: string
@@ -1326,7 +1334,7 @@ schemas:
     example:
       WPortPairing: PairingUnique
 
-  mastersScanGet: # TODO: IOLW
+  mastersScanGet:
     properties:
       scanStatus:
         type: string
@@ -1369,7 +1377,7 @@ schemas:
           iolinkRevision: "1.1"
           lastSeen: "2022-12-01T09:42:23.314Z"
 
-  mastersScanPost: # TODO: IOLW
+  mastersScanPost:
     properties:
       txPower:
         type: integer
@@ -1439,7 +1447,7 @@ schemas:
     items:
       $ref: "#/schemas/portWirelessObject"
 
-  mastersPortsStatusGet: # TODO: IOLW
+  mastersPortsStatusGet:
     properties:
       statusInfo:
         type: string
@@ -1544,7 +1552,7 @@ schemas:
             minimum: 1
             maximum: 63
 
-  mastersTrackstatusGet: # TODO: IOLW
+  mastersTrackstatusGet:
     type: array
     items:
       type: object
@@ -1596,7 +1604,7 @@ schemas:
       lqiDevice: 100
       rssiDevice: -39
 
-  mastersPortsQualityGet: # TODO: IOLW
+  mastersPortsQualityGet:
     properties:
       lqiMaster:
         type: integer
@@ -2338,7 +2346,7 @@ schemas:
             example: "linkUp"
   masterConfiguration:
     properties:
-      masterId: #TODO roeseko What masterId is this? Same as in identification object?
+      masterId:
         type: integer
         minimum: 1
         maximum: 29
@@ -2611,10 +2619,10 @@ schemas:
         $ref: "#/schemas/wirelessTrackNumber"
       channelErrors:
         type: object
-        # required:  # @TODO wireles
+        # required:
         #   - all
         properties:
-          "2402": # TODO roeseko What is mean by this value? Is this the error code for this channel?
+          "2402":
             type: integer
             minimum: 0
             maximum: 65535 # 0 to 100, 65535 means no data available
