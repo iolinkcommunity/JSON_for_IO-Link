@@ -582,7 +582,7 @@ paths:
         - $ref: "#/components/parameters/eventTop"
         - $ref: "#/components/parameters/eventBottom"
       responses:
-        "200":
+        "204":
           description: Successful operation
         "400":
           description: Bad Request
