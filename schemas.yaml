@@ -270,15 +270,19 @@ schemas:
     required:
       - ioddSupported
       - mqttSupported
+      - deviceFwUpdateSupported
     type: object
     properties:
       ioddSupported:
         type: boolean
       mqttSupported:
         type: boolean
+      deviceFwUpdateSupported:
+        type: boolean
     example:
       ioddSupported: true
       mqttSupported: true
+      deviceFwUpdateSupported: true
   masterCapabilitiesGet:
     required:
       - numberOfPorts
