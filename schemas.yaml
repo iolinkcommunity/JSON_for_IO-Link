@@ -1828,13 +1828,15 @@ schemas:
   deviceProcessDataValueGet:
     type: object
     description: >
-      The cqValue is present in the 'getData' object if the CQ (pin4) is configured as
-      digital input. The cqValue is present in the 'setData' object if the CQ (pin4)
-      is configured as digital output. The iolink is present either in the
-      'getData' or 'setData' or both objects if the CQ (pin4) is configured to IO-Link mode.
-      The iqValue is present in the 'getData' object if the IQ (pin2) is configured as
-      digital input. The iqValue is present in the 'setData' object if the IQ (pin4)
-      is configured as digital output.
+      The 'cqValue' is present in the 'getData' object if the CQ (pin4) is configured as digital input. 
+      The 'cqValue' is present in the 'setData' object if the CQ (pin4) is configured as digital output. 
+      The 'iolink' is present in the 'getData' if the port is configured to IO-Link mode and the device provides input process data. 
+      The 'iolink' is present in the 'setData' if the port is configured to IO-Link mode and the device provides output process data. 
+      The 'iqValue' is present in the 'getData' object if the IQ (pin2) is configured as digital input. 
+      The 'iqValue' is present in the 'setData' object if the IQ (pin4) is configured as digital output.
+    required:
+      - getData
+      - setData
     properties:
       getData:
         $ref: "#/schemas/processDataValue"
