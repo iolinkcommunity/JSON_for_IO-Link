@@ -585,7 +585,6 @@ schemas:
           ipAddress: 192.168.1.13
           subnetMask: 255.255.255.0
           standardGateway: 192.168.1.1
-
   voltageObject:
     type: object
     required:
@@ -658,8 +657,15 @@ schemas:
             $ref: "#/schemas/currentObject"
           iqCurrent:
             $ref: "#/schemas/currentObject"
-      wirelessQuality:
-        $ref: "#/schemas/wirelessPortQuality"
+  portMonitorWireless:
+    allOf:
+      - $ref: "#/schemas/portMonitor"
+      - type: object
+        required:
+          - wirelessQuality
+        properties:
+          wirelessQuality:
+            $ref: "#/schemas/wirelessPortQuality"
 
   mqttConfigurationGetPost:
     type: object

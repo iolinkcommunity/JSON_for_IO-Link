@@ -2414,7 +2414,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/portMonitor"
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/portMonitor"
+                  - $ref: "./schemas.yaml#/schemas/portMonitorWireless"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
