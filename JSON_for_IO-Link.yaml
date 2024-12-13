@@ -1485,7 +1485,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/masterCapabilitiesGet"
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/masterCapabilitiesGet"
+                  - $ref: "./schemas.yaml#/schemas/masterCapabilitiesGetWireless"
               examples:
                 IO-Link:
                   value:
@@ -1914,7 +1916,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/portCapabilitiesGet"
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/portCapabilitiesGet"
+                  - $ref: "./schemas.yaml#/schemas/portCapabilitiesGetWireless"
               examples:
                 CLASS_A:
                   value:
@@ -1955,6 +1959,7 @@ paths:
                 IO-Link_Wireless:
                   value:
                     portType: WIRELESS_MASTER
+                    slotType: SSLOT
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
