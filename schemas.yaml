@@ -225,6 +225,11 @@ schemas:
   wirelessBlockList:
     type: boolean
     default: false
+  dataStorageObject:
+        description: DataStorageObject (including the header) as described in E.6 DS_Data of the IO-Link Interface and System Specification v1.1.4 as Base64 coded string.
+        type: string
+        minLength: 16  # 12 octets encoded in Base64 (empty DS)
+        maxLength: 2748  # 2048 + 12 octets encoded in Base64
   identificationMasters:
     type: array
     items:
@@ -1759,10 +1764,10 @@ schemas:
         minLength: 26
         maxLength: 26
 
-  dataStorageGetPost:
+  dataStorageGet:
     description: >-
-      In case the Data Storage is empty, the header object is empty and the
-      content is an empty string.
+      In case of an empty Data Storage, the header object contains a value of 0 for every property,
+      and the content contains 12 bytes of 0x00, encoded as a Base64 string.
     type: object
     required:
       - header
@@ -1772,29 +1777,59 @@ schemas:
         oneOf:
           - type: object
             required:
+              - parameterChecksum
               - vendorId
               - deviceId
-              - iolinkRevision
+              - functionId
             properties:
+              parameterChecksum:
+                type: integer
+                minimum: 0
+                maximum: 4294967295  # UINT32_MAX
               vendorId:
                 $ref: "#/schemas/vendorId"
               deviceId:
                 $ref: "#/schemas/deviceId"
-              iolinkRevision:
-                $ref: "#/schemas/iolinkRevision"
+              functionId:
+                type: integer
+                enum:
+                  - 0
+          - type: object  # header for empty DS
+            required:
+              - parameterChecksum
+              - vendorId
+              - deviceId
+              - functionId
+            properties:
               parameterChecksum:
                 type: integer
-          - type: object # empty object
-            additionalProperties: false
-            minProperties: 0
-            maxProperties: 0
+                enum:
+                  - 0
+              vendorId:
+                type: integer
+                enum:
+                  - 0
+              deviceId:
+                type: integer
+                enum:
+                  - 0
+              functionId:
+                type: integer
+                enum:
+                  - 0
       content:
-        description: >-
-          Base64 encoded DataStorageObject. 
-          The contents of the DataStorageObject are described in E.6 of the "IO-Link Interface and System Specification 1.1.3",
-          it consists of the "Associated header information for stored DS data objects" as described in Table G.2, 
-          followed by the "stored DS data object" as described in Table G.1.
-        type: string
+        $ref: "#/schemas/dataStorageObject"
+
+  dataStoragePost:
+    description: >-
+      In case of an empty Data Storage, the content contains 12 bytes of 0x00, encoded as a Base64 string.
+    type: object
+    required:
+      - content
+    properties:
+      content:
+        $ref: "#/schemas/dataStorageObject"
+
   processDataValue:
     type: object
     properties:
