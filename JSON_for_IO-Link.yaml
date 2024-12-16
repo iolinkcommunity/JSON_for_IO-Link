@@ -594,7 +594,7 @@ paths:
         - $ref: "#/components/parameters/eventTop"
         - $ref: "#/components/parameters/eventBottom"
       responses:
-        "200":
+        "204":
           description: Successful operation
         "400":
           description: Bad Request
@@ -3630,8 +3630,8 @@ paths:
       operationId: GetDevicesDeviceAliasFirmwareUpdateStatus
       tags:
         - devices
-      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Optional.
-      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Device FW Update support is required.
+      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Device FW Update support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
@@ -3672,8 +3672,8 @@ paths:
       operationId: PostDevicesDeviceAliasFirmwareUpdate
       tags:
         - devices
-      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Optional.
-      description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
+      description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
@@ -3714,7 +3714,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: "./schemas.yaml#/schemas/deviceFirmwareUpdatePost"
-
 components:
   securitySchemes:
     basicAuth:
@@ -3873,6 +3872,7 @@ components:
         minimum: 0
         maximum: 255
       required: true
+
   responses:
     HTTP_401:
       description: Authentication information is missing or invalid
