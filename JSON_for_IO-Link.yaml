@@ -602,6 +602,113 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/diagnosis":
+    get:
+      operationId: GetGatewayDiagnosis
+      tags:
+        - gateway
+      summary: Get the currently pending events.
+      description: >-
+        Each event with a *mode* of "APPEARS" is considered as an pending event until the occurence of a corresponding with *mode* of "DISAPPEARS".
+        Pending events must be provided regardless of the Event Log content.
+          
+        Hint: *mode* is optional property under *message*. An event cannot qualify as a pending event if this property is not specified.
+      parameters:
+        - $ref: "#/components/parameters/eventOrigin"
+        - $ref: "#/components/parameters/eventMasterNumber"
+        - $ref: "#/components/parameters/eventPortNumber"
+        - $ref: "#/components/parameters/eventdeviceAlias"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+              examples:
+                origin=ALL:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+                origin=PORTS:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        port: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                origin=DEVICES:
+                  value:
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
   "/gateway/monitor":
     get:
       operationId: GetGatewayMonitor
