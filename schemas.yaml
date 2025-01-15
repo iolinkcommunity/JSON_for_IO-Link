@@ -316,7 +316,7 @@ schemas:
       - DEBUG
   eventInstance:
     description: >- 
-      Indicate the particular source (instance) of an Events. The IO-Link Instance
+      Indicate the particular source (instance) of an Event. The IO-Link Instance
       Unknown maps to UNKNOWN, Reserved to UNKNOWN, Application to APPLICATION, and System to SYSTEM.
     type: string
     enum:
