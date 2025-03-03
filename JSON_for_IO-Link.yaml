@@ -477,6 +477,7 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
+                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -487,6 +488,7 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
+                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -506,6 +508,7 @@ paths:
                       origin:
                         masterNumber: 1
                         port: 1
+                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -515,6 +518,7 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
+                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: DISAPPEARS
@@ -524,6 +528,7 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
+                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -536,6 +541,7 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
+                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -546,6 +552,7 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
+                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
