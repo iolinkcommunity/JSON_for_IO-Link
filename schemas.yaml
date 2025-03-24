@@ -633,16 +633,11 @@ schemas:
             $ref: "#/schemas/currentObject"
   portMonitorWired:
     type: object
-    required:
-      - voltage
-      - current
+    minProperties: 1
     properties:
       voltage:
         type: object
-        required:
-          - primaryVoltage
-          - cqVoltage
-          - iqVoltage
+        minProperties: 1
         properties:
           primaryVoltage:
             $ref: "#/schemas/voltageObject"
@@ -654,10 +649,7 @@ schemas:
             $ref: "#/schemas/voltageObject"
       current:
         type: object
-        required:
-          - primaryCurrent
-          - cqCurrent
-          - iqCurrent
+        minProperties: 1
         properties:
           primaryCurrent:
             $ref: "#/schemas/currentObject"
