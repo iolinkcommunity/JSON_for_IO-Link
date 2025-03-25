@@ -2063,7 +2063,7 @@ paths:
                     portType: FAILSAFE_PORT_B
                 IO-Link_Wireless:
                   value:
-                    portType: WIRELESS_MASTER
+                    portType: WIRELESS_PORT
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
