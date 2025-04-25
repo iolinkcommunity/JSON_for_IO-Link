@@ -631,11 +631,13 @@ schemas:
             $ref: "#/schemas/currentObject"
           secondaryCurrent:
             $ref: "#/schemas/currentObject"
-  portMonitor:
+  portMonitorWired:
     type: object
+    minProperties: 1
     properties:
       voltage:
         type: object
+        minProperties: 1
         properties:
           primaryVoltage:
             $ref: "#/schemas/voltageObject"
@@ -647,6 +649,7 @@ schemas:
             $ref: "#/schemas/voltageObject"
       current:
         type: object
+        minProperties: 1
         properties:
           primaryCurrent:
             $ref: "#/schemas/currentObject"
@@ -656,9 +659,17 @@ schemas:
             $ref: "#/schemas/currentObject"
           iqCurrent:
             $ref: "#/schemas/currentObject"
+  portMonitorWireless:
+    type: object
+    required:
+      - wirelessQuality
+    properties:
       wirelessQuality:
         $ref: "#/schemas/wirelessPortQuality"
-
+  portMonitor:
+    oneOf:
+      - $ref: "#/schemas/portMonitorWired"
+      - $ref: "#/schemas/portMonitorWireless"
   mqttConfigurationGetPost:
     type: object
     required:

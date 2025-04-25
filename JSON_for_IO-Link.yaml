@@ -747,8 +747,12 @@ paths:
       operationId: GetGatewayMonitor
       tags:
         - gateway
-      summary: Read current and voltage values of the Gateway.
-      description: Read current and voltage values of the primary and secondary rail of the Gateway.
+      summary: Read current and voltage values of the Gateway. Optional.
+      description: >- 
+        Read current and voltage values of the primary and secondary rail of the Gateway.
+          
+        This endpoint should only be available if the gateway is located within the same physical device as the Master(s).
+        Primary and secondary rails are commonly denoted by US and UA. 
       responses:
         "200":
           description: Successful operation
@@ -2502,8 +2506,12 @@ paths:
       operationId: GetMastersMasterNumberPortsPortNumberMonitor
       tags:
         - ports
-      summary: Read the actual current, voltage and wireless information from a port.
-      description: Read the actual current, voltage and wireless information from a port. The response object can vary depending on the port configuration or port type.
+      summary: Read the actual current, voltage and wireless information from a port. Optional.
+      description: >- 
+        Read the actual current, voltage and wireless information from a port.
+        The response object can vary depending on the port configuration or port type.
+          
+        The "secondaryVoltage" and "secondaryCurrent" only relevant for Wired, Class B ports and should reflect the Power 2 power supply. See 5.4.2 in IO-Link Interface and System Specification V1.1.4 June 2024 for more details.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
