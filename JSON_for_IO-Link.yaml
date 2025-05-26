@@ -3906,11 +3906,10 @@ components:
         name is 'masterNportM' where 'N' means the masterNumber and 'M' means
         the portNumber. Even if a new device alias has been assigned, the device
         can always be addressed via the default name.
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 32
       required: true
+      schema:
+        $ref: "./schemas.yaml#/schemas/deviceAlias"
+
     eventOrigin:
       name: origin
       in: query
