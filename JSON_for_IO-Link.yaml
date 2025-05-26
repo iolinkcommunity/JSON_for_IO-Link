@@ -2322,7 +2322,7 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/masters/{masterNumber}/ports/{portNumber}/datastorage":
     get:
-      operationId: GetMastersMasterNumberPortsPortNumberDatastorages
+      operationId: GetMastersMasterNumberPortsPortNumberDatastorage
       tags:
         - ports
       parameters:
@@ -2336,26 +2336,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/dataStorageGetPost"
+                $ref: "./schemas.yaml#/schemas/dataStorageGet"
               examples:
                 Data Storage with valid content:
                   value:
                     header:
-                      vendorId: 15
-                      deviceId: 65253
-                      iolinkRevision: "1.1"
-                      parameterChecksum: 123456
+                      parameterChecksum: 1192298517
+                      vendorId: 646
+                      deviceId: 1234
+                      functionId: 0
                     content: >-
-                      TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
+                      "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
                 Empty Data Storage:
                   value:
                     header:
-                      vendorId: 26
-                      deviceId: 65253
-                      iolinkRevision: "1.1"
-                      parameterChecksum: 123456
+                      parameterChecksum: 0
+                      vendorId: 0
+                      deviceId: 0
+                      functionId: 0
                     content: >-
-                      ''
+                      "AAAAAAAAAAAAAAAA"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2377,7 +2377,7 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
-      operationId: PostMastersMasterNumberPortsPortNumberDatastorages
+      operationId: PostMastersMasterNumberPortsPortNumberDatastorage
       tags:
         - ports
       parameters:
@@ -2390,20 +2390,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./schemas.yaml#/schemas/dataStorageGetPost"
+              $ref: "./schemas.yaml#/schemas/dataStoragePost"
             examples:
               Data Storage with valid content:
                 value:
-                  header:
-                    vendorId: 15
-                    deviceId: 65253
-                    iolinkRevision: "1.1"
                   content: >-
-                    TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
+                    "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
               Empty Data Storage:
                 value:
-                  header: {}
-                  content: ""
+                  content: "AAAAAAAAAAAAAAAA"
       responses:
         "204":
           description: Successful operation
