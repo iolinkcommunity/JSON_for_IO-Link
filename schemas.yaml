@@ -319,6 +319,15 @@ schemas:
       - NOTICE
       - INFO
       - DEBUG
+  eventInstance:
+    description: >- 
+      Indicate the particular source (instance) of an Event. The IO-Link Instance
+      Unknown maps to UNKNOWN, Reserved to UNKNOWN, Application to APPLICATION, and System to SYSTEM.
+    type: string
+    enum:
+      - UNKNOWN
+      - APPLICATION
+      - SYSTEM
   eventOriginObject:
     type: object
     properties:
@@ -337,6 +346,11 @@ schemas:
         $ref: "#/schemas/portNumber"
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
+      instance:
+        description: >-
+          This property is mandatory for IO-Link Port Events and IO-Link
+          Device Events. Should not be used for other log entries.
+        $ref: "#/schemas/eventInstance"
   eventObject:
     type: object
     properties:
@@ -466,6 +480,7 @@ schemas:
             - master
             - port
             - deviceAlias
+            - instance
           allOf:
             - $ref: "#/schemas/eventOriginObject"
         message:
@@ -481,6 +496,7 @@ schemas:
           master: 1
           port: 1
           deviceAlias: Temperature_sensor_1
+          instance: "APPLICATION"
         message:
           code: 16912
           mode: APPEARS
@@ -620,11 +636,13 @@ schemas:
             $ref: "#/schemas/currentObject"
           secondaryCurrent:
             $ref: "#/schemas/currentObject"
-  portMonitor:
+  portMonitorWired:
     type: object
+    minProperties: 1
     properties:
       voltage:
         type: object
+        minProperties: 1
         properties:
           primaryVoltage:
             $ref: "#/schemas/voltageObject"
@@ -636,6 +654,7 @@ schemas:
             $ref: "#/schemas/voltageObject"
       current:
         type: object
+        minProperties: 1
         properties:
           primaryCurrent:
             $ref: "#/schemas/currentObject"
@@ -645,9 +664,17 @@ schemas:
             $ref: "#/schemas/currentObject"
           iqCurrent:
             $ref: "#/schemas/currentObject"
+  portMonitorWireless:
+    type: object
+    required:
+      - wirelessQuality
+    properties:
       wirelessQuality:
         $ref: "#/schemas/wirelessPortQuality"
-
+  portMonitor:
+    oneOf:
+      - $ref: "#/schemas/portMonitorWired"
+      - $ref: "#/schemas/portMonitorWireless"
   mqttConfigurationGetPost:
     type: object
     required:
