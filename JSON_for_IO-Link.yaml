@@ -804,6 +804,7 @@ paths:
                       qos: 0_ONLY_ONCE
                       retain: true
                     keepAliveTime: 10
+                    originatorId: "master001"
                 Inactive client:
                   value:
                     clientMode: "INACTIVE"
@@ -856,6 +857,7 @@ paths:
                     qos: 0_ONLY_ONCE
                     retain: true
                   keepAliveTime: 10
+                  originatorId: "master001"
               Inactive Client:
                 value:
                   clientMode: INACTIVE
