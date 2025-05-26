@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: 1.1.0
+  version: 2.0.0
   title: JSON for IO-Link Specification
   description: >-
 
@@ -10,7 +10,7 @@ info:
     You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
 
 
-    * Draft for version 1.1.0
+    * Draft for version 2.0.0
     * The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
 
     * **Security:** The defined security schemas are just examples and can be replaced by vendor specifics. The way of restricting requests is as well in the responsibility of the vendor. It is recommended to limit access to writable endpoint. This should prevent misconfiguration and breaking running systems.
@@ -58,7 +58,7 @@ servers:
       host:
         default: "iolmaster.io-link.com"
       basePath:
-        default: iolink/v1
+        default: iolink/v2
       scheme:
         description: "The IO-Link gateway can expose the API over https and/or http"
         enum:
@@ -122,7 +122,7 @@ paths:
                       This is a sample IO-Link Master server. You can find out more about IO-Link
                       at [http://www.io-link.com](http://www.io-link.com)
                       # Description
-                      * Draft for version 1.x
+                      * Draft for version 2.x
                       ## Disclaimer:
                       >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
                       >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products. 
@@ -131,7 +131,7 @@ paths:
 
 
                       >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
-                    version: 1.1.0
+                    version: 2.0.0
                     title: Swagger IO-Link Master
                     contact:
                       email: info@io-link.com
@@ -146,8 +146,8 @@ paths:
                     {
                       "openapi": "3.0.3",
                       "info": null,
-                      "description": "This is a sample IO-Link Master server. You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com) # Description * Draft for version 1.x ## Disclaimer: >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents.  >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products.  >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.   >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). \n\n>IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.",
-                      "version": "1.1.0",
+                      "description": "This is a sample IO-Link Master server. You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com) # Description * Draft for version 2.x ## Disclaimer: >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents.  >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products.  >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.   >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). \n\n>IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.",
+                      "version": "2.0.0",
                       "title": "Swagger IO-Link Master",
                       "contact": { "email": "info@io-link.com" },
                       "license":
@@ -477,6 +477,7 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
+                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -487,6 +488,7 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
+                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -506,6 +508,7 @@ paths:
                       origin:
                         masterNumber: 1
                         port: 1
+                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -515,6 +518,7 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
+                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: DISAPPEARS
@@ -524,6 +528,7 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
+                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -536,6 +541,7 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
+                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -546,6 +552,7 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
+                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
@@ -602,13 +609,150 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/diagnosis":
+    get:
+      operationId: GetGatewayDiagnosis
+      tags:
+        - gateway
+      summary: Get the currently pending events.
+      description: >-
+        Each event with a *mode* of "APPEARS" is considered as an pending event until the occurence of a corresponding with *mode* of "DISAPPEARS".
+        Pending events must be provided regardless of the Event Log content.
+          
+        Hint: *mode* is optional property under *message*. An event cannot qualify as a pending event if this property is not specified.
+      parameters:
+        - $ref: "#/components/parameters/eventOrigin"
+        - $ref: "#/components/parameters/eventMasterNumber"
+        - $ref: "#/components/parameters/eventPortNumber"
+        - $ref: "#/components/parameters/eventdeviceAlias"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+              examples:
+                origin=ALL:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        instance: "APPLICATION"
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                        instance: "APPLICATION"
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                        instance: "APPLICATION"
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+                    - time: "2018-05-18T07:35:54.123Z"
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                        instance: "SYSTEM"
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=PORTS:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        port: 1
+                        instance: "APPLICATION"
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:35:54.123Z"
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                        instance: "SYSTEM"
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=DEVICES:
+                  value:
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                        instance: "APPLICATION"
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                        instance: "APPLICATION"
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
   "/gateway/monitor":
     get:
       operationId: GetGatewayMonitor
       tags:
         - gateway
-      summary: Read current and voltage values of the Gateway.
-      description: Read current and voltage values of the primary and secondary rail of the Gateway.
+      summary: Read current and voltage values of the Gateway. Optional.
+      description: >- 
+        Read current and voltage values of the primary and secondary rail of the Gateway.
+          
+        This endpoint should only be available if the gateway is located within the same physical device as the Master(s).
+        Primary and secondary rails are commonly denoted by US and UA. 
       responses:
         "200":
           description: Successful operation
@@ -2180,7 +2324,7 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
   "/masters/{masterNumber}/ports/{portNumber}/datastorage":
     get:
-      operationId: GetMastersMasterNumberPortsPortNumberDatastorages
+      operationId: GetMastersMasterNumberPortsPortNumberDatastorage
       tags:
         - ports
       parameters:
@@ -2194,26 +2338,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/dataStorageGetPost"
+                $ref: "./schemas.yaml#/schemas/dataStorageGet"
               examples:
                 Data Storage with valid content:
                   value:
                     header:
-                      vendorId: 15
-                      deviceId: 65253
-                      iolinkRevision: "1.1"
-                      parameterChecksum: 123456
+                      parameterChecksum: 1192298517
+                      vendorId: 646
+                      deviceId: 1234
+                      functionId: 0
                     content: >-
-                      TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
+                      "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
                 Empty Data Storage:
                   value:
                     header:
-                      vendorId: 26
-                      deviceId: 65253
-                      iolinkRevision: "1.1"
-                      parameterChecksum: 123456
+                      parameterChecksum: 0
+                      vendorId: 0
+                      deviceId: 0
+                      functionId: 0
                     content: >-
-                      ''
+                      "AAAAAAAAAAAAAAAA"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2235,7 +2379,7 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
     post:
-      operationId: PostMastersMasterNumberPortsPortNumberDatastorages
+      operationId: PostMastersMasterNumberPortsPortNumberDatastorage
       tags:
         - ports
       parameters:
@@ -2248,20 +2392,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./schemas.yaml#/schemas/dataStorageGetPost"
+              $ref: "./schemas.yaml#/schemas/dataStoragePost"
             examples:
               Data Storage with valid content:
                 value:
-                  header:
-                    vendorId: 15
-                    deviceId: 65253
-                    iolinkRevision: "1.1"
                   content: >-
-                    TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGl
+                    "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
               Empty Data Storage:
                 value:
-                  header: {}
-                  content: ""
+                  content: "AAAAAAAAAAAAAAAA"
       responses:
         "204":
           description: Successful operation
@@ -2364,8 +2503,12 @@ paths:
       operationId: GetMastersMasterNumberPortsPortNumberMonitor
       tags:
         - ports
-      summary: Read the actual current, voltage and wireless information from a port.
-      description: Read the actual current, voltage and wireless information from a port. The response object can vary depending on the port configuration or port type.
+      summary: Read the actual current, voltage and wireless information from a port. Optional.
+      description: >- 
+        Read the actual current, voltage and wireless information from a port.
+        The response object can vary depending on the port configuration or port type.
+          
+        The "secondaryVoltage" and "secondaryCurrent" only relevant for Wired, Class B ports and should reflect the Power 2 power supply. See 5.4.2 in IO-Link Interface and System Specification V1.1.4 June 2024 for more details.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"

@@ -225,6 +225,11 @@ schemas:
   wirelessBlockList:
     type: boolean
     default: false
+  dataStorageObject:
+        description: DataStorageObject (including the header) as described in E.6 DS_Data of the IO-Link Interface and System Specification v1.1.4 as Base64 coded string.
+        type: string
+        minLength: 16  # 12 octets encoded in Base64 (empty DS)
+        maxLength: 2748  # 2048 + 12 octets encoded in Base64
   identificationMasters:
     type: array
     items:
@@ -314,6 +319,15 @@ schemas:
       - NOTICE
       - INFO
       - DEBUG
+  eventInstance:
+    description: >- 
+      Indicate the particular source (instance) of an Event. The IO-Link Instance
+      Unknown maps to UNKNOWN, Reserved to UNKNOWN, Application to APPLICATION, and System to SYSTEM.
+    type: string
+    enum:
+      - UNKNOWN
+      - APPLICATION
+      - SYSTEM
   eventOriginObject:
     type: object
     properties:
@@ -332,6 +346,11 @@ schemas:
         $ref: "#/schemas/portNumber"
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
+      instance:
+        description: >-
+          This property is mandatory for IO-Link Port Events and IO-Link
+          Device Events. Should not be used for other log entries.
+        $ref: "#/schemas/eventInstance"
   eventObject:
     type: object
     properties:
@@ -461,6 +480,7 @@ schemas:
             - master
             - port
             - deviceAlias
+            - instance
           allOf:
             - $ref: "#/schemas/eventOriginObject"
         message:
@@ -476,6 +496,7 @@ schemas:
           master: 1
           port: 1
           deviceAlias: Temperature_sensor_1
+          instance: "APPLICATION"
         message:
           code: 16912
           mode: APPEARS
@@ -615,11 +636,13 @@ schemas:
             $ref: "#/schemas/currentObject"
           secondaryCurrent:
             $ref: "#/schemas/currentObject"
-  portMonitor:
+  portMonitorWired:
     type: object
+    minProperties: 1
     properties:
       voltage:
         type: object
+        minProperties: 1
         properties:
           primaryVoltage:
             $ref: "#/schemas/voltageObject"
@@ -631,6 +654,7 @@ schemas:
             $ref: "#/schemas/voltageObject"
       current:
         type: object
+        minProperties: 1
         properties:
           primaryCurrent:
             $ref: "#/schemas/currentObject"
@@ -640,9 +664,17 @@ schemas:
             $ref: "#/schemas/currentObject"
           iqCurrent:
             $ref: "#/schemas/currentObject"
+  portMonitorWireless:
+    type: object
+    required:
+      - wirelessQuality
+    properties:
       wirelessQuality:
         $ref: "#/schemas/wirelessPortQuality"
-
+  portMonitor:
+    oneOf:
+      - $ref: "#/schemas/portMonitorWired"
+      - $ref: "#/schemas/portMonitorWireless"
   mqttConfigurationGetPost:
     type: object
     required:
@@ -1759,10 +1791,10 @@ schemas:
         minLength: 26
         maxLength: 26
 
-  dataStorageGetPost:
+  dataStorageGet:
     description: >-
-      In case the Data Storage is empty, the header object is empty and the
-      content is an empty string.
+      In case of an empty Data Storage, the header object contains a value of 0 for every property,
+      and the content contains 12 bytes of 0x00, encoded as a Base64 string.
     type: object
     required:
       - header
@@ -1772,25 +1804,59 @@ schemas:
         oneOf:
           - type: object
             required:
+              - parameterChecksum
               - vendorId
               - deviceId
-              - iolinkRevision
+              - functionId
             properties:
+              parameterChecksum:
+                type: integer
+                minimum: 0
+                maximum: 4294967295  # UINT32_MAX
               vendorId:
                 $ref: "#/schemas/vendorId"
               deviceId:
                 $ref: "#/schemas/deviceId"
-              iolinkRevision:
-                $ref: "#/schemas/iolinkRevision"
+              functionId:
+                type: integer
+                enum:
+                  - 0
+          - type: object  # header for empty DS
+            required:
+              - parameterChecksum
+              - vendorId
+              - deviceId
+              - functionId
+            properties:
               parameterChecksum:
                 type: integer
-          - type: object # empty object
-            additionalProperties: false
-            minProperties: 0
-            maxProperties: 0
+                enum:
+                  - 0
+              vendorId:
+                type: integer
+                enum:
+                  - 0
+              deviceId:
+                type: integer
+                enum:
+                  - 0
+              functionId:
+                type: integer
+                enum:
+                  - 0
       content:
-        description: Base64 coded DS data Ojects. Max size = 2KB*1.33.
-        type: string
+        $ref: "#/schemas/dataStorageObject"
+
+  dataStoragePost:
+    description: >-
+      In case of an empty Data Storage, the content contains 12 bytes of 0x00, encoded as a Base64 string.
+    type: object
+    required:
+      - content
+    properties:
+      content:
+        $ref: "#/schemas/dataStorageObject"
+
   processDataValue:
     type: object
     properties:
