@@ -952,14 +952,7 @@ schemas:
           - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
           - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
           - FAILSAFE_PORT_B
-          - WIRELESS_MASTER
-      slotType:
-        description: >-
-          slotType for Wireless Master only
-        type: string
-        enum:
-          - SSLOT
-          - DSLOT
+          - WIRELESS_PORT
       maxPowerSupply:
         description: >-
           maxPowerSupply is not supported in IO-Link Wireless.
