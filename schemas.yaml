@@ -2,8 +2,9 @@ schemas:
   transactionId:
     description: Unique identifier for the transaction in for example as UUIDv4.
   deviceAliasBase:
-    description: Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
-        the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name.
+    description:
+      Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+      the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name.
   deviceAlias:
     allOf:
       - $ref: "#/schemas/deviceAliasBase"
@@ -230,10 +231,10 @@ schemas:
     type: boolean
     default: false
   dataStorageObject:
-        description: DataStorageObject (including the header) as described in E.6 DS_Data of the IO-Link Interface and System Specification v1.1.4 as Base64 coded string.
-        type: string
-        minLength: 16  # 12 octets encoded in Base64 (empty DS)
-        maxLength: 2748  # 2048 + 12 octets encoded in Base64
+    description: DataStorageObject (including the header) as described in E.6 DS_Data of the IO-Link Interface and System Specification v1.1.4 as Base64 coded string.
+    type: string
+    minLength: 16 # 12 octets encoded in Base64 (empty DS)
+    maxLength: 2748 # 2048 + 12 octets encoded in Base64
   identificationMasters:
     type: array
     items:
@@ -345,7 +346,7 @@ schemas:
       - INFO
       - DEBUG
   eventInstance:
-    description: >- 
+    description: >-
       Indicate the particular source (instance) of an Event. The IO-Link Instance
       Unknown maps to UNKNOWN, Reserved to UNKNOWN, Application to APPLICATION, and System to SYSTEM.
     type: string
@@ -968,7 +969,6 @@ schemas:
       - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
       - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
       - FAILSAFE_PORT_B
-      - WIRELESS_PORT
   portCapabilitiesGet:
     type: object
     required:
@@ -988,7 +988,9 @@ schemas:
       - slotType
     properties:
       portType:
-        $ref: "#/schemas/portCapabilitiesPorttype"
+        description: Type of the wireless port (must be WIRELESS_PORT).
+        type: string
+        enum: [WIRELESS_PORT]
       slotType:
         description: >-
           slotType for Wireless Master only
@@ -996,7 +998,6 @@ schemas:
         enum:
           - SSLOT
           - DSLOT
-
   portConfigurationGetCommon:
     type: object
     required:
@@ -1886,7 +1887,7 @@ schemas:
               parameterChecksum:
                 type: integer
                 minimum: 0
-                maximum: 4294967295  # UINT32_MAX
+                maximum: 4294967295 # UINT32_MAX
               vendorId:
                 type: integer
                 minimum: 0
@@ -1897,7 +1898,7 @@ schemas:
                 type: integer
                 enum:
                   - 0
-          - type: object  # header for empty DS
+          - type: object # header for empty DS
             required:
               - parameterChecksum
               - vendorId

@@ -760,11 +760,11 @@ paths:
       tags:
         - gateway
       summary: Read current and voltage values of the Gateway. Optional.
-      description: >- 
+      description: >-
         Read current and voltage values of the primary and secondary rail of the Gateway.
           
         This endpoint should only be available if the gateway is located within the same physical device as the Master(s).
-        Primary and secondary rails are commonly denoted by US and UA. 
+        Primary and secondary rails are commonly denoted by US and UA.
       responses:
         "200":
           description: Successful operation
@@ -2062,7 +2062,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
+                anyOf:
                   - $ref: "./schemas.yaml#/schemas/portCapabilitiesGet"
                   - $ref: "./schemas.yaml#/schemas/portCapabilitiesGetWireless"
               examples:
@@ -2102,9 +2102,10 @@ paths:
                       value: 2.0
                       unit: A
                     portType: FAILSAFE_PORT_B
-                IO-Link_Wireless:
+                WIRELESS_PORT:
                   value:
                     portType: WIRELESS_PORT
+                    slotType: SSLOT
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2544,7 +2545,7 @@ paths:
       tags:
         - ports
       summary: Read the actual current, voltage and wireless information from a port. Optional.
-      description: >- 
+      description: >-
         Read the actual current, voltage and wireless information from a port.
         The response object can vary depending on the port configuration or port type.
           
@@ -2779,8 +2780,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/deviceProcessDataValueGet"
               examples:
-                ? "Format=byteArray, CQ in IO-Link (only input), IQ in digital output"
-                : value:
+                "Format=byteArray, CQ in IO-Link (only input), IQ in digital output":
+                  value:
                     getData:
                       iolink:
                         valid: true
@@ -2790,8 +2791,8 @@ paths:
                           - 216
                     setData:
                       iqValue: true
-                ? "Format=iodd, CQ in IO-Link (input and output), IQ in digital input"
-                : value:
+                "Format=iodd, CQ in IO-Link (input and output), IQ in digital input":
+                  value:
                     getData:
                       iolink:
                         valid: true
@@ -2859,8 +2860,8 @@ paths:
             schema:
               $ref: "./schemas.yaml#/schemas/deviceProcessDataValuePost"
             examples:
-              ? "format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output"
-              : value:
+              "format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output":
+                value:
                   iolink:
                     valid: true
                     value:
@@ -2952,8 +2953,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/processDataValue"
               examples:
-                ? "Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input"
-                : value:
+                "Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
+                  value:
                     iolink:
                       valid: true
                       value:
@@ -3028,8 +3029,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/processDataValue"
               examples:
-                ? "Format=byteArray, CQ (pin4) in digital output, IQ (pin2) in digital input"
-                : value:
+                "Format=byteArray, CQ (pin4) in digital output, IQ (pin2) in digital input":
+                  value:
                     cqValue: false
                 "Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
                   value:
@@ -3355,8 +3356,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/errorObject_105"
 
-  ? "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices/{subParameterIdent}/value"
-  : get:
+  "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices/{subParameterIdent}/value":
+    get:
       operationId: GetDevicesDeviceAliasParametersSubindicesValue
       tags:
         - devices
@@ -4035,10 +4036,6 @@ components:
             $ref: "./schemas.yaml#/schemas/errorObject_150"
 
   examples: # reusable examples
-    exampleMasterConfiguration:
-      summary: IO-Link Master
-      value:
-
     exampleWirelessMasterConfiguration:
       summary: Wireless IO-Link Master
       value:
