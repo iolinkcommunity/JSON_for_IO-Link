@@ -1,36 +1,17 @@
-# .github/workflows/lint.yml
-name: Lint
+name: Run Spectral on Pull Requests
 
 on:
-  pull_request: {}
-  push:
-    branches: [main]
-    paths-ignore:
-      - 'README.md'
-      - 'src/**'
+  - pull_request
 
 jobs:
   build:
-    name: API Linting
+    name: Run Spectral
     runs-on: ubuntu-latest
-
-    permissions:
-      statuses: write
-      checks: write
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # Check out the repository
+      - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install -g @quobix/vacuum
-
-      - name: Lint API
-        run: vacuum report -r .ruleset.yaml --junit JSON_for_IO-Link.yaml lint-results
-
-      - name: Publish Lint Results
-        if: success() || failure()
-        uses: mikepenz/action-junit-report@v5
+      # Run Spectral
+      - uses: roesekoSICKAG/spectral-action@latest
         with:
-          check_name: API Lint Results
-          report_paths: lint-results-*.xml
+          file_glob: 'doc/api/*.yaml'
