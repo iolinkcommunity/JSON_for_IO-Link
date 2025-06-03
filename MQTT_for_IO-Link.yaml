@@ -31,8 +31,7 @@ servers:
 channels:
   "{originatorId}/gateway/identification":
     address: "{originatorId}/gateway/identification"
-    description: Publishes gateway nameplate information, send at connection startup/on change
-    parameters:
+    description: Publishes gateway nameplate information, send at connection startup/on change    
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
     messages:
