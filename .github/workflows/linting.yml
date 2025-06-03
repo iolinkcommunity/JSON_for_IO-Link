@@ -1,19 +1,36 @@
-name: Lint RestAPI with Spectral
+# .github/workflows/lint.yml
+name: Lint
 
 on:
-  - push
-  - pull_request
+  pull_request: {}
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'src/**'
 
 jobs:
   build:
-    name: Run Spectral
+    name: API Linting
     runs-on: ubuntu-latest
-    steps:
-      # Check out the repository
-      - uses: actions/checkout@v3
 
-      # Run Spectral
-      - uses: stoplightio/spectral-action@v0.8.11
+    permissions:
+      statuses: write
+      checks: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint API
+        run: npm exec vacuum report -- --junit openapi.yaml lint-results
+
+      - name: Publish Lint Results
+        if: success() || failure()
+        uses: mikepenz/action-junit-report@v5
         with:
-          file_glob: "JSON_for_IO-Link.yaml"
-          spectral_ruleset: .spectral.yaml
+          check_name: API Lint Results
+          report_paths: lint-results-*.xml
