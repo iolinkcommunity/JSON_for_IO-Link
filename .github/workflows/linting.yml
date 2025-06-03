@@ -17,3 +17,9 @@ jobs:
         with:
           file_glob: "JSON_for_IO-Link.yaml"
           spectral_ruleset: .spectral.yaml
+      
+      # Run Spectral
+      - uses: roesekoSICKAG/spectral-action@master
+        with:
+          file_glob: "MQTT_for_IO-Link.yaml"
+          spectral_ruleset: .spectral.yaml
