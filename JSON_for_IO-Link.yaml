@@ -76,9 +76,9 @@ tags:
   - name: gateway
     description: Access to parameters of the JSON gateway
   - name: mqtt
-    description: Access to the parameters of the MQTT client
+    description: Access to the parameters of the MQTT client. Optional.
   - name: iodds
-    description: Access to the IODDs
+    description: Access to the IODDs. Optional.
   - name: masters
     description: Access to parameters of the IO-Link master itself
   - name: ports
@@ -323,6 +323,7 @@ paths:
       summary: Write the configuration of the Gateway.
       description: Write the configuration of the Gateway.
       requestBody:
+        description: The configuration object for the IO-Link Gateway to be written.
         required: true
         content:
           application/json:
@@ -406,6 +407,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -433,6 +440,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -748,11 +761,11 @@ paths:
       tags:
         - gateway
       summary: Read current and voltage values of the Gateway. Optional.
-      description: >- 
+      description: >-
         Read current and voltage values of the primary and secondary rail of the Gateway.
           
         This endpoint should only be available if the gateway is located within the same physical device as the Master(s).
-        Primary and secondary rails are commonly denoted by US and UA. 
+        Primary and secondary rails are commonly denoted by US and UA.
       responses:
         "200":
           description: Successful operation
@@ -760,11 +773,16 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/gatewayMonitor"
-
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -837,8 +855,9 @@ paths:
         - mqtt
       summary: >-
         Update the MQTT configuration of the Gateway.
-      description: Update the MQTT configuration of the Gateway.
+      description: Update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
+        description: The MQTT configuration object for the Gateway to be updated.
         required: true
         content:
           application/json:
@@ -909,7 +928,7 @@ paths:
       tags:
         - mqtt
       summary: Get the list of MQTT topics.
-      description: Get the list of MQTT topics.
+      description: Get the list of MQTT topics. This endpoint is mandatory, if MQTT feature is supported.
       responses:
         "200":
           description: Successful operation
@@ -994,8 +1013,9 @@ paths:
       tags:
         - mqtt
       summary: Create a new MQTT topic.
-      description: Create a new MQTT topic.
+      description: Create a new MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
+        description: Create a new MQTT topic with the specified configuration.
         required: true
         content:
           application/json:
@@ -1093,7 +1113,7 @@ paths:
       tags:
         - mqtt
       summary: Get one MQTT topic.
-      description: Get one MQTT topic.
+      description: Get one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -1182,8 +1202,9 @@ paths:
       tags:
         - mqtt
       summary: Change or deactivate one MQTT topic.
-      description: Change or deactivate one MQTT topic.
+      description: Change or deactivate one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
+        description: Update or change the configuration of a specific MQTT topic by topicId.
         required: true
         content:
           application/json:
@@ -1278,7 +1299,7 @@ paths:
       tags:
         - mqtt
       summary: Delete a specific MQTT topic.
-      description: Delete a specific MQTT topic.
+      description: Delete a specific MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -1320,7 +1341,7 @@ paths:
       tags:
         - mqtt
       summary: Read the connection status of the MQTT client to the MQTT server.
-      description: Read the connection status of the MQTT client to the MQTT server.
+      description: Read the connection status of the MQTT client to the MQTT server. This endpoint is mandatory, if MQTT feature is supported.
       responses:
         "200":
           description: Successful operation
@@ -1362,8 +1383,7 @@ paths:
       summary: >-
         Get a list of all IODD (representations) that are available on the Gateway.
       description: >-
-        Only one version of an IODD is stored on the webserver at the same time
-        for one vendorId-deviceId-iolinkRevision-combination.
+        Only one version of an IODD is stored on the webserver at the same time for one vendorId-deviceId-iolinkRevision-combination. This endpoint is mandatory, if IODD feature is supported.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1410,7 +1430,7 @@ paths:
       tags:
         - iodds
       summary: Delete a specific IODD representation.
-      description: Delete a specific IODD representation and all related artifacts.
+      description: Delete a specific IODD representation and all related artifacts. This endpoint is mandatory, if IODD feature is supported.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1457,7 +1477,7 @@ paths:
       tags:
         - iodds
       summary: Get a specific IODD or other IODD artifacts like device image. Optional.
-      description: Get a specific IODD or other IODD artifacts like device image.
+      description: Get a specific IODD or other IODD artifacts like device image. This feature is optional.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1518,9 +1538,9 @@ paths:
         - iodds
       summary: Store or update an IODD.
       description: >
-        It is not needed to specify the identification data for this action as the
-        parser can read this information.
+        The assignment of an IODD to a device shall be done by matching vendor and device id. Only one IODD per vendor and device id is allowed. In case IODD with vendor and device id is already present on the gateway, this file should be replaced by the new one. This endpoint is mandatory, if IODD feature is supported.
       requestBody:
+        description: The IODD file or archive to be uploaded or updated.
         required: true
         content:
           application/xml:
@@ -1616,7 +1636,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/masterCapabilitiesGet"
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/masterCapabilitiesGet"
+                  - $ref: "./schemas.yaml#/schemas/masterCapabilitiesGetWireless"
               examples:
                 IO-Link:
                   value:
@@ -1725,6 +1747,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
+        description: The identification object for the master to be written.
         required: true
         content:
           application/json:
@@ -1775,7 +1798,7 @@ paths:
       tags:
         - masters
       summary: Read the actual configuration of the specified Master.
-      description: Read the actual configuration of the specified Master.
+      description: Read the actual configuration of the specified Master. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1786,8 +1809,6 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/mastersConfigurationGetPost"
               examples:
-                IO-Link:
-                  $ref: "#/components/examples/exampleMasterConfiguration"
                 IO-Link_Wireless:
                   $ref: "#/components/examples/exampleWirelessMasterConfiguration"
         "401":
@@ -1807,18 +1828,17 @@ paths:
       tags:
         - masters
       summary: Write the configuration of the specified Master.
-      description: Write the configuration of the specified Master.
+      description: Write the configuration of the specified Master. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
+        description: The configuration object for the specified Master to be written.
         required: true
         content:
           application/json:
             schema:
               $ref: "./schemas.yaml#/schemas/mastersConfigurationGetPost"
             examples:
-              IO-Link:
-                $ref: "#/components/examples/exampleMasterConfiguration"
               IO-Link_Wireless:
                 $ref: "#/components/examples/exampleWirelessMasterConfiguration"
       responses:
@@ -1849,13 +1869,13 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
-  "/masters/{masterNumber}/trackstatus": #TODO: wireles
+  "/masters/{masterNumber}/trackstatus":
     get:
       operationId: GetMastersMasterNumberTrackstatus
       tags:
         - masters
       summary: Read the actual Track status of the specified Wireless-Master.
-      description: Read the actual Track status of the specified Wireless-Master.
+      description: Read the actual Track status of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1869,6 +1889,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -1878,13 +1904,13 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
-  "/masters/{masterNumber}/scan": #TODO: wireles
+  "/masters/{masterNumber}/scan":
     get:
       operationId: GetMastersMasterNumberScan
       tags:
         - masters
       summary: Read the actual scan results of the specified Wireless-Master.
-      description: Read the actual scan results of the specified Wireless-Master.
+      description: Read the actual scan results of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       responses:
@@ -1898,6 +1924,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -1911,10 +1943,11 @@ paths:
       tags:
         - masters
       summary: To start a scan of the specified Wireless-Master.
-      description: To start a scan of the specified Wireless-Master.
+      description: To start a scan of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
+        description: The scan configuration object for the specified Wireless-Master.
         required: true
         content:
           application/json:
@@ -1939,6 +1972,12 @@ paths:
           $ref: "#/components/responses/HTTP_401"
         "403":
           $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
         "500":
           description: Internal Server Error
           content:
@@ -1966,7 +2005,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/mastersPortsGet"
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsGetWired"
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsGetWireless"
               examples:
                 IO-Link:
                   value:
@@ -2029,7 +2070,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/portCapabilitiesGet"
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/portCapabilitiesGet"
+                  - $ref: "./schemas.yaml#/schemas/portCapabilitiesGetWireless"
               examples:
                 CLASS_A:
                   value:
@@ -2067,9 +2110,10 @@ paths:
                       value: 2.0
                       unit: A
                     portType: FAILSAFE_PORT_B
-                IO-Link_Wireless:
+                WIRELESS_PORT:
                   value:
                     portType: WIRELESS_PORT
+                    slotType: SSLOT
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2107,7 +2151,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/mastersPortsStatusGet"
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWired"
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWireless"
               examples:
                 IO-Link:
                   value:
@@ -2168,7 +2214,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/portConfigurationGet"
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWired"
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWireless"
               examples:
                 IO-Link:
                   value:
@@ -2234,6 +2282,7 @@ paths:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
       requestBody:
+        description: The configuration object for the specified port to be written.
         required: true
         content:
           application/json:
@@ -2388,6 +2437,7 @@ paths:
       summary: Write the Data Storage content to a specific port.
       description: Write the Data Storage content to a specific port.
       requestBody:
+        description: The Data Storage content to write to the specified port.
         required: true
         content:
           application/json:
@@ -2447,11 +2497,12 @@ paths:
       tags:
         - ports
       summary: To pair a Wireless-Device with the specified Wireless-Port.
-      description: To pair a Wireless-Device with the specified Wireless-Port.
+      description: To pair a Wireless-Device with the specified Wireless-Port. This endpoint is mandatory, if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
       requestBody:
+        description: The pairing configuration object for the specified Wireless-Port.
         required: true
         content:
           application/json:
@@ -2487,6 +2538,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -2504,7 +2556,7 @@ paths:
       tags:
         - ports
       summary: Read the actual current, voltage and wireless information from a port. Optional.
-      description: >- 
+      description: >-
         Read the actual current, voltage and wireless information from a port.
         The response object can vary depending on the port configuration or port type.
           
@@ -2518,7 +2570,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/portMonitor"
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/portMonitor"
+                  - $ref: "./schemas.yaml#/schemas/portMonitorWireless"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2529,6 +2583,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -2669,6 +2724,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       requestBody:
+        description: The identification object for the device to be written.
         required: true
         content:
           application/json:
@@ -2736,8 +2792,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/deviceProcessDataValueGet"
               examples:
-                ? "Format=byteArray, CQ in IO-Link (only input), IQ in digital output"
-                : value:
+                "Format=byteArray, CQ in IO-Link (only input), IQ in digital output":
+                  value:
                     getData:
                       iolink:
                         valid: true
@@ -2747,8 +2803,8 @@ paths:
                           - 216
                     setData:
                       iqValue: true
-                ? "Format=iodd, CQ in IO-Link (input and output), IQ in digital input"
-                : value:
+                "Format=iodd, CQ in IO-Link (input and output), IQ in digital input":
+                  value:
                     getData:
                       iolink:
                         valid: true
@@ -2810,14 +2866,15 @@ paths:
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       requestBody:
+        description: The process data output values to write to the specified Device.
         required: true
         content:
           application/json:
             schema:
               $ref: "./schemas.yaml#/schemas/deviceProcessDataValuePost"
             examples:
-              ? "format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output"
-              : value:
+              "format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output":
+                value:
                   iolink:
                     valid: true
                     value:
@@ -2909,8 +2966,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/processDataValue"
               examples:
-                ? "Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input"
-                : value:
+                "Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
+                  value:
                     iolink:
                       valid: true
                       value:
@@ -2985,8 +3042,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/processDataValue"
               examples:
-                ? "Format=byteArray, CQ (pin4) in digital output, IQ (pin2) in digital input"
-                : value:
+                "Format=byteArray, CQ (pin4) in digital output, IQ (pin2) in digital input":
+                  value:
                     cqValue: false
                 "Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
                   value:
@@ -3178,6 +3235,7 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
       requestBody:
+        description: The parameter value to write, specified by index or parameter name.
         required: true
         content:
           application/json:
@@ -3312,8 +3370,8 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/errorObject_105"
 
-  ? "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices/{subParameterIdent}/value"
-  : get:
+  "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices/{subParameterIdent}/value":
+    get:
       operationId: GetDevicesDeviceAliasParametersSubindicesValue
       tags:
         - devices
@@ -3398,6 +3456,7 @@ paths:
         - $ref: "#/components/parameters/parameterIdent"
         - $ref: "#/components/parameters/subParameterIdent"
       requestBody:
+        description: The parameter value to write, specified by index/subindex or parametername/sub-parameter name.
         required: true
         content:
           application/json:
@@ -3475,6 +3534,7 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/format"
       requestBody:
+        description: The block parameterization request object specifying the direction and parameters to read or write.
         required: true
         content:
           application/json:
@@ -3834,8 +3894,8 @@ components:
           tokenUrl: https://io-link-vendor.com/protocol/openid-connect/token
           authorizationUrl: https://io-link-vendor.com/protocol/openid-connect/auth
           scopes:
-            MaintenanceRole: priviledged access for reading and writing all endpoints
-            SpecialistRole: more priviledged access for advanced features like firmware update
+            Maintenance: priviledged access for reading and writing all endpoints
+            Specialist: more priviledged access for advanced features like firmware update
   parameters:
     artifact:
       name: artifact
@@ -3992,12 +4052,9 @@ components:
             $ref: "./schemas.yaml#/schemas/errorObject_150"
 
   examples: # reusable examples
-    exampleMasterConfiguration:
-      summary: IO-Link Master
-      value:
-
     exampleWirelessMasterConfiguration:
       summary: Wireless IO-Link Master
+      description: Example configuration for a wireless IO-Link master device.
       value:
         masterId: 5
         advancedConnectivity:

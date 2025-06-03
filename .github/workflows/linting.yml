@@ -1,4 +1,4 @@
-name: Lint RestAPI with Spectral
+name: Run Spectral on Pull Requests
 
 on:
   - push
@@ -10,10 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Check out the repository
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Run Spectral
-      - uses: stoplightio/spectral-action@latest
+      - uses: roesekoSICKAG/spectral-action@master
         with:
           file_glob: "JSON_for_IO-Link.yaml"
+          spectral_ruleset: .spectral.yaml
+      
+      # Run Spectral
+      - uses: roesekoSICKAG/spectral-action@master
+        with:
+          file_glob: "MQTT_for_IO-Link.yaml"
           spectral_ruleset: .spectral.yaml

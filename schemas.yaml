@@ -2,8 +2,9 @@ schemas:
   transactionId:
     description: Unique identifier for the transaction in for example as UUIDv4.
   deviceAliasBase:
-    description: Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
-        the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name.
+    description:
+      Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+      the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name.
   deviceAlias:
     allOf:
       - $ref: "#/schemas/deviceAliasBase"
@@ -230,10 +231,10 @@ schemas:
     type: boolean
     default: false
   dataStorageObject:
-        description: DataStorageObject (including the header) as described in E.6 DS_Data of the IO-Link Interface and System Specification v1.1.4 as Base64 coded string.
-        type: string
-        minLength: 16  # 12 octets encoded in Base64 (empty DS)
-        maxLength: 2748  # 2048 + 12 octets encoded in Base64
+    description: DataStorageObject (including the header) as described in E.6 DS_Data of the IO-Link Interface and System Specification v1.1.4 as Base64 coded string.
+    type: string
+    minLength: 16 # 12 octets encoded in Base64 (empty DS)
+    maxLength: 2748 # 2048 + 12 octets encoded in Base64
   identificationMasters:
     type: array
     items:
@@ -266,6 +267,19 @@ schemas:
     minimum: 0
     maximum: 255
     example: 12
+  statusInfo:
+    type: string
+    enum: # see Terminology in V.113, Table E.4 PortStatusList
+      - COMMUNICATION_LOST # NO_DEVICE
+      - DEACTIVATED # DEACTIVATED
+      - INCORRECT_DEVICE # PORT_DIAG
+      - DEVICE_STARTING #
+      - DEVICE_ONLINE # OPERATE
+      - DIGITAL_INPUT_C/Q # DI_CQ
+      - DIGITAL_OUTPUT_C/Q # DO_CQ
+      - NOT_AVAILABLE # NOT_AVAILABLE
+      - PORT_POWER_OFF # PORT_POWER_OFF
+      - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
   masterIdentificationPost:
     type: object
     properties:
@@ -295,12 +309,20 @@ schemas:
   masterCapabilitiesGet:
     required:
       - numberOfPorts
+      - maxPowerSupply
     type: object
     properties:
       numberOfPorts:
         $ref: "#/schemas/portNumber"
       maxPowerSupply:
         $ref: "#/schemas/currentObject"
+  masterCapabilitiesGetWireless:
+    required:
+      - numberOfPorts
+    type: object
+    properties:
+      numberOfPorts:
+        $ref: "#/schemas/portNumber"
   eventTime:
     description: >-
       Timestamp (format defined in DIN ISO 8601). This field can give an
@@ -324,7 +346,7 @@ schemas:
       - INFO
       - DEBUG
   eventInstance:
-    description: >- 
+    description: >-
       Indicate the particular source (instance) of an Event. The IO-Link Instance
       Unknown maps to UNKNOWN, Reserved to UNKNOWN, Application to APPLICATION, and System to SYSTEM.
     type: string
@@ -523,6 +545,7 @@ schemas:
         maxLength: 64
       productId:
         type: string
+        minLength: 1
       hardwareRevision:
         type: string
         minLength: 1
@@ -592,7 +615,6 @@ schemas:
           ipAddress: 192.168.1.13
           subnetMask: 255.255.255.0
           standardGateway: 192.168.1.1
-
   voltageObject:
     type: object
     required:
@@ -938,27 +960,45 @@ schemas:
       functionTag:
         $ref: "#/schemas/tags"
         example: Check start of belt
+  portCapabilitiesPorttype:
+    type: string
+    enum:
+      - CLASS_A
+      - CLASS_B
+      - CLASS_A_WITH_PORT_POWER_OFF_ON
+      - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
+      - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
+      - FAILSAFE_PORT_B
   portCapabilitiesGet:
     type: object
     required:
       - portType
+      - maxPowerSupply
     properties:
       portType:
-        type: string
-        enum:
-          - CLASS_A
-          - CLASS_B
-          - CLASS_A_WITH_PORT_POWER_OFF_ON
-          - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
-          - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
-          - FAILSAFE_PORT_B
-          - WIRELESS_PORT
+        $ref: "#/schemas/portCapabilitiesPorttype"
       maxPowerSupply:
         description: >-
           maxPowerSupply is not supported in IO-Link Wireless.
         $ref: "#/schemas/currentObject"
-
-  portConfigurationGet:
+  portCapabilitiesGetWireless:
+    type: object
+    required:
+      - portType
+      - slotType
+    properties:
+      portType:
+        description: Type of the wireless port (must be WIRELESS_PORT).
+        type: string
+        enum: [WIRELESS_PORT]
+      slotType:
+        description: >-
+          slotType for Wireless Master only
+        type: string
+        enum:
+          - SSLOT
+          - DSLOT
+  portConfigurationGetCommon:
     type: object
     required:
       - mode
@@ -986,18 +1026,6 @@ schemas:
           - TYPE_COMPATIBLE_DEVICE_V1.1
           - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
           - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
-      cycleTime:
-        description: >-
-          required if portMode is IOLINK_MANUAL or
-          IOLINK_AUTOSTART. Default value is 0 ms which means as fast as possible. 
-          Note: If the applied value for cycle time cannot exactly be mapped,
-          the port shall use the next possible higher value. If the cycle time is greater 
-          than 132.8 ms the error 702 shall be returned.
-          Note: This value is not used in IO-Link wireless use 
-          wMasterCycleTimeOut and wMasterCycleTimeIn instead.
-        type: object
-        allOf:
-          - $ref: "#/schemas/cycleTime"
       vendorId:
         description: >-
           required if portMode is IOLINK_MANUAL and
@@ -1008,120 +1036,144 @@ schemas:
           required if portMode is IOLINK_MANUAL and
           validationAndBackup is not NO_DEVICE_CHECK.
         $ref: "#/schemas/deviceId"
-      iqConfiguration:
-        description: >-
-          iqConfiguration is not supported in IO-Link Wireless.
-        type: string
-        enum:
-          - NOT_SUPPORTED
-          - DIGITAL_INPUT
-          - DIGITAL_OUTPUT
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
-      slotNumber:
-        description: >-
-          slot number of the Wireless-Device (Wireless Master only).
-        $ref: "#/schemas/wirelessSlotNumber"
-      trackNumber:
-        description: >-
-          track number of the Wireless-Device, maximum depends on the number of 
-          available tracks on the Wireless-Master (Wireless Master only).
-        $ref: "#/schemas/wirelessTrackNumber"
-      deviceTxPower:
-        description: >-
-          transmission power of the Wireless-Device (Wireless Master only).
-        type: integer
-        minimum: 1
-        maximum: 31
-      maxRetry:
-        description: >-
-          Number of Retries for process data (Wireless Master only).
-        type: integer
-        minimum: 2
-        maximum: 31
-      imaTime:
-        description: >-
-          I am alive time for the wireless connection (Wireless Master only).
-        type: object
-        required:
-          - base
-          - multiplier
-        properties:
-          base:
-            description: >-
-              IMA timeout base.
-            type: string
-            enum:
-              - "1664us"
-              - "5ms"
-              - "1s"
-              - "1min"
-          multiplier:
-            description: >-
-              IMA timeout multiplier.
-            type: integer
-            minimum: 1
-            maximum: 255
-      slotType:
-        description: >-
-          Single Slot or Double Slot (Wireless Master only).
-        type: string
-        enum:
-          - "SSLOT"
-          - "DSLOT"
-      lowEnergyDevice:
-        description: >-
-          to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
-        type: boolean
-        default: false
-      maxPDSegLength:
-        description: >-
-          maximum process data output segment length (Wireless Master only).
-        type: integer
-        minimum: 0
-        maximum: 32
-      wMasterCycleTimeOut:
-        description: >-
-          Wireless-Master cycle time output for PD data (Wireless Master only).
-        type: object
-        required:
-          - base
-        properties:
-          base:
-            type: string
-            enum:
-              - "FreeRunning"
-              - "5ms"
-          multiplier:
-            type: integer
-            minimum: 1
-            maximum: 63
-      wMasterCycleTimeIn:
-        description: >-
-          Wireless-Master cycle time input for PD data (Wireless Master only).
-        type: object
-        required:
-          - base
-        properties:
-          base:
-            type: string
-            enum:
-              - "FreeRunning"
-              - "5ms"
-          multiplier:
-            type: integer
-            minimum: 1
-            maximum: 63
-      uniqueId:
-        description: >-
-          unique identifier for each Wireless-Device (Wireless Master only).
-        type: string
-        minLength: 26
-        maxLength: 26
 
-  mastersConfigurationGetPost: # TODO: IOLW
+  portConfigurationGetWired:
+    allOf:
+      - $ref: "#/schemas/portConfigurationGetCommon"
+      - type: object
+        properties:
+          iqConfiguration:
+            description: >-
+              iqConfiguration is not supported in IO-Link Wireless.
+            type: string
+            enum:
+              - NOT_SUPPORTED
+              - DIGITAL_INPUT
+              - DIGITAL_OUTPUT
+          cycleTime:
+            description: >-
+              required if portMode is IOLINK_MANUAL or
+              IOLINK_AUTOSTART. Default value is 0 ms which means as fast as possible. 
+              Note: If the applied value for cycle time cannot exactly be mapped,
+              the port shall use the next possible higher value. If the cycle time is greater 
+              than 132.8 ms the error 702 shall be returned.
+              Note: This value is not used in IO-Link wireless use 
+              wMasterCycleTimeOut and wMasterCycleTimeIn instead.
+            type: object
+            allOf:
+              - $ref: "#/schemas/cycleTime"
+
+  portConfigurationGetWireless:
+    allOf:
+      - $ref: "#/schemas/portConfigurationGetCommon"
+      - type: object
+        properties:
+          slotNumber:
+            description: >-
+              slot number of the Wireless-Device (Wireless Master only).
+            $ref: "#/schemas/wirelessSlotNumber"
+          trackNumber:
+            description: >-
+              track number of the Wireless-Device, maximum depends on the number of 
+              available tracks on the Wireless-Master (Wireless Master only).
+            $ref: "#/schemas/wirelessTrackNumber"
+          deviceTxPower:
+            description: >-
+              transmission power of the Wireless-Device (Wireless Master only).
+            type: integer
+            minimum: 1
+            maximum: 31
+          maxRetry:
+            description: >-
+              Number of Retries for process data (Wireless Master only).
+            type: integer
+            minimum: 2
+            maximum: 31
+          imaTime:
+            description: >-
+              I am alive time for the wireless connection (Wireless Master only).
+            type: object
+            required:
+              - base
+              - multiplier
+            properties:
+              base:
+                description: >-
+                  IMA timeout base.
+                type: string
+                enum:
+                  - "1664us"
+                  - "5ms"
+                  - "1s"
+                  - "1min"
+              multiplier:
+                description: >-
+                  IMA timeout multiplier.
+                type: integer
+                minimum: 1
+                maximum: 255
+          slotType:
+            description: >-
+              Single Slot or Double Slot (Wireless Master only).
+            type: string
+            enum:
+              - "SSLOT"
+              - "DSLOT"
+          lowEnergyDevice:
+            description: >-
+              to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
+            type: boolean
+            default: false
+          maxPDSegLength:
+            description: >-
+              maximum process data output segment length (Wireless Master only).
+            type: integer
+            minimum: 0
+            maximum: 32
+          wMasterCycleTimeOut:
+            description: >-
+              Wireless-Master cycle time output for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          wMasterCycleTimeIn:
+            description: >-
+              Wireless-Master cycle time input for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          uniqueId:
+            description: >-
+              unique identifier for each Wireless-Device (Wireless Master only).
+            type: string
+            minLength: 26
+            maxLength: 26
+
+  mastersConfigurationGetPost:
     properties:
-      wMasterId: #TODO roeseko What masterId is this? Same as in identification object?
+      wMasterId:
         description: >-
           Master identifier for connection with Wireless-Devices.
         type: integer
@@ -1334,7 +1386,7 @@ schemas:
             $ref: "#/schemas/wirelessBlockList"
           "2478":
             $ref: "#/schemas/wirelessBlockList"
-  mastersPortsPairingPost: # TODO: IOLW
+  mastersPortsPairingPost:
     properties:
       portPairing:
         type: string
@@ -1345,7 +1397,7 @@ schemas:
     example:
       WPortPairing: PairingUnique
 
-  mastersScanGet: # TODO: IOLW
+  mastersScanGet:
     properties:
       scanStatus:
         type: string
@@ -1355,20 +1407,27 @@ schemas:
           - ScanEnded
       scanResults:
         type: array
-        properties:
-          slotType:
-            type: string
-            enum:
-              - "SSLOT"
-              - "DSLOT"
-          uniqueId:
-            type: string
-            minLength: 26
-            maxLength: 26
-          iolinkRevision:
-            $ref: "#/schemas/iolinkRevision"
-          lastSeen:
-            $ref: "#/schemas/eventTime"
+        items:
+          type: object
+          required:
+            - slotType
+            - uniqueId
+            - iolinkRevision
+            - lastSeen
+          properties:
+            slotType:
+              type: string
+              enum:
+                - "SSLOT"
+                - "DSLOT"
+            uniqueId:
+              type: string
+              minLength: 26
+              maxLength: 26
+            iolinkRevision:
+              $ref: "#/schemas/iolinkRevision"
+            lastSeen:
+              $ref: "#/schemas/eventTime"
     example:
       scanStatus: ScanEnded
       scanResults:
@@ -1381,7 +1440,7 @@ schemas:
           iolinkRevision: "1.1"
           lastSeen: "2022-12-01T09:42:23.314Z"
 
-  mastersScanPost: # TODO: IOLW
+  mastersScanPost:
     properties:
       txPower:
         type: integer
@@ -1390,61 +1449,68 @@ schemas:
     example:
       txPower: 31
 
-  mastersPortsGet: # TODO: IOLW
+  portObject:
+    type: object
+    required:
+      - portNumber
+      - statusInfo
+      - deviceAlias
+    properties:
+      portNumber:
+        $ref: "#/schemas/portNumber"
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
+      statusInfo:
+        $ref: "#/schemas/statusInfo"
+      deviceInfo:
+        description: >-
+          Wireless Master only.
+        type: object
+        properties:
+          vendorId:
+            $ref: "#/schemas/vendorId"
+          deviceId:
+            $ref: "#/schemas/deviceId"
+          productName:
+            $ref: "#/schemas/productName"
+
+  portWirelessObject:
+    allOf:
+      - $ref: "#/schemas/portObject"
+      - type: object
+        required:
+          - slotNumber
+          - trackNumber
+          - slotType
+        properties:
+          slotNumber:
+            description: >-
+              slot number of the Wireless-Device (Wireless Master only).
+            $ref: "#/schemas/wirelessSlotNumber"
+          trackNumber:
+            description: >-
+              track number of the Wireless-Device, maximum depends on the number of 
+              available tracks on the Wireless-Master (Wireless Master only).
+            $ref: "#/schemas/wirelessTrackNumber"
+          slotType:
+            description: >-
+              Single Slot or Double Slot (Wireless Master only).
+            type: string
+            enum:
+              - "SSLOT"
+              - "DSLOT"
+
+  mastersPortsGetWired:
     type: array
     items:
-      type: object
-      required:
-        - portNumber
-        - statusInfo
-        - deviceAlias
-      properties:
-        portNumber:
-          $ref: "#/schemas/portNumber"
-        deviceAlias:
-          $ref: "#/schemas/deviceAlias"
-        statusInfo:
-          type: string
-          enum: # see Terminology in V.113, Table E.4 PortStatusList
-            - COMMUNICATION_LOST # NO_DEVICE
-            - DEACTIVATED # DEACTIVATED
-            - INCORRECT_DEVICE # PORT_DIAG
-            - DEVICE_STARTING #
-            - DEVICE_ONLINE # OPERATE
-            - DIGITAL_INPUT_C/Q # DI_CQ
-            - DIGITAL_OUTPUT_C/Q # DO_CQ
-            - NOT_AVAILABLE # NOT_AVAILABLE
-            - PORT_POWER_OFF # PORT_POWER_OFF
-            - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
-        slotNumber:
-          description: >-
-            slot number of the Wireless-Device (Wireless Master only).
-          $ref: "#/schemas/wirelessSlotNumber"
-        trackNumber:
-          description: >-
-            track number of the Wireless-Device, maximum depends on the number of 
-            available tracks on the Wireless-Master (Wireless Master only).
-          $ref: "#/schemas/wirelessTrackNumber"
-        slotType:
-          description: >-
-            Single Slot or Double Slot (Wireless Master only).
-          type: string
-          enum:
-            - "SSLOT"
-            - "DSLOT"
-        deviceInfo:
-          description: >-
-            Wireless Master only.
-          type: object
-          properties:
-            vendorId:
-              $ref: "#/schemas/vendorId"
-            deviceId:
-              $ref: "#/schemas/deviceId"
-            productName:
-              $ref: "#/schemas/productName"
+      $ref: "#/schemas/portObject"
 
-  mastersPortsStatusGet: # TODO: IOLW
+  mastersPortsGetWireless:
+    type: array
+    items:
+      $ref: "#/schemas/portWirelessObject"
+
+  mastersPortsStatusGet:
     properties:
       statusInfo:
         type: string
@@ -1464,92 +1530,104 @@ schemas:
           Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
           OPERATE.
         $ref: "#/schemas/iolinkRevision"
-      transmissionRate:
-        description: >-
-          Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
-          OPERATE. transmissionRate is not used in IO-Link Wireless.
-        type: string
-        enum:
-          - COM1
-          - COM2
-          - COM3
-      masterCycleTime:
-        description: >-
-          Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
-          OPERATE. masterCycleTime is not used in IO-Link wireless use 
-          wMasterCycleTimeOut and wMasterCycleTimeIn instead.
-        type: object
-        allOf:
-          - $ref: "#/schemas/cycleTime"
-      portQualityInfo:
-        description: >-
-          status information of the Process Data (Wireless Master only).
-        type: object
-        properties:
-          "pdInValid":
-            type: boolean
-            default: false
-          "pdOutValid":
-            type: boolean
-            default: false
-      inputDataLength:
-        description: >-
-          this element contains the input data length as number of octets of the Device provided by the PDIn service (Wireless Master only).
-        type: integer
-        minimum: 0
-        maximum: 32
-      outputDataLength:
-        description: >-
-          this element contains the output data length as number of octets of the Device provided by the PDOut service (Wireless Master only).
-        type: integer
-        minimum: 0
-        maximum: 32
-      vendorId:
-        description: >-
-          Wireless Master only.
-        type: integer
-        minimum: 1
-        maximum: 65535
-      deviceId:
-        description: >-
-          Wireless Master only.
-        type: integer
-        minimum: 1
-        maximum: 16777215
-      wMasterCycleTimeOut:
-        description: >-
-          Wireless-Master cycle time output for PD data (Wireless Master only).
-        type: object
-        required:
-          - base
-        properties:
-          base:
-            type: string
-            enum:
-              - "FreeRunning"
-              - "5ms"
-          multiplier:
-            type: integer
-            minimum: 1
-            maximum: 63
-      wMasterCycleTimeIn:
-        description: >-
-          Wireless-Master cycle time input for PD data (Wireless Master only).
-        type: object
-        required:
-          - base
-        properties:
-          base:
-            type: string
-            enum:
-              - "FreeRunning"
-              - "5ms"
-          multiplier:
-            type: integer
-            minimum: 1
-            maximum: 63
 
-  mastersTrackstatusGet: # TODO: IOLW
+  mastersPortsStatusGetWired:
+    allOf:
+      - $ref: "#/schemas/mastersPortsStatusGet"
+      - type: object
+        properties:
+          transmissionRate:
+            description: >-
+              Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+              OPERATE. transmissionRate is not used in IO-Link Wireless.
+            type: string
+            enum:
+              - COM1
+              - COM2
+              - COM3
+          masterCycleTime:
+            description: >-
+              Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+              OPERATE. masterCycleTime is not used in IO-Link wireless use 
+              wMasterCycleTimeOut and wMasterCycleTimeIn instead.
+            type: object
+            allOf:
+              - $ref: "#/schemas/cycleTime"
+
+  mastersPortsStatusGetWireless:
+    allOf:
+      - $ref: "#/schemas/mastersPortsStatusGet"
+      - type: object
+        properties:
+          wMasterCycleTimeOut:
+            description: >-
+              Wireless-Master cycle time output for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          wMasterCycleTimeIn:
+            description: >-
+              Wireless-Master cycle time input for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          portQualityInfo:
+            description: >-
+              status information of the Process Data (Wireless Master only).
+            type: object
+            properties:
+              "pdInValid":
+                type: boolean
+                default: false
+              "pdOutValid":
+                type: boolean
+                default: false
+          inputDataLength:
+            description: >-
+              this element contains the input data length as number of octets of the Device provided by the PDIn service (Wireless Master only).
+            type: integer
+            minimum: 0
+            maximum: 32
+          outputDataLength:
+            description: >-
+              this element contains the output data length as number of octets of the Device provided by the PDOut service (Wireless Master only).
+            type: integer
+            minimum: 0
+            maximum: 32
+          vendorId:
+            description: >-
+              Wireless Master only.
+            type: integer
+            minimum: 1
+            maximum: 65535
+          deviceId:
+            description: >-
+              Wireless Master only.
+            type: integer
+            minimum: 1
+            maximum: 16777215
+
+  mastersTrackstatusGet:
     type: array
     items:
       type: object
@@ -1601,7 +1679,7 @@ schemas:
       lqiDevice: 100
       rssiDevice: -39
 
-  mastersPortsQualityGet: # TODO: IOLW
+  mastersPortsQualityGet:
     properties:
       lqiMaster:
         type: integer
@@ -1809,16 +1887,18 @@ schemas:
               parameterChecksum:
                 type: integer
                 minimum: 0
-                maximum: 4294967295  # UINT32_MAX
+                maximum: 4294967295 # UINT32_MAX
               vendorId:
-                $ref: "#/schemas/vendorId"
+                type: integer
+                minimum: 0
+                maximum: 65535
               deviceId:
                 $ref: "#/schemas/deviceId"
               functionId:
                 type: integer
                 enum:
                   - 0
-          - type: object  # header for empty DS
+          - type: object # header for empty DS
             required:
               - parameterChecksum
               - vendorId
@@ -2375,7 +2455,7 @@ schemas:
             example: "linkUp"
   masterConfiguration:
     properties:
-      masterId: #TODO roeseko What masterId is this? Same as in identification object?
+      masterId:
         type: integer
         minimum: 1
         maximum: 29
@@ -2648,10 +2728,10 @@ schemas:
         $ref: "#/schemas/wirelessTrackNumber"
       channelErrors:
         type: object
-        # required:  # @TODO wireles
+        # required:
         #   - all
         properties:
-          "2402": # TODO roeseko What is mean by this value? Is this the error code for this channel?
+          "2402":
             type: integer
             minimum: 0
             maximum: 65535 # 0 to 100, 65535 means no data available

@@ -11,6 +11,7 @@ info:
   license:
     name: Apache 2.0
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  tags: [{ "name": "IO-Link IoT" }]
 defaultContentType: application/json
 servers:
   iol-master:
@@ -32,7 +33,8 @@ channels:
     address: "{originatorId}/gateway/identification"
     description: Publishes gateway nameplate information, send at connection startup/on change
     parameters:
-      $ref: "./schemas.yaml#/schemas/originatorId"
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
     messages:
       publish.message:
         name: gatewayIdentificationMessage
@@ -43,7 +45,8 @@ channels:
     address: "{originatorId}/gateway/events"
     description: Publishes list of occured gateway events, send on change
     parameters:
-      $ref: "./schemas.yaml#/schemas/originatorId"
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
     messages:
       publish.message:
         name: gatewayEventsMessage
@@ -138,8 +141,8 @@ channels:
         payload:
           $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
 
-  ? "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value"
-  : address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value"
+  "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value"
     description: Publishes device sub-parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
     parameters:
       originatorId:
@@ -190,19 +193,23 @@ channels:
 
 operations:
   "{originatorId}/gateway/identification.publish":
+    description: Publishes the gateway identification data
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1gateway~1identification"
     messages:
       - $ref: >-
           #/channels/{originatorId}~1gateway~1identification/messages/publish.message
+
   "{originatorId}/gateway/events.publish":
+    description: Publishes the gateway events
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1gateway~1events"
     messages:
       - $ref: "#/channels/{originatorId}~1gateway~1events/messages/publish.message"
   "{originatorId}/masters/{masterNumber}/identification.publish":
+    description: Publishes the master identification data
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1identification"
@@ -211,13 +218,16 @@ operations:
           #/channels/{originatorId}~1masters~1{masterNumber}~1identification/messages/publish.message
 
   "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status.publish":
+    description: Publishes the port status
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status"
     messages:
       - $ref: >-
           #/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status/messages/publish.message
+
   "{originatorId}/devices/{deviceAlias}/identification.publish":
+    description: Publishes the device identification data
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1identification"
@@ -228,36 +238,46 @@ operations:
     messages:
       - $ref: >-
           #/channels/{originatorId}~1devices~1{deviceAlias}~1identification/messages/publish.message
+
   "{originatorId}/{deviceAlias}/event.publish":
+    description: Publishes the device events
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1events"
     messages:
       - $ref: >-
           #/channels/{originatorId}~1devices~1{deviceAlias}~1events/messages/publish.message
+
   "{originatorId}/{deviceAlias}/processData.publish":
+    description: Publishes the device process data
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value"
     messages:
       - $ref: >-
           #/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value/messages/publish.message
+
   "{originatorId}/{deviceAlias}/parameter/parameterIdent.publish":
+    description: Publishes the device parameter data
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value"
     messages:
       - $ref: >-
           #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
-  ? "{originatorId}/devices/{deviceAlias}/parameter/parameterIdent/subParameterIdent.publish"
-  : action: send
+
+  "{originatorId}/devices/{deviceAlias}/parameter/parameterIdent/subParameterIdent.publish":
+    description: Publishes the device sub-parameter data
+    action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1{subParameterIdent}~1value"
     messages:
       - $ref: >-
           #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
-  ? "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}.subscribe"
-  : action: receive
+
+  "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}.subscribe":
+    description: Subscribes to device parameter requests
+    action: receive
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1request~1{transactionId}"
     reply:
