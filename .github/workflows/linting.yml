@@ -1,6 +1,7 @@
 name: Run Spectral on Pull Requests
 
 on:
+  - push
   - pull_request
 
 jobs:
@@ -14,4 +15,5 @@ jobs:
       # Run Spectral
       - uses: roesekoSICKAG/spectral-action@master
         with:
-          file_glob: 'doc/api/*.yaml'
+          file_glob: "JSON_for_IO-Link.yaml"
+          spectral_ruleset: .spectral.yaml
