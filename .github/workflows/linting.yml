@@ -12,6 +12,6 @@ jobs:
       - uses: actions/checkout@v3
 
       # Run Spectral
-      - uses: roesekoSICKAG/spectral-action@latest
+      - uses: roesekoSICKAG/spectral-action@main
         with:
           file_glob: 'doc/api/*.yaml'
