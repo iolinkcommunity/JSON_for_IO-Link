@@ -323,6 +323,7 @@ paths:
       summary: Write the configuration of the Gateway.
       description: Write the configuration of the Gateway.
       requestBody:
+        description: The configuration object for the IO-Link Gateway to be written.
         required: true
         content:
           application/json:
@@ -856,6 +857,7 @@ paths:
         Update the MQTT configuration of the Gateway.
       description: Update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
+        description: The MQTT configuration object for the Gateway to be updated.
         required: true
         content:
           application/json:
@@ -1013,6 +1015,7 @@ paths:
       summary: Create a new MQTT topic.
       description: Create a new MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
+        description: Create a new MQTT topic with the specified configuration.
         required: true
         content:
           application/json:
@@ -1201,6 +1204,7 @@ paths:
       summary: Change or deactivate one MQTT topic.
       description: Change or deactivate one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
+        description: Update or change the configuration of a specific MQTT topic by topicId.
         required: true
         content:
           application/json:
@@ -1536,6 +1540,7 @@ paths:
       description: >
         The assignment of an IODD to a device shall be done by matching vendor and device id. Only one IODD per vendor and device id is allowed. In case IODD with vendor and device id is already present on the gateway, this file should be replaced by the new one. This endpoint is mandatory, if IODD feature is supported.
       requestBody:
+        description: The IODD file or archive to be uploaded or updated.
         required: true
         content:
           application/xml:
@@ -1742,6 +1747,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
+        description: The identification object for the master to be written.
         required: true
         content:
           application/json:
@@ -1826,6 +1832,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
+        description: The configuration object for the specified Master to be written.
         required: true
         content:
           application/json:
@@ -1940,6 +1947,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
+        description: The scan configuration object for the specified Wireless-Master.
         required: true
         content:
           application/json:
@@ -2274,6 +2282,7 @@ paths:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
       requestBody:
+        description: The configuration object for the specified port to be written.
         required: true
         content:
           application/json:
@@ -2428,6 +2437,7 @@ paths:
       summary: Write the Data Storage content to a specific port.
       description: Write the Data Storage content to a specific port.
       requestBody:
+        description: The Data Storage content to write to the specified port.
         required: true
         content:
           application/json:
@@ -2492,6 +2502,7 @@ paths:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
       requestBody:
+        description: The pairing configuration object for the specified Wireless-Port.
         required: true
         content:
           application/json:
@@ -2713,6 +2724,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       requestBody:
+        description: The identification object for the device to be written.
         required: true
         content:
           application/json:
@@ -2854,6 +2866,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       requestBody:
+        description: The process data output values to write to the specified Device.
         required: true
         content:
           application/json:
@@ -3222,6 +3235,7 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
       requestBody:
+        description: The parameter value to write, specified by index or parameter name.
         required: true
         content:
           application/json:
@@ -3442,6 +3456,7 @@ paths:
         - $ref: "#/components/parameters/parameterIdent"
         - $ref: "#/components/parameters/subParameterIdent"
       requestBody:
+        description: The parameter value to write, specified by index/subindex or parametername/sub-parameter name.
         required: true
         content:
           application/json:
@@ -3519,6 +3534,7 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/format"
       requestBody:
+        description: The block parameterization request object specifying the direction and parameters to read or write.
         required: true
         content:
           application/json:
@@ -4038,6 +4054,7 @@ components:
   examples: # reusable examples
     exampleWirelessMasterConfiguration:
       summary: Wireless IO-Link Master
+      description: Example configuration for a wireless IO-Link master device.
       value:
         masterId: 5
         advancedConnectivity:

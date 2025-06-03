@@ -26,7 +26,7 @@ jobs:
         run: npm install -g @quobix/vacuum
 
       - name: Lint API
-        run: vacuum report --junit JSON_for_IO-Link.yaml lint-results
+        run: vacuum report -r .ruleset.yaml --junit JSON_for_IO-Link.yaml lint-results
 
       - name: Publish Lint Results
         if: success() || failure()
