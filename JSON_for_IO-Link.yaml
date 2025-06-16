@@ -475,7 +475,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+                type: array
+                items:
+                  $ref: "./schemas.yaml#/schemas/gatewayEventGet"
               examples:
                 origin=ALL:
                   value:
@@ -645,7 +647,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+                type: array
+                items:
+                  $ref: "./schemas.yaml#/schemas/gatewayEventGet"
               examples:
                 origin=ALL:
                   value:
@@ -3758,7 +3762,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/deviceEventsGet"
+                type: array
+                items:
+                  $ref: "./schemas.yaml#/schemas/deviceEventGet"
         "400":
           description: Bad Request
           content:

@@ -400,24 +400,96 @@ schemas:
         type: string
         minLength: 1
         maxLength: 255
-  gatewayEventsGet:
-    type: array
-    items:
-      type: object
-      required:
-        - time
-        - severity
-        - origin
-        - message
-      properties:
-        time:
-          $ref: "#/schemas/eventTime"
-        severity:
-          $ref: "#/schemas/eventSeverity"
-        origin:
-          $ref: "#/schemas/eventOriginObject"
+
+  gatewayEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - gateway
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        $ref: "#/schemas/eventObject"
+
+  masterEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - gateway
+        $ref: "#/schemas/eventOriginObject"
+      message:
         message:
-          $ref: "#/schemas/eventObject"
+        $ref: "#/schemas/eventObject"
+
+  portEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - gateway
+          - portNumber
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        message:
+        $ref: "#/schemas/eventObject"
+
+  deviceEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - portNumber
+          - deviceAlias
+          - instance
+        allOf:
+          - $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - code
+          - mode
+        allOf:
+          - $ref: "#/schemas/eventObject"
+
   blockParameterizationPostParametersRequest:
     type: array
     minItems: 1
@@ -487,34 +559,6 @@ schemas:
               $ref: "#/schemas/deviceParameterValueGetPost"
             iolinkError:
               $ref: "#/schemas/iolinkErrorObject"
-  deviceEventsGet:
-    type: array
-    items:
-      type: object
-      required:
-        - time
-        - severity
-        - origin
-        - message
-      properties:
-        time:
-          $ref: "#/schemas/eventTime"
-        severity:
-          $ref: "#/schemas/eventSeverity"
-        origin:
-          required:
-            - master
-            - port
-            - deviceAlias
-            - instance
-          allOf:
-            - $ref: "#/schemas/eventOriginObject"
-        message:
-          required:
-            - code
-            - mode
-          allOf:
-            - $ref: "#/schemas/eventObject"
     example:
       - time: "2018-05-18T07:31:54.123Z"
         severity: WARNING
