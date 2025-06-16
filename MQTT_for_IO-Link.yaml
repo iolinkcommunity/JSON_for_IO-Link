@@ -73,6 +73,8 @@ channels:
     parameters:
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
     messages:
       publish.message:
         name: masterEventMessage
@@ -101,6 +103,10 @@ channels:
     parameters:
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
+      portNumber:
+        $ref: "./schemas.yaml#/schemas/portNumberMqtt"
     messages:
       publish.message:
         name: portEventMessage
