@@ -3765,6 +3765,8 @@ paths:
                 type: array
                 items:
                   $ref: "./schemas.yaml#/schemas/deviceEventGet"
+              example:
+                $ref: "./examples.yaml#/examples/deviceEvent"
         "400":
           description: Bad Request
           content:

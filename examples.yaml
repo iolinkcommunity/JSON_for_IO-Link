@@ -73,3 +73,17 @@ examples:
       hardwareRevision: "V3.45"
       firmwareRevision: "V1.30"
       productInstanceUri: "sensor.tmp.23.com"
+
+  deviceEvent:
+    value:
+      time: "2018-05-18T07:31:54.123Z"
+      severity: WARNING
+      origin:
+        master: 1
+        port: 1
+        deviceAlias: Temperature_sensor_1
+        instance: "APPLICATION"
+      message:
+        code: 16912
+        mode: APPEARS
+        text: Device temperature over-run – Clear source of heat
