@@ -223,7 +223,7 @@ channels:
 
 operations:
   "{originatorId}/gateway/identification.publish":
-    description: Publishes the gateway identification data
+    description: Publishes gateway nameplate information, send at connection startup/on change
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1gateway~1identification"
@@ -232,7 +232,7 @@ operations:
           #/channels/{originatorId}~1gateway~1identification/messages/publish.message
 
   "{originatorId}/gateway/event.publish":
-    description: Publishes the gateway event
+    description: Publishes port gateway event when is occurs
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1gateway~1event"
@@ -240,7 +240,7 @@ operations:
       - $ref: "#/channels/{originatorId}~1gateway~1event/messages/publish.message"
 
   "{originatorId}/masters/{masterNumber}/identification.publish":
-    description: Publishes the master identification data
+    description: Publishes master identification data, send at connection startup/on change
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1identification"
@@ -249,7 +249,7 @@ operations:
           #/channels/{originatorId}~1masters~1{masterNumber}~1identification/messages/publish.message
 
   "{originatorId}/masters/{masterNumber}/event.publish":
-    description: Publishes the master event
+    description: Publishes master event when is occurs
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1event"
@@ -258,7 +258,7 @@ operations:
           #/channels/{originatorId}~1masters~1{masterNumber}~1event/messages/publish.message
 
   "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status.publish":
-    description: Publishes the port status
+    description: Publishes the port status, send at connection startup/on change
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status"
@@ -267,7 +267,7 @@ operations:
           #/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status/messages/publish.message
 
   "{originatorId}/masters/{masterNumber}/ports/{portNumber}/event.publish":
-    description: Publishes the port event
+    description: Publishes port event when is occurs
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1event"
@@ -276,7 +276,7 @@ operations:
           #/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1event/messages/publish.message
 
   "{originatorId}/devices/{deviceAlias}/identification.publish":
-    description: Publishes the device identification data
+    description: Publishes device identification, send at connection startup/on change
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1identification"
@@ -289,7 +289,7 @@ operations:
           #/channels/{originatorId}~1devices~1{deviceAlias}~1identification/messages/publish.message
 
   "{originatorId}/{deviceAlias}/event.publish":
-    description: Publishes the device event
+    description: Publishes device event when it occurs
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1event"
@@ -298,7 +298,7 @@ operations:
           #/channels/{originatorId}~1devices~1{deviceAlias}~1event/messages/publish.message
 
   "{originatorId}/{deviceAlias}/processData.publish":
-    description: Publishes the device process data
+    description: Publishes device process data, cyclically or on change
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value"
@@ -307,7 +307,7 @@ operations:
           #/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value/messages/publish.message
 
   "{originatorId}/{deviceAlias}/parameter/parameterIdent.publish":
-    description: Publishes the device parameter data
+    description: Publishes device parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value"
@@ -316,7 +316,7 @@ operations:
           #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
 
   "{originatorId}/devices/{deviceAlias}/parameter/parameterIdent/subParameterIdent.publish":
-    description: Publishes the device sub-parameter data
+    description: Publishes device sub-parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
     action: send
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1{subParameterIdent}~1value"
@@ -325,7 +325,7 @@ operations:
           #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
 
   "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}.subscribe":
-    description: Subscribes to device parameter requests
+    description: Listening to device parameter requests
     action: receive
     channel:
       $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1request~1{transactionId}"
