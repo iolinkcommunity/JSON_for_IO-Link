@@ -652,7 +652,7 @@ paths:
               schema:
                 type: array
                 items:
-                  oneOf:
+                  anyOf:
                     - $ref: "./schemas.yaml#/schemas/gatewayEventGet"
                     - $ref: "./schemas.yaml#/schemas/masterEventGet"
                     - $ref: "./schemas.yaml#/schemas/portEventGet"
@@ -660,86 +660,86 @@ paths:
               examples:
                 origin=ALL:
                   value:
-              - time: "2018-05-18T07:32:42.023Z"
-                severity: ERROR
-                origin:
-                  masterNumber: 1
-                  portNumber: 1
-                message:
-                  code: 6163
-                  mode: APPEARS
-                  text: Overcurrent at C/Q (if digital output) - check load
-              - time: "2018-05-18T07:31:54.123Z"
-                severity: WARNING
-                origin:
-                  masterNumber: 1
-                  portNumber: 1
-                  deviceAlias: Temp_sensor_1
-                message:
-                  code: 16912
-                  mode: APPEARS
-                  text: Device temperature over-run – Clear source of heat
-              - time: "2018-05-18T08:31:54.123Z"
-                severity: ERROR
-                origin:
-                  masterNumber: 1
-                  portNumber: 3
-                  deviceAlias: Distance_Laser_3
-                message:
-                  code: 20480
-                  mode: APPEARS
-                  text: Device hardware fault – Device exchange
-              - time: "2018-05-18T07:35:54.123Z"
-                severity: NOTICE
-                origin:
-                  masterNumber: 1
-                  portNumber: 2
-                message:
-                  code: 65313
-                  mode: SINGLESHOT
-                  text: New slave
-              origin=PORTS:
-                value:
-                  - time: "2018-05-18T07:32:42.023Z"
-                    severity: ERROR
-                    origin:
-                      masterNumber: 1
-                      port: 1
-                    message:
-                      code: 6163
-                      mode: APPEARS
-                      text: Overcurrent at C/Q (if digital output) - check load
-                  - time: "2018-05-18T07:35:54.123Z"
-                    severity: NOTICE
-                    origin:
-                      masterNumber: 1
-                      portNumber: 2
-                    message:
-                      code: 65313
-                      mode: SINGLESHOT
-                      text: New slave
-              origin=DEVICES:
-                value:
-                  - time: "2018-05-18T07:31:54.123Z"
-                    severity: WARNING
-                    origin:
-                      masterNumber: 1
-                      portNumber: 1
-                      deviceAlias: Temp_sensor_1
-                    message:
-                      code: 16912
-                      mode: APPEARS
-                      text: Device temperature over-run – Clear source of heat
-                  - time: "2018-05-18T08:31:54.123Z"
-                    severity: ERROR
-                    origin:
-                      masterNumber: 1
-                      portNumber: 3
-                      deviceAlias: Distance_Laser_3
-                    message:
-                      code: 20480
-                      mode: APPEARS
-                      text: Device hardware fault – Device exchange
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+                    - time: "2018-05-18T07:35:54.123Z"
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=PORTS:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        port: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:35:54.123Z"
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=DEVICES:
+                  value:
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
         "400":
           description: Bad Request
           content:
