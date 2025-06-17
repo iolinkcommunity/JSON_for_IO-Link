@@ -372,11 +372,6 @@ schemas:
         $ref: "#/schemas/portNumber"
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
-      instance:
-        description: >-
-          This property is mandatory for IO-Link Port Events and IO-Link
-          Device Events. Should not be used for other log entries.
-        $ref: "#/schemas/eventInstance"
   eventObject:
     type: object
     properties:
@@ -435,10 +430,8 @@ schemas:
       origin:
         required:
           - masterNumber
-          - gateway
         $ref: "#/schemas/eventOriginObject"
       message:
-        message:
         $ref: "#/schemas/eventObject"
 
   portEventGet:
@@ -456,11 +449,9 @@ schemas:
       origin:
         required:
           - masterNumber
-          - gateway
           - portNumber
         $ref: "#/schemas/eventOriginObject"
       message:
-        message:
         $ref: "#/schemas/eventObject"
 
   deviceEventGet:
@@ -480,7 +471,6 @@ schemas:
           - masterNumber
           - portNumber
           - deviceAlias
-          - instance
         allOf:
           - $ref: "#/schemas/eventOriginObject"
       message:
