@@ -801,7 +801,7 @@ paths:
         - mqtt
       summary: >-
         Read the MQTT configuration of the Gateway.
-      description: Read the MQTT configuration of the Gateway.
+      description: Read the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
       responses:
         "200":
           description: Successful operation
@@ -822,7 +822,7 @@ paths:
                       qos: 0_ONLY_ONCE
                       retain: true
                     keepAliveTime: 10
-                    originatorId: "master001"
+                    originatorId: "master001-6a624757-30a2-481e-a889-edafeaa025a6"
                 Inactive client:
                   value:
                     clientMode: "INACTIVE"
@@ -854,8 +854,8 @@ paths:
       tags:
         - mqtt
       summary: >-
-        Update the MQTT configuration of the Gateway.
-      description: Update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
+        Write or update the MQTT configuration of the Gateway.
+      description: Write or update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
         description: The MQTT configuration object for the Gateway to be updated.
         required: true
@@ -876,7 +876,7 @@ paths:
                     qos: 0_ONLY_ONCE
                     retain: true
                   keepAliveTime: 10
-                  originatorId: "master001"
+                  originatorId: "master001-6a624757-30a2-481e-a889-edafeaa025a6"
               Inactive Client:
                 value:
                   clientMode: INACTIVE
