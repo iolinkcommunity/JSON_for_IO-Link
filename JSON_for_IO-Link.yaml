@@ -1383,7 +1383,7 @@ paths:
       summary: >-
         Get a list of all IODD (representations) that are available on the Gateway.
       description: >-
-        Only one version of an IODD is stored on the webserver at the same time for one vendorId-deviceId-iolinkRevision-combination. This endpoint is mandatory, if IODD feature is supported.
+        Get a list of all IODD (representations) that are available on the Gateway. This endpoint is mandatory, if IODD feature is supported.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1536,9 +1536,11 @@ paths:
       operationId: PostIoddsFile
       tags:
         - iodds
-      summary: Store or update an IODD.
+      summary: Store or update an IODD (representation) on the Gateway.
       description: >
-        The assignment of an IODD to a device shall be done by matching vendor and device id. Only one IODD per vendor and device id is allowed. In case IODD with vendor and device id is already present on the gateway, this file should be replaced by the new one. This endpoint is mandatory, if IODD feature is supported.
+        Store or update an IODD (representation) on the Gateway. This endpoint is mandatory, if IODD feature is supported.
+          
+        **Note:** The assignment of an IODD to a device shall be done automatically by matching vendor, device id and iolink revision. Only one IODD per vendor, device id and iolink revision is allowed. In case IODD with vendor, device id and iolink revision is already present on the gateway, this file should be replaced by the new one.
       requestBody:
         description: The IODD file or archive to be uploaded or updated.
         required: true
@@ -3098,9 +3100,9 @@ paths:
       tags:
         - devices
       summary: >-
-        Read all available parameter indices and parameter names from the specific Device.
+        Read all available parameter indices and parameter names from the specific device.
         IODD support is required.
-      description: Read all available parameter indices and parameter names from the specific Device. IODD support is required.
+      description: Read all available parameter indices and parameter names from the specific device. IODD support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
@@ -3151,8 +3153,8 @@ paths:
       operationId: GetDevicesDeviceAliasParametersValue
       tags:
         - devices
-      summary: Read a parameter value from the specific Device with the given index or parametername depending on the path parameter.
-      description: Read a parameter value from the specific Device with the given index or parametername depending on the path parameter.
+      summary: Read the parameter value from the specific Device with the given index or parametername depending on the path parameter.
+      description: Read the parameter value from the specific Device with the given index or parametername depending on the path parameter.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3229,8 +3231,8 @@ paths:
       operationId: PostDevicesDeviceAliasParametersValue
       tags:
         - devices
-      summary: Write a parameter value with the given index or parametername depending on the path parameter to the specified Device.
-      description: Write a parameter value with the given index or parametername depending on the path parameter to the specified Device.
+      summary: Write the parameter value with the given index or parametername depending on the path parameter to the specified Device.
+      description: Write the parameter value with the given index or parametername depending on the path parameter to the specified Device. If there are no restrictions parameter will be updated. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3376,8 +3378,8 @@ paths:
       tags:
         - devices
       summary: >-
-        Read a parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
-      description: Read a parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
+        Read the parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
+      description: Read the parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3450,7 +3452,7 @@ paths:
         - devices
       summary: >-
         Write the parameter with the given index/subindex or parametername/sub-parameter name.
-      description: Write the parameter with the given index/subindex or parametername/sub-parameter name.
+      description: Write the parameter with the given index/subindex or parametername/sub-parameter name. If there are no restrictions parameter will be updated. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3529,7 +3531,7 @@ paths:
         - devices
       summary: >-
         Write or read one or more parameters using the block parameterization method.
-      description: Write or read one or more parameters using the block parameterization method.
+      description: Write or read one or more parameters using the block parameterization method. If there are no restrictions for writing, the objects will be modified. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/format"
@@ -3543,7 +3545,7 @@ paths:
             examples:
               "read, format=byteArray":
                 value:
-                  direction: READ
+                  direction: read
                   parameters:
                     - identifier:
                         index: 15
@@ -3552,16 +3554,16 @@ paths:
                         subIndex: 2
               "read, format=iodd":
                 value:
-                  direction: READ
+                  direction: read
                   parameters:
                     - identifier:
                         parameterName: Application_tag
                     - identifier:
-                        parameterName: Distance
-                        subParameterName: Quality
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
               "write, format=byteArray":
                 value:
-                  direction: WRITE
+                  direction: write
                   parameters:
                     - identifier:
                         index: 123
@@ -3580,7 +3582,7 @@ paths:
                           - 206
               "write, format=iodd":
                 value:
-                  direction: WRITE
+                  direction: write
                   parameters:
                     - identifier:
                         parameterName: Application_tag
@@ -3748,8 +3750,8 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/eventTop"
         - $ref: "#/components/parameters/eventBottom"
-      summary: Reading the EventLog filtered for a specific Device.
-      description: Reading the EventLog filtered for a specific Device.
+      summary: Read the eventlog for a specific device.
+      description: Read the eventlog for a specific device. This is similar to the reading of the eventlog but filtered for this specific device (origin is device). Logged events are not cleared or changed.
       responses:
         "200":
           description: >-
@@ -3998,7 +4000,7 @@ components:
       name: top
       in: query
       description: >-
-        Delivers or removes the oldest n events of the event buffer. top is mutually
+        Parameter to select the oldest x events of the event buffer. top is mutually
         exclusive to bottom.
       schema:
         $ref: "./schemas.yaml#/schemas/eventTop"
@@ -4006,7 +4008,7 @@ components:
       name: bottom
       in: query
       description: >-
-        Delivers or removes the youngest n events of the event buffer. bottom is mutually
+        Parameter to select the youngest x events of the event buffer. bottom is mutually
         exclusive to top.
       schema:
         $ref: "./schemas.yaml#/schemas/eventBottom"
