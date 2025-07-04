@@ -418,8 +418,27 @@ schemas:
           $ref: "#/schemas/eventOriginObject"
         message:
           $ref: "#/schemas/eventObject"
+  blockParameterizationIdentifier:
+    oneOf:
+      - type: object
+        required:
+          - index
+        properties:
+          index:
+            $ref: "#/schemas/index"
+          subIndex:
+            $ref: "#/schemas/subIndex"
+      - type: object
+        required:
+          - parameterName
+        properties:
+          parameterName:
+            $ref: "#/schemas/parameterName"
+          subParameterName:
+            $ref: "#/schemas/subParameterName"
   blockParameterizationPostParametersRequest:
     type: array
+    description: subIndex or subParameterName are only needed if sub parameters are addressed
     minItems: 1
     items:
       type: object
@@ -427,23 +446,7 @@ schemas:
         - identifier
       properties:
         identifier:
-          oneOf:
-            - type: object
-              required:
-                - index
-              properties:
-                index:
-                  $ref: "#/schemas/index"
-                subIndex:
-                  $ref: "#/schemas/subIndex"
-            - type: object
-              required:
-                - parameterName
-              properties:
-                parameterName:
-                  $ref: "#/schemas/parameterName"
-                subParameterName:
-                  $ref: "#/schemas/subParameterName"
+          $ref: "#/schemas/blockParameterizationIdentifier"
         content:
           $ref: "#/schemas/deviceParameterValueGetPost"
   deviceBlockParameterizationPostParametersAnswer:
@@ -455,23 +458,7 @@ schemas:
         - result
       properties:
         identifier:
-          oneOf:
-            - type: object
-              required:
-                - index
-              properties:
-                index:
-                  $ref: "#/schemas/index"
-                subIndex:
-                  $ref: "#/schemas/subIndex"
-            - type: object
-              required:
-                - parameterName
-              properties:
-                parameterName:
-                  $ref: "#/schemas/parameterName"
-                subParameterName:
-                  $ref: "#/schemas/subParameterName"
+          $ref: "#/schemas/blockParameterizationIdentifier"
         result:
           type: object
           required:
