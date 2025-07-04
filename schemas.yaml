@@ -26,8 +26,11 @@ schemas:
     maxLength: 64
   originatorId: # path parameter shall not contain a type according to async api spec
     description:
-      Shall be the unique identifier of the originator and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
-      DNS name, IP address or MAC address of the device hosting the MQTT publisher.
+      Shall be the unique identifier of the gateway as MQTT client and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
+      DNS name, IP address or MAC address of the device hosting the MQTT publisher. This identifier is used as a topic prefix for other publishing topics.
+    # type: string
+    # minLength: 1
+    # maxLength: 64
   parameterIdentMqtt: # path parameter shall not contain a type according to async api spec
     description: Identifier of the parameter. It can be the parameterName or the index of the parameter.
   subParameterIdentMqtt: # path parameter shall not contain a type according to async api spec
@@ -690,6 +693,7 @@ schemas:
       - $ref: "#/schemas/portMonitorWireless"
   mqttConfigurationGetPost:
     type: object
+    description: The properties serverAddress, username, password, lastWill and keepAliveTime are requried when clientmode set to ACTIVE.
     required:
       - clientMode
     properties:
@@ -799,13 +803,14 @@ schemas:
           - topicId
         properties:
           topicId:
+            description: The topic number as a reference
             type: integer
       - type: object
         required:
           - topicName
         properties:
-          topicName:
-            type: string
+          topicName:            
+            $ref: "#/schemas/mqttTopicName"
       - $ref: "#/schemas/mqttConfigurationTopic"
     example:
       topicId: 1
@@ -1979,11 +1984,11 @@ schemas:
       minimum: 0
       maximum: 255
   deviceSimpleTypeValue:
+    description: The value (with simple type) in iodd format.
     oneOf:
       - type: boolean
       - type: string
       - type: number
-    description: The value (with simple type) in iodd format.
   deviceComplexTypeEntry:
     type: object
     description: The entry for a complex iodd type
@@ -3670,3 +3675,23 @@ schemas:
             enum: [703]
           message:
             enum: ["Data set combination incompatible"]
+  mqttTopicName:
+    type: string
+    description: >-
+      MQTT topic name following the structure: <originatorId>/<deviceAlias>/<type>[/<parameter>]
+
+      Where:
+      - <originatorId> is the unique identifier of the gateway
+      - <deviceAlias> is the device alias
+      - <type> can be: processData, events, or parameter
+      - <parameter> is optional and used for parameter topics (index or parameterName)
+
+      Examples:
+      - gateway1/device1/processData
+      - gateway1/device1/events  
+      - gateway1/device1/parameter/123
+      - gateway1/device1/parameter/temperature
+    pattern: "^[a-zA-Z0-9._-]+/[a-zA-Z0-9_]+/(processData|events|parameter(/[a-zA-Z0-9_]+)?)$"
+    minLength: 1
+    maxLength: 256
+    example: "gateway1/master1port1/processData"
