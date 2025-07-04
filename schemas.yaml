@@ -2097,8 +2097,8 @@ schemas:
       direction:
         type: string
         enum:
-          - WRITE
-          - READ
+          - write
+          - read
       parameters:
         $ref: "#/schemas/blockParameterizationPostParametersRequest"
   ioddIdentification:
