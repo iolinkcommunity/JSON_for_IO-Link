@@ -734,13 +734,6 @@ schemas:
         type: integer
         minimum: 1
         maximum: 65535
-      clientId:
-        type: string
-        description:
-          MQTT Client identifier to address and identify the iolink master as MQTT client. It needs to be unique within the MQTT network.
-          Since this parameter is optional, default value shall be set internally to a unique value (e.g. master name + MAC).
-        minLength: 1
-        maxLength: 64
       originatorId:
         $ref: "#/schemas/originatorId"
   mqttConfigurationTopic:
