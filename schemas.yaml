@@ -743,9 +743,6 @@ schemas:
   mqttConfigurationTopic:
     allOf:
       - type: object
-        required:
-          - qos
-          - deviceAlias
         properties:
           activate:
             type: boolean
@@ -792,9 +789,6 @@ schemas:
   mqttConfigurationTopicPost:
     allOf:
       - type: object
-        required:
-          - qos
-          - deviceAlias
         properties:
           topicName:
             description: The topic name as a reference
