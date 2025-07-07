@@ -809,7 +809,7 @@ schemas:
         required:
           - topicName
         properties:
-          topicName:            
+          topicName:
             $ref: "#/schemas/mqttTopicName"
       - $ref: "#/schemas/mqttConfigurationTopic"
     example:
@@ -3691,7 +3691,6 @@ schemas:
       - gateway1/device1/events  
       - gateway1/device1/parameter/123
       - gateway1/device1/parameter/temperature
-    pattern: "^[a-zA-Z0-9._-]+/[a-zA-Z0-9_]+/(processData|events|parameter(/[a-zA-Z0-9_]+)?)$"
     minLength: 1
     maxLength: 256
     example: "gateway1/master1port1/processData"
