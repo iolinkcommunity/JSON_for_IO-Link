@@ -919,6 +919,7 @@ schemas:
       functionTag: Check end of belt
   portIdentificationPost:
     type: object
+    minProperties: 1
     properties:
       applicationSpecificTag:
         $ref: "#/schemas/tags"
