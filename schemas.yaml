@@ -171,6 +171,7 @@ schemas:
     default: ALL
   masterNumber:
     description: Index of the master.
+    type: integer
     minimum: 1
   portNumber:
     type: integer
