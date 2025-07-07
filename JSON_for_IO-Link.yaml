@@ -1068,7 +1068,12 @@ paths:
           content:
             application/json:
               schema:
-                type: integer
+                type: object
+                required:
+                  - topicId
+                properties:
+                  topicId:
+                    $ref: "./schemas.yaml#/schemas/mqttTopicId"
         "400":
           description: Bad Request
           content:
@@ -1112,8 +1117,8 @@ paths:
       operationId: GetMqttTopicsTopicId
       tags:
         - mqtt
-      summary: Get one MQTT topic.
-      description: Get one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
+      summary: Read one specific MQTT topic.
+      description: Read one specific MQTT topic on the Gateway referenced by topic ID. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -1201,15 +1206,14 @@ paths:
         - $ref: "#/components/parameters/mqttTopicId"
       tags:
         - mqtt
-      summary: Change or deactivate one MQTT topic.
-      description: Change or deactivate one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
+      description: Change or deactivate one specific MQTT topic on the Gateway referenced by topic ID. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
         description: Update or change the configuration of a specific MQTT topic by topicId.
         required: true
         content:
           application/json:
             schema:
-              $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicsTopicPost"
+              $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicPost"
             examples:
               Deactivate Topic:
                 value:
@@ -1299,7 +1303,7 @@ paths:
       tags:
         - mqtt
       summary: Delete a specific MQTT topic.
-      description: Delete a specific MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
+      description: Delete a specific MQTT topic on the Gateway referenced by the topic ID. The topic ID is addressed by a path parameter. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -3939,11 +3943,10 @@ components:
       name: topicId
       in: path
       description: >-
-        ID of a configured MQTT topic. This the position of the topic in the
-        topics list.
+        Id of a configured MQTT topic. The management of the topic ids is done by the gateway.
       required: true
       schema:
-        type: integer
+        $ref: "./schemas.yaml#/schemas/mqttTopicId"
     masterNumber:
       name: masterNumber
       in: path
