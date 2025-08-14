@@ -584,6 +584,9 @@ schemas:
         minItems: 1
         items:
           type: object
+          description: >
+            The properties ipAddress, subnetMask and standardGateway are only allowed for POST,
+            if ipConfiguration is set to MANUAL.  They are mandatory for GET.
           required:
             - ipConfiguration
           properties:
@@ -592,6 +595,7 @@ schemas:
               minLength: 1
               maxLength: 64
             ipConfiguration:
+              description: At least one of the methods shall be implemented.
               $ref: "#/schemas/ipConfiguration"
             ipAddress:
               $ref: "#/schemas/ipAddress"
