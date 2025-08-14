@@ -3316,6 +3316,14 @@ schemas:
     oneOf:
       - $ref: "#/schemas/parameterName"
       - $ref: "#/schemas/index"
+  rawSmi:
+    type: object
+    properties:
+      message:
+        description: SMI message as Base64 coded string.
+        type: string
+        minLength: 12 # 8 octets encoded in Base64 (minimum length of SMI message)
+
   errorObject_101:
     allOf:
       - $ref: "#/schemas/errorObject"
