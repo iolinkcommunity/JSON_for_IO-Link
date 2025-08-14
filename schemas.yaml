@@ -286,6 +286,7 @@ schemas:
       - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
   masterIdentificationPost:
     type: object
+    description: At least one of the properties has to be used, if the request is issued.
     properties:
       applicationSpecificTag:
         $ref: "#/schemas/tags"
@@ -992,7 +993,7 @@ schemas:
           - WIOLINK_ROAMING_AUTOPAIRING
           - WIOLINK_ROAMING
       validationAndBackup:
-        description: required if portMode is IOLINK_MANUAL.
+        description: required if mode is IOLINK_MANUAL.
         type: string
         enum:
           - NO_DEVICE_CHECK
@@ -1033,8 +1034,6 @@ schemas:
               Note: If the applied value for cycle time cannot exactly be mapped,
               the port shall use the next possible higher value. If the cycle time is greater 
               than 132.8 ms the error 702 shall be returned.
-              Note: This value is not used in IO-Link wireless use 
-              wMasterCycleTimeOut and wMasterCycleTimeIn instead.
             type: object
             allOf:
               - $ref: "#/schemas/cycleTime"

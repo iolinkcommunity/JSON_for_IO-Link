@@ -1750,7 +1750,9 @@ paths:
       tags:
         - masters
       summary: Write application specific identification to a Master.
-      description: Write application specific identification to a Master.
+      description: >
+        Write application specific identification to a Master.
+        Only required, if at least one of the tags is implemented.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
@@ -2222,8 +2224,8 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWired"
-                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWireless"
+                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWired"
+                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWireless"
               examples:
                 IO-Link:
                   value:
