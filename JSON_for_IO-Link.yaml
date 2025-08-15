@@ -490,12 +490,16 @@ paths:
                       origin:
                         gateway: GatewayXYZ-1234567
                       message:
+                        code: 65534
+                        mode: APPEARS
                         text: Problem with webserver. Received to many requests to handle. Check possibility of DoS Attack.
                     - time: "2018-05-18T07:31:54.123Z"
                       severity: WARNING
                       origin:
                         masterNumber: 1
                       message:
+                        code: 65535
+                        mode: APPEARS
                         text: IO-Link Master has restarted
                     - time: "2018-05-18T07:32:42.023Z"
                       severity: ERROR
@@ -523,6 +527,8 @@ paths:
                       origin:
                         masterNumber: 1
                       message:
+                        code: 65535
+                        mode: APPEARS
                         text: IO-Link Master has restarted
                 origin=PORTS:
                   value:

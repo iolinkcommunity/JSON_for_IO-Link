@@ -374,6 +374,9 @@ schemas:
         $ref: "#/schemas/deviceAlias"
   eventObject:
     type: object
+    required:
+      - code
+      - mode
     properties:
       code:
         description: >-
