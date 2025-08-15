@@ -374,9 +374,6 @@ schemas:
         $ref: "#/schemas/deviceAlias"
   eventObject:
     type: object
-    required:
-      - code
-      - mode
     properties:
       code:
         description: >-
@@ -416,6 +413,8 @@ schemas:
           - gateway
         $ref: "#/schemas/eventOriginObject"
       message:
+        required:
+          - text
         $ref: "#/schemas/eventObject"
 
   masterEventGet:
@@ -435,6 +434,8 @@ schemas:
           - masterNumber
         $ref: "#/schemas/eventOriginObject"
       message:
+        required:
+          - text
         $ref: "#/schemas/eventObject"
 
   portEventGet:
@@ -455,6 +456,9 @@ schemas:
           - portNumber
         $ref: "#/schemas/eventOriginObject"
       message:
+        required:
+          - code
+          - mode
         $ref: "#/schemas/eventObject"
 
   deviceEventGet:
