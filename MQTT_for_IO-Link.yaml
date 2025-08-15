@@ -43,7 +43,8 @@ channels:
 
   "{originatorId}/gateway/event":
     address: "{originatorId}/gateway/event"
-    description: Publishes port gateway event when is occurs
+    description: Publishes port gateway event when it occurs
+
     parameters:
       originatorId:
         $ref: "./schemas.yaml#/schemas/originatorId"
