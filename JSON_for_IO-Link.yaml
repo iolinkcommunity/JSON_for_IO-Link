@@ -2594,6 +2594,100 @@ paths:
                 oneOf:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/power":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Read the current power mode of the specified port.
+      description: Read the current power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/PortPowerMode"
+              example:
+                powerMode: 2
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Set the power mode of the specified port.
+      description: Set the power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      requestBody:
+        description: The power mode configuration for the specified port.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/PortPowerMode"
+            examples:
+              Switch port power off:
+                value:
+                  powerMode: 1
+              Switch port power on:
+                value:
+                  powerMode: 2
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
   ################################################################################
   # devices
   ################################################################################
