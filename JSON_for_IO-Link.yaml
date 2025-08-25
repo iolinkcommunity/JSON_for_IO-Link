@@ -1752,7 +1752,6 @@ paths:
       summary: Write application specific identification to a Master.
       description: >
         Write application specific identification to a Master.
-        Only required, if at least one of the tags is implemented.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:

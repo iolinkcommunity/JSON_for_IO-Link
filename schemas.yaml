@@ -3151,6 +3151,9 @@ schemas:
       - vendorId
       - masterId
       - masterType
+      - applicationSpecificTag
+      - locationTag
+      - functionTag
     type: object
     properties:
       vendorName:
