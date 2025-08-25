@@ -4040,18 +4040,18 @@ components:
       name: masterNumber
       in: path
       description: Master identification number starting with 1
+      required: true
       schema:
         type: integer
         minimum: 1
-      required: true
     portNumber:
       name: portNumber
       in: path
       description: Port identification number starting with 1
+      required: true
       schema:
         type: integer
         minimum: 1
-      required: true
     deviceAlias:
       name: deviceAlias
       in: path
@@ -4114,18 +4114,18 @@ components:
       name: parameterIdent
       in: path
       description: Parameter access either via index or parametername. Access via parametername requires IODD support.
+      required: true
       schema:
         $ref: "./schemas.yaml#/schemas/parameterIdent"
-      required: true
     subParameterIdent:
       name: subParameterIdent
       in: path
       description: Subparameter access either via subindex or subparametername. Access via subparametername requires IODD support.
+      required: true
       schema:
         type: integer
         minimum: 0
         maximum: 255
-      required: true
 
   responses:
     HTTP_401:
