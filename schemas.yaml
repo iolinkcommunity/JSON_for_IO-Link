@@ -3690,16 +3690,21 @@ schemas:
             enum: [703]
           message:
             enum: ["Data set combination incompatible"]
+
+  powerMode:
+    type: boolean
+    description: >-
+      Port power mode control:
+      true - Switch PortPowerOn (permanent)
+      false - Switch PortPowerOff (permanent)
+    example: true
+
   PortPowerMode:
     type: object
     required:
-      - powerMode
+      - primaryPower
     properties:
-      powerMode:
-        type: number
-        enum: [1, 2]
-        description: >-
-          Port power mode control:
-          1 - Switch PortPowerOff (permanent)
-          2 - Switch PortPowerOn (permanent)
-        example: 2
+      primaryPower:
+        $ref: "#/schemas/powerMode"
+      secondaryPower:
+        $ref: "#/schemas/powerMode"

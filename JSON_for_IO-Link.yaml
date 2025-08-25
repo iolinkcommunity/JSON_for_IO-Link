@@ -2613,7 +2613,7 @@ paths:
               schema:
                 $ref: "./schemas.yaml#/schemas/PortPowerMode"
               example:
-                powerMode: 2
+                primaryPower: true
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2654,10 +2654,14 @@ paths:
             examples:
               Switch port power off:
                 value:
-                  powerMode: 1
+                  primaryPower: false
               Switch port power on:
                 value:
-                  powerMode: 2
+                  primaryPower: true
+              Switch port power on with P24:
+                value:
+                  primaryPower: true
+                  secondaryPower: true
       responses:
         "204":
           description: Successful operation
