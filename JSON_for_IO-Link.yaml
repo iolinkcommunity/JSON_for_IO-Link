@@ -2600,7 +2600,7 @@ paths:
       operationId: GetMastersMasterNumberPortsPortNumberPower
       tags:
         - ports
-      summary: Read the current power mode of the specified port.
+      summary: Read the current power mode of the specified port. Optional.
       description: Read the current power mode of the specified port.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
@@ -2638,7 +2638,7 @@ paths:
       operationId: PostMastersMasterNumberPortsPortNumberPower
       tags:
         - ports
-      summary: Set the power mode of the specified port.
+      summary: Set the power mode of the specified port. Optional.
       description: Set the power mode of the specified port.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
