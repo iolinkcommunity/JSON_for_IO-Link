@@ -2624,6 +2624,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -2666,6 +2667,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
         "401":
