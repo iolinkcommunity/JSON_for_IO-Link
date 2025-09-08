@@ -491,7 +491,24 @@ schemas:
           - mode
         allOf:
           - $ref: "#/schemas/eventObject"
-
+  blockParameterizationIdentifier:
+    oneOf:
+      - type: object
+        required:
+          - index
+        properties:
+          index:
+            $ref: "#/schemas/index"
+          subIndex:
+            $ref: "#/schemas/subIndex"
+      - type: object
+        required:
+          - parameterName
+        properties:
+          parameterName:
+            $ref: "#/schemas/parameterName"
+          subParameterName:
+            $ref: "#/schemas/subParameterName"
   blockParameterizationPostParametersRequest:
     type: array
     minItems: 1
