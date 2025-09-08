@@ -475,22 +475,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+                type: array
+                items:
+                  anyOf:
+                    - $ref: "./schemas.yaml#/schemas/portEventGet"
+                    - $ref: "./schemas.yaml#/schemas/gatewayEventGet"
+                    - $ref: "./schemas.yaml#/schemas/masterEventGet"
+                    - $ref: "./schemas.yaml#/schemas/deviceEventGet"
               examples:
                 origin=ALL:
                   value:
+                    - time: "2022-10-18T21:12:34.843Z"
+                      severity: WARNING
+                      origin:
+                        gateway: GatewayXYZ-1234567
+                      message:
+                        code: 65534
+                        mode: APPEARS
+                        text: Problem with webserver. Received to many requests to handle. Check possibility of DoS Attack.
                     - time: "2018-05-18T07:31:54.123Z"
                       severity: WARNING
                       origin:
                         masterNumber: 1
                       message:
+                        code: 65535
+                        mode: APPEARS
                         text: IO-Link Master has restarted
                     - time: "2018-05-18T07:32:42.023Z"
                       severity: ERROR
                       origin:
                         masterNumber: 1
                         portNumber: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -501,7 +516,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -513,6 +527,8 @@ paths:
                       origin:
                         masterNumber: 1
                       message:
+                        code: 65535
+                        mode: APPEARS
                         text: IO-Link Master has restarted
                 origin=PORTS:
                   value:
@@ -521,7 +537,6 @@ paths:
                       origin:
                         masterNumber: 1
                         port: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -531,7 +546,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: DISAPPEARS
@@ -541,7 +555,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
-                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -554,7 +567,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -565,7 +577,6 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
-                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
@@ -645,7 +656,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+                type: array
+                items:
+                  anyOf:
+                    - $ref: "./schemas.yaml#/schemas/gatewayEventGet"
+                    - $ref: "./schemas.yaml#/schemas/masterEventGet"
+                    - $ref: "./schemas.yaml#/schemas/portEventGet"
+                    - $ref: "./schemas.yaml#/schemas/deviceEventGet"
               examples:
                 origin=ALL:
                   value:
@@ -654,7 +671,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -665,7 +681,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -676,7 +691,6 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
-                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
@@ -686,7 +700,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
-                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -698,7 +711,6 @@ paths:
                       origin:
                         masterNumber: 1
                         port: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -708,7 +720,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
-                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -721,7 +732,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -732,7 +742,6 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
-                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
@@ -3766,7 +3775,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/deviceEventsGet"
+                type: array
+                items:
+                  $ref: "./schemas.yaml#/schemas/deviceEventGet"
+              example:
+                - $ref: "./examples.yaml#/examples/deviceEvent"
         "400":
           description: Bad Request
           content:

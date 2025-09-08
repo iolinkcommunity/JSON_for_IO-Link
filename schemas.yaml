@@ -377,11 +377,6 @@ schemas:
         $ref: "#/schemas/portNumber"
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
-      instance:
-        description: >-
-          This property is mandatory for IO-Link Port Events and IO-Link
-          Device Events. Should not be used for other log entries.
-        $ref: "#/schemas/eventInstance"
   eventObject:
     type: object
     properties:
@@ -405,24 +400,97 @@ schemas:
         type: string
         minLength: 1
         maxLength: 255
-  gatewayEventsGet:
-    type: array
-    items:
-      type: object
-      required:
-        - time
-        - severity
-        - origin
-        - message
-      properties:
-        time:
-          $ref: "#/schemas/eventTime"
-        severity:
-          $ref: "#/schemas/eventSeverity"
-        origin:
-          $ref: "#/schemas/eventOriginObject"
-        message:
-          $ref: "#/schemas/eventObject"
+
+  gatewayEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - gateway
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - text
+        $ref: "#/schemas/eventObject"
+
+  masterEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - text
+        $ref: "#/schemas/eventObject"
+
+  portEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - portNumber
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - code
+          - mode
+        $ref: "#/schemas/eventObject"
+
+  deviceEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - portNumber
+          - deviceAlias
+        allOf:
+          - $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - code
+          - mode
+        allOf:
+          - $ref: "#/schemas/eventObject"
   blockParameterizationIdentifier:
     oneOf:
       - type: object
@@ -443,7 +511,6 @@ schemas:
             $ref: "#/schemas/subParameterName"
   blockParameterizationPostParametersRequest:
     type: array
-    description: subIndex or subParameterName are only needed if sub parameters are addressed
     minItems: 1
     items:
       type: object
@@ -451,7 +518,23 @@ schemas:
         - identifier
       properties:
         identifier:
-          $ref: "#/schemas/blockParameterizationIdentifier"
+          oneOf:
+            - type: object
+              required:
+                - index
+              properties:
+                index:
+                  $ref: "#/schemas/index"
+                subIndex:
+                  $ref: "#/schemas/subIndex"
+            - type: object
+              required:
+                - parameterName
+              properties:
+                parameterName:
+                  $ref: "#/schemas/parameterName"
+                subParameterName:
+                  $ref: "#/schemas/subParameterName"
         content:
           $ref: "#/schemas/deviceParameterValueGetPost"
   deviceBlockParameterizationPostParametersAnswer:
@@ -479,46 +562,6 @@ schemas:
               $ref: "#/schemas/deviceParameterValueGetPost"
             iolinkError:
               $ref: "#/schemas/iolinkErrorObject"
-  deviceEventsGet:
-    type: array
-    items:
-      type: object
-      required:
-        - time
-        - severity
-        - origin
-        - message
-      properties:
-        time:
-          $ref: "#/schemas/eventTime"
-        severity:
-          $ref: "#/schemas/eventSeverity"
-        origin:
-          required:
-            - master
-            - port
-            - deviceAlias
-            - instance
-          allOf:
-            - $ref: "#/schemas/eventOriginObject"
-        message:
-          required:
-            - code
-            - mode
-          allOf:
-            - $ref: "#/schemas/eventObject"
-    example:
-      - time: "2018-05-18T07:31:54.123Z"
-        severity: WARNING
-        origin:
-          master: 1
-          port: 1
-          deviceAlias: Temperature_sensor_1
-          instance: "APPLICATION"
-        message:
-          code: 16912
-          mode: APPEARS
-          text: Device temperature over-run – Clear source of heat
   gatewayIdentificationGet:
     type: object
     required:
