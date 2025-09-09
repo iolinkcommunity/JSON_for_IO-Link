@@ -15,6 +15,9 @@ In order to raise a bugfix, improvement or change/feature request file an issue.
 
 https://editor.swagger.io/?url=https://raw.githubusercontent.com/iolinkcommunity/JSON_for_IO-Link/version-1-x/JSON_for_IO-Link.yaml
 
+
+## Open in AsyncAPI Editor:
+
 https://studio.asyncapi.com/?url=https://raw.githubusercontent.com/iolinkcommunity/JSON_for_IO-Link/version-1-x/MQTT_for_IO-Link.yaml
 
 ## Linting
@@ -25,6 +28,8 @@ You can run it locally with the command:
 `docker run --rm -v ${PWD}:/usr/src/spectral stoplight/spectral lint -r spectral.yaml  JSON_for_IO-Link.yaml `
 
 ## Merge files
+
+The OpenAPI and MQTT specification share the same schemas/examples contained by a separate files. An addtional step is included in the build process to merge all files together, in order to create only one file.
 
 Installation of merging tool:
 
