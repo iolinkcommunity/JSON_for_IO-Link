@@ -33,3 +33,17 @@ jobs:
         with:
           name: json-yaml
           path: JSON_for_IO-Link_merged.yaml
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: |
+            JSON_for_IO-Link_merged.yaml
+            MQTT_for_IO-Link_merged.yaml
+            LICENSE
+          body_path: ${{ github.workspace }}/CHANGELOG.md
+          draft: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
