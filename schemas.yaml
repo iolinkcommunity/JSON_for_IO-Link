@@ -25,8 +25,11 @@ schemas:
     maxLength: 64
   originatorId: # path parameter shall not contain a type according to async api spec
     description:
-      Shall be the unique identifier of the originator and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
-      DNS name, IP address or MAC address of the device hosting the MQTT publisher.
+      Shall be the unique identifier of the gateway as MQTT client and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
+      DNS name, IP address or MAC address of the device hosting the MQTT publisher. This identifier is used as a topic prefix for other publishing topics.
+    # type: string
+    # minLength: 1
+    # maxLength: 64
   parameterIdentMqtt: # path parameter shall not contain a type according to async api spec
     description: Identifier of the parameter. It can be the parameterName or the index of the parameter.
   subParameterIdentMqtt: # path parameter shall not contain a type according to async api spec
@@ -167,6 +170,7 @@ schemas:
     default: ALL
   masterNumber:
     description: Index of the master.
+    type: integer
     minimum: 1
   portNumber:
     type: integer
@@ -281,6 +285,7 @@ schemas:
       - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
   masterIdentificationPost:
     type: object
+    description: At least one of the properties has to be used, if the request is issued.
     properties:
       applicationSpecificTag:
         $ref: "#/schemas/tags"
@@ -371,11 +376,6 @@ schemas:
         $ref: "#/schemas/portNumber"
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
-      instance:
-        description: >-
-          This property is mandatory for IO-Link Port Events and IO-Link
-          Device Events. Should not be used for other log entries.
-        $ref: "#/schemas/eventInstance"
   eventObject:
     type: object
     properties:
@@ -399,24 +399,115 @@ schemas:
         type: string
         minLength: 1
         maxLength: 255
-  gatewayEventsGet:
-    type: array
-    items:
-      type: object
-      required:
-        - time
-        - severity
-        - origin
-        - message
-      properties:
-        time:
-          $ref: "#/schemas/eventTime"
-        severity:
-          $ref: "#/schemas/eventSeverity"
-        origin:
-          $ref: "#/schemas/eventOriginObject"
-        message:
-          $ref: "#/schemas/eventObject"
+
+  gatewayEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - gateway
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - text
+        $ref: "#/schemas/eventObject"
+
+  masterEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - text
+        $ref: "#/schemas/eventObject"
+
+  portEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - portNumber
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - code
+          - mode
+        $ref: "#/schemas/eventObject"
+
+  deviceEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - portNumber
+          - deviceAlias
+        allOf:
+          - $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - code
+          - mode
+        allOf:
+          - $ref: "#/schemas/eventObject"
+  blockParameterizationIdentifier:
+    oneOf:
+      - type: object
+        required:
+          - index
+        properties:
+          index:
+            $ref: "#/schemas/index"
+          subIndex:
+            $ref: "#/schemas/subIndex"
+      - type: object
+        required:
+          - parameterName
+        properties:
+          parameterName:
+            $ref: "#/schemas/parameterName"
+          subParameterName:
+            $ref: "#/schemas/subParameterName"
   blockParameterizationPostParametersRequest:
     type: array
     minItems: 1
@@ -454,23 +545,7 @@ schemas:
         - result
       properties:
         identifier:
-          oneOf:
-            - type: object
-              required:
-                - index
-              properties:
-                index:
-                  $ref: "#/schemas/index"
-                subIndex:
-                  $ref: "#/schemas/subIndex"
-            - type: object
-              required:
-                - parameterName
-              properties:
-                parameterName:
-                  $ref: "#/schemas/parameterName"
-                subParameterName:
-                  $ref: "#/schemas/subParameterName"
+          $ref: "#/schemas/blockParameterizationIdentifier"
         result:
           type: object
           required:
@@ -486,46 +561,6 @@ schemas:
               $ref: "#/schemas/deviceParameterValueGetPost"
             iolinkError:
               $ref: "#/schemas/iolinkErrorObject"
-  deviceEventsGet:
-    type: array
-    items:
-      type: object
-      required:
-        - time
-        - severity
-        - origin
-        - message
-      properties:
-        time:
-          $ref: "#/schemas/eventTime"
-        severity:
-          $ref: "#/schemas/eventSeverity"
-        origin:
-          required:
-            - master
-            - port
-            - deviceAlias
-            - instance
-          allOf:
-            - $ref: "#/schemas/eventOriginObject"
-        message:
-          required:
-            - code
-            - mode
-          allOf:
-            - $ref: "#/schemas/eventObject"
-    example:
-      - time: "2018-05-18T07:31:54.123Z"
-        severity: WARNING
-        origin:
-          master: 1
-          port: 1
-          deviceAlias: Temperature_sensor_1
-          instance: "APPLICATION"
-        message:
-          code: 16912
-          mode: APPEARS
-          text: Device temperature over-run – Clear source of heat
   gatewayIdentificationGet:
     type: object
     required:
@@ -592,6 +627,9 @@ schemas:
         minItems: 1
         items:
           type: object
+          description: >
+            The properties ipAddress, subnetMask and standardGateway are only allowed for POST,
+            if ipConfiguration is set to MANUAL.  They are mandatory for GET.
           required:
             - ipConfiguration
           properties:
@@ -600,6 +638,7 @@ schemas:
               minLength: 1
               maxLength: 64
             ipConfiguration:
+              description: At least one of the methods shall be implemented.
               $ref: "#/schemas/ipConfiguration"
             ipAddress:
               $ref: "#/schemas/ipAddress"
@@ -702,6 +741,7 @@ schemas:
       - $ref: "#/schemas/portMonitorWireless"
   mqttConfigurationGetPost:
     type: object
+    description: The properties serverAddress, username, password, lastWill and keepAliveTime are requried when clientmode set to ACTIVE.
     required:
       - clientMode
     properties:
@@ -746,21 +786,11 @@ schemas:
         type: integer
         minimum: 1
         maximum: 65535
-      clientId:
-        type: string
-        description:
-          MQTT Client identifier to address and identify the iolink master as MQTT client. It needs to be unique within the MQTT network.
-          Since this parameter is optional, default value shall be set internally to a unique value (e.g. master name + MAC).
-        minLength: 1
-        maxLength: 64
       originatorId:
         $ref: "#/schemas/originatorId"
   mqttConfigurationTopic:
     allOf:
       - type: object
-        required:
-          - qos
-          - deviceAlias
         properties:
           activate:
             type: boolean
@@ -781,27 +811,20 @@ schemas:
                 $ref: "#/schemas/processData"
               parameter:
                 $ref: "#/schemas/mqttParameter"
-  mqttConfigurationTopicPost:
+  mqttConfigurationTopicGet:
     allOf:
       - type: object
+        required:
+          - qos
+          - deviceAlias
+          - topicName
         properties:
           topicName:
-            type: string
-      - $ref: "#/schemas/mqttConfigurationTopic"
-  mqttConfigurationTopicsTopicPost:
-    anyOf:
-      - type: object
-        properties:
-          topicId:
-            type: integer
-      - type: object
-        properties:
-          topicName:
-            type: string
+            description: The topic name as a reference
+            $ref: "#/schemas/mqttTopicName"
       - $ref: "#/schemas/mqttConfigurationTopic"
     example:
       topicId: 1
-      activate: true
       topicName: PD input
       qos: 1_AT_LEAST_ONCE
       deviceAlias: DT35
@@ -811,23 +834,17 @@ schemas:
         interval:
           value: 10
           unit: ms
-  mqttConfigurationTopicGet:
+  mqttConfigurationTopicPost:
     allOf:
       - type: object
-        required:
-          - topicId
-        properties:
-          topicId:
-            type: integer
-      - type: object
-        required:
-          - topicName
         properties:
           topicName:
-            type: string
+            description: The topic name as a reference
+            $ref: "#/schemas/mqttTopicName"
       - $ref: "#/schemas/mqttConfigurationTopic"
     example:
       topicId: 1
+      activate: true
       topicName: PD input
       qos: 1_AT_LEAST_ONCE
       deviceAlias: DT35
@@ -949,6 +966,7 @@ schemas:
       functionTag: Check end of belt
   portIdentificationPost:
     type: object
+    minProperties: 1
     properties:
       applicationSpecificTag:
         $ref: "#/schemas/tags"
@@ -1017,7 +1035,7 @@ schemas:
           - WIOLINK_ROAMING_AUTOPAIRING
           - WIOLINK_ROAMING
       validationAndBackup:
-        description: required if portMode is IOLINK_MANUAL.
+        description: required if mode is IOLINK_MANUAL.
         type: string
         enum:
           - NO_DEVICE_CHECK
@@ -1058,8 +1076,6 @@ schemas:
               Note: If the applied value for cycle time cannot exactly be mapped,
               the port shall use the next possible higher value. If the cycle time is greater 
               than 132.8 ms the error 702 shall be returned.
-              Note: This value is not used in IO-Link wireless use 
-              wMasterCycleTimeOut and wMasterCycleTimeIn instead.
             type: object
             allOf:
               - $ref: "#/schemas/cycleTime"
@@ -1998,11 +2014,11 @@ schemas:
       minimum: 0
       maximum: 255
   deviceSimpleTypeValue:
+    description: The value (with simple type) in iodd format.
     oneOf:
       - type: boolean
       - type: string
       - type: number
-    description: The value (with simple type) in iodd format.
   deviceComplexTypeEntry:
     type: object
     description: The entry for a complex iodd type
@@ -2096,8 +2112,8 @@ schemas:
       direction:
         type: string
         enum:
-          - WRITE
-          - READ
+          - write
+          - read
       parameters:
         $ref: "#/schemas/blockParameterizationPostParametersRequest"
   ioddIdentification:
@@ -3177,6 +3193,9 @@ schemas:
       - vendorId
       - masterId
       - masterType
+      - applicationSpecificTag
+      - locationTag
+      - functionTag
     type: object
     properties:
       vendorName:
@@ -3689,3 +3708,29 @@ schemas:
             enum: [703]
           message:
             enum: ["Data set combination incompatible"]
+  mqttTopicName:
+    type: string
+    description: >-
+      MQTT topic name is bound to a device and individual topics can be created. The configured originatorId will be automatically added when data is published. <br>
+      In case no topic name is provided the following structure will be used: &lt;originatorId&gt;/&lt;deviceAlias&gt;/&lt;type&gt;[/&lt;parameter&gt;] <br>
+      Where: <br>
+      - &lt;originatorId&gt; is the unique identifier of the gateway which will be added automatically <br>
+      - &lt;deviceAlias&gt; is the device alias <br>
+      - &lt;type&gt; can be: processData, events, or parameter <br>
+      - &lt;parameter&gt; is optional and used for parameter topics (index or parameterName) <br>
+      <br>
+      Examples: <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/processData <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/events <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/parameter/123 <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/parameter/temperature <br>
+      <br>
+    minLength: 1
+    maxLength: 256
+    example: "master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/processData"
+  mqttTopicId:
+    type: integer
+    description: The topic id as a reference to a topic name. The management of the topic ids is done by the gateway.
+    minimum: 1
+    maximum: 65535
+    example: 1
