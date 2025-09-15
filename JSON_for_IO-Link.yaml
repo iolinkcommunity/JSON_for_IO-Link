@@ -10,25 +10,22 @@ info:
     You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
 
 
-    * Draft for version 2.0.0
-    * The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
+    * **Version:** The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
 
     * **Security:** The defined security schemas are just examples and can be replaced by vendor specifics. The way of restricting requests is as well in the responsibility of the vendor. It is recommended to limit access to writable endpoint. This should prevent misconfiguration and breaking running systems.
 
-    # Specification Reference URIs:
+    # Specifications
+          
+    * **JSON Integration for IO-Link V1.0.0 - Order No: 10.222**
 
-    >  [JSON Integration for IO-Link - Draft V2.0](http://www.io-link.com/io-link/10.222/V2.0)
-      
-    >  [JSON Integration for IO-Link V1.0](http://www.io-link.com/io-link/10.222/V1.0)
-      
-    >  [IO-Link Interface and System Specification V1.1.3](http://www.io-link.com/io-link/10.002/V1.13)
-      
-    >  [IO-Link Wireless System Extensions V1.1](http://www.io-link.com/io-link/10.122/V1.1)
-      
-    >  [Web of Things (WoT) Thing Description 1.1](https://www.w3.org/2022/wot/td/v1.1)
+    * **IO-Link Interface and System Specification V1.1.4 - Order No: 10.002**
+
+    * **IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112**
+
+    * **IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082**
 
 
-    # Disclaimer:
+    # Disclaimer
 
     >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
 
@@ -475,22 +472,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+                type: array
+                items:
+                  anyOf:
+                    - $ref: "./schemas.yaml#/schemas/portEventGet"
+                    - $ref: "./schemas.yaml#/schemas/gatewayEventGet"
+                    - $ref: "./schemas.yaml#/schemas/masterEventGet"
+                    - $ref: "./schemas.yaml#/schemas/deviceEventGet"
               examples:
                 origin=ALL:
                   value:
+                    - time: "2022-10-18T21:12:34.843Z"
+                      severity: WARNING
+                      origin:
+                        gateway: GatewayXYZ-1234567
+                      message:
+                        code: 65534
+                        mode: APPEARS
+                        text: Problem with webserver. Received to many requests to handle. Check possibility of DoS Attack.
                     - time: "2018-05-18T07:31:54.123Z"
                       severity: WARNING
                       origin:
                         masterNumber: 1
                       message:
+                        code: 65535
+                        mode: APPEARS
                         text: IO-Link Master has restarted
                     - time: "2018-05-18T07:32:42.023Z"
                       severity: ERROR
                       origin:
                         masterNumber: 1
                         portNumber: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -501,7 +513,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -513,6 +524,8 @@ paths:
                       origin:
                         masterNumber: 1
                       message:
+                        code: 65535
+                        mode: APPEARS
                         text: IO-Link Master has restarted
                 origin=PORTS:
                   value:
@@ -521,7 +534,6 @@ paths:
                       origin:
                         masterNumber: 1
                         port: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -531,7 +543,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: DISAPPEARS
@@ -541,7 +552,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
-                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -554,7 +564,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -565,7 +574,6 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
-                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
@@ -645,7 +653,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/gatewayEventsGet"
+                type: array
+                items:
+                  anyOf:
+                    - $ref: "./schemas.yaml#/schemas/gatewayEventGet"
+                    - $ref: "./schemas.yaml#/schemas/masterEventGet"
+                    - $ref: "./schemas.yaml#/schemas/portEventGet"
+                    - $ref: "./schemas.yaml#/schemas/deviceEventGet"
               examples:
                 origin=ALL:
                   value:
@@ -654,7 +668,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -665,7 +678,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -676,7 +688,6 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
-                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
@@ -686,7 +697,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
-                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -698,7 +708,6 @@ paths:
                       origin:
                         masterNumber: 1
                         port: 1
-                        instance: "APPLICATION"
                       message:
                         code: 6163
                         mode: APPEARS
@@ -708,7 +717,6 @@ paths:
                       origin:
                         masterNumber: 1
                         portNumber: 2
-                        instance: "SYSTEM"
                       message:
                         code: 65313
                         mode: SINGLESHOT
@@ -721,7 +729,6 @@ paths:
                         masterNumber: 1
                         portNumber: 1
                         deviceAlias: Temp_sensor_1
-                        instance: "APPLICATION"
                       message:
                         code: 16912
                         mode: APPEARS
@@ -732,7 +739,6 @@ paths:
                         masterNumber: 1
                         portNumber: 3
                         deviceAlias: Distance_Laser_3
-                        instance: "APPLICATION"
                       message:
                         code: 20480
                         mode: APPEARS
@@ -801,7 +807,7 @@ paths:
         - mqtt
       summary: >-
         Read the MQTT configuration of the Gateway.
-      description: Read the MQTT configuration of the Gateway.
+      description: Read the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
       responses:
         "200":
           description: Successful operation
@@ -822,7 +828,7 @@ paths:
                       qos: 0_ONLY_ONCE
                       retain: true
                     keepAliveTime: 10
-                    originatorId: "master001"
+                    originatorId: "master001-6a624757-30a2-481e-a889-edafeaa025a6"
                 Inactive client:
                   value:
                     clientMode: "INACTIVE"
@@ -854,8 +860,8 @@ paths:
       tags:
         - mqtt
       summary: >-
-        Update the MQTT configuration of the Gateway.
-      description: Update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
+        Write or update the MQTT configuration of the Gateway.
+      description: Write or update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
         description: The MQTT configuration object for the Gateway to be updated.
         required: true
@@ -876,7 +882,7 @@ paths:
                     qos: 0_ONLY_ONCE
                     retain: true
                   keepAliveTime: 10
-                  originatorId: "master001"
+                  originatorId: "master001-6a624757-30a2-481e-a889-edafeaa025a6"
               Inactive Client:
                 value:
                   clientMode: INACTIVE
@@ -1068,7 +1074,12 @@ paths:
           content:
             application/json:
               schema:
-                type: integer
+                type: object
+                required:
+                  - topicId
+                properties:
+                  topicId:
+                    $ref: "./schemas.yaml#/schemas/mqttTopicId"
         "400":
           description: Bad Request
           content:
@@ -1112,8 +1123,8 @@ paths:
       operationId: GetMqttTopicsTopicId
       tags:
         - mqtt
-      summary: Get one MQTT topic.
-      description: Get one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
+      summary: Read one specific MQTT topic.
+      description: Read one specific MQTT topic on the Gateway referenced by topic ID. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -1201,15 +1212,15 @@ paths:
         - $ref: "#/components/parameters/mqttTopicId"
       tags:
         - mqtt
-      summary: Change or deactivate one MQTT topic.
-      description: Change or deactivate one MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
+      summary: Change or deactivate one specific MQTT topic.
+      description: Change or deactivate one specific MQTT topic on the Gateway referenced by topic ID. This endpoint is mandatory, if MQTT feature is supported.
       requestBody:
         description: Update or change the configuration of a specific MQTT topic by topicId.
         required: true
         content:
           application/json:
             schema:
-              $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicsTopicPost"
+              $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicPost"
             examples:
               Deactivate Topic:
                 value:
@@ -1299,7 +1310,7 @@ paths:
       tags:
         - mqtt
       summary: Delete a specific MQTT topic.
-      description: Delete a specific MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
+      description: Delete a specific MQTT topic on the Gateway referenced by the topic ID. The topic ID is addressed by a path parameter. This endpoint is mandatory, if MQTT feature is supported.
       parameters:
         - $ref: "#/components/parameters/mqttTopicId"
       responses:
@@ -1383,7 +1394,7 @@ paths:
       summary: >-
         Get a list of all IODD (representations) that are available on the Gateway.
       description: >-
-        Only one version of an IODD is stored on the webserver at the same time for one vendorId-deviceId-iolinkRevision-combination. This endpoint is mandatory, if IODD feature is supported.
+        Get a list of all IODD (representations) that are available on the Gateway. This endpoint is mandatory, if IODD feature is supported.
       parameters:
         - $ref: "#/components/parameters/vendorId"
         - $ref: "#/components/parameters/deviceId"
@@ -1536,9 +1547,11 @@ paths:
       operationId: PostIoddsFile
       tags:
         - iodds
-      summary: Store or update an IODD.
+      summary: Store or update an IODD (representation) on the Gateway.
       description: >
-        The assignment of an IODD to a device shall be done by matching vendor and device id. Only one IODD per vendor and device id is allowed. In case IODD with vendor and device id is already present on the gateway, this file should be replaced by the new one. This endpoint is mandatory, if IODD feature is supported.
+        Store or update an IODD (representation) on the Gateway. This endpoint is mandatory, if IODD feature is supported.
+          
+        **Note:** The assignment of an IODD to a device shall be done automatically by matching vendor, device id and iolink revision. Only one IODD per vendor, device id and iolink revision is allowed. In case IODD with vendor, device id and iolink revision is already present on the gateway, this file should be replaced by the new one.
       requestBody:
         description: The IODD file or archive to be uploaded or updated.
         required: true
@@ -1743,7 +1756,8 @@ paths:
       tags:
         - masters
       summary: Write application specific identification to a Master.
-      description: Write application specific identification to a Master.
+      description: >
+        Write application specific identification to a Master.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
       requestBody:
@@ -2273,8 +2287,8 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWired"
-                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWireless"
+                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWired"
+                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWireless"
               examples:
                 IO-Link:
                   value:
@@ -3156,9 +3170,9 @@ paths:
       tags:
         - devices
       summary: >-
-        Read all available parameter indices and parameter names from the specific Device.
+        Read all available parameter indices and parameter names from the specific device.
         IODD support is required.
-      description: Read all available parameter indices and parameter names from the specific Device. IODD support is required.
+      description: Read all available parameter indices and parameter names from the specific device. IODD support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
@@ -3209,8 +3223,8 @@ paths:
       operationId: GetDevicesDeviceAliasParametersValue
       tags:
         - devices
-      summary: Read a parameter value from the specific Device with the given index or parametername depending on the path parameter.
-      description: Read a parameter value from the specific Device with the given index or parametername depending on the path parameter.
+      summary: Read the parameter value from the specific Device with the given index or parametername depending on the path parameter.
+      description: Read the parameter value from the specific Device with the given index or parametername depending on the path parameter.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3287,8 +3301,8 @@ paths:
       operationId: PostDevicesDeviceAliasParametersValue
       tags:
         - devices
-      summary: Write a parameter value with the given index or parametername depending on the path parameter to the specified Device.
-      description: Write a parameter value with the given index or parametername depending on the path parameter to the specified Device.
+      summary: Write the parameter value with the given index or parametername depending on the path parameter to the specified Device.
+      description: Write the parameter value with the given index or parametername depending on the path parameter to the specified Device. If there are no restrictions parameter will be updated. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3434,8 +3448,8 @@ paths:
       tags:
         - devices
       summary: >-
-        Read a parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
-      description: Read a parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
+        Read the parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
+      description: Read the parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3508,7 +3522,7 @@ paths:
         - devices
       summary: >-
         Write the parameter with the given index/subindex or parametername/sub-parameter name.
-      description: Write the parameter with the given index/subindex or parametername/sub-parameter name.
+      description: Write the parameter with the given index/subindex or parametername/sub-parameter name. If there are no restrictions parameter will be updated. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/parameterIdent"
@@ -3587,7 +3601,7 @@ paths:
         - devices
       summary: >-
         Write or read one or more parameters using the block parameterization method.
-      description: Write or read one or more parameters using the block parameterization method.
+      description: Write or read one or more parameters using the block parameterization method. If there are no restrictions for writing, the objects will be modified. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/format"
@@ -3601,7 +3615,7 @@ paths:
             examples:
               "read, format=byteArray":
                 value:
-                  direction: READ
+                  direction: read
                   parameters:
                     - identifier:
                         index: 15
@@ -3610,16 +3624,16 @@ paths:
                         subIndex: 2
               "read, format=iodd":
                 value:
-                  direction: READ
+                  direction: read
                   parameters:
                     - identifier:
                         parameterName: Application_tag
                     - identifier:
-                        parameterName: Distance
-                        subParameterName: Quality
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
               "write, format=byteArray":
                 value:
-                  direction: WRITE
+                  direction: write
                   parameters:
                     - identifier:
                         index: 123
@@ -3638,7 +3652,7 @@ paths:
                           - 206
               "write, format=iodd":
                 value:
-                  direction: WRITE
+                  direction: write
                   parameters:
                     - identifier:
                         parameterName: Application_tag
@@ -3806,8 +3820,8 @@ paths:
         - $ref: "#/components/parameters/deviceAlias"
         - $ref: "#/components/parameters/eventTop"
         - $ref: "#/components/parameters/eventBottom"
-      summary: Reading the EventLog filtered for a specific Device.
-      description: Reading the EventLog filtered for a specific Device.
+      summary: Read the eventlog for a specific device.
+      description: Read the eventlog for a specific device. This is similar to the reading of the eventlog but filtered for this specific device (origin is device). Logged events are not cleared or changed.
       responses:
         "200":
           description: >-
@@ -3816,7 +3830,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./schemas.yaml#/schemas/deviceEventsGet"
+                type: array
+                items:
+                  $ref: "./schemas.yaml#/schemas/deviceEventGet"
+              example:
+                - $ref: "./examples.yaml#/examples/deviceEvent"
         "400":
           description: Bad Request
           content:
@@ -3995,11 +4013,10 @@ components:
       name: topicId
       in: path
       description: >-
-        ID of a configured MQTT topic. This the position of the topic in the
-        topics list.
+        Id of a configured MQTT topic. The management of the topic ids is done by the gateway.
       required: true
       schema:
-        type: integer
+        $ref: "./schemas.yaml#/schemas/mqttTopicId"
     masterNumber:
       name: masterNumber
       in: path
@@ -4056,7 +4073,7 @@ components:
       name: top
       in: query
       description: >-
-        Delivers or removes the oldest n events of the event buffer. top is mutually
+        Parameter to select the oldest x events of the event buffer. top is mutually
         exclusive to bottom.
       schema:
         $ref: "./schemas.yaml#/schemas/eventTop"
@@ -4064,7 +4081,7 @@ components:
       name: bottom
       in: query
       description: >-
-        Delivers or removes the youngest n events of the event buffer. bottom is mutually
+        Parameter to select the youngest x events of the event buffer. bottom is mutually
         exclusive to top.
       schema:
         $ref: "./schemas.yaml#/schemas/eventBottom"
