@@ -2614,7 +2614,7 @@ paths:
       operationId: GetMastersMasterNumberPortsPortNumberPower
       tags:
         - ports
-      summary: Read the current power mode of the specified port. Optional.
+      summary: Read the current power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
       description: Read the current power mode of the specified port.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
@@ -2653,7 +2653,7 @@ paths:
       operationId: PostMastersMasterNumberPortsPortNumberPower
       tags:
         - ports
-      summary: Set the power mode of the specified port. Optional.
+      summary: Set the power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
       description: Set the power mode of the specified port.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
@@ -2672,10 +2672,6 @@ paths:
               Switch port power on:
                 value:
                   primaryPower: true
-              Switch port power on with P24:
-                value:
-                  primaryPower: true
-                  secondaryPower: true
       responses:
         "204":
           description: Successful operation
