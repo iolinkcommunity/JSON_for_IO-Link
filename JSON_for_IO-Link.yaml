@@ -2001,6 +2001,74 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
+  "/masters/{masterNumber}/rawsmi":
+    post:
+      operationId: PostMastersMasterNumberRawsmi
+      tags:
+        - masters
+      summary: Send an arbitrary SMI message (as described in 11.2.2 of the IO-Link Interface and System Specification) to the master and receive the response.
+      description: Send an arbitrary SMI message to the master and receive the response.  This endpoint is optional.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      requestBody:
+        description: A JSON object containing the SMI message, encoded as Base64.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/rawSmi"
+            examples:
+              PortStatusRequest:
+                value:
+                  message: "AQGQAAAC//A="
+              PortConfigurationRequest:
+                value:
+                  message: "AQH/8AAMgAACAAAAAAAAAAAA"
+      responses:
+        "200":
+          description: Successful operation, content contains the SMI confirmation (could be a negative result / JobError).
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/rawSmi"
+              examples:
+                PortStatusConfirmation:
+                  value:
+                    message: "AQH/8AAQkAABAwAAAAAAAAAAAAAAAA=="
+                PortConfigurationConfirmation:
+                  value:
+                    message: "AQGAAAAC//A="
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
   ################################################################################
   # ports
   ################################################################################
