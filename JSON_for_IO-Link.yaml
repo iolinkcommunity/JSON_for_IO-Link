@@ -2006,7 +2006,7 @@ paths:
       operationId: PostMastersMasterNumberRawsmi
       tags:
         - masters
-      summary: Send an arbitrary SMI message to the master and receive the response.
+      summary: Send an arbitrary SMI message (as described in 11.2.2 of the IO-Link Interface and System Specification) to the master and receive the response.
       description: Send an arbitrary SMI message to the master and receive the response.  This endpoint is optional.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
@@ -2021,13 +2021,23 @@ paths:
               PortStatusRequest:
                 value:
                   message: "AQGQAAAC//A="
+              PortConfigurationRequest:
+                value:
+                  message: "AQH/8AAMgAACAAAAAAAAAAAA"
       responses:
         "200":
-          description: Successful operation, content contains the SMI confirmation.
+          description: Successful operation, content contains the SMI confirmation (could be a negative result / JobError).
           content:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/rawSmi"
+              examples:
+                PortStatusConfirmation:
+                  value:
+                    message: "AQH/8AAQkAABAwAAAAAAAAAAAAAAAA=="
+                PortConfigurationConfirmation:
+                  value:
+                    message: "AQGAAAAC//A="
         "400":
           description: Bad request
           content:
