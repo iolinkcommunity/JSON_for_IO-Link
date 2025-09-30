@@ -2643,6 +2643,8 @@ paths:
         The response object can vary depending on the port configuration or port type.
           
         The "secondaryVoltage" and "secondaryCurrent" only relevant for Wired, Class B ports and should reflect the Power 2 power supply. See 5.4.2 in IO-Link Interface and System Specification V1.1.4 June 2024 for more details.
+          
+        This endpoint is mandatory (for Wireless ports), if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
