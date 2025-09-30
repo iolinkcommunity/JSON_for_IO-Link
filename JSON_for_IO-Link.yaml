@@ -2653,6 +2653,31 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/portMonitor"
+              examples:
+                IO-Link:
+                  value:
+                    voltage:
+                      primaryVoltage:
+                        value: 24.0
+                        unit: V
+                      cqVoltage:
+                        value: 24.0
+                        unit: V
+                    current:
+                      primaryCurrent:
+                        value: 0.25
+                        unit: A
+                      cqCurrent:
+                        value: 0.10
+                        unit: A
+                IO-Link_Wireless:
+                  value:
+                    wirelessQuality:
+                      lqiMaster: 100
+                      rssiMaster: -60
+                      lqiDevice: 50
+                      rssiDevice: -80
+
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
