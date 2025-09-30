@@ -736,7 +736,7 @@ schemas:
       wirelessQuality:
         $ref: "#/schemas/wirelessPortQuality"
   portMonitor:
-    oneOf:
+    anyOf:
       - $ref: "#/schemas/portMonitorWired"
       - $ref: "#/schemas/portMonitorWireless"
   mqttConfigurationGetPost:
