@@ -1,5 +1,9 @@
 # Changelog: JSON for IO-Link REST API Specification
 
+## Symbols and abbreviated terms
+
+- M/O/C - Mandatory/Optional/Conditional
+
 ## Version 2.0.0
 
 ### Introduced features
