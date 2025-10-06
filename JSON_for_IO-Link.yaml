@@ -2641,6 +2641,8 @@ paths:
         The response object can vary depending on the port configuration or port type.
           
         The "secondaryVoltage" and "secondaryCurrent" only relevant for Wired, Class B ports and should reflect the Power 2 power supply. See 5.4.2 in IO-Link Interface and System Specification V1.1.4 June 2024 for more details.
+          
+        This endpoint is mandatory (for Wireless ports), if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
@@ -2650,9 +2652,32 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "./schemas.yaml#/schemas/portMonitor"
-                  - $ref: "./schemas.yaml#/schemas/portMonitorWireless"
+                $ref: "./schemas.yaml#/schemas/portMonitor"
+              examples:
+                IO-Link:
+                  value:
+                    voltage:
+                      primaryVoltage:
+                        value: 24.0
+                        unit: V
+                      cqVoltage:
+                        value: 24.0
+                        unit: V
+                    current:
+                      primaryCurrent:
+                        value: 0.25
+                        unit: A
+                      cqCurrent:
+                        value: 0.10
+                        unit: A
+                IO-Link_Wireless:
+                  value:
+                    wirelessQuality:
+                      lqiMaster: 100
+                      rssiMaster: -60
+                      lqiDevice: 50
+                      rssiDevice: -80
+
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2664,6 +2689,102 @@ paths:
               schema:
                 oneOf:
                   - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/power":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Read the current power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
+      description: Read the current power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/PortPowerMode"
+              example:
+                primaryPower: true
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Set the power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
+      description: Set the power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      requestBody:
+        description: The power mode configuration for the specified port.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/PortPowerMode"
+            examples:
+              Switch port power off:
+                value:
+                  primaryPower: false
+              Switch port power on:
+                value:
+                  primaryPower: true
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -4029,18 +4150,18 @@ components:
       name: masterNumber
       in: path
       description: Master identification number starting with 1
+      required: true
       schema:
         type: integer
         minimum: 1
-      required: true
     portNumber:
       name: portNumber
       in: path
       description: Port identification number starting with 1
+      required: true
       schema:
         type: integer
         minimum: 1
-      required: true
     deviceAlias:
       name: deviceAlias
       in: path
@@ -4103,18 +4224,18 @@ components:
       name: parameterIdent
       in: path
       description: Parameter access either via index or parametername. Access via parametername requires IODD support.
+      required: true
       schema:
         $ref: "./schemas.yaml#/schemas/parameterIdent"
-      required: true
     subParameterIdent:
       name: subParameterIdent
       in: path
       description: Subparameter access either via subindex or subparametername. Access via subparametername requires IODD support.
+      required: true
       schema:
         type: integer
         minimum: 0
         maximum: 255
-      required: true
 
   responses:
     HTTP_401:
