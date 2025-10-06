@@ -1018,22 +1018,8 @@ schemas:
   portConfigurationGetCommon:
     type: object
     required:
-      - mode
-      - iqConfiguration
       - deviceAlias
     properties:
-      mode:
-        type: string
-        enum:
-          - DEACTIVATED
-          - IOLINK_MANUAL
-          - IOLINK_AUTOSTART
-          - DIGITAL_INPUT
-          - DIGITAL_OUTPUT
-          - WIOLINK_CYCLIC_AUTOPAIRING
-          - WIOLINK_CYCLIC
-          - WIOLINK_ROAMING_AUTOPAIRING
-          - WIOLINK_ROAMING
       validationAndBackup:
         description: required if mode is IOLINK_MANUAL.
         type: string
@@ -1055,12 +1041,32 @@ schemas:
         $ref: "#/schemas/deviceId"
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
-
+  portConfigurationWiredMode:
+    type: string
+    enum:
+      - DEACTIVATED
+      - IOLINK_MANUAL
+      - IOLINK_AUTOSTART
+      - DIGITAL_INPUT
+      - DIGITAL_OUTPUT
+  portConfigurationWirelessMode:
+    type: string
+    enum:
+      - DEACTIVATED
+      - WIOLINK_CYCLIC_AUTOPAIRING
+      - WIOLINK_CYCLIC
+      - WIOLINK_ROAMING_AUTOPAIRING
+      - WIOLINK_ROAMING
   portConfigurationGetWired:
     allOf:
       - $ref: "#/schemas/portConfigurationGetCommon"
       - type: object
+        required:
+          - mode
+          - iqConfiguration
         properties:
+          mode:
+            $ref: "#/schemas/portConfigurationWiredMode"
           iqConfiguration:
             description: >-
               iqConfiguration is not supported in IO-Link Wireless.
@@ -1084,7 +1090,11 @@ schemas:
     allOf:
       - $ref: "#/schemas/portConfigurationGetCommon"
       - type: object
+        required:
+          - mode
         properties:
+          mode:
+            $ref: "#/schemas/portConfigurationWirelessMode"
           slotNumber:
             description: >-
               slot number of the Wireless-Device (Wireless Master only).
@@ -1185,7 +1195,10 @@ schemas:
             type: string
             minLength: 26
             maxLength: 26
-
+  portConfigurationGet:         
+    anyOf:
+      - $ref: "#/schemas/portConfigurationGetWired"
+      - $ref: "#/schemas/portConfigurationGetWireless"
   mastersConfigurationGetPost:
     properties:
       wMasterId:

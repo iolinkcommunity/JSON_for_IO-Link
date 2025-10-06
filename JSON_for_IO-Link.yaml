@@ -2296,9 +2296,7 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWired"
-                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWireless"
+                $ref: "./schemas.yaml#/schemas/portConfigurationGet"
               examples:
                 IO-Link:
                   value:
