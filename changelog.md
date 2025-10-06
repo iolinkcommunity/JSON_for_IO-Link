@@ -4,12 +4,10 @@
 
 ### Introduced features
 
-| Feature | Description |
-|---|---|
-| IO-Link Wireless extension | Support for Wireless IO-Link Masters and Devices added according to *IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112* |
-| Monitoring | Support for power supply monitoring. |
-| IO-Link Device FW Update extension | Support for performing the Device FW update procedure based on *IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082* |
-| Security scheme suggestions | Security scheme suggestions has been introduced. While the selected scheme and the way of restricting requests are the responsibility of the vendor. It is recommended to limit access to writable endpoint. |
+- Wireless extension according to *IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112*
+- IO-Link Device FW Update extension based on *IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082*
+- Power supply monitoring.
+- Security scheme suggestions. While the selected scheme and the way of restricting requests are the responsibility of the vendor. It is recommended to limit access to writable endpoint.
 
 ### Additions
 
@@ -36,17 +34,13 @@
 
 #### Additions affecting each endpoint
 
-- HTTP status code 401 response has been introduced.
-- The JSON for IO-Link specific error schemas for 4xx and 5xx HTTP status codes has been updated. Endpoint produced error codes are no longer listed as an example, they are part of the schema.
-- Most schemas have been extended with limitation regarding allowed value range or length.
+- Added HTTP 401 status code as a possible response.
+- Updated error schemas for 4xx/5xx codes; error codes now part of schema.
+- Extended schemas with value range/length limitations.
 
 ### Modifications
 
 Modifications are introduced in the parameter, request or response schemas.
-
-**NOTE:** The URL parameters *{index}* and *{parameterName}* has been replaced with *{parameterIdent}*.
-
-**NOTE:** The URL parameters *{subIndex}* and *{subParameterName}* has been replaced with *{subParameterIdent}*.
 
 | Endpoint | M/O/C |
 |---|---|
@@ -89,15 +83,17 @@ Modifications are introduced in the parameter, request or response schemas.
 
 #### OperationId and Tag
 
-- Operation IDs and tags have been standardized and changed for many endpoints.
+- Operation IDs and tags have been standardized and changed.
 
 #### Path Structure
 
-- Major versioning has been increased, all endpoints are moved to basepath `/iolink/v2` from `/iolink/v1`.
+- URL parameters *{index}*, *{parameterName}* → *{parameterIdent}*
+- URL parameters *{subIndex}*, *{subParameterName}* → *{subParameterIdent}*
+- Major versioning has been increased, all endpoints moved to basepath `/iolink/v2` from `/iolink/v1`.
 
 #### Discrepancies in version 1.0.0
 
-The listed properties has been different in the released PDF and YAML in version 1.0.0.
+Property names differed between PDF and YAML in v1.0.0.
 
 | PDF location | PDF | YAML v1.0.0 | YAML v2.0.0 |
 |-|-|-|-|
