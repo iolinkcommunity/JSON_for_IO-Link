@@ -15,11 +15,11 @@ jobs:
       # Run Spectral
       - uses: stoplightio/spectral-action@v0.8.12
         with:
-          file_glob: "JSON_for_IO-Link.yaml"
+          file_glob: "JSON_for_IO-Link_unmerged.yaml"
           spectral_ruleset: .spectral.yaml
 
       # Run Spectral
       - uses: stoplightio/spectral-action@v0.8.12
         with:
-          file_glob: "MQTT_for_IO-Link.yaml"
+          file_glob: "MQTT_for_IO-Link_unmerged.yaml"
           spectral_ruleset: .spectral.yaml
