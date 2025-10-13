@@ -10,25 +10,22 @@ info:
     You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
 
 
-    * Draft for version 2.0.0
-    * The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
+    * **Version:** The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
 
     * **Security:** The defined security schemas are just examples and can be replaced by vendor specifics. The way of restricting requests is as well in the responsibility of the vendor. It is recommended to limit access to writable endpoint. This should prevent misconfiguration and breaking running systems.
 
-    # Specification Reference URIs:
+    # Specifications
+          
+    * **JSON Integration for IO-Link V1.0.0 - Order No: 10.222**
 
-    >  [JSON Integration for IO-Link - Draft V2.0](http://www.io-link.com/io-link/10.222/V2.0)
-      
-    >  [JSON Integration for IO-Link V1.0](http://www.io-link.com/io-link/10.222/V1.0)
-      
-    >  [IO-Link Interface and System Specification V1.1.3](http://www.io-link.com/io-link/10.002/V1.13)
-      
-    >  [IO-Link Wireless System Extensions V1.1](http://www.io-link.com/io-link/10.122/V1.1)
-      
-    >  [Web of Things (WoT) Thing Description 1.1](https://www.w3.org/2022/wot/td/v1.1)
+    * **IO-Link Interface and System Specification V1.1.4 - Order No: 10.002**
+
+    * **IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112**
+
+    * **IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082**
 
 
-    # Disclaimer:
+    # Disclaimer
 
     >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
 
@@ -2004,6 +2001,74 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_101"
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
 
+  "/masters/{masterNumber}/rawsmi":
+    post:
+      operationId: PostMastersMasterNumberRawsmi
+      tags:
+        - masters
+      summary: Send an arbitrary SMI message (as described in 11.2.2 of the IO-Link Interface and System Specification) to the master and receive the response.
+      description: Send an arbitrary SMI message to the master and receive the response.  This endpoint is optional.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      requestBody:
+        description: A JSON object containing the SMI message, encoded as Base64.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/rawSmi"
+            examples:
+              PortStatusRequest:
+                value:
+                  message: "AQGQAAAC//A="
+              PortConfigurationRequest:
+                value:
+                  message: "AQH/8AAMgAACAAAAAAAAAAAA"
+      responses:
+        "200":
+          description: Successful operation, content contains the SMI confirmation (could be a negative result / JobError).
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/rawSmi"
+              examples:
+                PortStatusConfirmation:
+                  value:
+                    message: "AQH/8AAQkAABAwAAAAAAAAAAAAAAAA=="
+                PortConfigurationConfirmation:
+                  value:
+                    message: "AQGAAAAC//A="
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
   ################################################################################
   # ports
   ################################################################################
@@ -2231,9 +2296,7 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWired"
-                  - $ref: "./schemas.yaml#/schemas/portConfigurationGetWireless"
+                $ref: "./schemas.yaml#/schemas/portConfigurationGet"
               examples:
                 IO-Link:
                   value:
@@ -2578,6 +2641,8 @@ paths:
         The response object can vary depending on the port configuration or port type.
           
         The "secondaryVoltage" and "secondaryCurrent" only relevant for Wired, Class B ports and should reflect the Power 2 power supply. See 5.4.2 in IO-Link Interface and System Specification V1.1.4 June 2024 for more details.
+          
+        This endpoint is mandatory (for Wireless ports), if wireless feature is supported.
       parameters:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
@@ -2587,9 +2652,32 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "./schemas.yaml#/schemas/portMonitor"
-                  - $ref: "./schemas.yaml#/schemas/portMonitorWireless"
+                $ref: "./schemas.yaml#/schemas/portMonitor"
+              examples:
+                IO-Link:
+                  value:
+                    voltage:
+                      primaryVoltage:
+                        value: 24.0
+                        unit: V
+                      cqVoltage:
+                        value: 24.0
+                        unit: V
+                    current:
+                      primaryCurrent:
+                        value: 0.25
+                        unit: A
+                      cqCurrent:
+                        value: 0.10
+                        unit: A
+                IO-Link_Wireless:
+                  value:
+                    wirelessQuality:
+                      lqiMaster: 100
+                      rssiMaster: -60
+                      lqiDevice: 50
+                      rssiDevice: -80
+
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2601,6 +2689,102 @@ paths:
               schema:
                 oneOf:
                   - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/power":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Read the current power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
+      description: Read the current power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/PortPowerMode"
+              example:
+                primaryPower: true
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Set the power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
+      description: Set the power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      requestBody:
+        description: The power mode configuration for the specified port.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/PortPowerMode"
+            examples:
+              Switch port power off:
+                value:
+                  primaryPower: false
+              Switch port power on:
+                value:
+                  primaryPower: true
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -3966,18 +4150,18 @@ components:
       name: masterNumber
       in: path
       description: Master identification number starting with 1
+      required: true
       schema:
         type: integer
         minimum: 1
-      required: true
     portNumber:
       name: portNumber
       in: path
       description: Port identification number starting with 1
+      required: true
       schema:
         type: integer
         minimum: 1
-      required: true
     deviceAlias:
       name: deviceAlias
       in: path
@@ -4040,18 +4224,18 @@ components:
       name: parameterIdent
       in: path
       description: Parameter access either via index or parametername. Access via parametername requires IODD support.
+      required: true
       schema:
         $ref: "./schemas.yaml#/schemas/parameterIdent"
-      required: true
     subParameterIdent:
       name: subParameterIdent
       in: path
       description: Subparameter access either via subindex or subparametername. Access via subparametername requires IODD support.
+      required: true
       schema:
         type: integer
         minimum: 0
         maximum: 255
-      required: true
 
   responses:
     HTTP_401:
