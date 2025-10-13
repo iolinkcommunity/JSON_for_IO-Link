@@ -11,7 +11,7 @@
 - Wireless extension according to *IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112*
 - IO-Link Device FW Update extension based on *IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082*
 - Power supply monitoring.
-- Security scheme suggestions. While the selected scheme and the way of restricting requests are the responsibility of the vendor. It is recommended to limit access to writable endpoint.
+- Security scheme suggestions. While the selected scheme and the way of restricting requests are the responsibility of the vendor. It is recommended to limit access to writable endpoints.
 
 ### Additions
 
