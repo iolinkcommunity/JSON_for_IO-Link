@@ -1779,6 +1779,9 @@ schemas:
           not NO_DEVICE_CHECK.
         $ref: "#/schemas/deviceId"
       iqConfiguration:
+        description: >-
+          Defines the behavior of the I/Q signal (Pin 2 at M12 connector).
+          Only available for Class A Ports, if the IO-Link Master supports it. For Class B Ports the value POWER_2 should be used.
         type: string
         enum:
           - NOT_SUPPORTED
