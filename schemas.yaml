@@ -1770,7 +1770,7 @@ schemas:
           - $ref: "#/schemas/cycleTime"
       vendorId:
         description: >-
-          Rrequired if the port's mode is IOLINK_MANUAL and validationAndBackup is
+          Required if the port's mode is IOLINK_MANUAL and validationAndBackup is
           not NO_DEVICE_CHECK.
         $ref: "#/schemas/vendorId"
       deviceId:
