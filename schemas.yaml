@@ -1732,8 +1732,6 @@ schemas:
       rssiDevice: -39
 
   portConfigurationPost:
-    description: "Note:  At least one of the mode, iqConfiguration,
-      deviceAlias properties shall be included to the POST request"
     type: object
     properties:
       mode:
