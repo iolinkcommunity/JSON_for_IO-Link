@@ -1784,8 +1784,6 @@ schemas:
           - NOT_SUPPORTED
           - DIGITAL_INPUT
           - DIGITAL_OUTPUT
-          - ANALOG_INPUT
-          - ANALOG_OUTPUT
           - POWER_2
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
