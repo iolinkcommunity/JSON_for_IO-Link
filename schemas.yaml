@@ -1732,6 +1732,11 @@ schemas:
       rssiDevice: -39
 
   portConfigurationPost:
+    anyOf:
+      - $ref: "#/schemas/portConfigurationPostWired"
+      - $ref: "#/schemas/portConfigurationPostWireless"
+
+  portConfigurationPostWired:
     type: object
     properties:
       mode:
@@ -1742,13 +1747,9 @@ schemas:
           - IOLINK_AUTOSTART
           - DIGITAL_INPUT
           - DIGITAL_OUTPUT
-          - WIOLINK_CYCLIC_AUTOPAIRING
-          - WIOLINK_CYCLIC
-          - WIOLINK_ROAMING_AUTOPAIRING
-          - WIOLINK_ROAMING
       validationAndBackup:
         description: >-
-          required if the port's mode is IOLINK_MANUAL.
+          Required if the port's mode is IOLINK_MANUAL.
         type: string
         enum:
           - NO_DEVICE_CHECK
@@ -1763,24 +1764,21 @@ schemas:
           IO-Link Master. If the applied value for cycle time cannot exactly be
           mapped, the port shall use the next possible higher value.
           If the cycle time is greater than 132.8 ms the error 702 shall 
-          be returned. This value is not used in IO-Link wireless use 
-          wMasterCycleTimeOut and wMasterCycleTimeIn instead.
+          be returned.
         type: object
         allOf:
           - $ref: "#/schemas/cycleTime"
       vendorId:
         description: >-
-          required if the port's mode is IOLINK_MANUAL and validationAndBackup is
+          Rrequired if the port's mode is IOLINK_MANUAL and validationAndBackup is
           not NO_DEVICE_CHECK.
         $ref: "#/schemas/vendorId"
       deviceId:
         description: >-
-          required if the port's mode is IOLINK_MANUAL and validationAndBackup is
+          Required if the port's mode is IOLINK_MANUAL and validationAndBackup is
           not NO_DEVICE_CHECK.
         $ref: "#/schemas/deviceId"
       iqConfiguration:
-        description: >-
-          iqConfiguration is not supported in IO-Link Wireless.
         type: string
         enum:
           - NOT_SUPPORTED
@@ -1791,30 +1789,56 @@ schemas:
           - POWER_2
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
+        
+  portConfigurationPostWireless:
+    type: object
+    properties:
+      mode:
+        type: string
+        enum:
+          - DEACTIVATED
+          - WIOLINK_CYCLIC_AUTOPAIRING
+          - WIOLINK_CYCLIC
+          - WIOLINK_ROAMING_AUTOPAIRING
+          - WIOLINK_ROAMING
+      validationAndBackup:
+        type: string
+        enum:
+          - NO_DEVICE_CHECK
+          - TYPE_COMPATIBLE_DEVICE_V1.0
+          - TYPE_COMPATIBLE_DEVICE_V1.1
+          - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+          - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+      vendorId:
+        $ref: "#/schemas/vendorId"
+      deviceId:
+        $ref: "#/schemas/deviceId"
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
       slotNumber:
         description: >-
-          slot number of the Wireless-Device (Wireless Master only).
+          Slot number of the Wireless-Device.
         $ref: "#/schemas/wirelessSlotNumber"
       trackNumber:
         description: >-
-          track number of the Wireless-Device, maximum depends on the number of 
-          available tracks on the Wireless-Master (Wireless Master only).
+          Track number of the Wireless-Device, maximum depends on the number of 
+          available tracks on the Wireless-Master.
         $ref: "#/schemas/wirelessTrackNumber"
       deviceTxPower:
         description: >-
-          transmission power of the Wireless-Device (Wireless Master only).
+          Transmission power of the Wireless-Device.
         type: integer
         minimum: 1
         maximum: 31
       maxRetry:
         description: >-
-          Number of Retries for process data (Wireless Master only).
+          Number of Retries for process data.
         type: integer
         minimum: 2
         maximum: 31
       imaTime:
         description: >-
-          I am alive time for the wireless connection (Wireless Master only).
+          I am alive time for the wireless connection.
         type: object
         required:
           - base
@@ -1837,25 +1861,25 @@ schemas:
             maximum: 255
       slotType:
         description: >-
-          Single Slot or Double Slot (Wireless Master only).
+          Single Slot or Double Slot.
         type: string
         enum:
           - "SSLOT"
           - "DSLOT"
       lowEnergyDevice:
         description: >-
-          to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
+          To set low energy mode (Wireless-Device has to support low energy).
         type: boolean
         default: false
       maxPDSegLength:
         description: >-
-          maximum process data output segment length (Wireless Master only).
+          Maximum process data output segment length.
         type: integer
         minimum: 0
         maximum: 32
       wMasterCycleTimeOut:
         description: >-
-          Wireless-Master cycle time output for PD data (Wireless Master only).
+          Wireless-Master cycle time output for PD data.
         type: object
         required:
           - base
@@ -1871,7 +1895,7 @@ schemas:
             maximum: 63
       wMasterCycleTimeIn:
         description: >-
-          Wireless-Master cycle time input for PD data (Wireless Master only).
+          Wireless-Master cycle time input for PD data.
         type: object
         required:
           - base
@@ -1887,7 +1911,7 @@ schemas:
             maximum: 63
       uniqueId:
         description: >-
-          unique identifier for each Wireless-Device (Wireless Master only).
+          Unique identifier for each Wireless-Device.
         type: string
         minLength: 26
         maxLength: 26
