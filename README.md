@@ -1,4 +1,4 @@
-# IOT integration for IO-Link
+# REST and MQTT integration for IO-Link
 
 In general, the functionality of gateways, masters, and devices is accessed using data in JSON format. The specification is split into an OpenAPI and AysncAPI document to describe the feature set for HTTP/REST and MQTT interfaces.
 
