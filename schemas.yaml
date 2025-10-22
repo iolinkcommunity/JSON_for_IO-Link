@@ -3765,6 +3765,8 @@ schemas:
     properties:
       primaryPower:
         $ref: "#/schemas/powerMode"
+      secondaryPower:
+        $ref: "#/schemas/powerMode"
   mqttTopicName:
     type: string
     description: >-
