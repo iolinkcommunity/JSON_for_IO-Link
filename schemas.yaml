@@ -2066,7 +2066,7 @@ schemas:
         $ref: "#/schemas/deviceSimpleTypeValueUnit"
   deviceSimpleTypeValueUnit:
     type: string
-    description: The unit for the simple type number value in SI format.
+    description: The unit of the simple type number value. Must match the `abbr` attribute value of a `Unit` element defined in *IODD-StandardUnitDefinitions1.1.xml*.
   deviceComplexTypeValue:
     type: object
     minProperties: 1
