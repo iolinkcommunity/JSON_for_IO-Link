@@ -1262,7 +1262,7 @@ schemas:
       blockList:
         type: object
         properties:
-          "2403":
+          "ch_2403":
             $ref: "#/schemas/wirelessBlockList"
           "ch_2404":
             $ref: "#/schemas/wirelessBlockList"
