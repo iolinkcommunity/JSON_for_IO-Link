@@ -4225,7 +4225,7 @@ components:
     parameterIdent:
       name: parameterIdent
       in: path
-      description: Parameter access either via index or parametername. Access via parametername requires IODD support.
+      description: Parameter access either via index or parametername. The index is an integer in the range of 0 to 65535. Access via parametername requires IODD support.
       required: true
       schema:
         $ref: "./schemas.yaml#/schemas/parameterIdent"
