@@ -3366,9 +3366,7 @@ schemas:
         portNumber: 4
         ioddFileName: vendorname-devicename-20231016-IODD1.1.xml
   parameterIdent:
-    oneOf:
-      - $ref: "#/schemas/parameterName"
-      - $ref: "#/schemas/index"
+    $ref: "#/schemas/parameterName"
   rawSmi:
     type: object
     properties:
