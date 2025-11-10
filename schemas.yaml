@@ -1264,155 +1264,155 @@ schemas:
         properties:
           "2403":
             $ref: "#/schemas/wirelessBlockList"
-          "2404":
+          "ch_2404":
             $ref: "#/schemas/wirelessBlockList"
-          "2405":
+          "ch_2405":
             $ref: "#/schemas/wirelessBlockList"
-          "2406":
+          "ch_2406":
             $ref: "#/schemas/wirelessBlockList"
-          "2407":
+          "ch_2407":
             $ref: "#/schemas/wirelessBlockList"
-          "2408":
+          "ch_2408":
             $ref: "#/schemas/wirelessBlockList"
-          "2409":
+          "ch_2409":
             $ref: "#/schemas/wirelessBlockList"
-          "2410":
+          "ch_2410":
             $ref: "#/schemas/wirelessBlockList"
-          "2411":
+          "ch_2411":
             $ref: "#/schemas/wirelessBlockList"
-          "2412":
+          "ch_2412":
             $ref: "#/schemas/wirelessBlockList"
-          "2413":
+          "ch_2413":
             $ref: "#/schemas/wirelessBlockList"
-          "2414":
+          "ch_2414":
             $ref: "#/schemas/wirelessBlockList"
-          "2415":
+          "ch_2415":
             $ref: "#/schemas/wirelessBlockList"
-          "2416":
+          "ch_2416":
             $ref: "#/schemas/wirelessBlockList"
-          "2417":
+          "ch_2417":
             $ref: "#/schemas/wirelessBlockList"
-          "2418":
+          "ch_2418":
             $ref: "#/schemas/wirelessBlockList"
-          "2419":
+          "ch_2419":
             $ref: "#/schemas/wirelessBlockList"
-          "2420":
+          "ch_2420":
             $ref: "#/schemas/wirelessBlockList"
-          "2421":
+          "ch_2421":
             $ref: "#/schemas/wirelessBlockList"
-          "2422":
+          "ch_2422":
             $ref: "#/schemas/wirelessBlockList"
-          "2423":
+          "ch_2423":
             $ref: "#/schemas/wirelessBlockList"
-          "2424":
+          "ch_2424":
             $ref: "#/schemas/wirelessBlockList"
-          "2425":
+          "ch_2425":
             $ref: "#/schemas/wirelessBlockList"
-          "2426":
+          "ch_2426":
             $ref: "#/schemas/wirelessBlockList"
-          "2427":
+          "ch_2427":
             $ref: "#/schemas/wirelessBlockList"
-          "2428":
+          "ch_2428":
             $ref: "#/schemas/wirelessBlockList"
-          "2429":
+          "ch_2429":
             $ref: "#/schemas/wirelessBlockList"
-          "2430":
+          "ch_2430":
             $ref: "#/schemas/wirelessBlockList"
-          "2431":
+          "ch_2431":
             $ref: "#/schemas/wirelessBlockList"
-          "2432":
+          "ch_2432":
             $ref: "#/schemas/wirelessBlockList"
-          "2433":
+          "ch_2433":
             $ref: "#/schemas/wirelessBlockList"
-          "2434":
+          "ch_2434":
             $ref: "#/schemas/wirelessBlockList"
-          "2435":
+          "ch_2435":
             $ref: "#/schemas/wirelessBlockList"
-          "2436":
+          "ch_2436":
             $ref: "#/schemas/wirelessBlockList"
-          "2437":
+          "ch_2437":
             $ref: "#/schemas/wirelessBlockList"
-          "2438":
+          "ch_2438":
             $ref: "#/schemas/wirelessBlockList"
-          "2439":
+          "ch_2439":
             $ref: "#/schemas/wirelessBlockList"
-          "2440":
+          "ch_2440":
             $ref: "#/schemas/wirelessBlockList"
-          "2441":
+          "ch_2441":
             $ref: "#/schemas/wirelessBlockList"
-          "2442":
+          "ch_2442":
             $ref: "#/schemas/wirelessBlockList"
-          "2443":
+          "ch_2443":
             $ref: "#/schemas/wirelessBlockList"
-          "2444":
+          "ch_2444":
             $ref: "#/schemas/wirelessBlockList"
-          "2445":
+          "ch_2445":
             $ref: "#/schemas/wirelessBlockList"
-          "2446":
+          "ch_2446":
             $ref: "#/schemas/wirelessBlockList"
-          "2447":
+          "ch_2447":
             $ref: "#/schemas/wirelessBlockList"
-          "2448":
+          "ch_2448":
             $ref: "#/schemas/wirelessBlockList"
-          "2449":
+          "ch_2449":
             $ref: "#/schemas/wirelessBlockList"
-          "2450":
+          "ch_2450":
             $ref: "#/schemas/wirelessBlockList"
-          "2451":
+          "ch_2451":
             $ref: "#/schemas/wirelessBlockList"
-          "2452":
+          "ch_2452":
             $ref: "#/schemas/wirelessBlockList"
-          "2453":
+          "ch_2453":
             $ref: "#/schemas/wirelessBlockList"
-          "2454":
+          "ch_2454":
             $ref: "#/schemas/wirelessBlockList"
-          "2455":
+          "ch_2455":
             $ref: "#/schemas/wirelessBlockList"
-          "2456":
+          "ch_2456":
             $ref: "#/schemas/wirelessBlockList"
-          "2457":
+          "ch_2457":
             $ref: "#/schemas/wirelessBlockList"
-          "2458":
+          "ch_2458":
             $ref: "#/schemas/wirelessBlockList"
-          "2459":
+          "ch_2459":
             $ref: "#/schemas/wirelessBlockList"
-          "2460":
+          "ch_2460":
             $ref: "#/schemas/wirelessBlockList"
-          "2461":
+          "ch_2461":
             $ref: "#/schemas/wirelessBlockList"
-          "2462":
+          "ch_2462":
             $ref: "#/schemas/wirelessBlockList"
-          "2463":
+          "ch_2463":
             $ref: "#/schemas/wirelessBlockList"
-          "2464":
+          "ch_2464":
             $ref: "#/schemas/wirelessBlockList"
-          "2465":
+          "ch_2465":
             $ref: "#/schemas/wirelessBlockList"
-          "2466":
+          "ch_2466":
             $ref: "#/schemas/wirelessBlockList"
-          "2467":
+          "ch_2467":
             $ref: "#/schemas/wirelessBlockList"
-          "2468":
+          "ch_2468":
             $ref: "#/schemas/wirelessBlockList"
-          "2469":
+          "ch_2469":
             $ref: "#/schemas/wirelessBlockList"
-          "2470":
+          "ch_2470":
             $ref: "#/schemas/wirelessBlockList"
-          "2471":
+          "ch_2471":
             $ref: "#/schemas/wirelessBlockList"
-          "2472":
+          "ch_2472":
             $ref: "#/schemas/wirelessBlockList"
-          "2473":
+          "ch_2473":
             $ref: "#/schemas/wirelessBlockList"
-          "2474":
+          "ch_2474":
             $ref: "#/schemas/wirelessBlockList"
-          "2475":
+          "ch_2475":
             $ref: "#/schemas/wirelessBlockList"
-          "2476":
+          "ch_2476":
             $ref: "#/schemas/wirelessBlockList"
-          "2477":
+          "ch_2477":
             $ref: "#/schemas/wirelessBlockList"
-          "2478":
+          "ch_2478":
             $ref: "#/schemas/wirelessBlockList"
   mastersPortsPairingPost:
     properties:
@@ -2531,161 +2531,161 @@ schemas:
         required:
           - all
         properties:
-          "2402":
+          "ch_2402":
             $ref: "#/schemas/wirelessBlockList"
-          "2403":
+          "ch_2403":
             $ref: "#/schemas/wirelessBlockList"
-          "2404":
+          "ch_2404":
             $ref: "#/schemas/wirelessBlockList"
-          "2405":
+          "ch_2405":
             $ref: "#/schemas/wirelessBlockList"
-          "2406":
+          "ch_2406":
             $ref: "#/schemas/wirelessBlockList"
-          "2407":
+          "ch_2407":
             $ref: "#/schemas/wirelessBlockList"
-          "2408":
+          "ch_2408":
             $ref: "#/schemas/wirelessBlockList"
-          "2409":
+          "ch_2409":
             $ref: "#/schemas/wirelessBlockList"
-          "2410":
+          "ch_2410":
             $ref: "#/schemas/wirelessBlockList"
-          "2411":
+          "ch_2411":
             $ref: "#/schemas/wirelessBlockList"
-          "2412":
+          "ch_2412":
             $ref: "#/schemas/wirelessBlockList"
-          "2413":
+          "ch_2413":
             $ref: "#/schemas/wirelessBlockList"
-          "2414":
+          "ch_2414":
             $ref: "#/schemas/wirelessBlockList"
-          "2415":
+          "ch_2415":
             $ref: "#/schemas/wirelessBlockList"
-          "2416":
+          "ch_2416":
             $ref: "#/schemas/wirelessBlockList"
-          "2417":
+          "ch_2417":
             $ref: "#/schemas/wirelessBlockList"
-          "2418":
+          "ch_2418":
             $ref: "#/schemas/wirelessBlockList"
-          "2419":
+          "ch_2419":
             $ref: "#/schemas/wirelessBlockList"
-          "2420":
+          "ch_2420":
             $ref: "#/schemas/wirelessBlockList"
-          "2421":
+          "ch_2421":
             $ref: "#/schemas/wirelessBlockList"
-          "2422":
+          "ch_2422":
             $ref: "#/schemas/wirelessBlockList"
-          "2423":
+          "ch_2423":
             $ref: "#/schemas/wirelessBlockList"
-          "2424":
+          "ch_2424":
             $ref: "#/schemas/wirelessBlockList"
-          "2425":
+          "ch_2425":
             $ref: "#/schemas/wirelessBlockList"
-          "2426":
+          "ch_2426":
             $ref: "#/schemas/wirelessBlockList"
-          "2427":
+          "ch_2427":
             $ref: "#/schemas/wirelessBlockList"
-          "2428":
+          "ch_2428":
             $ref: "#/schemas/wirelessBlockList"
-          "2429":
+          "ch_2429":
             $ref: "#/schemas/wirelessBlockList"
-          "2430":
+          "ch_2430":
             $ref: "#/schemas/wirelessBlockList"
-          "2431":
+          "ch_2431":
             $ref: "#/schemas/wirelessBlockList"
-          "2432":
+          "ch_2432":
             $ref: "#/schemas/wirelessBlockList"
-          "2433":
+          "ch_2433":
             $ref: "#/schemas/wirelessBlockList"
-          "2434":
+          "ch_2434":
             $ref: "#/schemas/wirelessBlockList"
-          "2435":
+          "ch_2435":
             $ref: "#/schemas/wirelessBlockList"
-          "2436":
+          "ch_2436":
             $ref: "#/schemas/wirelessBlockList"
-          "2437":
+          "ch_2437":
             $ref: "#/schemas/wirelessBlockList"
-          "2438":
+          "ch_2438":
             $ref: "#/schemas/wirelessBlockList"
-          "2439":
+          "ch_2439":
             $ref: "#/schemas/wirelessBlockList"
-          "2440":
+          "ch_2440":
             $ref: "#/schemas/wirelessBlockList"
-          "2441":
+          "ch_2441":
             $ref: "#/schemas/wirelessBlockList"
-          "2442":
+          "ch_2442":
             $ref: "#/schemas/wirelessBlockList"
-          "2443":
+          "ch_2443":
             $ref: "#/schemas/wirelessBlockList"
-          "2444":
+          "ch_2444":
             $ref: "#/schemas/wirelessBlockList"
-          "2445":
+          "ch_2445":
             $ref: "#/schemas/wirelessBlockList"
-          "2446":
+          "ch_2446":
             $ref: "#/schemas/wirelessBlockList"
-          "2447":
+          "ch_2447":
             $ref: "#/schemas/wirelessBlockList"
-          "2448":
+          "ch_2448":
             $ref: "#/schemas/wirelessBlockList"
-          "2449":
+          "ch_2449":
             $ref: "#/schemas/wirelessBlockList"
-          "2450":
+          "ch_2450":
             $ref: "#/schemas/wirelessBlockList"
-          "2451":
+          "ch_2451":
             $ref: "#/schemas/wirelessBlockList"
-          "2452":
+          "ch_2452":
             $ref: "#/schemas/wirelessBlockList"
-          "2453":
+          "ch_2453":
             $ref: "#/schemas/wirelessBlockList"
-          "2454":
+          "ch_2454":
             $ref: "#/schemas/wirelessBlockList"
-          "2455":
+          "ch_2455":
             $ref: "#/schemas/wirelessBlockList"
-          "2456":
+          "ch_2456":
             $ref: "#/schemas/wirelessBlockList"
-          "2457":
+          "ch_2457":
             $ref: "#/schemas/wirelessBlockList"
-          "2458":
+          "ch_2458":
             $ref: "#/schemas/wirelessBlockList"
-          "2459":
+          "ch_2459":
             $ref: "#/schemas/wirelessBlockList"
-          "2460":
+          "ch_2460":
             $ref: "#/schemas/wirelessBlockList"
-          "2461":
+          "ch_2461":
             $ref: "#/schemas/wirelessBlockList"
-          "2462":
+          "ch_2462":
             $ref: "#/schemas/wirelessBlockList"
-          "2463":
+          "ch_2463":
             $ref: "#/schemas/wirelessBlockList"
-          "2464":
+          "ch_2464":
             $ref: "#/schemas/wirelessBlockList"
-          "2465":
+          "ch_2465":
             $ref: "#/schemas/wirelessBlockList"
-          "2466":
+          "ch_2466":
             $ref: "#/schemas/wirelessBlockList"
-          "2467":
+          "ch_2467":
             $ref: "#/schemas/wirelessBlockList"
-          "2468":
+          "ch_2468":
             $ref: "#/schemas/wirelessBlockList"
-          "2469":
+          "ch_2469":
             $ref: "#/schemas/wirelessBlockList"
-          "2470":
+          "ch_2470":
             $ref: "#/schemas/wirelessBlockList"
-          "2471":
+          "ch_2471":
             $ref: "#/schemas/wirelessBlockList"
-          "2472":
+          "ch_2472":
             $ref: "#/schemas/wirelessBlockList"
-          "2473":
+          "ch_2473":
             $ref: "#/schemas/wirelessBlockList"
-          "2474":
+          "ch_2474":
             $ref: "#/schemas/wirelessBlockList"
-          "2475":
+          "ch_2475":
             $ref: "#/schemas/wirelessBlockList"
-          "2476":
+          "ch_2476":
             $ref: "#/schemas/wirelessBlockList"
-          "2477":
+          "ch_2477":
             $ref: "#/schemas/wirelessBlockList"
-          "2478":
+          "ch_2478":
             $ref: "#/schemas/wirelessBlockList"
-          "2479":
+          "ch_2479":
             $ref: "#/schemas/wirelessBlockList"
     example:
       masterId: 5
@@ -2694,84 +2694,84 @@ schemas:
         value: 25
         unit: s
       blackList:
-        "2402": false
-        "2403": false
-        "2404": false
-        "2405": false
-        "2406": false
-        "2407": false
-        "2408": false
-        "2409": false
-        "2410": false
-        "2411": false
-        "2412": false
-        "2413": false
-        "2414": false
-        "2415": false
-        "2416": false
-        "2417": false
-        "2418": false
-        "2419": false
-        "2420": false
-        "2421": false
-        "2422": false
-        "2423": false
-        "2424": false
-        "2425": false
-        "2426": false
-        "2427": false
-        "2428": false
-        "2429": false
-        "2430": false
-        "2431": false
-        "2432": false
-        "2433": false
-        "2434": false
-        "2435": false
-        "2436": false
-        "2437": false
-        "2438": false
-        "2439": false
-        "2440": false
-        "2441": false
-        "2442": false
-        "2443": false
-        "2444": false
-        "2445": false
-        "2446": false
-        "2447": false
-        "2448": false
-        "2449": false
-        "2450": false
-        "2451": false
-        "2452": false
-        "2453": false
-        "2454": false
-        "2455": false
-        "2456": false
-        "2457": false
-        "2458": false
-        "2459": false
-        "2460": false
-        "2461": false
-        "2462": false
-        "2463": false
-        "2464": false
-        "2465": false
-        "2466": false
-        "2467": false
-        "2468": false
-        "2469": false
-        "2470": false
-        "2471": false
-        "2472": false
-        "2473": false
-        "2474": false
-        "2475": false
-        "2476": false
-        "2477": false
-        "2478": false
-        "2479": false
+        "ch_2402": false
+        "ch_2403": false
+        "ch_2404": false
+        "ch_2405": false
+        "ch_2406": false
+        "ch_2407": false
+        "ch_2408": false
+        "ch_2409": false
+        "ch_2410": false
+        "ch_2411": false
+        "ch_2412": false
+        "ch_2413": false
+        "ch_2414": false
+        "ch_2415": false
+        "ch_2416": false
+        "ch_2417": false
+        "ch_2418": false
+        "ch_2419": false
+        "ch_2420": false
+        "ch_2421": false
+        "ch_2422": false
+        "ch_2423": false
+        "ch_2424": false
+        "ch_2425": false
+        "ch_2426": false
+        "ch_2427": false
+        "ch_2428": false
+        "ch_2429": false
+        "ch_2430": false
+        "ch_2431": false
+        "ch_2432": false
+        "ch_2433": false
+        "ch_2434": false
+        "ch_2435": false
+        "ch_2436": false
+        "ch_2437": false
+        "ch_2438": false
+        "ch_2439": false
+        "ch_2440": false
+        "ch_2441": false
+        "ch_2442": false
+        "ch_2443": false
+        "ch_2444": false
+        "ch_2445": false
+        "ch_2446": false
+        "ch_2447": false
+        "ch_2448": false
+        "ch_2449": false
+        "ch_2450": false
+        "ch_2451": false
+        "ch_2452": false
+        "ch_2453": false
+        "ch_2454": false
+        "ch_2455": false
+        "ch_2456": false
+        "ch_2457": false
+        "ch_2458": false
+        "ch_2459": false
+        "ch_2460": false
+        "ch_2461": false
+        "ch_2462": false
+        "ch_2463": false
+        "ch_2464": false
+        "ch_2465": false
+        "ch_2466": false
+        "ch_2467": false
+        "ch_2468": false
+        "ch_2469": false
+        "ch_2470": false
+        "ch_2471": false
+        "ch_2472": false
+        "ch_2473": false
+        "ch_2474": false
+        "ch_2475": false
+        "ch_2476": false
+        "ch_2477": false
+        "ch_2478": false
+        "ch_2479": false
   tracksStatisticsChannel:
     properties:
       trackNumber:
