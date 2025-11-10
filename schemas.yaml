@@ -5,7 +5,7 @@ schemas:
     type: string
     description:
       Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
-      the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name.
+      the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name. A device name must only contain alphanumeric characters and underscores.
     minLength: 1
     maxLength: 32
     pattern: "^[a-zA-Z0-9_]{1,32}$"
@@ -310,7 +310,7 @@ schemas:
         description:
           type: string
           description: |
-              Additional information about the provided specification.
+            Additional information about the provided specification.
     example:
       - apiId: JsonForIoLink_REST_v2
         protocol: REST
@@ -1232,7 +1232,7 @@ schemas:
             type: string
             minLength: 26
             maxLength: 26
-  portConfigurationGet:         
+  portConfigurationGet:
     anyOf:
       - $ref: "#/schemas/portConfigurationGetWired"
       - $ref: "#/schemas/portConfigurationGetWireless"
@@ -1826,7 +1826,7 @@ schemas:
           - POWER_2
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
-        
+
   portConfigurationPostWireless:
     type: object
     properties:
