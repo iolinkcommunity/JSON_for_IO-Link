@@ -129,10 +129,10 @@ paths:
       responses:
         "200":
           description: Successful operation
-          content:            
+          content:
             application/json:
               schema:
-                type: object                
+                type: object
                 required:
                   - url
                 properties:
@@ -2387,7 +2387,7 @@ paths:
         - $ref: "#/components/parameters/masterNumber"
         - $ref: "#/components/parameters/portNumber"
       requestBody:
-        description: The configuration object for the specified port to be written.
+        description: The configuration object for the specified port to be written. The definition of duplicated deviceAlias has to be rejected.
         required: true
         content:
           application/json:
