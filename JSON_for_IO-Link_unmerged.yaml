@@ -89,70 +89,22 @@ paths:
   ################################################################################
   # general
   ################################################################################
-  "/openapi":
+  /apis:
     get:
       tags:
         - general
-      operationId: getOpenApiDocument
+      operationId: getApis
       summary: >-
-        Get the OpenAPI interface description of the IO-Link Master.
+        Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications.
       description: >-
-        Get the OpenAPI interface description of the IO-Link Master. The general OpenAPI description should be adjusted in regards of vendor specific characteristics like used security schemas, supported endpoints or additional information.
+        Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications. The OpenAPI or AsyncAPI specifications should be aligned with vendor-specific requirements such as used security schemas, supported endpoints, or additional information.
       responses:
         "200":
           description: Successful operation
           content:
-            application/text:
-              schema:
-                type: string
-              examples:
-                "url-github":
-                  value: https://github.com/iolinkcommunity/JSON_for_IO-Link/blob/1.0.0/JSON_for_IO-Link.yaml
-                "url-vendor":
-                  value: >-
-                    https://www.iolink-master-vendor.com/de/de/p/p672882
-            application/yaml:
-              example:
-                "yaml":
-                  value: >-
-                    openapi: 3.0.3
-                    info:
-                    description: >-
-                      This is a sample IO-Link Master server. You can find out more about IO-Link
-                      at [http://www.io-link.com](http://www.io-link.com)
-                      # Description
-                      * Draft for version 2.x
-                      ## Disclaimer:
-                      >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
-                      >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products. 
-                      >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.  
-                      >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). 
-
-
-                      >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
-                    version: 2.0.0
-                    title: Swagger IO-Link Master
-                    contact:
-                      email: info@io-link.com
-                    license:
-                      name: tbd
-                      url: 'http://www.io-link.com'
-                    ...
             application/json:
-              example:
-                "json":
-                  value:
-                    {
-                      "openapi": "3.0.3",
-                      "info": null,
-                      "description": "This is a sample IO-Link Master server. You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com) # Description * Draft for version 2.x ## Disclaimer: >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents.  >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products.  >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.   >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). \n\n>IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.",
-                      "version": "2.0.0",
-                      "title": "Swagger IO-Link Master",
-                      "contact": { "email": "info@io-link.com" },
-                      "license":
-                        { "name": "tbd", "url": "http://www.io-link.com" },
-                      ...: "to be continued",
-                    }
+              schema:
+                $ref: "./schemas.yaml#/schemas/apisGet"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -163,14 +115,85 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/errorObject_101"
-  /apiversion:
+  /apis/{apiId}:
+    get:
+      tags:
+        - general
+      operationId: getApisApiId
+      summary: >-
+        Read a specific OpenAPI or AsyncAPI specification.
+      description: >-
+        Read a specific OpenAPI or AsyncAPI specification.
+      parameters:
+        - $ref: "#/components/parameters/apiId"
+      responses:
+        "200":
+          description: Successful operation
+          content:            
+            application/json:
+              schema:
+                type: object                
+                required:
+                  - url
+                properties:
+                  url:
+                    type: string
+                    description: The url referring to the OpenAPI or AsyncAPI specification.
+                    example: https://github.com/iolinkcommunity/JSON_for_IO-Link/blob/2.0.0/JSON_for_IO-Link.yaml
+              examples:
+                "url-github":
+                  value:
+                    "url": "https://github.com/iolinkcommunity/JSON_for_IO-Link/blob/2.0.0/JSON_for_IO-Link.yaml"
+                "url-vendor":
+                  value:
+                    "url": "https://www.iolink-master-vendor.com/de/de/p/p672882"
+            application/yaml:
+              example:
+                "yaml":
+                  value: >-
+                    openapi: 3.0.3
+                    info:
+                      description: >-
+                        This is a sample IO-Link Master server. You can find out more about IO-Link
+                        at [http://www.io-link.com](http://www.io-link.com)
+                        # Description
+                        * Version 2.0.0
+                        ## Disclaimer:
+                        >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
+                        >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products. 
+                        >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.  
+                        >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). 
+
+                        >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
+                      version: 2.0.0
+                        title: Swagger IO-Link Master
+                      contact:
+                        email: info@io-link.com
+                      license:
+                        name: tbd
+                        url: 'http://www.io-link.com'
+                    ...
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+  /apis/{apiId}/version:
     get:
       tags:
         - general
       operationId: getApiVersion
-      summary: Get the REST interface version identification.
+      summary: Read version information of a specific OpenAPI or AsyncAPI specification.
       description: >-
-        This version relates to the released version by the iolink community on github (e.g. https://github.com/iolinkcommunity/JSON_for_IO-Link/releases). It can be extended by vendor specific parts.
+        The provided version aligns with the released version by the iolink community on github (e.g. https://github.com/iolinkcommunity/JSON_for_IO-Link/releases).
+        It may be extended by vendor specific parts.
+      parameters:
+        - $ref: "#/components/parameters/apiId"
       responses:
         "200":
           description: Successful operation
@@ -183,16 +206,16 @@ paths:
                 properties:
                   version:
                     type: string
-                  additionalInfo:
+                  description:
                     type: string
               examples:
-                "mandatory":
+                "mandatory content":
                   value:
-                    version: 1.0.0
-                "optional addition":
+                    version: 2.0.0
+                "optional content":
                   value:
-                    version: 1.0.0
-                    additionalInfo: 1.2.3-feature-xyz
+                    version: 2.0.0
+                    description: 1.2.3-feature-xyz
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -4104,6 +4127,14 @@ components:
             Maintenance: priviledged access for reading and writing all endpoints
             Specialist: more priviledged access for advanced features like firmware update
   parameters:
+    apiId:
+      name: apiId
+      description: API identifier of an OpenAPI or AsyncAPI specification.
+      required: true
+      in: path
+      schema:
+        type: string
+        pattern: "^[A-Za-z0-9._-]+$"
     artifact:
       name: artifact
       description: IO-Link IODD Artifacts

@@ -283,6 +283,43 @@ schemas:
       - NOT_AVAILABLE # NOT_AVAILABLE
       - PORT_POWER_OFF # PORT_POWER_OFF
       - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
+  apisGet:
+    type: array
+    items:
+      type: object
+      required:
+        - apiId
+        - protocol
+        - version
+        - description
+      properties:
+        apiId:
+          type: string
+          pattern: "^[A-Za-z0-9._-]+$"
+          description: An identifier representing a specific OpenAPI or AsyncAPI specification.
+        protocol:
+          type: string
+          enum:
+            - REST
+            - MQTT
+          description: The specification type.
+        version:
+          type: string
+          description: |
+            The version of the OpenAPI or AsyncAPI specification.
+        description:
+          type: string
+          description: |
+              Additional information about the provided specification.
+    example:
+      - apiId: JsonForIoLink_REST_v2
+        protocol: REST
+        version: 2.0.0
+        description: The latest version of the JSON for IO-Link OpenAPI specification.
+      - apiId: JsonForIoLink_MQTT_v1
+        protocol: MQTT
+        version: 1.0.1
+        description: The latest version of the JSON for IO-Link AsyncAPI specification.
   masterIdentificationPost:
     type: object
     description: At least one of the properties has to be used, if the request is issued.
