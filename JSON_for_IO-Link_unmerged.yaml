@@ -4212,7 +4212,25 @@ components:
     parameterIdent:
       name: parameterIdent
       in: path
-      description: Parameter access either via index or parametername. Access via parametername requires IODD support.
+      description: |
+        Parameter name. Comes from the primary language name in the IODD but might be reformatted. \
+        Constraints for strings in keys of JSON key-value-pairs and URLs require the following conversion rules for those names: 
+
+        **Rule 1:** Names are based on the IODD XML Element Name inside variables or process data resolving the text in primary language. \
+        **Rule 2:** Only alphanumeric characters and underscores are allowed. All other characters are replaced by &quot; _ &quot;. \
+        **Rule 3:** Leading numbers shall be prefixed with &quot; _ &quot;.  \
+        **Rule 4:** If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: `{name}_{index}` or `{name}_{subindex}`. \
+        **Rule 5:** Naming according the scheme `{name}_{index}` or `{name}_{subindex}` is always allowed even if names are not duplicated. \
+        **Rule 6:** The naming of ArrayT elements is `element_{subindex}`. \
+
+        **Examples:**
+        | IODD text Name | Index/subindex | Parameter name | Unique name (with index) |
+        |----------------|----------------|------|--------------------------|
+        | 0815 variable | 3452 | `_0815_variable` | `_0815_variable_3452` |
+        | Switchpoint (Q1) | 345 | `Switchpoint__Q1_` | `Switchpoint__Q1__345` |
+        | External temperature | 311 | `External_temperature_1` | `External_temperature_311` |
+        | External temperature | 1423 | `External_temperature_1` | `External_temperature_1423` |
+
       required: true
       schema:
         $ref: "./schemas.yaml#/schemas/parameterIdent"
