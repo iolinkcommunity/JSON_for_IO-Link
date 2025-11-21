@@ -97,7 +97,7 @@ paths:
       summary: >-
         Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications.
       description: >-
-        Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications. The OpenAPI or AsyncAPI specifications should be aligned with vendor-specific requirements such as used security schemas, supported endpoints, or additional information.
+        Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications. The OpenAPI or AsyncAPI specifications should be aligned with vendor-specific requirements such as used security schemas, supported endpoints, or additional information. In addition this endpoint can be used for vendor specific APIs as well.
       responses:
         "200":
           description: Successful operation
@@ -121,9 +121,9 @@ paths:
         - general
       operationId: getApisApiId
       summary: >-
-        Read a specific OpenAPI or AsyncAPI specification.
+        Read a specific OpenAPI or AsyncAPI document.
       description: >-
-        Read a specific OpenAPI or AsyncAPI specification.
+        Read a specific OpenAPI or AsyncAPI document. Either as URL or directly as YAML/JSON content.
       parameters:
         - $ref: "#/components/parameters/apiId"
       responses:
@@ -138,7 +138,7 @@ paths:
                 properties:
                   url:
                     type: string
-                    description: The url referring to the OpenAPI or AsyncAPI specification.
+                    description: The url referring to the OpenAPI or AsyncAPI document.
                     example: https://github.com/iolinkcommunity/JSON_for_IO-Link/blob/2.0.0/JSON_for_IO-Link.yaml
               examples:
                 "url-github":
@@ -173,49 +173,6 @@ paths:
                         name: tbd
                         url: 'http://www.io-link.com'
                     ...
-        "401":
-          $ref: "#/components/responses/HTTP_401"
-        "403":
-          $ref: "#/components/responses/HTTP_403"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "./schemas.yaml#/schemas/errorObject_101"
-  /apis/{apiId}/version:
-    get:
-      tags:
-        - general
-      operationId: getApiVersion
-      summary: Read version information of a specific OpenAPI or AsyncAPI specification.
-      description: >-
-        The provided version aligns with the released version by the iolink community on github (e.g. https://github.com/iolinkcommunity/JSON_for_IO-Link/releases).
-        It may be extended by vendor specific parts.
-      parameters:
-        - $ref: "#/components/parameters/apiId"
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - version
-                properties:
-                  version:
-                    type: string
-                  description:
-                    type: string
-              examples:
-                "mandatory content":
-                  value:
-                    version: 2.0.0
-                "optional content":
-                  value:
-                    version: 2.0.0
-                    description: 1.2.3-feature-xyz
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -4133,8 +4090,7 @@ components:
       required: true
       in: path
       schema:
-        type: string
-        pattern: "^[A-Za-z0-9._-]+$"
+        $ref: "./schemas.yaml#/schemas/apiId"
     artifact:
       name: artifact
       description: IO-Link IODD Artifacts
