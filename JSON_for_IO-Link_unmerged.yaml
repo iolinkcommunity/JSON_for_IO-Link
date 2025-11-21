@@ -6,7 +6,7 @@ info:
 
     # Description
 
-    This is an [openapi specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md) for IO-Link gateways, masters and devices. 
+    This is an [OpenAPI document](https://spec.openapis.org/oas/v3.0.3.html) for IO-Link gateways, masters and devices. 
     You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
 
 
@@ -14,8 +14,8 @@ info:
 
     * **Security:** The defined security schemas are just examples and can be replaced by vendor specifics. The way of restricting requests is as well in the responsibility of the vendor. It is recommended to limit access to writable endpoint. This should prevent misconfiguration and breaking running systems.
 
-    # Specifications
-          
+    # Specifications    
+
     * **JSON Integration for IO-Link V1.0.0 - Order No: 10.222**
 
     * **IO-Link Interface and System Specification V1.1.4 - Order No: 10.002**
@@ -45,11 +45,78 @@ info:
 
     ---
 
+    # General remarks
+
+    ## Data type conversion 
+
+    The following conversion rules shall be applied for the data type mapping between IO-Link and JSON.
+
+      | IO-Link data type | JSON data type |
+      |-------------------|----------------|
+      | BooleanT | Boolean |
+      | StringT | String |
+      | ArrayT | Array |      
+      | IntegerT, UintegerT | Number |
+      | Float32T | Number |
+      | RecordT | Object |
+      | TimeSpanT | String |
+      | TimeT | String |
+      | OctetStringT | Bit sequences that are not interpretable without using information out of the IODD are represented as JSON arrays of decimal numbers. One array item is representing one byte. If the value of the bit sequence is not a multiple of 8, the value is padded with zeros from the left to the next byte border. Byte order is big-endian. See table below. |
+
+      **OctetStringT examples:**
+
+      | Value (bin) | Bit length | Value (hex) | Byte array (dec) |
+      |-------------|------------|-------------|------------------|
+      | 10 0111 | 6 | 0x27 | [39] |
+      | 100 0000 1111 0000 | 15 | 0x40F0 | [64, 240] |
+
+    ## Parameter naming rules
+
+    Parameter and sub-parameter names come from the IODD but are reformatted for JSON/URL compatibility according to these rules:
+      - **Rule 1:** Names are based on the IODD XML Element Name inside variables or process data, resolving the text in primary language.
+      - **Rule 2:** Only alphanumeric characters and underscores are allowed. All other characters are replaced by "**_**".
+      - **Rule 3:** Leading numbers shall be prefixed with "**_**".
+      - **Rule 4:** If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the scheme: `{name}_{index}` or `{name}_{subindex}`.
+      - **Rule 5:** Naming according to the scheme `{name}_{index}` or `{name}_{subindex}` is always allowed even if names are not duplicated.
+      - **Rule 6:** The naming of ArrayT elements is `element_{subindex}`.
+
+      **Examples:**
+      | IODD text Name | Index/subindex | Parameter name | Unique name (with index) |
+      |----------------|----------------|------|--------------------------|
+      | 0815 variable | 3452 | `_0815_variable` | `_0815_variable_3452` |
+      | Switchpoint (Q1) | 345 | `Switchpoint__Q1_` | `Switchpoint__Q1__345` |
+      | External temperature | 311 | `External_temperature_1` | `External_temperature_311` |
+      | External temperature | 1423 | `External_temperature_1` | `External_temperature_1423` |
+
+    ## Time formats
+
+      Any time values shall be represented either as an absolute time or a relative time in the format as specified in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html). 
+      
+      **NOTE:** Each italic letter in the following format definitions is to be replaced by one digit. The square brackets indicate that an element is optional. 
+
+      The format for absolute time is *`YYYY-MM-DDThh:mm:ss.fZ`* \
+      Time format for relative time is *`P[YY][MM][WW][DD][T[hH][mM][s[.f]S]]`* \
+      Relative time is starting at re-initialization of the system. 
+      
+      **Examples:** \
+      Absolute time:   `2018-05-18T07:31:54.123Z ` \
+      Relative time:   `P3Y6M4DT12H30M17.123S ` 
+
+    ## Error behavior
+
+      While processing HTTP requests errors may occur. There are several errors defined. The body of an HTTP response indicating an error contains the [Error object](#/components/schemas/errorObject). 
+      The following general rules apply for the error handling: \
+      **a)** Errors 101 and 150 (see appendix A.2) can be returned to each request. \
+      **b)** If parts of POST requests are not applicable, the HTTP response has a different HTTP status code than 2xx. The body of this HTTP response shall contain the Error object. \
+      **c)** If multiple errors occur while processing the request only the first detected error shall be responded. \
+      **d)** Errors 305 and 306 (see A.2) can be returned to requests when there are query parameters added to the URL. \
+      **e)** If REST API commands are not available, error 103 (see A.2) shall be responded.
+
   contact:
     email: info@io-link.com
   license:
     name: Legal Information
-    url: "https://io-link.com/en/Global/Impressum.php"
+    url: "https://io-link.com/legal-information"
 
 servers:
   - url: "{scheme}://{host}/{basePath}"
@@ -4213,37 +4280,22 @@ components:
       name: parameterIdent
       in: path
       description: |
-        Parameter name. Comes from the primary language name in the IODD but might be reformatted. \
-        Constraints for strings in keys of JSON key-value-pairs and URLs require the following conversion rules for those names: 
-
-        **Rule 1:** Names are based on the IODD XML Element Name inside variables or process data resolving the text in primary language. \
-        **Rule 2:** Only alphanumeric characters and underscores are allowed. All other characters are replaced by &quot; _ &quot;. \
-        **Rule 3:** Leading numbers shall be prefixed with &quot; _ &quot;.  \
-        **Rule 4:** If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: `{name}_{index}` or `{name}_{subindex}`. \
-        **Rule 5:** Naming according the scheme `{name}_{index}` or `{name}_{subindex}` is always allowed even if names are not duplicated. \
-        **Rule 6:** The naming of ArrayT elements is `element_{subindex}`. \
-
-        **Examples:**
-        | IODD text Name | Index/subindex | Parameter name | Unique name (with index) |
-        |----------------|----------------|------|--------------------------|
-        | 0815 variable | 3452 | `_0815_variable` | `_0815_variable_3452` |
-        | Switchpoint (Q1) | 345 | `Switchpoint__Q1_` | `Switchpoint__Q1__345` |
-        | External temperature | 311 | `External_temperature_1` | `External_temperature_311` |
-        | External temperature | 1423 | `External_temperature_1` | `External_temperature_1423` |
-
+        Parameter identifier. Can be either the parameter index (integer) or the parameter name (string). \
+        Access via parameter names requires IODD support. \
+        Parameter names come from the IODD but are reformatted according to the **Parameter naming rules** described in the general remarks section above.
       required: true
       schema:
         $ref: "./schemas.yaml#/schemas/parameterIdent"
     subParameterIdent:
       name: subParameterIdent
       in: path
-      description: Subparameter access either via subindex or subparametername. Access via subparametername requires IODD support.
+      description: |
+        Sub-Parameter identifier. Can be either the sub parameter index (integer) or the sub parameter name (string). \        
+        Access via subparametername requires IODD support. \
+        Parameter names come from the IODD but are reformatted according to the **Parameter naming rules** described in the general remarks section above.
       required: true
       schema:
-        type: integer
-        minimum: 0
-        maximum: 255
-
+        $ref: "./schemas.yaml#/schemas/subParameterIdent"
   responses:
     HTTP_401:
       description: Authentication information is missing or invalid
