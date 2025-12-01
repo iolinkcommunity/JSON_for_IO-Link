@@ -2,16 +2,107 @@ asyncapi: 3.0.0
 info:
   title: MQTT for IO-Link Gateways
   version: 2.0.0
-  description: This is the recommended specification for IO-Link gateway MQTT communication by the IO-Link consortium.
-  termsOfService: "https://www.io-link.com"
+  description: >-
+
+    # Description
+
+    This is an [AsyncAPI specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0) for IO-Link gateways, masters and devices. 
+    You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)    
+
+    # Specifications    
+
+    * **JSON Integration for IO-Link V1.0.0 - Order No: 10.222**
+
+    * **IO-Link Interface and System Specification V1.1.4 - Order No: 10.002**
+
+    * **IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112**
+
+    * **IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082**
+
+    * **IO Device Description Specification Version 1.1.4 - Order No: 10.012**
+
+
+    # Disclaimer
+
+    The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
+
+
+    The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products. 
+
+
+    WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.  
+
+
+    In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). 
+
+
+    IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
+
+
+    # General remarks
+
+    ## Data type conversion 
+
+    The following conversion rules shall be applied for the data type mapping between IO-Link and JSON.
+
+      | IO-Link data type | JSON data type |
+      |-------------------|----------------|
+      | BooleanT | Boolean |
+      | StringT | String |
+      | ArrayT | Array |      
+      | IntegerT, UintegerT | Number |
+      | Float32T | Number |
+      | RecordT | Object |
+      | TimeSpanT | String |
+      | TimeT | String |
+      | OctetStringT | Bit sequences that are not interpretable without using information out of the IODD are represented as JSON arrays of decimal numbers. One array item is representing one byte. If the value of the bit sequence is not a multiple of 8, the value is padded with zeros from the left to the next byte border. Byte order is big-endian. See table below. |
+
+      **OctetStringT examples:**
+
+      | Value (bin) | Bit length | Value (hex) | Byte array (dec) |
+      |-------------|------------|-------------|------------------|
+      | 10 0111 | 6 | 0x27 | [39] |
+      | 100 0000 1111 0000 | 15 | 0x40F0 | [64, 240] |
+
+    ## Parameter naming rules
+
+    Parameter and sub-parameter names come from the IODD but are reformatted for JSON/URL compatibility according to these rules:
+      - **Rule 1:** Names are based on the IODD XML Element Name inside variables or process data, resolving the text in primary language.
+      - **Rule 2:** Only alphanumeric characters and underscores are allowed. All other characters are replaced by "**_**".
+      - **Rule 3:** Leading numbers shall be prefixed with "**_**".
+      - **Rule 4:** If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the scheme: **{name}_{index}** or **{name}_{subindex}**.
+      - **Rule 5:** Naming according to the scheme **{name}_{index}** or **{name}_{subindex}** is always allowed even if names are not duplicated.
+      - **Rule 6:** The naming of ArrayT elements is **element_{subindex}**.
+
+      **Examples:**
+      | IODD text Name | Index/subindex | Parameter name | Unique name (with index) |
+      |----------------|----------------|------|--------------------------|
+      | 0815 variable | 3452 | **_0815_variable** | **_0815_variable_3452** |
+      | Switchpoint (Q1) | 345 | **Switchpoint__Q1_** | **Switchpoint__Q1__345** |
+      | External temperature | 311 | **External_temperature_1** | **External_temperature_311** |
+      | External temperature | 1423 | **External_temperature_1** | **External_temperature_1423** |
+
+    ## Time formats
+
+      Any time values shall be represented either as an absolute time or a relative time in the format as specified in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html). 
+      
+      **NOTE:** Each italic letter in the following format definitions is to be replaced by one digit. The square brackets indicate that an element is optional. 
+
+      The format for absolute time is *YYYY-MM-DDThh:mm:ss.fZ* \
+      Time format for relative time is *P[YY][MM][WW][DD][T[hH][mM][s[.f]S]]* \
+      Relative time is starting at re-initialization of the system. 
+      
+      **Examples:** \
+      Absolute time:   **2018-05-18T07:31:54.123Z** \
+      Relative time:   **P3Y6M4DT12H30M17.123S**
+
   contact:
     name: IO-Link Community
     email: info@io-link.com
     url: "http://www.io-link.com"
   license:
-    name: Apache 2.0
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-  tags: [{ "name": "IO-Link IoT" }]
+    name: Legal Information
+    url: "https://io-link.com/legal-information"
 defaultContentType: application/json
 servers:
   iol-master:
