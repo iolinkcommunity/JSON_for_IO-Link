@@ -1661,6 +1661,9 @@ paths:
                     maxPowerSupply: # max power supply per port
                       value: 0.3
                       unit: A
+                    maxStorageCapacity:
+                      value: 4096
+                      unit: kB
                 IO-Link_Wireless:
                   value:
                     numberOfPorts: 40
@@ -4040,8 +4043,14 @@ paths:
       operationId: PostDevicesDeviceAliasFirmwareUpdate
       tags:
         - devices
-      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
-      description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
+      summary: >
+        Perform a firmware update for a specific Device using either a complete iolfw file or an extracted binary firmware file
+        with additional mandatory meta information according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+        Device FW Update support is required.
+      description: >
+        Perform a firmware update for a specific Device using either a complete iolfw file or an extracted binary firmware file
+        with additional mandatory meta information according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19.
+        Device FW Update support is required.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
       responses:
@@ -4077,7 +4086,10 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_102"
       requestBody:
         required: true
-        description: The firmware update file in iolfw format. The file must be provided as a multipart/form-data request including the `filename` as header parameter (see RFC7578).
+        description: >
+          The firmware update file, either as a complete iolfw file or as an extracted binary firmware
+          file with additional mandatory meta information. The file must be provided as a multipart/form-data
+          request including the `filename` as header parameter (see RFC7578).
         content:
           multipart/form-data:
             schema:

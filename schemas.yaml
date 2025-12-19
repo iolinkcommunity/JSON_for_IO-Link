@@ -314,12 +314,29 @@ schemas:
     required:
       - numberOfPorts
       - maxPowerSupply
+      - maxStorageCapacity
     type: object
     properties:
       numberOfPorts:
         $ref: "#/schemas/portNumber"
       maxPowerSupply:
         $ref: "#/schemas/currentObject"
+      maxStorageCapacity:
+        required:
+          - value
+          - unit
+        description: >-
+          Maximum capacity available on the host device for storing extracted iolfw file content.
+        type: object
+        properties:
+          value:
+            type: integer
+            minimum: 0
+          unit:
+            type: string
+            enum:
+              - kB
+            default: kB
   masterCapabilitiesGetWireless:
     required:
       - numberOfPorts
@@ -3320,16 +3337,49 @@ schemas:
         maximum: 100
   deviceFirmwareUpdatePost:
     type: object
-    properties:
-      password:
-        type: string
-        description: password for updating the device if required
-      iolfwfile:
-        type: string
-        format: binary
-        description: IOLFW File for the device
-    required:
-      - iolfwfile
+    oneOf:
+      - type: object
+        properties:
+          password:
+            type: string
+            description: password for updating the device if required
+          iolfwfile:
+            type: string
+            format: binary
+            description: IOLFW File for the device
+        required:
+          - iolfwfile
+      - type: object
+        properties:
+          password:
+            type: string
+            description: password for updating the device if required
+          hardwareIdKey:
+            type: string
+            description: >
+              The identifier that must match the hardware id key within the device to ensure
+              compatibility, linking the firmware update data to the specific hardware variants
+              for which it can be used, and is checked by the update software before allowing a
+              firmware update to proceed.
+          vendorId:
+            $ref: "#/schemas/vendorId"
+          activationRetryCount:
+            type: integer
+            description: >
+              Maximum number of automatic retries (default: 3) the host tool performs when
+              polling the device for successful activation of new firmware after an update.
+            default: 3
+            minimum: 1
+          binfwfile:
+            type: string
+            format: binary
+            description: >
+              The binary firmware file contained in the iolfw file, representing the actual
+              firmware image to be transferred to the device during a firmware update.
+        required:
+          - hardwareIdKey
+          - vendorId          
+          - binfwfile
   devicesGet:
     type: array
     items:
