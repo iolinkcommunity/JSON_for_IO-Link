@@ -5,7 +5,7 @@ schemas:
     type: string
     description:
       Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
-      the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name.
+      the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name. A device name must only contain alphanumeric characters and underscores.
     minLength: 1
     maxLength: 32
     pattern: "^[a-zA-Z0-9_]{1,32}$"
@@ -31,33 +31,19 @@ schemas:
     # minLength: 1
     # maxLength: 64
   parameterIdentMqtt: # path parameter shall not contain a type according to async api spec
-    description: Identifier of the parameter. It can be the parameterName or the index of the parameter.
+    description: Identifier of the parameter. It can be the parameterName or the index of the parameter. For details see Parameter naming rules in General remarks. \
   subParameterIdentMqtt: # path parameter shall not contain a type according to async api spec
-    description: Identifier of the sub-parameter. It can be the sub-parameterName or the sub-index of the parameter.
+    description: Identifier of the sub-parameter. It can be the sub-parameterName or the sub-index of the parameter. For details see Parameter naming rules in General remarks. \
   parameterName:
     type: string
     description: |
-      Parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
-      Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
-      Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
-      Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used.\
-      Rule 3: Leading numbers shall be prefixed with “_“.  \
-      Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
-      Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
-      Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
+      Parameter name. For details see Parameter naming rules in General remarks. \
     minLength: 1
     maxLength: 64
   subParameterName:
     type: string
     description: |
-      Sub-parameter name. Comes from the IODD but might be reformatted according to the JSON mapping specification. \
-      Constraints for strings in keys of JSON key-value-pairs (see [9]) and URLs require the following conversion rules for those names: \
-      Rule 1: Names are based on the IODD XML Element Name inside variables or process data 159 resolving the text in primary language. \
-      Rule 2: Only alphanumeric characters and underscores are allowed. All other characters are replaced by "_". The following regex (/[^\w\n]/g) can be used. \
-      Rule 3: Leading numbers shall be prefixed with “_“. \
-      Rule 4: If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the following scheme: {name}_{index} or {name}_{subindex}. \
-      Rule 5: Naming according the scheme {name}_{index} or {name}_{subindex} is always allowed even if names are not duplicated. \
-      Rule 6: The naming of ArrayT elements is “element_{subindex}”. \
+      Sub-parameter name. For details see Parameter naming rules in General remarks. \
     minLength: 1
     maxLength: 64
   cycleTime:
@@ -283,6 +269,48 @@ schemas:
       - NOT_AVAILABLE # NOT_AVAILABLE
       - PORT_POWER_OFF # PORT_POWER_OFF
       - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
+  apiId:
+    type: string
+    enum:
+      - IOLINK_REST_V1
+      - IOLINK_REST_V2
+      - IOLINK_MQTT_V1
+    description: An identifier representing a specific OpenAPI or AsyncAPI specification.
+  apisGet:
+    type: array
+    items:
+      type: object
+      required:
+        - apiId
+        - protocol
+        - version
+        - description
+      properties:
+        apiId:
+          $ref: "#/schemas/apiId"
+        protocol:
+          type: string
+          enum:
+            - REST
+            - MQTT
+          description: The specification type.
+        version:
+          type: string
+          description: |
+            The version of the OpenAPI or AsyncAPI specification.
+        description:
+          type: string
+          description: |
+            Additional information about the provided specification.
+    example:
+      - apiId: IOLINK_REST_V2
+        protocol: REST
+        version: 2.0.0
+        description: The latest version of the JSON for IO-Link OpenAPI specification.
+      - apiId: IOLINK_MQTT_V1
+        protocol: MQTT
+        version: 1.0.1
+        description: The latest version of the JSON for IO-Link AsyncAPI specification.
   masterIdentificationPost:
     type: object
     description: At least one of the properties has to be used, if the request is issued.
@@ -1195,7 +1223,7 @@ schemas:
             type: string
             minLength: 26
             maxLength: 26
-  portConfigurationGet:         
+  portConfigurationGet:
     anyOf:
       - $ref: "#/schemas/portConfigurationGetWired"
       - $ref: "#/schemas/portConfigurationGetWireless"
@@ -1789,7 +1817,7 @@ schemas:
           - POWER_2
       deviceAlias:
         $ref: "#/schemas/deviceAlias"
-        
+
   portConfigurationPostWireless:
     type: object
     properties:
@@ -3369,6 +3397,10 @@ schemas:
     oneOf:
       - $ref: "#/schemas/parameterName"
       - $ref: "#/schemas/index"
+  subParameterIdent:
+    oneOf:
+      - $ref: "#/schemas/subParameterName"
+      - $ref: "#/schemas/subIndex"
   rawSmi:
     type: object
     properties:

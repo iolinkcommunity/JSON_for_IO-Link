@@ -23,8 +23,8 @@ Mandatory endpoint with a note must be implemented if the indicated optional fea
 
 | Endpoint | Description | M/O/C |
 |---|---|---|
-| *[GET] /openapi* | Retrieves the OpenAPI interface description. | M |
-| *[GET] /apiversion* | Retrieves the REST interface version. | M |
+| *[GET] /apis* | Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications with versions. | M |
+| *[GET] /apis/{apiId}* | Read a specific OpenAPI or AsyncAPI document. | M |
 | *[GET] /gateway/diagnosis* | Retrieves the pending events. | M |
 | *[GET] /gateway/monitor* | Retrieves current and voltage values of the gateway. | O |
 | *[POST] /mqtt/topics/{topicId}* | Changes or deactivates a specific MQTT topic. | M - MQTT support |
@@ -39,7 +39,7 @@ Mandatory endpoint with a note must be implemented if the indicated optional fea
 | *[GET] /masters/{masterNumber}/ports/{portNumber}/monitor* | Reads current and voltage or wireless info (depends on the Port type). | O - For Wired Ports / M - For Wireless Ports |
 | *[GET] /masters/{masterNumber}/ports/{portNumber}/power* | Reads the current power mode of the specified port. | C - For Class A with PortPowerOffOn or Class B Ports |
 | *[POST] /masters/{masterNumber}/ports/{portNumber}/power* | Sets the power mode of the specified port. | C - For Class A with PortPowerOffOn or Class B Ports|
-| *[GET] /devices/{deviceAlias}/fwupdate* | Performs Device FW Update procedure. | M - Device FW Update support |
+| *[GET] /devices/{deviceAlias}/fwupdate* | Gives the stage and progress of a running firmware update. | M - Device FW Update support |
 | *[POST] /devices/{deviceAlias}/fwupdate* | Performs Device FW Update procedure. | M - Device FW Update support |
 
 ##### Additions affecting each endpoint
