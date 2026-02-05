@@ -4282,7 +4282,8 @@ components:
       description: |
         Parameter identifier. Can be either the parameter index (integer) or the parameter name (string). \
         Access via parameter names requires IODD support. \
-        Parameter names come from the IODD but are reformatted according to the **Parameter naming rules** described in the general remarks section above.
+        Parameter names come from the IODD but are reformatted according to the **Parameter naming rules** described in the general remarks section above. \
+        The index is an integer in the range of 0 to 65535.
       required: true
       schema:
         $ref: "./schemas.yaml#/schemas/parameterIdent"
