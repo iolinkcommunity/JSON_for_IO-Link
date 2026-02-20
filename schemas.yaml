@@ -833,8 +833,6 @@ schemas:
       - oneOf:
           - type: object
             properties:
-              event:
-                $ref: "#/schemas/event"
               processData:
                 $ref: "#/schemas/processData"
               parameter:
