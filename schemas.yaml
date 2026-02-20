@@ -3779,6 +3779,15 @@ schemas:
             enum: [703]
           message:
             enum: ["Data set combination incompatible"]
+  errorObject_704:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [704]
+          message:
+            enum: ["File too large to process"]
   powerMode:
     type: boolean
     description: >-
