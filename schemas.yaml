@@ -851,7 +851,7 @@ schemas:
       - $ref: "#/schemas/mqttConfigurationTopic"
     example:
       topicId: 1
-      topicName: PD input
+      topicName: pd_input
       qos: 1_AT_LEAST_ONCE
       deviceAlias: DT35
       processData:
@@ -871,7 +871,7 @@ schemas:
     example:
       topicId: 1
       activate: true
-      topicName: PD input
+      topicName: pd_input
       qos: 1_AT_LEAST_ONCE
       deviceAlias: DT35
       processData:
@@ -3797,22 +3797,22 @@ schemas:
     type: string
     description: >-
       MQTT topic name is bound to a device and individual topics can be created. The configured originatorId will be automatically added when data is published. <br>
-      In case no topic name is provided the following structure will be used: &lt;originatorId&gt;/&lt;deviceAlias&gt;/&lt;type&gt;[/&lt;parameter&gt;] <br>
+      In case no topic name is provided the following structure will be used: &lt;originatorId&gt;/&lt;devices/&lt;deviceAlias&gt;/&lt;type&gt;[/&lt;parameter&gt;] <br>
       Where: <br>
       - &lt;originatorId&gt; is the unique identifier of the gateway which will be added automatically <br>
       - &lt;deviceAlias&gt; is the device alias <br>
-      - &lt;type&gt; can be: processData, events, or parameter <br>
+      - &lt;type&gt; can be: processdata, events, or parameter <br>
       - &lt;parameter&gt; is optional and used for parameter topics (index or parameterName) <br>
       <br>
       Examples: <br>
-      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/processData <br>
-      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/events <br>
-      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/parameter/123 <br>
-      - master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/parameter/temperature <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/processdata <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/events <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/parameter/123 <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/parameter/temperature <br>
       <br>
     minLength: 1
     maxLength: 256
-    example: "master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/processData"
+    example: "master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/processdata"
   mqttTopicId:
     type: integer
     description: The topic id as a reference to a topic name. The management of the topic ids is done by the gateway.
