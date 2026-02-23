@@ -1619,6 +1619,12 @@ paths:
             application/json:
               schema:
                 $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "413":
+          description: Content Too Large
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_704"
         "500":
           description: Internal Server Error
           content:
@@ -4096,6 +4102,12 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_304"
                   - $ref: "./schemas.yaml#/schemas/errorObject_308"
+        "413":
+          description: Content Too Large
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_704"
         "500":
           description: Internal Server Error
           content:
