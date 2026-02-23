@@ -49,6 +49,7 @@ schemas:
         description: only for complex parameters (records or arrays) required. Not allowed for simple parameters
       subindexes:
         type: array
+        description: only for complex parameters (records or arrays) required.
         items:
           type: object
           required:
