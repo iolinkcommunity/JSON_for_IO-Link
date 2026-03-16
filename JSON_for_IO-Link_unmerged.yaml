@@ -996,7 +996,7 @@ paths:
               example:
                 - topicId: 1
                   activate: true
-                  topicName: Sensor34/processData
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/processdata
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: DT35
                   processData:
@@ -1007,13 +1007,12 @@ paths:
                       unit: ms
                 - topicId: 2
                   activate: true
-                  topicName: Sensor34/event
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/TAD08/events
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: TAD081
-                  event: {}
                 - topicId: 3
                   activate: false
-                  topicName: PD
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/processdata
                   qos: 0_ONLY_ONCE
                   deviceAlias: BNI_IOL
                   processData:
@@ -1022,7 +1021,7 @@ paths:
                     onChange: true
                 - topicId: 4
                   activate: false
-                  topicName: DT35_CycleTime
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/dt35_cycle_time
                   qos: 0_ONLY_ONCE
                   deviceAlias: DT35
                   parameter:
@@ -1032,7 +1031,7 @@ paths:
                     onChange: true
                 - topicId: 5
                   activate: true
-                  topicName: deviceTemperature
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/deviceTemperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: master1port2
                   parameter:
@@ -1041,6 +1040,11 @@ paths:
                     interval:
                       value: 10
                       unit: ms
+                - topicId: 6
+                  activate: true
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/TAD08/sensor34/event
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: TAD081
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -1081,19 +1085,13 @@ paths:
                 value:
                   activate: true
                   qos: 1_AT_LEAST_ONCE
-                  deviceAlias: DT35
+                  deviceAlias: master1port1
                   processData:
                     direction: getData
                     format: iodd
                     interval:
                       value: 10
                       unit: ms
-              Event:
-                value:
-                  activate: true
-                  qos: 1_AT_LEAST_ONCE
-                  deviceAlias: TAD081
-                  event: {}
               Parameter (Index):
                 value:
                   activate: false
@@ -1108,7 +1106,7 @@ paths:
               Parameter (ParameterName):
                 value:
                   activate: true
-                  topicName: deviceTemperature
+                  topicName: device_temperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: AHM36A
                   parameter:
@@ -1188,7 +1186,7 @@ paths:
                   value:
                     topicId: 1
                     activate: true
-                    topicName: PD input
+                    topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/pd_input
                     qos: 1_AT_LEAST_ONCE
                     deviceAlias: DT35
                     processData:
@@ -1197,19 +1195,11 @@ paths:
                       interval:
                         value: 10
                         unit: ms
-                Event:
-                  value:
-                    topicId: 2
-                    activate: true
-                    topicName: Event
-                    qos: 1_AT_LEAST_ONCE
-                    deviceAlias: TAD081
-                    event: {}
                 Parameter (Index):
                   value:
                     topicId: 3
                     activate: true
-                    topicName: devvice/indexXY
+                    topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/device/index_xy
                     qos: 0_ONLY_ONCE
                     deviceAlias: master1port1
                     parameter:
@@ -1222,7 +1212,7 @@ paths:
                   value:
                     topicId: 5
                     activate: true
-                    topicName: deviceTemperature
+                    topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/device_temperature
                     qos: 0_ONLY_ONCE
                     deviceAlias: AHM36A
                     parameter:
@@ -1281,7 +1271,7 @@ paths:
                 value:
                   topicId: 1
                   activate: true
-                  topicName: PD input
+                  topicName: pd_input
                   qos: 1_AT_LEAST_ONCE
                   deviceAlias: DT35
                   processData:
@@ -1290,18 +1280,10 @@ paths:
                     interval:
                       value: 10
                       unit: ms
-              Event:
-                value:
-                  topicId: 2
-                  activate: true
-                  topicName: Event
-                  qos: 1_AT_LEAST_ONCE
-                  deviceAlias: TAD081
-                  event: {}
               Parameter (Index):
                 value:
                   topicId: 3
-                  topicName: devvice/indexXY
+                  topicName: device_index_xy
                   qos: 0_ONLY_ONCE
                   deviceAlias: master1port1
                   parameter:
@@ -1314,7 +1296,7 @@ paths:
                 value:
                   topicId: 5
                   activate: true
-                  topicName: deviceTemperature
+                  topicName: device_temperature
                   qos: 0_ONLY_ONCE
                   deviceAlias: AHM36A
                   parameter:
