@@ -1287,7 +1287,7 @@ schemas:
         items:
           type: integer
             minimum: 2402
-            maximum: 2478
+            maximum: 2479
   mastersPortsPairingPost:
     properties:
       portPairing:
