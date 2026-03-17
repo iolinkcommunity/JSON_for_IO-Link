@@ -34,6 +34,41 @@ schemas:
     description: Identifier of the parameter. It can be the parameterName or the index of the parameter. For details see Parameter naming rules in General remarks. \
   subParameterIdentMqtt: # path parameter shall not contain a type according to async api spec
     description: Identifier of the sub-parameter. It can be the sub-parameterName or the sub-index of the parameter. For details see Parameter naming rules in General remarks. \
+  parameterInfo:
+    type: object
+    required:
+      - parameterName
+      - index
+    properties:
+      index:
+        $ref: "#/schemas/index"
+      parameterName:
+        $ref: "#/schemas/parameterName"
+      subindexAccessSupported:
+        type: boolean
+        description: only for complex parameters (records or arrays) required. Not allowed for simple parameters
+      subindexes:
+        type: array
+        description: only for complex parameters (records or arrays) required.
+        items:
+          type: object
+          required:
+            - subIndex
+            - subParameterName
+          properties:
+            subIndex:
+              $ref: "#/schemas/subIndex"
+            subParameterName:
+              $ref: "#/schemas/subParameterName"
+    example:
+      index: 60
+      parameterName: SSC1_1_Param
+      subindexAccessSupported: true
+      subindexes:
+        - subIndex: 1
+          subParameterName: SP1
+        - subIndex: 2
+          subParameterName: SP2
   parameterName:
     type: string
     description: |
@@ -2103,28 +2138,7 @@ schemas:
   deviceParametersGet:
     type: array
     items:
-      type: object
-      required:
-        - index
-        - parameterName
-      properties:
-        index:
-          $ref: "#/schemas/index"
-        parameterName:
-          $ref: "#/schemas/parameterName"
-        subindexAccessSupported:
-          type: boolean
-          description: only for complex parameters (records or arrays) required. Not allowed for simple parameters
-    example:
-      - index: 16
-        parameterName: "Vendor_Name"
-      - index: 18
-        parameterName: "Product_Name"
-      - index: 19
-        parameterName: "ProductID"
-      - index: 60
-        parameterName: "SSC_1_Param"
-        subindexAccessSupported: true
+      $ref: "#/schemas/parameterInfo"
   deviceSubParametersGet:
     type: array
     items:
