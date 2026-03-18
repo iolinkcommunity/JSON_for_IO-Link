@@ -2391,43 +2391,6 @@ schemas:
           items:
             type: string
             example: "linkUp"
-  masterConfiguration:
-    properties:
-      masterId:
-        type: integer
-        minimum: 1
-        maximum: 29
-      ahtEnable:
-        type: boolean
-        default: false
-      pairingTimeout:
-        type: object
-        required:
-          - value
-          - unit
-        properties:
-          value:
-            type: integer
-            minimum: 5
-            maximum: 65535
-          unit:
-            type: string
-            enum:
-              - s
-      blacklist:
-        type: array
-        items:
-          type: integer
-    example:
-      masterId: 5
-      ahtEnable: false
-      pairingTimeout:
-        value: 25
-        unit: s
-      blackList:
-        - 2403
-        - 2404
-        - 2479
   tracksStatisticsChannel:
     properties:
       trackNumber:
