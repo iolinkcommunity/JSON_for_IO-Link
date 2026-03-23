@@ -1306,7 +1306,7 @@ schemas:
             $ref: "#/schemas/wirelessTrackNumber"
           "track_5":
             $ref: "#/schemas/wirelessTrackNumber"
-      blockList:
+      blackList:
         type: array
         items:
           type: integer
