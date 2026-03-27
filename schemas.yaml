@@ -1306,12 +1306,12 @@ schemas:
             $ref: "#/schemas/wirelessTrackNumber"
           "track_5":
             $ref: "#/schemas/wirelessTrackNumber"
-      blackList:
+      blockList:
         type: array
         items:
           type: integer
-          minimum: 2402
-          maximum: 2479
+          minimum: 2403
+          maximum: 2478
   mastersPortsPairingPost:
     properties:
       portPairing:
