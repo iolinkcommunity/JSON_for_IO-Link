@@ -4328,7 +4328,7 @@ components:
           "track_3": 31
           "track_4": 0
           "track_5": 0
-        blackList:
+        blockList:
           - 2404
           - 2405
           - 2478
