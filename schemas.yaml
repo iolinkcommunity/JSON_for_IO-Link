@@ -1,0 +1,2697 @@
+schemas:
+  transactionId:
+    description: Unique identifier for the transaction in for example as UUIDv4.
+  deviceAlias:
+    type: string
+    description:
+      Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+      the portNumber. Even if a new device alias has been assigned, the device can always be addressed via the default name. A device name must only contain alphanumeric characters and underscores.
+    minLength: 1
+    maxLength: 32
+    pattern: "^[a-zA-Z0-9_]{1,32}$"
+    example: master1port1
+  deviceAliasMqtt: # path parameter shall not contain a type according to async api spec
+    description:
+      Unique deviceAlias. Default device name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+      the portNumber.
+  portNumberMqtt: # path parameter shall not contain a type according to async api spec
+    description: Port number.
+  masterNumberMqtt: # path parameter shall not contain a type according to async api spec
+    description: Index of the master.
+  serverAddressMqtt:
+    description: Serveraddress.
+    type: string
+    minLength: 1
+    maxLength: 64
+  originatorId: # path parameter shall not contain a type according to async api spec
+    description:
+      Shall be the unique identifier of the gateway as MQTT client and shall correspond to the client id inside the MQTT message. It can be the ProductURI,
+      DNS name, IP address or MAC address of the device hosting the MQTT publisher. This identifier is used as a topic prefix for other publishing topics.
+    # type: string
+    # minLength: 1
+    # maxLength: 64
+  parameterIdentMqtt: # path parameter shall not contain a type according to async api spec
+    description: Identifier of the parameter. It can be the parameterName or the index of the parameter. For details see Parameter naming rules in General remarks. \
+  subParameterIdentMqtt: # path parameter shall not contain a type according to async api spec
+    description: Identifier of the sub-parameter. It can be the sub-parameterName or the sub-index of the parameter. For details see Parameter naming rules in General remarks. \
+  parameterInfo:
+    type: object
+    required:
+      - parameterName
+      - index
+    properties:
+      index:
+        $ref: "#/schemas/index"
+      parameterName:
+        $ref: "#/schemas/parameterName"
+      subindexAccessSupported:
+        type: boolean
+        description: only for complex parameters (records or arrays) required. Not allowed for simple parameters
+      subindexes:
+        type: array
+        description: only for complex parameters (records or arrays) required.
+        items:
+          type: object
+          required:
+            - subIndex
+            - subParameterName
+          properties:
+            subIndex:
+              $ref: "#/schemas/subIndex"
+            subParameterName:
+              $ref: "#/schemas/subParameterName"
+    example:
+      index: 60
+      parameterName: SSC1_1_Param
+      subindexAccessSupported: true
+      subindexes:
+        - subIndex: 1
+          subParameterName: SP1
+        - subIndex: 2
+          subParameterName: SP2
+  parameterName:
+    type: string
+    description: |
+      Parameter name. For details see Parameter naming rules in General remarks. \
+    minLength: 1
+    maxLength: 64
+  subParameterName:
+    type: string
+    description: |
+      Sub-parameter name. For details see Parameter naming rules in General remarks. \
+    minLength: 1
+    maxLength: 64
+  cycleTime:
+    type: object
+    required:
+      - value
+      - unit
+    properties:
+      value:
+        type: number
+        minimum: 0
+        example: 10
+      unit:
+        type: string
+        enum:
+          - ms
+        default: ms
+  ipConfiguration:
+    type: string
+    enum:
+      - MANUAL
+      - DHCP
+  processData:
+    allOf:
+      - type: object
+        required:
+          - direction
+          - format
+        properties:
+          direction:
+            $ref: "#/schemas/content"
+          format:
+            $ref: "#/schemas/format"
+    oneOf:
+      - type: object
+        required:
+          - interval
+        properties:
+          interval:
+            $ref: "#/schemas/cycleTime"
+      - type: object
+        required:
+          - onChange
+        properties:
+          onChange:
+            type: boolean
+  format:
+    type: string
+    enum:
+      - byteArray
+      - iodd
+    default: byteArray
+  content:
+    type: string
+    enum:
+      - getData
+      - setData
+      - getSetData
+    default: getData
+  mqttParameter:
+    type: object
+    required:
+      - format
+    properties:
+      parameter:
+        $ref: "#/schemas/parameter"
+      format:
+        $ref: "#/schemas/format"
+    oneOf:
+      - type: object
+        required:
+          - interval
+        properties:
+          interval:
+            $ref: "#/schemas/cycleTime"
+      - type: object
+        required:
+          - onChange
+        properties:
+          onChange:
+            type: boolean
+  parameter:
+    oneOf:
+      - type: object
+        required:
+          - parameterName
+        properties:
+          parameterName:
+            $ref: "#/schemas/parameterName"
+          subParameterName:
+            $ref: "#/schemas/subParameterName"
+      - type: object
+        required:
+          - index
+        properties:
+          index:
+            $ref: "#/schemas/index"
+          subindex:
+            $ref: "#/schemas/subIndex"
+  eventOrigin:
+    type: string
+    enum:
+      - ALL
+      - GATEWAY
+      - MASTERS
+      - PORTS
+      - DEVICES
+    default: ALL
+  masterNumber:
+    description: Index of the master.
+    type: integer
+    minimum: 1
+  portNumber:
+    type: integer
+    minimum: 1
+  eventTop:
+    type: integer
+    minimum: 1
+  eventBottom:
+    type: integer
+    minimum: 1
+  orderCode:
+    type: string
+    minLength: 1
+    maxLength: 64
+  serialNumber:
+    type: string
+    minLength: 1
+  serialNumberDevice:
+    type: string
+    minLength: 1
+    maxLength: 16
+  vendorId:
+    type: integer
+    minimum: 1
+    maximum: 65535
+  vendorName:
+    type: string
+    minLength: 1
+    maxLength: 64
+  vendorText:
+    type: string
+    minLength: 1
+    maxLength: 64
+  deviceId:
+    type: integer
+    minimum: 1
+    maximum: 16777215
+  productName:
+    type: string
+    minLength: 1
+    maxLength: 64
+  iolinkRevision:
+    type: string
+    enum:
+      - "1.0"
+      - "1.1"
+  tags:
+    type: string
+    minLength: 1
+    maxLength: 32
+  wirelessTrackNumber:
+    type: integer
+    minimum: 0
+    maximum: 31
+    default: 0
+  wirelessSlotNumber:
+    type: integer
+    minimum: 0
+    maximum: 7
+  dataStorageObject:
+    description: DataStorageObject (including the header) as described in E.6 DS_Data of the IO-Link Interface and System Specification v1.1.4 as Base64 coded string.
+    type: string
+    minLength: 16 # 12 octets encoded in Base64 (empty DS)
+    maxLength: 2748 # 2048 + 12 octets encoded in Base64
+  identificationMasters:
+    type: array
+    items:
+      type: object
+      required:
+        - masterNumber
+      properties:
+        masterNumber:
+          $ref: "#/schemas/masterNumber"
+        serialNumber:
+          $ref: "#/schemas/serialNumber"
+        locationTag:
+          type: string
+          minLength: 1
+          maxLength: 32
+    example:
+      - masterNumber: 1
+        serialNumber: A12345678B
+        locationTag: slotNumber 5
+      - masterNumber: 2
+        serialNumber: 123A45B783
+        locationTag: slotNumber 6
+  index:
+    type: integer
+    minimum: 0
+    maximum: 65535
+    example: 233
+  subIndex:
+    type: integer
+    minimum: 0
+    maximum: 255
+    example: 12
+  statusInfo:
+    type: string
+    enum: # see Terminology in V.113, Table E.4 PortStatusList
+      - COMMUNICATION_LOST # NO_DEVICE
+      - DEACTIVATED # DEACTIVATED
+      - INCORRECT_DEVICE # PORT_DIAG
+      - DEVICE_STARTING #
+      - DEVICE_ONLINE # OPERATE
+      - DIGITAL_INPUT_C/Q # DI_CQ
+      - DIGITAL_OUTPUT_C/Q # DO_CQ
+      - NOT_AVAILABLE # NOT_AVAILABLE
+      - PORT_POWER_OFF # PORT_POWER_OFF
+      - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
+  apiId:
+    type: string
+    enum:
+      - IOLINK_REST_V1
+      - IOLINK_REST_V2
+      - IOLINK_MQTT_V1
+    description: An identifier representing a specific OpenAPI or AsyncAPI specification.
+  apisGet:
+    type: array
+    items:
+      type: object
+      required:
+        - apiId
+        - protocol
+        - version
+        - description
+      properties:
+        apiId:
+          $ref: "#/schemas/apiId"
+        protocol:
+          type: string
+          enum:
+            - REST
+            - MQTT
+          description: The specification type.
+        version:
+          type: string
+          description: |
+            The version of the OpenAPI or AsyncAPI specification.
+        description:
+          type: string
+          description: |
+            Additional information about the provided specification.
+    example:
+      - apiId: IOLINK_REST_V2
+        protocol: REST
+        version: 2.0.0
+        description: The latest version of the JSON for IO-Link OpenAPI specification.
+      - apiId: IOLINK_MQTT_V1
+        protocol: MQTT
+        version: 1.0.1
+        description: The latest version of the JSON for IO-Link AsyncAPI specification.
+  masterIdentificationPost:
+    type: object
+    description: At least one of the properties has to be used, if the request is issued.
+    properties:
+      applicationSpecificTag:
+        $ref: "#/schemas/tags"
+      locationTag:
+        $ref: "#/schemas/tags"
+      functionTag:
+        $ref: "#/schemas/tags"
+  gatewayCapabilitiesGet:
+    required:
+      - ioddSupported
+      - mqttSupported
+      - deviceFwUpdateSupported
+    type: object
+    properties:
+      ioddSupported:
+        type: boolean
+      mqttSupported:
+        type: boolean
+      deviceFwUpdateSupported:
+        type: boolean
+    example:
+      ioddSupported: true
+      mqttSupported: true
+      deviceFwUpdateSupported: true
+  masterCapabilitiesGet:
+    required:
+      - numberOfPorts
+      - maxPowerSupply
+    type: object
+    properties:
+      numberOfPorts:
+        $ref: "#/schemas/portNumber"
+      maxPowerSupply:
+        $ref: "#/schemas/currentObject"
+  masterCapabilitiesGetWireless:
+    required:
+      - numberOfPorts
+    type: object
+    properties:
+      numberOfPorts:
+        $ref: "#/schemas/portNumber"
+  eventTime:
+    description: >-
+      Timestamp (format defined in DIN ISO 8601). This field can give an
+      absolute time or a relative time. Both formats are defined in DIN ISO
+      8601.
+    type: string
+    minLength: 1
+    maxLength: 32
+  eventSeverity:
+    description: >-
+      Indicates the severity of the message. The IO-Link EventType
+      NOTIFICATION maps to NOTICE, WARNING to WARNING and ERROR to ERROR.
+    type: string
+    enum:
+      - EMERGENCY
+      - ALERT
+      - CRITICAL
+      - ERROR
+      - WARNING
+      - NOTICE
+      - INFO
+      - DEBUG
+  eventOriginObject:
+    type: object
+    properties:
+      gateway:
+        type: string
+      masterNumber:
+        description: >-
+          This property is mandatory for IO-Link Master Events, IO-Link Port
+          Events and IO-Link Device Events. Should not be used for other log
+          entries.
+        $ref: "#/schemas/masterNumber"
+      portNumber:
+        description: >-
+          This property is mandatory for IO-Link Port Events and IO-Link
+          Device Events. Should not be used for other log entries.
+        $ref: "#/schemas/portNumber"
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
+  eventObject:
+    type: object
+    properties:
+      code:
+        description: >-
+          IO-Link Port EventCode or IO-Link Device EventCode. This property is
+          mandatory for IO-Link Port Events or IO-Link Device Events.
+        type: integer
+        minimum: 0
+        maximum: 65535
+      mode:
+        description: >-
+          IO-Link Port Event Mode or IO-Link Device EventMode. This property
+          is mandatory for IO-Link Port Events or IO-Link Device Events.
+        type: string
+        enum:
+          - SINGLESHOT
+          - APPEARS
+          - DISAPPEARS
+      text:
+        type: string
+        minLength: 1
+        maxLength: 255
+
+  gatewayEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - gateway
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - text
+        $ref: "#/schemas/eventObject"
+
+  masterEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - text
+        $ref: "#/schemas/eventObject"
+
+  portEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - portNumber
+        $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - code
+          - mode
+        $ref: "#/schemas/eventObject"
+
+  deviceEventGet:
+    type: object
+    required:
+      - time
+      - severity
+      - origin
+      - message
+    properties:
+      time:
+        $ref: "#/schemas/eventTime"
+      severity:
+        $ref: "#/schemas/eventSeverity"
+      origin:
+        required:
+          - masterNumber
+          - portNumber
+          - deviceAlias
+        allOf:
+          - $ref: "#/schemas/eventOriginObject"
+      message:
+        required:
+          - code
+          - mode
+        allOf:
+          - $ref: "#/schemas/eventObject"
+  blockParameterizationIdentifier:
+    oneOf:
+      - type: object
+        required:
+          - index
+        properties:
+          index:
+            $ref: "#/schemas/index"
+          subIndex:
+            $ref: "#/schemas/subIndex"
+      - type: object
+        required:
+          - parameterName
+        properties:
+          parameterName:
+            $ref: "#/schemas/parameterName"
+          subParameterName:
+            $ref: "#/schemas/subParameterName"
+  blockParameterizationPostParametersRequest:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required:
+        - identifier
+      properties:
+        identifier:
+          oneOf:
+            - type: object
+              required:
+                - index
+              properties:
+                index:
+                  $ref: "#/schemas/index"
+                subIndex:
+                  $ref: "#/schemas/subIndex"
+            - type: object
+              required:
+                - parameterName
+              properties:
+                parameterName:
+                  $ref: "#/schemas/parameterName"
+                subParameterName:
+                  $ref: "#/schemas/subParameterName"
+        content:
+          $ref: "#/schemas/deviceParameterValueGetPost"
+  deviceBlockParameterizationPostParametersAnswer:
+    type: array
+    items:
+      type: object
+      required:
+        - identifier
+        - result
+      properties:
+        identifier:
+          $ref: "#/schemas/blockParameterizationIdentifier"
+        result:
+          type: object
+          required:
+            - parameterExchangeResult
+          properties:
+            parameterExchangeResult:
+              type: string
+              enum:
+                - WRITE_SUCCESS
+                - READ_SUCCESS
+                - ERROR
+            content:
+              $ref: "#/schemas/deviceParameterValueGetPost"
+            iolinkError:
+              $ref: "#/schemas/iolinkErrorObject"
+  gatewayIdentificationGet:
+    type: object
+    required:
+      - macAddress
+      - vendorName
+    properties:
+      macAddress:
+        $ref: "#/schemas/macAddress"
+      serialNumber:
+        $ref: "#/schemas/serialNumber"
+      orderCode:
+        $ref: "#/schemas/orderCode"
+      productName:
+        type: string
+        minLength: 1
+        maxLength: 64
+      productId:
+        type: string
+        minLength: 1
+      hardwareRevision:
+        type: string
+        minLength: 1
+        maxLength: 64
+      firmwareRevision:
+        type: string
+        minLength: 1
+        maxLength: 64
+      vendorName:
+        $ref: "#/schemas/vendorName"
+      vendorUrl:
+        type: string
+        minLength: 1
+        maxLength: 64
+      manualUrl:
+        type: string
+        minLength: 1
+        maxLength: 64
+      productInstanceUri:
+        type: string
+        minLength: 1
+        maxLength: 64
+      applicationSpecificTag:
+        $ref: "#/schemas/tags"
+      locationTag:
+        $ref: "#/schemas/tags"
+      functionTag:
+        $ref: "#/schemas/tags"
+    example:
+      macAddress: "00:02:72:CE:A6:49"
+      serialNumber: "C134A746"
+      productId: "TMP34Z"
+      vendorName: "SensorCompany"
+      productName: "FlowSensor34"
+      hardwareRevision: "V3.45"
+      firmwareRevision: "V1.30"
+      productInstanceUri: "sensor.tmp.23.com"
+  gatewayConfigurationGetPost:
+    type: object
+    required:
+      - ethIpv4
+    properties:
+      ethIpv4:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          description: >
+            The properties ipAddress, subnetMask and standardGateway are only allowed for POST,
+            if ipConfiguration is set to MANUAL.  They are mandatory for GET.
+          required:
+            - ipConfiguration
+          properties:
+            ifName:
+              type: string
+              minLength: 1
+              maxLength: 64
+            ipConfiguration:
+              description: At least one of the methods shall be implemented.
+              $ref: "#/schemas/ipConfiguration"
+            ipAddress:
+              $ref: "#/schemas/ipAddress"
+            subnetMask:
+              $ref: "#/schemas/subnetMask"
+            standardGateway:
+              $ref: "#/schemas/standardGateway"
+    example:
+      ethIpv4:
+        - ifName: "eth0"
+          ipConfiguration: MANUAL
+          ipAddress: 192.168.1.13
+          subnetMask: 255.255.255.0
+          standardGateway: 192.168.1.1
+  voltageObject:
+    type: object
+    required:
+      - value
+      - unit
+    properties:
+      value:
+        type: number
+        minimum: 0
+        example: 24.0
+      unit:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: "V"
+  currentObject:
+    type: object
+    required:
+      - value
+      - unit
+    properties:
+      value:
+        type: number
+        minimum: 0
+        example: 0.5
+      unit:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: "A"
+  gatewayMonitor:
+    type: object
+    properties:
+      voltage:
+        type: object
+        properties:
+          primaryVoltage:
+            $ref: "#/schemas/voltageObject"
+          secondaryVoltage:
+            $ref: "#/schemas/voltageObject"
+      current:
+        type: object
+        properties:
+          primaryCurrent:
+            $ref: "#/schemas/currentObject"
+          secondaryCurrent:
+            $ref: "#/schemas/currentObject"
+  portMonitorWired:
+    type: object
+    minProperties: 1
+    properties:
+      voltage:
+        type: object
+        minProperties: 1
+        properties:
+          primaryVoltage:
+            $ref: "#/schemas/voltageObject"
+          secondaryVoltage:
+            $ref: "#/schemas/voltageObject"
+          cqVoltage:
+            $ref: "#/schemas/voltageObject"
+          iqVoltage:
+            $ref: "#/schemas/voltageObject"
+      current:
+        type: object
+        minProperties: 1
+        properties:
+          primaryCurrent:
+            $ref: "#/schemas/currentObject"
+          secondaryCurrent:
+            $ref: "#/schemas/currentObject"
+          cqCurrent:
+            $ref: "#/schemas/currentObject"
+          iqCurrent:
+            $ref: "#/schemas/currentObject"
+  portMonitorWireless:
+    type: object
+    required:
+      - wirelessQuality
+    properties:
+      wirelessQuality:
+        $ref: "#/schemas/wirelessPortQuality"
+  portMonitor:
+    anyOf:
+      - $ref: "#/schemas/portMonitorWired"
+      - $ref: "#/schemas/portMonitorWireless"
+  mqttConfigurationGetPost:
+    type: object
+    description: The properties serverAddress, username, password, lastWill and keepAliveTime are requried when clientmode set to ACTIVE.
+    required:
+      - clientMode
+    properties:
+      clientMode:
+        type: string
+        enum:
+          - ACTIVE
+          - INACTIVE
+      serverAddress:
+        $ref: "#/schemas/serverAddressMqtt"
+      username:
+        type: string
+        minLength: 1
+        maxLength: 64
+      password:
+        type: string
+        minLength: 1
+        maxLength: 64
+      lastWill:
+        type: object
+        required:
+          - topic
+          - message
+          - qos
+          - retain
+        properties:
+          topic:
+            type: string
+            minLength: 1
+            maxLength: 64
+          message:
+            type: string
+          qos:
+            type: string
+            enum:
+              - 0_ONLY_ONCE
+              - 1_AT_LEAST_ONCE
+              - 2_EXACTLY_ONCE
+          retain:
+            type: boolean
+      keepAliveTime:
+        type: integer
+        minimum: 1
+        maximum: 65535
+      originatorId:
+        $ref: "#/schemas/originatorId"
+  mqttConfigurationTopic:
+    allOf:
+      - type: object
+        properties:
+          activate:
+            type: boolean
+          qos:
+            type: string
+            enum:
+              - 0_ONLY_ONCE
+              - 1_AT_LEAST_ONCE
+              - 2_EXACTLY_ONCE
+          deviceAlias:
+            $ref: "#/schemas/deviceAlias"
+      - oneOf:
+          - type: object
+            properties:
+              processData:
+                $ref: "#/schemas/processData"
+              parameter:
+                $ref: "#/schemas/mqttParameter"
+  mqttConfigurationTopicGet:
+    allOf:
+      - type: object
+        required:
+          - qos
+          - deviceAlias
+          - topicName
+        properties:
+          topicName:
+            description: The topic name as a reference
+            $ref: "#/schemas/mqttTopicName"
+      - $ref: "#/schemas/mqttConfigurationTopic"
+    example:
+      topicId: 1
+      topicName: pd_input
+      qos: 1_AT_LEAST_ONCE
+      deviceAlias: DT35
+      processData:
+        direction: getData
+        format: iodd
+        interval:
+          value: 10
+          unit: ms
+  mqttConfigurationTopicPost:
+    allOf:
+      - type: object
+        properties:
+          topicName:
+            description: The topic name as a reference
+            $ref: "#/schemas/mqttTopicName"
+      - $ref: "#/schemas/mqttConfigurationTopic"
+    example:
+      topicId: 1
+      activate: true
+      topicName: pd_input
+      qos: 1_AT_LEAST_ONCE
+      deviceAlias: DT35
+      processData:
+        direction: getData
+        format: iodd
+        interval:
+          value: 10
+          unit: ms
+  mqttConnectionStatusGet:
+    allOf:
+      - type: object
+        required:
+          - connectionStatus
+          - serverAddress
+          - upTime
+        properties:
+          connectionStatus:
+            type: string
+            enum:
+              - CLIENT_INACTIVE
+              - CONNECTION_ACCEPTED
+              - UNACCEPTABLE_PROTOCOL_VERSION
+              - IDENTIFIER_REJECTED
+              - SERVER_UNAVAILABLE
+              - BAD_USERNAME_OR_PASSWORD
+              - NOT_AUTHORIZED
+          serverAddress:
+            $ref: "#/schemas/serverAddressMqtt"
+          upTime:
+            type: integer
+    example:
+      connectionStatus: CONNECTION_ACCEPTED
+      serverAddress: "http://broker-address.com"
+      upTime: 1050
+  deviceCapabilitiesGet:
+    required:
+      - minimumCycleTime
+      - supportedProfiles
+    type: object
+    properties:
+      minimumCycleTime:
+        $ref: "#/schemas/cycleTime"
+      supportedProfiles:
+        type: array
+        items:
+          type: integer
+          minimum: 1
+  deviceIdentificationGet:
+    required:
+      - vendorId
+      - deviceId
+      - iolinkRevision
+      - vendorName
+      - productName
+    type: object
+    properties:
+      vendorId:
+        $ref: "#/schemas/vendorId"
+      deviceId:
+        $ref: "#/schemas/deviceId"
+      iolinkRevision:
+        $ref: "#/schemas/iolinkRevision"
+      vendorName:
+        description: Mandatory if the Device suports the ISDU.
+        $ref: "#/schemas/vendorName"
+      vendorText:
+        $ref: "#/schemas/vendorText"
+      vendorUrl:
+        type: string
+      productName:
+        description: Mandatory if the Device suports the ISDU.
+        $ref: "#/schemas/productName"
+      productId:
+        type: string
+        minLength: 1
+        maxLength: 64
+      productText:
+        type: string
+        minLength: 1
+        maxLength: 64
+      serialNumber:
+        $ref: "#/schemas/serialNumberDevice"
+      hardwareRevision:
+        type: string
+        minLength: 1
+        maxLength: 64
+      firmwareRevision:
+        type: string
+      productInstanceUri:
+        type: string
+      ioddUri:
+        type: string
+      applicationSpecificTag:
+        $ref: "#/schemas/tags"
+      locationTag:
+        $ref: "#/schemas/tags"
+      functionTag:
+        $ref: "#/schemas/tags"
+    example:
+      vendorId: 26
+      deviceId: 8389226
+      iolinkRevision: "1.1"
+      vendorName: SICK AG
+      vendorText: Sensor Intelligence.
+      productName: SLG-2
+      productId: SLG-2
+      productText: The SLG-2 IO-Link device is a smart lightgrid
+      serialNumber: Serial123456
+      hardwareRevision: 3.2.1.444R
+      firmwareRevision: 3.2.1.888R
+      vendorUrl: "http://www.sick.com"
+      productInstanceUri: "http://www.sick.com/SLG-2/Serial123456"
+      ioddUri: "https://ioddfinder.io-link.com/26/42/SICK-SLG-2-20210428-IODD1.1"
+      # 'https://ioddfinder.io-link.com/api/vendors/26/iodds/11541/files/zip/rated'
+      # 'https://ioddfinder.io-link.com/productvariants/search/32872'
+      applicationSpecificTag: Fallback light switch
+      locationTag: Down under
+      functionTag: Check end of belt
+  portIdentificationPost:
+    type: object
+    minProperties: 1
+    properties:
+      applicationSpecificTag:
+        $ref: "#/schemas/tags"
+        example: Fallback light switch
+      locationTag:
+        $ref: "#/schemas/tags"
+        example: Down under
+      functionTag:
+        $ref: "#/schemas/tags"
+        example: Check start of belt
+  portCapabilitiesPorttype:
+    type: string
+    enum:
+      - CLASS_A
+      - CLASS_B
+      - CLASS_A_WITH_PORT_POWER_OFF_ON
+      - FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
+      - FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
+      - FAILSAFE_PORT_B
+  portCapabilitiesGet:
+    type: object
+    required:
+      - portType
+      - maxPowerSupply
+    properties:
+      portType:
+        $ref: "#/schemas/portCapabilitiesPorttype"
+      maxPowerSupply:
+        description: >-
+          maxPowerSupply is not supported in IO-Link Wireless.
+        $ref: "#/schemas/currentObject"
+  portCapabilitiesGetWireless:
+    type: object
+    required:
+      - portType
+      - slotType
+    properties:
+      portType:
+        description: Type of the wireless port (must be WIRELESS_PORT).
+        type: string
+        enum: [WIRELESS_PORT]
+      slotType:
+        description: >-
+          slotType for Wireless Master only
+        type: string
+        enum:
+          - SSLOT
+          - DSLOT
+  portConfigurationGetCommon:
+    type: object
+    required:
+      - deviceAlias
+    properties:
+      validationAndBackup:
+        description: required if mode is IOLINK_MANUAL.
+        type: string
+        enum:
+          - NO_DEVICE_CHECK
+          - TYPE_COMPATIBLE_DEVICE_V1.0
+          - TYPE_COMPATIBLE_DEVICE_V1.1
+          - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+          - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+      vendorId:
+        description: >-
+          required if portMode is IOLINK_MANUAL and
+          validationAndBackup is not NO_DEVICE_CHECK.
+        $ref: "#/schemas/vendorId"
+      deviceId:
+        description: >-
+          required if portMode is IOLINK_MANUAL and
+          validationAndBackup is not NO_DEVICE_CHECK.
+        $ref: "#/schemas/deviceId"
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
+  portConfigurationWiredMode:
+    type: string
+    enum:
+      - DEACTIVATED
+      - IOLINK_MANUAL
+      - IOLINK_AUTOSTART
+      - DIGITAL_INPUT
+      - DIGITAL_OUTPUT
+  portConfigurationWirelessMode:
+    type: string
+    enum:
+      - DEACTIVATED
+      - WIOLINK_CYCLIC_AUTOPAIRING
+      - WIOLINK_CYCLIC
+      - WIOLINK_ROAMING_AUTOPAIRING
+      - WIOLINK_ROAMING
+  portConfigurationGetWired:
+    allOf:
+      - $ref: "#/schemas/portConfigurationGetCommon"
+      - type: object
+        required:
+          - mode
+          - iqConfiguration
+        properties:
+          mode:
+            $ref: "#/schemas/portConfigurationWiredMode"
+          iqConfiguration:
+            description: >-
+              iqConfiguration is not supported in IO-Link Wireless.
+            type: string
+            enum:
+              - NOT_SUPPORTED
+              - DIGITAL_INPUT
+              - DIGITAL_OUTPUT
+          cycleTime:
+            description: >-
+              required if portMode is IOLINK_MANUAL or
+              IOLINK_AUTOSTART. Default value is 0 ms which means as fast as possible. 
+              Note: If the applied value for cycle time cannot exactly be mapped,
+              the port shall use the next possible higher value. If the cycle time is greater 
+              than 132.8 ms the error 702 shall be returned.
+            type: object
+            allOf:
+              - $ref: "#/schemas/cycleTime"
+
+  portConfigurationGetWireless:
+    allOf:
+      - $ref: "#/schemas/portConfigurationGetCommon"
+      - type: object
+        required:
+          - mode
+        properties:
+          mode:
+            $ref: "#/schemas/portConfigurationWirelessMode"
+          slotNumber:
+            description: >-
+              slot number of the Wireless-Device (Wireless Master only).
+            $ref: "#/schemas/wirelessSlotNumber"
+          trackNumber:
+            description: >-
+              track number of the Wireless-Device, maximum depends on the number of 
+              available tracks on the Wireless-Master (Wireless Master only).
+            $ref: "#/schemas/wirelessTrackNumber"
+          deviceTxPower:
+            description: >-
+              transmission power of the Wireless-Device (Wireless Master only).
+            type: integer
+            minimum: 1
+            maximum: 31
+          maxRetry:
+            description: >-
+              Number of Retries for process data (Wireless Master only).
+            type: integer
+            minimum: 2
+            maximum: 31
+          imaTime:
+            description: >-
+              I am alive time for the wireless connection (Wireless Master only).
+            type: object
+            required:
+              - base
+              - multiplier
+            properties:
+              base:
+                description: >-
+                  IMA timeout base.
+                type: string
+                enum:
+                  - "1664us"
+                  - "5ms"
+                  - "1s"
+                  - "1min"
+              multiplier:
+                description: >-
+                  IMA timeout multiplier.
+                type: integer
+                minimum: 1
+                maximum: 255
+          slotType:
+            description: >-
+              Single Slot or Double Slot (Wireless Master only).
+            type: string
+            enum:
+              - "SSLOT"
+              - "DSLOT"
+          lowEnergyDevice:
+            description: >-
+              to set low energy mode (Wireless Master only and Wireless-Device has to support low energy).
+            type: boolean
+            default: false
+          maxPDSegLength:
+            description: >-
+              maximum process data output segment length (Wireless Master only).
+            type: integer
+            minimum: 0
+            maximum: 32
+          wMasterCycleTimeOut:
+            description: >-
+              Wireless-Master cycle time output for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          wMasterCycleTimeIn:
+            description: >-
+              Wireless-Master cycle time input for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          uniqueId:
+            description: >-
+              unique identifier for each Wireless-Device (Wireless Master only).
+            type: string
+            minLength: 26
+            maxLength: 26
+  portConfigurationGet:
+    anyOf:
+      - $ref: "#/schemas/portConfigurationGetWired"
+      - $ref: "#/schemas/portConfigurationGetWireless"
+  mastersConfigurationGetPost:
+    properties:
+      wMasterId:
+        description: >-
+          Master identifier for connection with Wireless-Devices.
+        type: integer
+        minimum: 1
+        maximum: 29
+      advancedConnectivity:
+        description: >-
+          To set advanced connectivity functions on the Wireless-Master.
+        type: object
+        properties:
+          "ahtEnable":
+            description: >-
+              To enable or disable the Adaptive Hopping Table.
+            type: boolean
+            default: false
+      pairingTimeout:
+        description: >-
+          Timeout for pairing by BUTTON / UNIQUE.
+        type: object
+        required:
+          - value
+          - unit
+        properties:
+          value:
+            type: integer
+            minimum: 5
+            maximum: 255
+          unit:
+            type: string
+            enum:
+              - s
+      serviceTrackNumber:
+        description: >-
+          W-Track number used for service requests (Scan/Pairing/Roaming).
+        $ref: "#/schemas/wirelessTrackNumber"
+      serviceTrackMode:
+        description: >-
+          Mode of the service track.
+        type: string
+        enum:
+          - CYCLIC
+          - ROAMING
+      trackTxPower:
+        description: >-
+          transmission power of the W-Track (0 = Disable)
+        type: object
+        properties:
+          "track_1":
+            $ref: "#/schemas/wirelessTrackNumber"
+          "track_2":
+            $ref: "#/schemas/wirelessTrackNumber"
+          "track_3":
+            $ref: "#/schemas/wirelessTrackNumber"
+          "track_4":
+            $ref: "#/schemas/wirelessTrackNumber"
+          "track_5":
+            $ref: "#/schemas/wirelessTrackNumber"
+      blockList:
+        type: array
+        items:
+          type: integer
+          minimum: 2403
+          maximum: 2478
+  mastersPortsPairingPost:
+    properties:
+      portPairing:
+        type: string
+        enum:
+          - Unpairing
+          - PairingUnique
+          - PairingButton
+    example:
+      WPortPairing: PairingUnique
+
+  mastersScanGet:
+    properties:
+      scanStatus:
+        type: string
+        enum:
+          - NoScanWasPerformed
+          - ScanInProgress
+          - ScanEnded
+      scanResults:
+        type: array
+        items:
+          type: object
+          required:
+            - slotType
+            - uniqueId
+            - iolinkRevision
+            - lastSeen
+          properties:
+            slotType:
+              type: string
+              enum:
+                - "SSLOT"
+                - "DSLOT"
+            uniqueId:
+              type: string
+              minLength: 26
+              maxLength: 26
+            iolinkRevision:
+              $ref: "#/schemas/iolinkRevision"
+            lastSeen:
+              $ref: "#/schemas/eventTime"
+    example:
+      scanStatus: ScanEnded
+      scanResults:
+        - slotType: SSLOT
+          uniqueId: 03:78:00:00:01:32:50:60:46
+          iolinkRevision: "1.1"
+          lastSeen: "2022-12-01T08:42:23.314Z"
+        - slotType: DSLOT
+          uniqueId: 03:78:00:00:01:32:50:60:47
+          iolinkRevision: "1.1"
+          lastSeen: "2022-12-01T09:42:23.314Z"
+
+  mastersScanPost:
+    properties:
+      txPower:
+        type: integer
+        minimum: 1
+        maximum: 31
+    example:
+      txPower: 31
+
+  portObject:
+    type: object
+    required:
+      - portNumber
+      - statusInfo
+      - deviceAlias
+    properties:
+      portNumber:
+        $ref: "#/schemas/portNumber"
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
+      statusInfo:
+        $ref: "#/schemas/statusInfo"
+      deviceInfo:
+        description: >-
+          Wireless Master only.
+        type: object
+        properties:
+          vendorId:
+            $ref: "#/schemas/vendorId"
+          deviceId:
+            $ref: "#/schemas/deviceId"
+          productName:
+            $ref: "#/schemas/productName"
+
+  portWirelessObject:
+    allOf:
+      - $ref: "#/schemas/portObject"
+      - type: object
+        required:
+          - slotNumber
+          - trackNumber
+          - slotType
+        properties:
+          slotNumber:
+            description: >-
+              slot number of the Wireless-Device (Wireless Master only).
+            $ref: "#/schemas/wirelessSlotNumber"
+          trackNumber:
+            description: >-
+              track number of the Wireless-Device, maximum depends on the number of 
+              available tracks on the Wireless-Master (Wireless Master only).
+            $ref: "#/schemas/wirelessTrackNumber"
+          slotType:
+            description: >-
+              Single Slot or Double Slot (Wireless Master only).
+            type: string
+            enum:
+              - "SSLOT"
+              - "DSLOT"
+
+  mastersPortsGetWired:
+    type: array
+    items:
+      $ref: "#/schemas/portObject"
+
+  mastersPortsGetWireless:
+    type: array
+    items:
+      $ref: "#/schemas/portWirelessObject"
+
+  mastersPortsStatusGet:
+    properties:
+      statusInfo:
+        type: string
+        enum: # see Terminology in V.113, Table E.4 PortStatusList
+          - COMMUNICATION_LOST # NO_DEVICE
+          - DEACTIVATED # DEACTIVATED
+          - INCORRECT_DEVICE # PORT_DIAG
+          - DEVICE_STARTING #
+          - DEVICE_ONLINE # OPERATE
+          - DIGITAL_INPUT_C/Q # DI_CQ
+          - DIGITAL_OUTPUT_C/Q # DO_CQ
+          - NOT_AVAILABLE # NOT_AVAILABLE
+          - PORT_POWER_OFF # PORT_POWER_OFF
+          - PAIRING_FAULT # PAIRING_TIMEOUT, PAIRING_WRONG_SLOTTYPE
+      iolinkRevision:
+        description: >-
+          Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+          OPERATE.
+        $ref: "#/schemas/iolinkRevision"
+
+  mastersPortsStatusGetWired:
+    allOf:
+      - $ref: "#/schemas/mastersPortsStatusGet"
+      - type: object
+        properties:
+          transmissionRate:
+            description: >-
+              Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+              OPERATE. transmissionRate is not used in IO-Link Wireless.
+            type: string
+            enum:
+              - COM1
+              - COM2
+              - COM3
+          masterCycleTime:
+            description: >-
+              Mandatory if the portStatusInfo is INCORRECT_DEVICE, PREOPERATE or
+              OPERATE. masterCycleTime is not used in IO-Link wireless use 
+              wMasterCycleTimeOut and wMasterCycleTimeIn instead.
+            type: object
+            allOf:
+              - $ref: "#/schemas/cycleTime"
+
+  mastersPortsStatusGetWireless:
+    allOf:
+      - $ref: "#/schemas/mastersPortsStatusGet"
+      - type: object
+        properties:
+          wMasterCycleTimeOut:
+            description: >-
+              Wireless-Master cycle time output for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          wMasterCycleTimeIn:
+            description: >-
+              Wireless-Master cycle time input for PD data (Wireless Master only).
+            type: object
+            required:
+              - base
+            properties:
+              base:
+                type: string
+                enum:
+                  - "FreeRunning"
+                  - "5ms"
+              multiplier:
+                type: integer
+                minimum: 1
+                maximum: 63
+          portQualityInfo:
+            description: >-
+              status information of the Process Data (Wireless Master only).
+            type: object
+            properties:
+              "pdInValid":
+                type: boolean
+                default: false
+              "pdOutValid":
+                type: boolean
+                default: false
+          inputDataLength:
+            description: >-
+              this element contains the input data length as number of octets of the Device provided by the PDIn service (Wireless Master only).
+            type: integer
+            minimum: 0
+            maximum: 32
+          outputDataLength:
+            description: >-
+              this element contains the output data length as number of octets of the Device provided by the PDOut service (Wireless Master only).
+            type: integer
+            minimum: 0
+            maximum: 32
+          vendorId:
+            description: >-
+              Wireless Master only.
+            type: integer
+            minimum: 1
+            maximum: 65535
+          deviceId:
+            description: >-
+              Wireless Master only.
+            type: integer
+            minimum: 1
+            maximum: 16777215
+
+  mastersTrackstatusGet:
+    type: array
+    items:
+      type: object
+      properties:
+        trackNumber:
+          $ref: "#/schemas/wirelessTrackNumber"
+        Mode:
+          type: string
+          enum:
+            - DEACTIVATED
+            - CYCLIC
+            - ROAMING
+            - SCAN
+            - PAIRING
+        txPower:
+          type: integer
+          minimum: 1
+          maximum: 31
+    example:
+      - trackNumber: 1
+        Mode: CYCLIC
+        txPower: 31
+      - trackNumber: 2
+        Mode: ROAMING
+        txPower: 31
+
+  wirelessPortQuality:
+    type: object
+    properties:
+      lqiMaster:
+        type: integer
+        minimum: 0
+        maximum: 100
+      rssiMaster:
+        type: integer
+        minimum: -128
+        maximum: 20
+      lqiDevice:
+        type: integer
+        minimum: 0
+        maximum: 100
+      rssiDevice:
+        type: integer
+        minimum: -128
+        maximum: 20
+    example:
+      lqiMaster: 100
+      rssiMaster: -40
+      lqiDevice: 100
+      rssiDevice: -39
+
+  portConfigurationPost:
+    anyOf:
+      - $ref: "#/schemas/portConfigurationPostWired"
+      - $ref: "#/schemas/portConfigurationPostWireless"
+
+  portConfigurationPostWired:
+    type: object
+    properties:
+      mode:
+        type: string
+        enum:
+          - DEACTIVATED
+          - IOLINK_MANUAL
+          - IOLINK_AUTOSTART
+          - DIGITAL_INPUT
+          - DIGITAL_OUTPUT
+      validationAndBackup:
+        description: >-
+          Required if the port's mode is IOLINK_MANUAL.
+        type: string
+        enum:
+          - NO_DEVICE_CHECK
+          - TYPE_COMPATIBLE_DEVICE_V1.0
+          - TYPE_COMPATIBLE_DEVICE_V1.1
+          - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+          - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+      cycleTime:
+        description: >-
+          If no cycleTime configured with mode IOLINK_MANUAL or
+          IOLINK_AUTOSTART, the possible fastest cycle time is used by the
+          IO-Link Master. If the applied value for cycle time cannot exactly be
+          mapped, the port shall use the next possible higher value.
+          If the cycle time is greater than 132.8 ms the error 702 shall 
+          be returned.
+        type: object
+        allOf:
+          - $ref: "#/schemas/cycleTime"
+      vendorId:
+        description: >-
+          Required if the port's mode is IOLINK_MANUAL and validationAndBackup is
+          not NO_DEVICE_CHECK.
+        $ref: "#/schemas/vendorId"
+      deviceId:
+        description: >-
+          Required if the port's mode is IOLINK_MANUAL and validationAndBackup is
+          not NO_DEVICE_CHECK.
+        $ref: "#/schemas/deviceId"
+      iqConfiguration:
+        description: >-
+          Defines the behavior of the I/Q signal (Pin 2 at M12 connector).
+        type: string
+        enum:
+          - NOT_SUPPORTED
+          - DIGITAL_INPUT
+          - DIGITAL_OUTPUT
+          - POWER_2
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
+
+  portConfigurationPostWireless:
+    type: object
+    properties:
+      mode:
+        type: string
+        enum:
+          - DEACTIVATED
+          - WIOLINK_CYCLIC_AUTOPAIRING
+          - WIOLINK_CYCLIC
+          - WIOLINK_ROAMING_AUTOPAIRING
+          - WIOLINK_ROAMING
+      validationAndBackup:
+        type: string
+        enum:
+          - NO_DEVICE_CHECK
+          - TYPE_COMPATIBLE_DEVICE_V1.0
+          - TYPE_COMPATIBLE_DEVICE_V1.1
+          - TYPE_COMPATIBLE_DEVICE_V1.1_BACKUP_AND_RESTORE
+          - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
+      vendorId:
+        $ref: "#/schemas/vendorId"
+      deviceId:
+        $ref: "#/schemas/deviceId"
+      deviceAlias:
+        $ref: "#/schemas/deviceAlias"
+      slotNumber:
+        description: >-
+          Slot number of the Wireless-Device.
+        $ref: "#/schemas/wirelessSlotNumber"
+      trackNumber:
+        description: >-
+          Track number of the Wireless-Device, maximum depends on the number of 
+          available tracks on the Wireless-Master.
+        $ref: "#/schemas/wirelessTrackNumber"
+      deviceTxPower:
+        description: >-
+          Transmission power of the Wireless-Device.
+        type: integer
+        minimum: 1
+        maximum: 31
+      maxRetry:
+        description: >-
+          Number of Retries for process data.
+        type: integer
+        minimum: 2
+        maximum: 31
+      imaTime:
+        description: >-
+          I am alive time for the wireless connection.
+        type: object
+        required:
+          - base
+          - multiplier
+        properties:
+          base:
+            description: >-
+              IMA timeout base.
+            type: string
+            enum:
+              - "1664us"
+              - "5ms"
+              - "1s"
+              - "1min"
+          multiplier:
+            description: >-
+              IMA timeout multiplier.
+            type: integer
+            minimum: 1
+            maximum: 255
+      slotType:
+        description: >-
+          Single Slot or Double Slot.
+        type: string
+        enum:
+          - "SSLOT"
+          - "DSLOT"
+      lowEnergyDevice:
+        description: >-
+          To set low energy mode (Wireless-Device has to support low energy).
+        type: boolean
+        default: false
+      maxPDSegLength:
+        description: >-
+          Maximum process data output segment length.
+        type: integer
+        minimum: 0
+        maximum: 32
+      wMasterCycleTimeOut:
+        description: >-
+          Wireless-Master cycle time output for PD data.
+        type: object
+        required:
+          - base
+        properties:
+          base:
+            type: string
+            enum:
+              - "FreeRunning"
+              - "5ms"
+          multiplier:
+            type: integer
+            minimum: 1
+            maximum: 63
+      wMasterCycleTimeIn:
+        description: >-
+          Wireless-Master cycle time input for PD data.
+        type: object
+        required:
+          - base
+        properties:
+          base:
+            type: string
+            enum:
+              - "FreeRunning"
+              - "5ms"
+          multiplier:
+            type: integer
+            minimum: 1
+            maximum: 63
+      uniqueId:
+        description: >-
+          Unique identifier for each Wireless-Device.
+        type: string
+        minLength: 26
+        maxLength: 26
+
+  dataStorageGet:
+    description: >-
+      In case of an empty Data Storage, the header object contains a value of 0 for every property,
+      and the content contains 12 bytes of 0x00, encoded as a Base64 string.
+    type: object
+    required:
+      - header
+      - content
+    properties:
+      header:
+        oneOf:
+          - type: object
+            required:
+              - parameterChecksum
+              - vendorId
+              - deviceId
+              - functionId
+            properties:
+              parameterChecksum:
+                type: integer
+                minimum: 0
+                maximum: 4294967295 # UINT32_MAX
+              vendorId:
+                type: integer
+                minimum: 0
+                maximum: 65535
+              deviceId:
+                $ref: "#/schemas/deviceId"
+              functionId:
+                type: integer
+                enum:
+                  - 0
+          - type: object # header for empty DS
+            required:
+              - parameterChecksum
+              - vendorId
+              - deviceId
+              - functionId
+            properties:
+              parameterChecksum:
+                type: integer
+                enum:
+                  - 0
+              vendorId:
+                type: integer
+                enum:
+                  - 0
+              deviceId:
+                type: integer
+                enum:
+                  - 0
+              functionId:
+                type: integer
+                enum:
+                  - 0
+      content:
+        $ref: "#/schemas/dataStorageObject"
+
+  dataStoragePost:
+    description: >-
+      In case of an empty Data Storage, the content contains 12 bytes of 0x00, encoded as a Base64 string.
+    type: object
+    required:
+      - content
+    properties:
+      content:
+        $ref: "#/schemas/dataStorageObject"
+
+  processDataValue:
+    type: object
+    properties:
+      iolink:
+        description: Process data in IO-Link mode
+        allOf:
+          - type: object
+            required:
+              - valid
+            properties:
+              valid:
+                type: boolean
+                description: >
+                  Process data validity
+          - type: object
+            required:
+              - value
+            properties:
+              value:
+                oneOf:
+                  - $ref: "#/schemas/deviceByteArrayTypeValue"
+                  - $ref: "#/schemas/deviceSimpleTypeValue"
+                  - $ref: "#/schemas/deviceComplexTypeValue"
+              unit:
+                $ref: "#/schemas/deviceSimpleTypeValueUnit"
+            description: >
+              Process data value
+      cqValue:
+        type: boolean
+        description: >
+          IO-Link cable CQ (pin4) level if it is used as digital input or
+          output (SIO mode). (false - 0 V, true - 24 V)
+      iqValue:
+        type: boolean
+        description: >
+          IO-Link cable IQ (pin2) level if it is used as digital input or output.
+          (false - 0 V, true - 24 V)
+
+  deviceProcessDataValueGet:
+    type: object
+    description: >
+      The 'cqValue' is present in the 'getData' object if the CQ (pin4) is configured as digital input. 
+      The 'cqValue' is present in the 'setData' object if the CQ (pin4) is configured as digital output. 
+      The 'iolink' is present in the 'getData' if the port is configured to IO-Link mode and the device provides input process data. 
+      The 'iolink' is present in the 'setData' if the port is configured to IO-Link mode and the device provides output process data. 
+      The 'iqValue' is present in the 'getData' object if the IQ (pin2) is configured as digital input. 
+      The 'iqValue' is present in the 'setData' object if the IQ (pin4) is configured as digital output.
+    required:
+      - getData
+      - setData
+    properties:
+      getData:
+        $ref: "#/schemas/processDataValue"
+      setData:
+        $ref: "#/schemas/processDataValue"
+  deviceProcessDataValuePost:
+    $ref: "#/schemas/processDataValue"
+  deviceByteArrayTypeValue:
+    type: array
+    description: The value in byteArray format.
+    items:
+      type: integer
+      minimum: 0
+      maximum: 255
+  deviceSimpleTypeValue:
+    description: The value (with simple type) in iodd format.
+    oneOf:
+      - type: boolean
+      - type: string
+      - type: number
+  deviceComplexTypeEntry:
+    type: object
+    description: The entry for a complex iodd type
+    required:
+      - value
+    properties:
+      value:
+        $ref: "#/schemas/deviceSimpleTypeValue"
+      unit:
+        $ref: "#/schemas/deviceSimpleTypeValueUnit"
+  deviceSimpleTypeValueUnit:
+    type: string
+    description: The unit of the simple type number value. Must match the `abbr` attribute value of a `Unit` element defined in *IODD-StandardUnitDefinitions1.1.xml*.
+  deviceComplexTypeValue:
+    type: object
+    minProperties: 1
+    maxProperties: 255
+    description: The value (with complex type) in iodd format.
+    additionalProperties:
+      $ref: "#/schemas/deviceComplexTypeEntry"
+  deviceParametersGet:
+    type: array
+    items:
+      $ref: "#/schemas/parameterInfo"
+  deviceSubParametersGet:
+    type: array
+    items:
+      type: object
+      required:
+        - subIndex
+        - subParameterName
+      properties:
+        subIndex:
+          $ref: "#/schemas/subIndex"
+        subParameterName:
+          $ref: "#/schemas/subParameterName"
+    example:
+      - subIndex: 1
+        subParameterName: Master_command
+      - subIndex: 2
+        subParameterName: Master_cycle_time
+      - subIndex: 3
+        subParameterName: Minimum_cycle_time
+  deviceParameterValueGetPost:
+    type: object
+    properties:
+      value:
+        oneOf:
+          - $ref: "#/schemas/deviceByteArrayTypeValue"
+          - $ref: "#/schemas/deviceSimpleTypeValue"
+          - $ref: "#/schemas/deviceComplexTypeValue"
+      unit:
+        $ref: "#/schemas/deviceSimpleTypeValueUnit"
+  deviceParameterSubindexValueGetPost:
+    type: object
+    properties:
+      value:
+        oneOf:
+          - $ref: "#/schemas/deviceByteArrayTypeValue"
+          - $ref: "#/schemas/deviceSimpleTypeValue"
+          - $ref: "#/schemas/deviceComplexTypeValue"
+      unit:
+        $ref: "#/schemas/deviceSimpleTypeValueUnit"
+  deviceBlockParameterizationPost:
+    type: object
+    required:
+      - direction
+      - parameters
+    properties:
+      direction:
+        type: string
+        enum:
+          - write
+          - read
+      parameters:
+        $ref: "#/schemas/blockParameterizationPostParametersRequest"
+  ioddIdentification:
+    type: object
+    required:
+      - vendorId
+      - deviceId
+      - version
+      - releaseDate
+      - iolinkRevision
+    properties:
+      vendorId:
+        $ref: "#/schemas/vendorId"
+      deviceId:
+        $ref: "#/schemas/deviceId"
+      version:
+        $ref: "#/schemas/ioddDescriptionText"
+      releaseDate:
+        $ref: "#/schemas/ioddDescriptionText"
+      iolinkRevision:
+        $ref: "#/schemas/iolinkRevision"
+      availableArtifacts:
+        type: array
+        items:
+          $ref: "#/schemas/artifact"
+  ioddFile:
+    description: The IODD XML file or other IODD artifacts.
+    type: string
+    format: binary
+  ioddDescriptionText:
+    description: The decription text from IODD For all others Description/@textId.
+    type: string
+    minLength: 1
+    maxLength: 255
+  ioddNameDescription:
+    decription: The decription text from IODD For all Name/@textId
+    type: string
+    minLength: 1
+    maxLength: 64
+  ioddArchive:
+    description: The IODD in archive format (e.g. IODD Finder) containing XML file and device images.
+    type: string
+    format: binary
+  ioddsGet:
+    type: array
+    items:
+      $ref: "#/schemas/ioddIdentification"
+    example:
+      - vendorId: 1234
+        deviceId: 4567
+        version: "4.3"
+        releaseDate: "2018-01-02"
+        iolinkRevision: "1.1"
+      - vendorId: 4321
+        deviceId: 8765
+        version: "2.1"
+        releaseDate: "2015-01-02"
+        iolinkRevision: "1.1"
+        availableArtifacts: [XML, DeviceIcon, DeviceSymbol, VendorLogo]
+  iolinkErrorObject:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        minimum: 0
+        maximum: 65535
+      message:
+        $ref: "#/schemas/ioddDescriptionText"
+  errorObject:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        minimum: 0
+      message:
+        $ref: "#/schemas/ioddDescriptionText"
+  ipAddress:
+    type: string
+    format: ipv4
+    pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
+    example: 192.168.1.13
+  subnetMask:
+    type: string
+    format: ipv4
+    pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
+    example: 255.255.255.0
+  standardGateway:
+    type: string
+    format: ipv4
+    pattern: ^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.(?!$)|$)){4}$
+    example: 192.168.1.1
+  macAddress:
+    type: string
+    pattern: "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
+    minLength: 1
+    maxLength: 17
+    example: "FE:AB:3A:55:33:11"
+  artifact:
+    type: string
+    description: IODD Artifacts like device, vendor images
+    enum:
+      - XML
+      - DeviceIcon
+      - DeviceSymbol
+      - VendorLogo
+      - zip
+    default: XML
+  masterIdentificationGet:
+    required:
+      - vendorName
+      - vendorId
+      - masterId
+      - masterType
+      - applicationSpecificTag
+      - locationTag
+      - functionTag
+    type: object
+    properties:
+      vendorName:
+        $ref: "#/schemas/vendorName"
+      vendorId:
+        $ref: "#/schemas/vendorId"
+      masterId:
+        type: integer
+        minimum: 1
+        maximum: 4294967295
+      masterType:
+        type: string
+        enum:
+          - Unspecific
+          - Master acc. V1.0
+          - Master acc. V1.1
+          - Failsafe_Master
+          - Wireless_Master
+      serialNumber:
+        type: string
+        minLength: 1
+        maxLength: 16
+      orderCode:
+        $ref: "#/schemas/orderCode"
+      productName:
+        $ref: "#/schemas/productName"
+      productId:
+        type: string
+        minLength: 1
+        maxLength: 64
+      hardwareRevision:
+        type: string
+        minLength: 1
+        maxLength: 64
+      firmwareRevision:
+        type: string
+        minLength: 1
+        maxLength: 64
+      vendorUrl:
+        type: string
+        format: uri
+      manualUrl:
+        type: string
+        format: uri
+      productInstanceUri:
+        type: string
+      descriptionFileUri:
+        type: string
+      applicationSpecificTag:
+        $ref: "#/schemas/tags"
+      locationTag:
+        $ref: "#/schemas/tags"
+      functionTag:
+        $ref: "#/schemas/tags"
+  deviceFirmwareUpdateStatusGet:
+    type: object
+    properties:
+      active:
+        type: boolean
+        description: >-
+          Indicates if a firmware update is currently in progress.
+      stage:
+        type: string
+        description: >-
+          Indicates the current stage of the firmware update.
+        enum:
+          - PREPARATION
+          - DOWNLOAD
+          - VALIDATION
+          - UPDATE
+          - FINISHED
+      message:
+        type: string
+        description: >-
+          Status message according to BLOB Transfer & Firmware Update Specification Version 1.1 September 2019  (Table 19 – Error displays of FW-Update tools).
+        example: Selected file is not a firmware update file
+      action:
+        type: string
+        description: >-
+          Indicates the action to be taken by the user according to BLOB Transfer & Firmware Update Specification Version 1.1 September 2019  (Table 19 – Error displays of FW-Update tools).
+        example: Look for a file with extension .iolfw
+      progress:
+        type: number
+        description: >-
+          Indicates the progress of the firmware update in percent.
+        minimum: 0
+        maximum: 100
+  deviceFirmwareUpdatePost:
+    type: object
+    properties:
+      password:
+        type: string
+        description: password for updating the device if required
+      iolfwfile:
+        type: string
+        format: binary
+        description: IOLFW File for the device
+    required:
+      - iolfwfile
+  devicesGet:
+    type: array
+    items:
+      type: object
+      description: >
+        Information about the device access parameter like master/ port number and the unique deviceAlias.
+      required:
+        - deviceAlias
+        - masterNumber
+        - portNumber
+      properties:
+        deviceAlias:
+          $ref: "#/schemas/deviceAlias"
+        masterNumber:
+          $ref: "#/schemas/masterNumber"
+        portNumber:
+          $ref: "#/schemas/portNumber"
+        ioddFileName:
+          type: string
+          minLength: 1
+          maxLength: 128
+    example:
+      - deviceAlias: DT35
+        masterNumber: 1
+        portNumber: 1
+      - deviceAlias: TAD081
+        masterNumber: 1
+        portNumber: 2
+      - deviceAlias: BNI_IOL
+        masterNumber: 1
+        portNumber: 3
+      - deviceAlias: master1port4
+        masterNumber: 1
+        portNumber: 4
+        ioddFileName: vendorname-devicename-20231016-IODD1.1.xml
+  parameterIdent:
+    $ref: "#/schemas/parameterName"
+  subParameterIdent:
+    $ref: "#/schemas/subParameterName"
+  rawSmi:
+    type: object
+    properties:
+      message:
+        description: SMI message as Base64 coded string.
+        type: string
+        minLength: 12 # 8 octets encoded in Base64 (minimum length of SMI message)
+
+  errorObject_101:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [101]
+          message:
+            enum: ["Internal server error"]
+  errorObject_102:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [102]
+          message:
+            enum: ["Internal communication error"]
+  errorObject_103:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [103]
+          message:
+            enum: ["Operation not supported"]
+  errorObject_104:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [104]
+          message:
+            enum: ["Action locked by another client"]
+  errorObject_105:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [105]
+          message:
+            enum: ["IODD feature not supported"]
+  errorObject_106:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [106]
+          message:
+            enum: ["MQTT feature not supported"]
+  errorObject_107:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [107]
+          message:
+            enum: ["Error during device firmware update"]
+  errorObject_150:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [150]
+          message:
+            enum: ["Permission denied"]
+  errorObject_151:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [151]
+          message:
+            enum: ["Authentication information is missing or invalid"]
+  errorObject_201:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [201]
+          message:
+            enum: ["JSON parsing failed"]
+  errorObject_202:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [202]
+          message:
+            enum: ["JSON data value invalid"]
+  errorObject_203:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [203]
+          message:
+            enum: ["JSON data type invalid"]
+  errorObject_204:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [204]
+          message:
+            enum: ["Enumeration value unknown"]
+  errorObject_205:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [205]
+          message:
+            enum: ["JSON data value out of range"]
+  errorObject_206:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [206]
+          message:
+            enum: ["JSON data value out of bounds"]
+  errorObject_207:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [207]
+          message:
+            enum: ["deviceAlias is not unique"]
+  errorObject_208:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [208]
+          message:
+            enum: ["POST request without content"]
+  errorObject_301:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [301]
+          message:
+            enum: ["Resource not found"]
+  errorObject_302:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [302]
+          message:
+            enum: ["masterNumber not found"]
+  errorObject_303:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [303]
+          message:
+            enum: ["portNumber not found"]
+  errorObject_304:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [304]
+          message:
+            enum: ["deviceAlias not found"]
+  errorObject_305:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [305]
+          message:
+            enum: ["Query parameter name invalid"]
+  errorObject_306:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [306]
+          message:
+            enum: ["Query parameter value invalid"]
+  errorObject_307:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [307]
+          message:
+            enum: ["Port is not configured to IO-Link"]
+  errorObject_308:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [308]
+          message:
+            enum: ["IO-Link Device is not accessible"]
+  errorObject_309:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [309]
+          message:
+            enum: ["IO-Link parameter not found"]
+  errorObject_310:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [310]
+          message:
+            enum: ["IO-Link parameter access not supported by the device"]
+  errorObject_311:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [311]
+          message:
+            enum: ["IO-Link parameter access error"]
+          iolinkError:
+            $ref: "#/schemas/iolinkErrorObject"
+        required:
+          - iolinkError
+  errorObject_312:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [312]
+          message:
+            enum: ["IO-Link parameter name is not unique"]
+  errorObject_401:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [401]
+          message:
+            enum: ["Data storage mismatch"]
+  errorObject_501:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [501]
+          message:
+            enum: ["I/Q is not configured as DIGITAL_OUTPUT"]
+  errorObject_502:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [502]
+          message:
+            enum: ["C/Q is not configured as DIGITAL_OUTPUT"]
+  errorObject_503:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [503]
+          message:
+            enum: ["IO-Link Device has no output process data"]
+  errorObject_601:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [601]
+          message:
+            enum:
+              ["IODD (representation) for this IO-Link device is not available"]
+  errorObject_602:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [602]
+          message:
+            enum: ["IODD upload failed. Not enough memory"]
+  errorObject_603:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [603]
+          message:
+            enum: ["IODD upload failed. IODD XML invalid"]
+  errorObject_604:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [604]
+          message:
+            enum: ["IODD upload failed. CRC error"]
+  errorObject_605:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [605]
+          message:
+            enum: ["IODD upload failed. Parsing error"]
+  errorObject_701:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [701]
+          message:
+            enum: ["Data set incomplete"]
+  errorObject_702:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [702]
+          message:
+            enum: ["Data set not applicable"]
+  errorObject_703:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [703]
+          message:
+            enum: ["Data set combination incompatible"]
+  errorObject_704:
+    allOf:
+      - $ref: "#/schemas/errorObject"
+      - type: object
+        properties:
+          code:
+            enum: [704]
+          message:
+            enum: ["File too large to process"]
+  powerMode:
+    type: boolean
+    description: >-
+      Port power mode control:
+      true - Switch PortPowerOn (permanent)
+      false - Switch PortPowerOff (permanent)
+    example: true
+  PortPowerMode:
+    type: object
+    required:
+      - primaryPower
+    properties:
+      primaryPower:
+        $ref: "#/schemas/powerMode"
+      secondaryPower:
+        $ref: "#/schemas/powerMode"
+  mqttTopicName:
+    type: string
+    description: >-
+      MQTT topic name is bound to a device and individual topics can be created. The configured originatorId will be automatically added when data is published. <br>
+      In case no topic name is provided the following structure will be used: &lt;originatorId&gt;/&lt;devices/&lt;deviceAlias&gt;/&lt;type&gt;[/&lt;parameter&gt;] <br>
+      Where: <br>
+      - &lt;originatorId&gt; is the unique identifier of the gateway which will be added automatically <br>
+      - &lt;deviceAlias&gt; is the device alias <br>
+      - &lt;type&gt; can be: processdata, events, or parameter <br>
+      - &lt;parameter&gt; is optional and used for parameter topics (index or parameterName) <br>
+      <br>
+      Examples: <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/processdata <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/events <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/parameter/123 <br>
+      - master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/parameter/temperature <br>
+      <br>
+    minLength: 1
+    maxLength: 256
+    example: "master001-6a624757-30a2-481e-a889-edafeaa025a6/devices/master1port1/processdata"
+  mqttTopicId:
+    type: integer
+    description: The topic id as a reference to a topic name. The management of the topic ids is done by the gateway.
+    minimum: 1
+    maximum: 65535
+    example: 1
