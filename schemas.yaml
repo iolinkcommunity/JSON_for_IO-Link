@@ -1914,6 +1914,7 @@ schemas:
       setData:
         $ref: "#/schemas/processDataValue"
   deviceProcessDataValuePost:
+    minProperties: 1
     $ref: "#/schemas/processDataValue"
   deviceByteArrayTypeValue:
     type: array
@@ -1973,6 +1974,7 @@ schemas:
         subParameterName: Minimum_cycle_time
   deviceParameterValueGetPost:
     type: object
+    minProperties: 1
     properties:
       value:
         oneOf:
@@ -1983,6 +1985,7 @@ schemas:
         $ref: "#/schemas/deviceSimpleTypeValueUnit"
   deviceParameterSubindexValueGetPost:
     type: object
+    minProperties: 1
     properties:
       value:
         oneOf:
