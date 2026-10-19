@@ -1,0 +1,4334 @@
+openapi: 3.0.3
+info:
+  version: 2.0.0
+  title: JSON for IO-Link Specification
+  description: >-
+
+    # Description
+
+    This is an [OpenAPI document](https://spec.openapis.org/oas/v3.0.3.html) for IO-Link gateways, masters and devices. 
+    You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)
+
+
+    * **Version:** The major versioning of endpoints in case of incompatibility changes is done in the path (e.g. V1, V2, etc.) individually. Request /apiversion in order to get the full version or check the info:version: section of this specification.
+
+    * **Security:** The defined security schemas are just examples and can be replaced by vendor specifics. The way of restricting requests is as well in the responsibility of the vendor. It is recommended to limit access to writable endpoint. This should prevent misconfiguration and breaking running systems.
+
+    # Specifications    
+
+    * **JSON Integration for IO-Link V1.0.0 - Order No: 10.222**
+
+    * **IO-Link Interface and System Specification V1.1.4 - Order No: 10.002**
+
+    * **IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112**
+
+    * **IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082**
+
+    * **IO Device Description Specification Version 1.1.4 - Order No: 10.012**
+
+
+    # Disclaimer
+
+    >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
+
+
+    >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products. 
+
+
+    >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.  
+
+
+    >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). 
+
+
+    >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
+
+    ---
+
+    # General remarks
+
+    ## Data type conversion 
+
+    The following conversion rules shall be applied for the data type mapping between IO-Link and JSON.
+
+      | IO-Link data type | JSON data type |
+      |-------------------|----------------|
+      | BooleanT | Boolean |
+      | StringT | String |
+      | ArrayT | Array |      
+      | IntegerT, UintegerT | Number |
+      | Float32T | Number |
+      | RecordT | Object |
+      | TimeSpanT | String |
+      | TimeT | String |
+      | OctetStringT | Bit sequences that are not interpretable without using information out of the IODD are represented as JSON arrays of decimal numbers. One array item is representing one byte. If the value of the bit sequence is not a multiple of 8, the value is padded with zeros from the left to the next byte border. Byte order is big-endian. See table below. |
+
+      **OctetStringT examples:**
+
+      | Value (bin) | Bit length | Value (hex) | Byte array (dec) |
+      |-------------|------------|-------------|------------------|
+      | 10 0111 | 6 | 0x27 | [39] |
+      | 100 0000 1111 0000 | 15 | 0x40F0 | [64, 240] |
+
+    ## Parameter naming rules
+
+    Parameter and sub-parameter names come from the IODD but are reformatted for JSON/URL compatibility according to these rules:
+      - **Rule 1:** Names are based on the IODD XML Element Name inside variables or process data, resolving the text in primary language.
+      - **Rule 2:** Only alphanumeric characters and underscores are allowed. All other characters are replaced by "**_**".
+      - **Rule 3:** Leading numbers shall be prefixed with "**_**".
+      - **Rule 4:** If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the scheme: `{name}_{index}` or `{name}_{subindex}`.
+      - **Rule 5:** Naming according to the scheme `{name}_{index}` or `{name}_{subindex}` is always allowed even if names are not duplicated.
+      - **Rule 6:** The naming of ArrayT elements is `element_{subindex}`.
+
+      **Examples:**
+      | IODD text Name | Index/subindex | Parameter name | Unique name (with index) |
+      |----------------|----------------|------|--------------------------|
+      | 0815 variable | 3452 | `_0815_variable` | `_0815_variable_3452` |
+      | Switchpoint (Q1) | 345 | `Switchpoint__Q1_` | `Switchpoint__Q1__345` |
+      | External temperature | 311 | `External_temperature_1` | `External_temperature_311` |
+      | External temperature | 1423 | `External_temperature_1` | `External_temperature_1423` |
+
+    ## Time formats
+
+      Any time values shall be represented either as an absolute time or a relative time in the format as specified in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html). 
+      
+      **NOTE:** Each italic letter in the following format definitions is to be replaced by one digit. The square brackets indicate that an element is optional. 
+
+      The format for absolute time is *`YYYY-MM-DDThh:mm:ss.fZ`* \
+      Time format for relative time is *`P[YY][MM][WW][DD][T[hH][mM][s[.f]S]]`* \
+      Relative time is starting at re-initialization of the system. 
+      
+      **Examples:** \
+      Absolute time:   `2018-05-18T07:31:54.123Z ` \
+      Relative time:   `P3Y6M4DT12H30M17.123S ` 
+
+    ## Error behavior
+
+      While processing HTTP requests errors may occur. There are several errors defined. The body of an HTTP response indicating an error contains the [Error object](#/components/schemas/errorObject). 
+      The following general rules apply for the error handling: \
+      **a)** Errors 101 and 150 (see appendix A.2) can be returned to each request. \
+      **b)** If parts of POST requests are not applicable, the HTTP response has a different HTTP status code than 2xx. The body of this HTTP response shall contain the Error object. \
+      **c)** If multiple errors occur while processing the request only the first detected error shall be responded. \
+      **d)** Errors 305 and 306 (see A.2) can be returned to requests when there are query parameters added to the URL. \
+      **e)** If REST API commands are not available, error 103 (see A.2) shall be responded.
+
+  contact:
+    email: info@io-link.com
+  license:
+    name: Legal Information
+    url: "https://io-link.com/legal-information"
+
+servers:
+  - url: "{scheme}://{host}/{basePath}"
+    variables:
+      host:
+        default: "iolmaster.io-link.com"
+      basePath:
+        default: iolink/v2
+      scheme:
+        description: "The IO-Link gateway can expose the API over https and/or http"
+        enum:
+          - "https"
+          - "http"
+        default: "http"
+security:
+  - {}
+  - basicAuth: []
+  - bearerAuth: []
+  - oauth2: [Maintenance]
+tags:
+  - name: general
+    description: Access to general informations
+  - name: gateway
+    description: Access to parameters of the JSON gateway
+  - name: mqtt
+    description: Access to the parameters of the MQTT client. Optional.
+  - name: iodds
+    description: Access to the IODDs. Optional.
+  - name: masters
+    description: Access to parameters of the IO-Link master itself
+  - name: ports
+    description: Access to the IO-Link ports of the IO-Link master
+  - name: devices
+    description: Access to the IO-Link Devices connected ot the Master
+
+paths:
+  ################################################################################
+  # general
+  ################################################################################
+  /apis:
+    get:
+      tags:
+        - general
+      operationId: getApis
+      summary: >-
+        Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications.
+      description: >-
+        Read the list of available IO-Link-related OpenAPI and AsyncAPI specifications. The OpenAPI or AsyncAPI specifications should be aligned with vendor-specific requirements such as used security schemas, supported endpoints, or additional information. In addition this endpoint can be used for vendor specific APIs as well.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/apisGet"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+  /apis/{apiId}:
+    get:
+      tags:
+        - general
+      operationId: getApisApiId
+      summary: >-
+        Read a specific OpenAPI or AsyncAPI document.
+      description: >-
+        Read a specific OpenAPI or AsyncAPI document. Either as URL or directly as YAML/JSON content.
+      parameters:
+        - $ref: "#/components/parameters/apiId"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - url
+                properties:
+                  url:
+                    type: string
+                    description: The url referring to the OpenAPI or AsyncAPI document.
+                    example: https://github.com/iolinkcommunity/JSON_for_IO-Link/blob/2.0.0/JSON_for_IO-Link.yaml
+              examples:
+                "url-github":
+                  value:
+                    "url": "https://github.com/iolinkcommunity/JSON_for_IO-Link/blob/2.0.0/JSON_for_IO-Link.yaml"
+                "url-vendor":
+                  value:
+                    "url": "https://www.iolink-master-vendor.com/de/de/p/p672882"
+            application/yaml:
+              example:
+                "yaml":
+                  value: >-
+                    openapi: 3.0.3
+                    info:
+                      description: >-
+                        This is a sample IO-Link Master server. You can find out more about IO-Link
+                        at [http://www.io-link.com](http://www.io-link.com)
+                        # Description
+                        * Version 2.0.0
+                        ## Disclaimer:
+                        >The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
+                        >The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products. 
+                        >WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.  
+                        >In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). 
+
+                        >IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
+                      version: 2.0.0
+                        title: Swagger IO-Link Master
+                      contact:
+                        email: info@io-link.com
+                      license:
+                        name: tbd
+                        url: 'http://www.io-link.com'
+                    ...
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  ################################################################################
+  # gateway
+  ################################################################################
+  "/gateway/identification":
+    get:
+      operationId: GetGatewayIdentification
+      tags:
+        - gateway
+      summary: Read the identification of the Gateway.
+      description: Read the identification of the Gateway.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/gatewayIdentificationGet"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/capabilities":
+    get:
+      operationId: PostGatewayCapabilities
+      tags:
+        - gateway
+      summary: Read the capabilities of the Gateway.
+      description: Read the capabilities of the Gateway.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/gatewayCapabilitiesGet"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/configuration":
+    get:
+      operationId: GetGatewayConfiguration
+      tags:
+        - gateway
+      summary: Read the configuration of the Gateway.
+      description: Read the actual active configuration of the IO-Link Gateway. The Gateway may support multiple IPv4 interfaces
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/gatewayConfigurationGetPost"
+              examples:
+                Manual:
+                  value:
+                    ethIpv4:
+                      - ipConfiguration: MANUAL
+                        ipAddress: 192.168.1.13
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.1.1
+                DHCP:
+                  value:
+                    ethIpv4:
+                      - ipConfiguration: DHCP
+                        ipAddress: 192.168.100.5
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.100.1
+                Multiple ethernet interfaces:
+                  value:
+                    ethIpv4:
+                      - ifName: eth0
+                        ipConfiguration: MANUAL
+                        ipAddress: 192.168.1.13
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.1.1
+                      - ifName: eth1
+                        ipConfiguration: MANUAL
+                        ipAddress: 192.168.2.10
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.2.1
+                      - ifName: eth2
+                        ipConfiguration: DHCP
+                        ipAddress: 192.168.200.7
+                        subnetMask: 255.255.255.0
+                        standardGateway: 192.168.200.1
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+    post:
+      operationId: PostGatewayConfiguration
+      tags:
+        - gateway
+      summary: Write the configuration of the Gateway.
+      description: Write the configuration of the Gateway.
+      requestBody:
+        description: The configuration object for the IO-Link Gateway to be written.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/gatewayConfigurationGetPost"
+            examples:
+              Manual:
+                value:
+                  ethIpv4:
+                    - ipConfiguration: MANUAL
+                      ipAddress: 192.168.1.13
+                      subnetMask: 255.255.255.0
+                      standardGateway: 192.168.1.1
+              DHCP:
+                value:
+                  ethIpv4:
+                    - ipConfiguration: DHCP
+              Multiple ethernet interfaces:
+                value:
+                  ethIpv4:
+                    - ifName: eth0
+                      ipConfiguration: MANUAL
+                      ipAddress: 192.168.1.13
+                      subnetMask: 255.255.255.0
+                      standardGateway: 192.168.1.1
+                    - ifName: eth1
+                      ipConfiguration: MANUAL
+                      ipAddress: 192.168.2.10
+                      subnetMask: 255.255.255.0
+                      standardGateway: 192.168.2.1
+                    - ifName: eth2
+                      ipConfiguration: DHCP
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/reset":
+    post:
+      operationId: PostGatewayReset
+      tags:
+        - gateway
+      summary: Reset the Gateway including all Masters. Optional.
+      description: Invoke a reset of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog.
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_104"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/reboot":
+    post:
+      operationId: PostGatewayReboot
+      tags:
+        - gateway
+      summary: Reboot the Gateway including all Masters. Optional.
+      description: Invoke a reboot of the IO-Link Gateway. This may reset all configuration data and interrupt all communications channels. It is recommended to log this within the EventLog
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_104"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/events":
+    get:
+      operationId: GetGatewayEvents
+      tags:
+        - gateway
+      summary: Read the EventLog containing all events from Gateway, Masters, Ports and Devices.
+      description:
+        Each Gateway shall have an Event Log object containing the events of the devices, ports and
+        the masters. The content of the Event Log can be read by getting the object "Gateway Event Log"
+      parameters:
+        - $ref: "#/components/parameters/eventOrigin"
+        - $ref: "#/components/parameters/eventMasterNumber"
+        - $ref: "#/components/parameters/eventPortNumber"
+        - $ref: "#/components/parameters/eventdeviceAlias"
+        - $ref: "#/components/parameters/eventTop"
+        - $ref: "#/components/parameters/eventBottom"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: "./schemas.yaml#/schemas/portEventGet"
+                    - $ref: "./schemas.yaml#/schemas/gatewayEventGet"
+                    - $ref: "./schemas.yaml#/schemas/masterEventGet"
+                    - $ref: "./schemas.yaml#/schemas/deviceEventGet"
+              examples:
+                origin=ALL:
+                  value:
+                    - time: "2022-10-18T21:12:34.843Z"
+                      severity: WARNING
+                      origin:
+                        gateway: GatewayXYZ-1234567
+                      message:
+                        code: 65534
+                        mode: APPEARS
+                        text: Problem with webserver. Received to many requests to handle. Check possibility of DoS Attack.
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                      message:
+                        code: 65535
+                        mode: APPEARS
+                        text: IO-Link Master has restarted
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                origin=MASTERS:
+                  value:
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                      message:
+                        code: 65535
+                        mode: APPEARS
+                        text: IO-Link Master has restarted
+                origin=PORTS:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        port: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:33:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                      message:
+                        code: 6163
+                        mode: DISAPPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:35:54.123Z"
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=DEVICES:
+                  value:
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+    delete:
+      operationId: DeleteGatewayEvents
+      tags:
+        - gateway
+      summary: Delete events of Gateway, Masters, Ports and Devices from EventLog according to filter query.
+      description: Delete events of Gateway, Masters, Ports and Devices from EventLog according to filter query.
+      parameters:
+        - $ref: "#/components/parameters/eventOrigin"
+        - $ref: "#/components/parameters/eventMasterNumber"
+        - $ref: "#/components/parameters/eventPortNumber"
+        - $ref: "#/components/parameters/eventdeviceAlias"
+        - $ref: "#/components/parameters/eventTop"
+        - $ref: "#/components/parameters/eventBottom"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  "/gateway/diagnosis":
+    get:
+      operationId: GetGatewayDiagnosis
+      tags:
+        - gateway
+      summary: Get the currently pending events.
+      description: >-
+        Each event with a *mode* of "APPEARS" is considered as an pending event until the occurence of a corresponding with *mode* of "DISAPPEARS".
+        Pending events must be provided regardless of the Event Log content.
+          
+        Hint: *mode* is optional property under *message*. An event cannot qualify as a pending event if this property is not specified.
+      parameters:
+        - $ref: "#/components/parameters/eventOrigin"
+        - $ref: "#/components/parameters/eventMasterNumber"
+        - $ref: "#/components/parameters/eventPortNumber"
+        - $ref: "#/components/parameters/eventdeviceAlias"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: "./schemas.yaml#/schemas/gatewayEventGet"
+                    - $ref: "./schemas.yaml#/schemas/masterEventGet"
+                    - $ref: "./schemas.yaml#/schemas/portEventGet"
+                    - $ref: "./schemas.yaml#/schemas/deviceEventGet"
+              examples:
+                origin=ALL:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+                    - time: "2018-05-18T07:35:54.123Z"
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=PORTS:
+                  value:
+                    - time: "2018-05-18T07:32:42.023Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        port: 1
+                      message:
+                        code: 6163
+                        mode: APPEARS
+                        text: Overcurrent at C/Q (if digital output) - check load
+                    - time: "2018-05-18T07:35:54.123Z"
+                      severity: NOTICE
+                      origin:
+                        masterNumber: 1
+                        portNumber: 2
+                      message:
+                        code: 65313
+                        mode: SINGLESHOT
+                        text: New slave
+                origin=DEVICES:
+                  value:
+                    - time: "2018-05-18T07:31:54.123Z"
+                      severity: WARNING
+                      origin:
+                        masterNumber: 1
+                        portNumber: 1
+                        deviceAlias: Temp_sensor_1
+                      message:
+                        code: 16912
+                        mode: APPEARS
+                        text: Device temperature over-run – Clear source of heat
+                    - time: "2018-05-18T08:31:54.123Z"
+                      severity: ERROR
+                      origin:
+                        masterNumber: 1
+                        portNumber: 3
+                        deviceAlias: Distance_Laser_3
+                      message:
+                        code: 20480
+                        mode: APPEARS
+                        text: Device hardware fault – Device exchange
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+  "/gateway/monitor":
+    get:
+      operationId: GetGatewayMonitor
+      tags:
+        - gateway
+      summary: Read current and voltage values of the Gateway. Optional.
+      description: >-
+        Read current and voltage values of the primary and secondary rail of the Gateway.
+          
+        This endpoint should only be available if the gateway is located within the same physical device as the Master(s).
+        Primary and secondary rails are commonly denoted by US and UA.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/gatewayMonitor"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+
+  ################################################################################
+  # mqtt
+  ################################################################################
+
+  "/mqtt/configuration":
+    get:
+      operationId: GetMqttConfiguration
+      tags:
+        - mqtt
+      summary: >-
+        Read the MQTT configuration of the Gateway.
+      description: Read the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/mqttConfigurationGetPost"
+              examples:
+                Active client:
+                  value:
+                    clientMode: "ACTIVE"
+                    serverAddress: 192.168.2.1:1883/mqttbroker
+                    username: iolink_json
+                    password: "1234"
+                    lastwill:
+                      topic: process_data
+                      message: Process data transfer stopped.
+                      qos: 0_ONLY_ONCE
+                      retain: true
+                    keepAliveTime: 10
+                    originatorId: "master001-6a624757-30a2-481e-a889-edafeaa025a6"
+                Inactive client:
+                  value:
+                    clientMode: "INACTIVE"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+
+    post:
+      operationId: PostMqttConfiguration
+      tags:
+        - mqtt
+      summary: >-
+        Write or update the MQTT configuration of the Gateway.
+      description: Write or update the MQTT configuration of the Gateway. This endpoint is mandatory, if MQTT feature is supported.
+      requestBody:
+        description: The MQTT configuration object for the Gateway to be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/mqttConfigurationGetPost"
+            examples:
+              Active Client:
+                value:
+                  clientMode: ACTIVE
+                  serverAddress: 192.168.2.1:1883/mqttbroker
+                  username: iolink_json
+                  password: "1234"
+                  lastwill:
+                    topic: process_data
+                    message: Process data transfer stopped.
+                    qos: 0_ONLY_ONCE
+                    retain: true
+                  keepAliveTime: 10
+                  originatorId: "master001-6a624757-30a2-481e-a889-edafeaa025a6"
+              Inactive Client:
+                value:
+                  clientMode: INACTIVE
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+  "/mqtt/topics":
+    get:
+      operationId: GetMqttTopics
+      tags:
+        - mqtt
+      summary: Get the list of MQTT topics.
+      description: Get the list of MQTT topics. This endpoint is mandatory, if MQTT feature is supported.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicGet"
+              example:
+                - topicId: 1
+                  activate: true
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/master1port1/processdata
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: DT35
+                  processData:
+                    direction: getData
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+                - topicId: 2
+                  activate: true
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/TAD08/events
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: TAD081
+                - topicId: 3
+                  activate: false
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/processdata
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: BNI_IOL
+                  processData:
+                    direction: getSetData
+                    format: iodd
+                    onChange: true
+                - topicId: 4
+                  activate: false
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/dt35_cycle_time
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: DT35
+                  parameter:
+                    parametereName: Direct_Parameters_1
+                    subParameterName: Min_Cycle_Time
+                    format: iodd
+                    onChange: true
+                - topicId: 5
+                  activate: true
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/deviceTemperature
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: master1port2
+                  parameter:
+                    index: 153
+                    format: byteArray
+                    interval:
+                      value: 10
+                      unit: ms
+                - topicId: 6
+                  activate: true
+                  topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/TAD08/sensor34/event
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: TAD081
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+    post:
+      operationId: PostMqttTopics
+      tags:
+        - mqtt
+      summary: Create a new MQTT topic.
+      description: Create a new MQTT topic. This endpoint is mandatory, if MQTT feature is supported.
+      requestBody:
+        description: Create a new MQTT topic with the specified configuration.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicPost"
+            examples:
+              Process Data:
+                value:
+                  activate: true
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: master1port1
+                  processData:
+                    direction: getData
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+              Parameter (Index):
+                value:
+                  activate: false
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: master1port1
+                  parameter:
+                    index: 86
+                    format: byteArray
+                    interval:
+                      value: 10
+                      unit: ms
+              Parameter (ParameterName):
+                value:
+                  activate: true
+                  topicName: device_temperature
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: AHM36A
+                  parameter:
+                    parameterName: Temperature1
+                    format: iodd
+                    interval:
+                      value: 1000
+                      unit: ms
+      responses:
+        "200":
+          description: Successful operation returning the topic ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - topicId
+                properties:
+                  topicId:
+                    $ref: "./schemas.yaml#/schemas/mqttTopicId"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+  "/mqtt/topics/{topicId}":
+    get:
+      operationId: GetMqttTopicsTopicId
+      tags:
+        - mqtt
+      summary: Read one specific MQTT topic.
+      description: Read one specific MQTT topic on the Gateway referenced by topic ID. This endpoint is mandatory, if MQTT feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/mqttTopicId"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicGet"
+              examples:
+                Process Data:
+                  value:
+                    topicId: 1
+                    activate: true
+                    topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/pd_input
+                    qos: 1_AT_LEAST_ONCE
+                    deviceAlias: DT35
+                    processData:
+                      direction: getData
+                      format: iodd
+                      interval:
+                        value: 10
+                        unit: ms
+                Parameter (Index):
+                  value:
+                    topicId: 3
+                    activate: true
+                    topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/device/index_xy
+                    qos: 0_ONLY_ONCE
+                    deviceAlias: master1port1
+                    parameter:
+                      index: 86
+                      format: byteArray
+                      interval:
+                        value: 10
+                        unit: ms
+                Parameter (ParameterName):
+                  value:
+                    topicId: 5
+                    activate: true
+                    topicName: master001-6a624757-30a2-481e-a889-edafeaa025a6/device_temperature
+                    qos: 0_ONLY_ONCE
+                    deviceAlias: AHM36A
+                    parameter:
+                      parameterName: Temperature1
+                      format: iodd
+                      interval:
+                        value: 1000
+                        unit: ms
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+    post:
+      operationId: PostMqttTopicsTopicId
+      parameters:
+        - $ref: "#/components/parameters/mqttTopicId"
+      tags:
+        - mqtt
+      summary: Change or deactivate one specific MQTT topic.
+      description: Change or deactivate one specific MQTT topic on the Gateway referenced by topic ID. This endpoint is mandatory, if MQTT feature is supported.
+      requestBody:
+        description: Update or change the configuration of a specific MQTT topic by topicId.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/mqttConfigurationTopicPost"
+            examples:
+              Deactivate Topic:
+                value:
+                  activate: false
+              Activate Topic:
+                value:
+                  activate: true
+              Process Data:
+                value:
+                  topicId: 1
+                  activate: true
+                  topicName: pd_input
+                  qos: 1_AT_LEAST_ONCE
+                  deviceAlias: DT35
+                  processData:
+                    direction: getData
+                    format: iodd
+                    interval:
+                      value: 10
+                      unit: ms
+              Parameter (Index):
+                value:
+                  topicId: 3
+                  topicName: device_index_xy
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: master1port1
+                  parameter:
+                    index: 86
+                    format: byteArray
+                    interval:
+                      value: 10
+                      unit: ms
+              Parameter (ParameterName):
+                value:
+                  topicId: 5
+                  activate: true
+                  topicName: device_temperature
+                  qos: 0_ONLY_ONCE
+                  deviceAlias: AHM36A
+                  parameter:
+                    parameterName: Temperature1
+                    format: iodd
+                    interval:
+                      value: 1000
+                      unit: ms
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+    delete:
+      operationId: DeleteMqttTopicsTopicId
+      tags:
+        - mqtt
+      summary: Delete a specific MQTT topic.
+      description: Delete a specific MQTT topic on the Gateway referenced by the topic ID. The topic ID is addressed by a path parameter. This endpoint is mandatory, if MQTT feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/mqttTopicId"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_104"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+  "/mqtt/connectionstatus":
+    get:
+      operationId: GetMqttConnectionstatus
+      tags:
+        - mqtt
+      summary: Read the connection status of the MQTT client to the MQTT server.
+      description: Read the connection status of the MQTT client to the MQTT server. This endpoint is mandatory, if MQTT feature is supported.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/mqttConnectionStatusGet"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_106"
+
+  ################################################################################
+  # iodds
+  ################################################################################
+  "/iodds":
+    get:
+      operationId: GetIodds
+      tags:
+        - iodds
+      summary: >-
+        Get a list of all IODD (representations) that are available on the Gateway.
+      description: >-
+        Get a list of all IODD (representations) that are available on the Gateway. This endpoint is mandatory, if IODD feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/vendorId"
+        - $ref: "#/components/parameters/deviceId"
+        - $ref: "#/components/parameters/revision"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/ioddsGet"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+    delete:
+      operationId: DeleteIodds
+      tags:
+        - iodds
+      summary: Delete a specific IODD representation.
+      description: Delete a specific IODD representation and all related artifacts. This endpoint is mandatory, if IODD feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/vendorId"
+        - $ref: "#/components/parameters/deviceId"
+        - $ref: "#/components/parameters/revision"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+  "/iodds/file":
+    get:
+      operationId: GetIoddsFile
+      tags:
+        - iodds
+      summary: Get a specific IODD or other IODD artifacts like device image. Optional.
+      description: Get a specific IODD or other IODD artifacts like device image. This feature is optional.
+      parameters:
+        - $ref: "#/components/parameters/vendorId"
+        - $ref: "#/components/parameters/deviceId"
+        - $ref: "#/components/parameters/revision"
+        - $ref: "#/components/parameters/artifact"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/xml:
+              schema:
+                $ref: "./schemas.yaml#/schemas/ioddFile"
+              example: "IODD XML file"
+            img/png:
+              schema:
+                $ref: "./schemas.yaml#/schemas/ioddFile"
+              example: "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAJaSURBVDhPPVPPS3JRED0+LVGpIMUfSCW2iVLEiEytv6IWgiLtFNwJbVp9EP0DIogtol0LEaV2QovWSbgQdCFGLbIgBDW08sftzvTpgcu77905c2bOnaeaTCZCAiqVitcU1WoV39/f2NzchE6n42/TOMkBxuMxERmNRkMcHByIxcVF4XQ6xfr6urDZbMLj8YhcLvc/SggSU6Yq6XQaW1tbCAaDiEQirGIymbC6uor5+XmcnJzg6OiIY7k6ypDP5xGPx+FwOPDw8MCHLpeLyRqNht8J7XYbfr8fV1dXf0SLxcIBT09PnJ3Q6XSwsbGBtbU1fieQ0svLC25ubqAQu9froVgsMun8/BwXFxdYWlqC7AvPz89MkPl5Wa1Wbkut1Wr/HR8f4/DwEMlkEtfX17i/v8dgMEA4HMbX1xcqlcqsErVajff3dyi1Wo0NCYVCuL29BZVtNBqRyWSQSCSwvb2N4XD4Z4hcVB2RVbJZshf9fh96vZ6D9vb28Pr6inK5zK6ORiMmtVotnJ6eIpVKQSEFCjYYDNwD4efnB4VCAfv7+3h7e+NvlOjs7AyxWAwfHx9QvF4vDcFsKqiXUqmEx8dH7pdaILdpH41GuW9yG81mU5jNZiHLE7u7u8Ln8/HTbrcLqSzzCSGvgJ/SbZ6qbDYr+B5pUsi5hYWFmTKVS3tSJkxNpGuiCphIBzs7O2wQHZBZiqKg2+1CVoDLy0vIqjhBvV7H8vIy+O8gBQLZT5dOMzo3N8fKNGbkwcrKCu7u7mYmsuJUgfD5+cmOyt7ZbSIEAgG43W4+J5IQAr+h1V0CntKWLwAAAABJRU5ErkJggg=="
+            application/zip:
+              schema:
+                $ref: "./schemas.yaml#/schemas/ioddArchive"
+              example: "IODD in archive format provided by the IODD finder"
+
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_301"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_101"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+    post:
+      operationId: PostIoddsFile
+      tags:
+        - iodds
+      summary: Store or update an IODD (representation) on the Gateway.
+      description: >
+        Store or update an IODD (representation) on the Gateway. This endpoint is mandatory, if IODD feature is supported.
+          
+        **Note:** The assignment of an IODD to a device shall be done automatically by matching vendor, device id and iolink revision. Only one IODD per vendor, device id and iolink revision is allowed. In case IODD with vendor, device id and iolink revision is already present on the gateway, this file should be replaced by the new one.
+      requestBody:
+        description: The IODD file or archive to be uploaded or updated.
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: "./schemas.yaml#/schemas/ioddFile"
+            example: "IODD XML file"
+          application/zip:
+            schema:
+              $ref: "./schemas.yaml#/schemas/ioddArchive"
+            example: "IODD in archive format provided by the IODD finder"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_603"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_604"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_605"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "413":
+          description: Content Too Large
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_704"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_602"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  ################################################################################
+  # masters
+  ################################################################################
+  "/masters":
+    get:
+      operationId: GetMasters
+      tags:
+        - masters
+      summary: >-
+        Read all the available masterNumber keys with the corresponding
+        identification information.
+      description: Read all the available masterNumber keys with the corresponding identification information.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/identificationMasters"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/masters/{masterNumber}/capabilities":
+    get:
+      operationId: GetMastersMasterNumberCapabilities
+      tags:
+        - masters
+      summary: Read the capabilities of the Master.
+      description: Read the capabilities of the Master.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/masterCapabilitiesGet"
+                  - $ref: "./schemas.yaml#/schemas/masterCapabilitiesGetWireless"
+              examples:
+                IO-Link:
+                  value:
+                    numberOfPorts: 8
+                    maxPowerSupply: # max power supply per port
+                      value: 0.3
+                      unit: A
+                IO-Link_Wireless:
+                  value:
+                    numberOfPorts: 40
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/masters/{masterNumber}/identification":
+    get:
+      operationId: GetMastersMasterNumberIdentification
+      tags:
+        - masters
+      summary: Read the identification of the Master.
+      description: Read the identification of the Master.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/masterIdentificationGet"
+              examples:
+                IO-Link:
+                  value:
+                    vendorName: Vendor GmbH
+                    vendorId: 26
+                    masterId: 42
+                    masterType: Master acc. V1.0
+                    serialNumber: IOLM123456
+                    orderCode: PROD-123456
+                    productName: IO-Link Master
+                    productId: PROD-123456
+                    hardwareRevision: "3.2.1.444R"
+                    firmwareRevision: "3.2.1.888R"
+                    vendorUrl: "http://www.io-link.com/io-link-master"
+                    manualUrl: "http://www.io-link.com/io-link-master/documentation.pdf"
+                    applicationSpecificTag: End of the belt
+                    locationTag: Down under
+                    functionTag: Code reading
+                IO-Link_Wireless:
+                  value:
+                    vendorName: Vendor GmbH
+                    vendorId: 01
+                    masterId: 22
+                    masterType: Wireless_Master
+                    serialNumber: IOLWM123456
+                    orderCode: PROD6789
+                    productName: IO-Link Wireless Master
+                    productId: PROD6789
+                    hardwareRevision: "1"
+                    firmwareRevision: "2.0.0"
+                    vendorUrl: "http://www.io-link.com"
+                    productInstanceUri: "http://www.io-link.com/PROD123456/IOLWM123456"
+                    descriptionFileUri: "https://io-link.com/GSDML-V2.34-IO-Link-Wireless-Master-20190301.xml"
+                    manualUrl: "http://www.io-link.com/io-link-master/documentation.pdf"
+                    applicationSpecificTag: "***"
+                    locationTag: "***"
+                    functionTag: "***"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberIdentification
+      tags:
+        - masters
+      summary: Write application specific identification to a Master.
+      description: >
+        Write application specific identification to a Master.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      requestBody:
+        description: The identification object for the master to be written.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/masterIdentificationPost"
+            examples:
+              All optional fiels:
+                value:
+                  applicationSpecificTag: Fallback reader at the end
+                  locationTag: Down under
+                  functionTag: Code reading
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/masters/{masterNumber}/configuration":
+    get:
+      operationId: GetMastersMasterNumberConfiguration
+      tags:
+        - masters
+      summary: Read the actual configuration of the specified Master.
+      description: Read the actual configuration of the specified Master. This endpoint is mandatory, if wireless feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/mastersConfigurationGetPost"
+              examples:
+                IO-Link_Wireless:
+                  $ref: "#/components/examples/exampleWirelessMasterConfiguration"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberConfiguration
+      tags:
+        - masters
+      summary: Write the configuration of the specified Master.
+      description: Write the configuration of the specified Master. This endpoint is mandatory, if wireless feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      requestBody:
+        description: The configuration object for the specified Master to be written.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/mastersConfigurationGetPost"
+            examples:
+              IO-Link_Wireless:
+                $ref: "#/components/examples/exampleWirelessMasterConfiguration"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/trackstatus":
+    get:
+      operationId: GetMastersMasterNumberTrackstatus
+      tags:
+        - masters
+      summary: Read the actual Track status of the specified Wireless-Master.
+      description: Read the actual Track status of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/mastersTrackstatusGet"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/scan":
+    get:
+      operationId: GetMastersMasterNumberScan
+      tags:
+        - masters
+      summary: Read the actual scan results of the specified Wireless-Master.
+      description: Read the actual scan results of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/mastersScanGet"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberScan
+      tags:
+        - masters
+      summary: To start a scan of the specified Wireless-Master.
+      description: To start a scan of the specified Wireless-Master. This endpoint is mandatory, if master has wireless ports.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      requestBody:
+        description: The scan configuration object for the specified Wireless-Master.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/mastersScanPost"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/rawsmi":
+    post:
+      operationId: PostMastersMasterNumberRawsmi
+      tags:
+        - masters
+      summary: Send an arbitrary SMI message (as described in 11.2.2 of the IO-Link Interface and System Specification) to the master and receive the response.
+      description: Send an arbitrary SMI message to the master and receive the response.  This endpoint is optional.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      requestBody:
+        description: A JSON object containing the SMI message, encoded as Base64.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/rawSmi"
+            examples:
+              PortStatusRequest:
+                value:
+                  message: "AQGQAAAC//A="
+              PortConfigurationRequest:
+                value:
+                  message: "AQH/8AAMgAACAAAAAAAAAAAA"
+      responses:
+        "200":
+          description: Successful operation, content contains the SMI confirmation (could be a negative result / JobError).
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/rawSmi"
+              examples:
+                PortStatusConfirmation:
+                  value:
+                    message: "AQH/8AAQkAABAwAAAAAAAAAAAAAAAA=="
+                PortConfigurationConfirmation:
+                  value:
+                    message: "AQGAAAAC//A="
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_103"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  ################################################################################
+  # ports
+  ################################################################################
+  "/masters/{masterNumber}/ports":
+    get:
+      operationId: GetMastersMasterNumberPorts
+      tags:
+        - ports
+      summary: Read all the available portNumber keys with the corresponding identification information.
+      description: Read all the available portNumber keys with the corresponding identification information.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsGetWired"
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsGetWireless"
+              examples:
+                IO-Link:
+                  value:
+                    - portNumber: 1
+                      statusInfo: "DEVICE_ONLINE"
+                      deviceAlias: "Distance_Sensor"
+                    - portNumber: 2
+                      statusInfo: "DIGITAL_INPUT_C/Q"
+                      deviceAlias: "Switching_Sensor"
+                    - portNumber: 4
+                      statusInfo: "DEACTIVATED"
+                      deviceAlias: "Empty_port"
+                IO-Link_Wireless:
+                  value:
+                    - portNumber: 1
+                      deviceAlias: "Port_X01"
+                      statusInfo: "DEVICE_ONLINE"
+                      slotNumber: 2
+                      trackNumber: 1
+                      slotType: "SSLOT"
+                      deviceInfo:
+                        vendorId: 888
+                        deviceId: 10485760
+                        productName: "BNI IOW-302-W01-K080"
+                    - portNumber: 4
+                      statusInfo: "DEACTIVATED"
+                      deviceAlias: "Empty_port"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_302"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/capabilities":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberCapabilities
+      tags:
+        - ports
+      summary: Read the capability information of the specified port.
+      description: Read the capability information of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/portCapabilitiesGet"
+                  - $ref: "./schemas.yaml#/schemas/portCapabilitiesGetWireless"
+              examples:
+                CLASS_A:
+                  value:
+                    maxPowerSupply:
+                      value: 0.3
+                      unit: A
+                    portType: CLASS_A
+                CLASS_B:
+                  value:
+                    maxPowerSupply:
+                      value: 2.0
+                      unit: A
+                    portType: CLASS_B
+                CLASS_A_WITH_PORT_POWER_OFF_ON:
+                  value:
+                    maxPowerSupply:
+                      value: 0.3
+                      unit: A
+                    portType: CLASS_A_WITH_PORT_POWER_OFF_ON
+                FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS:
+                  value:
+                    maxPowerSupply:
+                      value: 0.2
+                      unit: A
+                    portType: FAILSAFE_PORT_A_WITHOUT_SAFETY_DIGITAL_INPUTS
+                FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS:
+                  value:
+                    maxPowerSupply:
+                      value: 0.2
+                      unit: A
+                    portType: FAILSAFE_PORT_A_WITH_SAFETY_DIGITAL_INPUTS
+                FAILSAFE_PORT_B:
+                  value:
+                    maxPowerSupply:
+                      value: 2.0
+                      unit: A
+                    portType: FAILSAFE_PORT_B
+                WIRELESS_PORT:
+                  value:
+                    portType: WIRELESS_PORT
+                    slotType: SSLOT
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/status":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberStatus
+      tags:
+        - ports
+      summary: Read the actual status of the selected port.
+      description: Read the actual status of the selected port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWired"
+                  - $ref: "./schemas.yaml#/schemas/mastersPortsStatusGetWireless"
+              examples:
+                IO-Link:
+                  value:
+                    statusInfo: "DEVICE_ONLINE"
+                    iolinkRevision: "1.1"
+                    transmissionRate: COM2
+                    masterCycleTime:
+                      value: 2.3
+                      unit: ms
+                IO-Link_Wireless:
+                  value:
+                    statusInfo: DEVICE_ONLINE
+                    portQualityInfo:
+                      pdInValid: true
+                      pdOutValid: true
+                    iolinkRevision: "1.1"
+                    inputDataLength: 2
+                    outputDataLength: 2
+                    vendorId: 888
+                    deviceId: 1
+                    wMasterCycleTimeOut:
+                      base: FreeRunning
+                    wMasterCycleTimeIn:
+                      base: FreeRunning
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/masters/{masterNumber}/ports/{portNumber}/configuration":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberConfiguration
+      tags:
+        - ports
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      summary: Read the actual configuration of the specified port.
+      description: Read the actual configuration of the specified port.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/portConfigurationGet"
+              examples:
+                IO-Link:
+                  value:
+                    mode: IOLINK_MANUAL
+                    validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                    iqConfiguration: DIGITAL_INPUT
+                    cycleTime:
+                      value: 2.3
+                      unit: ms
+                    vendorId: 26
+                    deviceId: 333
+                    deviceAlias: Distance_sensor_1
+                IO-Link_Wireless:
+                  value:
+                    mode: WIOLINK_CYCLIC_AUTOPAIRING
+                    validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                    iqConfiguration: NOT_SUPPORTED
+                    vendorId: 888
+                    deviceId: 1
+                    slotNumber: 1
+                    trackNumber: 5
+                    deviceTxPower: 31
+                    maxRetry: 20
+                    imaTime:
+                      base: 1664us
+                      multiplier: 60
+                    slotType: SSLOT
+                    lowEnergyDevice: false
+                    maxPDSegLength: 0
+                    wMasterCycleTimeOut:
+                      base: FreeRunning
+                    wMasterCycleTimeIn:
+                      base: FreeRunning
+                    uniqueId: 03:78:00:00:01:32:50:60:46
+                    deviceAlias: Port_X01
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberConfiguration
+      tags:
+        - ports
+      summary: Write the configuration of the specified port.
+      description: Write the configuration of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      requestBody:
+        description: The configuration object for the specified port to be written. The definition of duplicated deviceAlias has to be rejected.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/portConfigurationPost"
+            examples:
+              Complete configuration:
+                value:
+                  mode: IOLINK_MANUAL
+                  validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                  cycleTime:
+                    value: 2.3
+                    unit: ms
+                  vendorId: 26
+                  deviceId: 333
+                  iqConfiguration: DIGITAL_INPUT
+                  deviceAlias: Distance_sensor_1
+              Change CQ mode:
+                value:
+                  mode: IOLINK_AUTOSTART
+              Change iqConfiguration:
+                value:
+                  iqConfiguration: DIGITAL_OUTPUT
+              Change the deviceAlias:
+                value:
+                  deviceAlias: Flow_control_1
+              IO-Link_Wireless:
+                value:
+                  mode: WIOLINK_CYCLIC_AUTOPAIRING
+                  validationAndBackup: TYPE_COMPATIBLE_DEVICE_V1.1
+                  vendorId: 888
+                  deviceId: 1
+                  slotNumber: 1
+                  trackNumber: 5
+                  deviceTxPower: 31
+                  maxRetry: 20
+                  imaTime:
+                    base: 1664us
+                    multiplier: 60
+                  slotType: SSLOT
+                  lowEnergyDevice: false
+                  maxPDSegLength: 0
+                  wMasterCycleTimeOut:
+                    base: FreeRunning
+                  wMasterCycleTimeIn:
+                    base: FreeRunning
+                  uniqueId: 03:78:00:00:01:32:50:60:46
+                  deviceAlias: Port_X01
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_207"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/masters/{masterNumber}/ports/{portNumber}/datastorage":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberDatastorage
+      tags:
+        - ports
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      summary: Read the Data Storage content of a specific port.
+      description: Read the Data Storage content of a specific port.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/dataStorageGet"
+              examples:
+                Data Storage with valid content:
+                  value:
+                    header:
+                      parameterChecksum: 1192298517
+                      vendorId: 646
+                      deviceId: 1234
+                      functionId: 0
+                    content: >-
+                      "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
+                Empty Data Storage:
+                  value:
+                    header:
+                      parameterChecksum: 0
+                      vendorId: 0
+                      deviceId: 0
+                      functionId: 0
+                    content: >-
+                      "AAAAAAAAAAAAAAAA"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberDatastorage
+      tags:
+        - ports
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      summary: Write the Data Storage content to a specific port.
+      description: Write the Data Storage content to a specific port.
+      requestBody:
+        description: The Data Storage content to write to the specified port.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/dataStoragePost"
+            examples:
+              Data Storage with valid content:
+                value:
+                  content: >-
+                    "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
+              Empty Data Storage:
+                value:
+                  content: "AAAAAAAAAAAAAAAA"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_401"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/pairing":
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberPairing
+      tags:
+        - ports
+      summary: To pair a Wireless-Device with the specified Wireless-Port.
+      description: To pair a Wireless-Device with the specified Wireless-Port. This endpoint is mandatory, if wireless feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      requestBody:
+        description: The pairing configuration object for the specified Wireless-Port.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/mastersPortsPairingPost"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_207"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/monitor":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberMonitor
+      tags:
+        - ports
+      summary: Read the actual current, voltage and wireless information from a port. Optional.
+      description: >-
+        Read the actual current, voltage and wireless information from a port.
+        The response object can vary depending on the port configuration or port type.
+          
+        The "secondaryVoltage" and "secondaryCurrent" only relevant for Wired, Class B ports and should reflect the Power 2 power supply. See 5.4.2 in IO-Link Interface and System Specification V1.1.4 June 2024 for more details.
+          
+        This endpoint is mandatory (for Wireless ports), if wireless feature is supported.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/portMonitor"
+              examples:
+                IO-Link:
+                  value:
+                    voltage:
+                      primaryVoltage:
+                        value: 24.0
+                        unit: V
+                      cqVoltage:
+                        value: 24.0
+                        unit: V
+                    current:
+                      primaryCurrent:
+                        value: 0.25
+                        unit: A
+                      cqCurrent:
+                        value: 0.10
+                        unit: A
+                IO-Link_Wireless:
+                  value:
+                    wirelessQuality:
+                      lqiMaster: 100
+                      rssiMaster: -60
+                      lqiDevice: 50
+                      rssiDevice: -80
+
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/masters/{masterNumber}/ports/{portNumber}/power":
+    get:
+      operationId: GetMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Read the current power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
+      description: Read the current power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/PortPowerMode"
+              example:
+                primaryPower: true
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostMastersMasterNumberPortsPortNumberPower
+      tags:
+        - ports
+      summary: Set the power mode of the specified port. Mandatory for masters with at least one port of type CLASS_A_WITH_PORT_POWER_OFF_ON.
+      description: Set the power mode of the specified port.
+      parameters:
+        - $ref: "#/components/parameters/masterNumber"
+        - $ref: "#/components/parameters/portNumber"
+      requestBody:
+        description: The power mode configuration for the specified port.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/PortPowerMode"
+            examples:
+              Switch port power off:
+                value:
+                  primaryPower: false
+              Switch port power on:
+                value:
+                  primaryPower: true
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_302"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_303"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  ################################################################################
+  # devices
+  ################################################################################
+  "/devices":
+    get:
+      operationId: GetDevices
+      tags:
+        - devices
+      summary: Get all available deviceAlias keys and the location by Master number and Port number.
+      description: Get all available deviceAlias keys and the location by Master number and Port number.
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/devicesGet"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/devices/{deviceAlias}/capabilities":
+    get:
+      operationId: GetDevicesDeviceAliasCapabilities
+      tags:
+        - devices
+      summary: Read the capabilities from the specific Device.
+      description: Read the capabilities from the specific Device.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+      responses:
+        "200":
+          description: Successful opearation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceCapabilitiesGet"
+              example:
+                minimumCycleTime:
+                  value: 2.3
+                  unit: ms
+                supportedProfiles: [10, 32770]
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_307"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/devices/{deviceAlias}/identification":
+    get:
+      operationId: GetDevicesDeviceAliasidentification
+      tags:
+        - devices
+      summary: Read the identification from the specific Device.
+      description: >-
+        *Implementation hint*: You have to request the ISDU values of
+        applicationSpecificTag, locationTag and functionTag (if they are
+        supported by the device).
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_307"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostDevicesDeviceAliasidentification
+      tags:
+        - devices
+      summary: Write application specific identification to the Device.
+      description: Write application specific identification to the Device.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+      requestBody:
+        description: The identification object for the device to be written.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/portIdentificationPost"
+            examples:
+              All optional fields:
+                value:
+                  applicationSpecificTag: Fallback light switch
+                  locationTag: Down under
+                  functionTag: Check start of belt
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+  "/devices/{deviceAlias}/processdata/value":
+    get:
+      operationId: GetDevicesDeviceAliasProcessData
+      tags:
+        - devices
+      summary: Read the process data values (input and output) from the specified Device.
+      description: Read the process data values (input and output) from the specified Device.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/format"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceProcessDataValueGet"
+              examples:
+                "Format=byteArray, CQ in IO-Link (only input), IQ in digital output":
+                  value:
+                    getData:
+                      iolink:
+                        valid: true
+                        value:
+                          - 12
+                          - 22
+                          - 216
+                    setData:
+                      iqValue: true
+                "Format=iodd, CQ in IO-Link (input and output), IQ in digital input":
+                  value:
+                    getData:
+                      iolink:
+                        valid: true
+                        value:
+                          Distance:
+                            value: 55
+                            unit: "cm"
+                          Quality:
+                            value: 12
+                      iqValue: true
+                    setData:
+                      iolink:
+                        valid: true
+                        value:
+                          Buzzer:
+                            value: 5
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+    post:
+      operationId: PostDevicesDeviceAliasProcessData
+      tags:
+        - devices
+      summary: Write the process data output values to the specified Device.
+      description: Write the process data output values to the specified Device.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+      requestBody:
+        description: The process data output values to write to the specified Device.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/deviceProcessDataValuePost"
+            examples:
+              "format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital output":
+                value:
+                  iolink:
+                    valid: true
+                    value:
+                      - 15
+                      - 123
+                      - 126
+                      - 236
+                  iqValue: true
+              "format=iodd, CQ (pin4) in IO-Link, IQ (pin2) not available":
+                value:
+                  iolink:
+                    valid: true
+                    value:
+                      Valve_1:
+                        value: true
+                      Valve_2:
+                        value: false
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_501"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_502"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_503"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/processdata/getdata/value":
+    get:
+      operationId: GetDevicesDeviceAliasProcessDataGetData
+      tags:
+        - devices
+      summary: >-
+        Read the process data input values from the specified Device.
+      description: Read the process data input values from the specified Device.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/format"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/processDataValue"
+              examples:
+                "Format=byteArray, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
+                  value:
+                    iolink:
+                      valid: true
+                      value:
+                        - 12
+                        - 22
+                        - 216
+                    iqValue: true
+                "Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
+                  value:
+                    iolink:
+                      valid: true
+                      value:
+                        Distance:
+                          value: 55
+                          unit: "cm"
+                        Quality:
+                          value: 12
+                    iqValue: true
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/processdata/setdata/value":
+    get:
+      operationId: GetDevicesDeviceAliasProcessDataSetData
+      tags:
+        - devices
+      summary: >-
+        Read the process data output values from the specified Device.
+      description: Read the process data output values from the specified Device.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/format"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/processDataValue"
+              examples:
+                "Format=byteArray, CQ (pin4) in digital output, IQ (pin2) in digital input":
+                  value:
+                    cqValue: false
+                "Format=iodd, CQ (pin4) in IO-Link, IQ (pin2) in digital input":
+                  value:
+                    iolink:
+                      valid: true
+                      value:
+                        Valve_1:
+                          value: true
+                        Valve_2:
+                          value: false
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_503"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/parameters":
+    get:
+      operationId: GetDevicesDeviceAliasParameters
+      tags:
+        - devices
+      summary: >-
+        Read all available parameter indices and parameter names from the specific device.
+        IODD support is required.
+      description: Read all available parameter indices and parameter names from the specific device. IODD support is required.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceParametersGet"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/parameters/{parameterIdent}/value":
+    get:
+      operationId: GetDevicesDeviceAliasParametersValue
+      tags:
+        - devices
+      summary: Read the parameter value from the specific Device with the given index or parametername depending on the path parameter.
+      description: Read the parameter value from the specific Device with the given index or parametername depending on the path parameter.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/parameterIdent"
+        - $ref: "#/components/parameters/format"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
+              examples:
+                format=byteArray:
+                  value:
+                    value:
+                      - 0
+                      - 156
+                      - 125
+                      - 25
+                "format=iodd, simple type":
+                  value:
+                    value: 15.2
+                    unit: "cm"
+                "format=iodd, complex type":
+                  value:
+                    Distance:
+                      value: 15
+                      unit: "cm"
+                    Quality:
+                      value: 12
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+    post:
+      operationId: PostDevicesDeviceAliasParametersValue
+      tags:
+        - devices
+      summary: Write the parameter value with the given index or parametername depending on the path parameter to the specified Device.
+      description: Write the parameter value with the given index or parametername depending on the path parameter to the specified Device. If there are no restrictions parameter will be updated. Otherwise an error will be returned.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/parameterIdent"
+      requestBody:
+        description: The parameter value to write, specified by index or parameter name.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
+            examples:
+              "payload as byteArray":
+                value:
+                  value:
+                    - 0
+                    - 156
+                    - 125
+                    - 25
+              "payload as iodd, simple type":
+                value:
+                  value: 15.2
+                  unit: "cm"
+              "payload as iodd, complex type":
+                value:
+                  Distance:
+                    value: 15
+                    unit: "cm"
+                  Quality:
+                    value: 12
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices":
+    get:
+      operationId: GetDevicesDeviceAliasParametersSubindices
+      tags:
+        - devices
+      summary: >-
+        Read all available parameter sub-indices and sub-parameter names from the specific Device.
+        IODD support is required.
+      description: Read all available parameter sub-indices and sub-parameter names from the specific Device. IODD support is required.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/parameterIdent"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceSubParametersGet"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_601"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/parameters/{parameterIdent}/subindices/{subParameterIdent}/value":
+    get:
+      operationId: GetDevicesDeviceAliasParametersSubindicesValue
+      tags:
+        - devices
+      summary: >-
+        Read the parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
+      description: Read the parameter value from the specific Device with the given index/subindex or parametername/sub-parameter name.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/parameterIdent"
+        - $ref: "#/components/parameters/subParameterIdent"
+        - $ref: "#/components/parameters/format"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceParameterSubindexValueGetPost"
+              examples:
+                format=byteArray:
+                  value:
+                    value:
+                      - 0
+                      - 156
+                      - 125
+                      - 25
+                format=iodd:
+                  value:
+                    Distance:
+                      value: 15.2
+                      unit: "cm"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+    post:
+      operationId: PostDevicesDeviceAliasParametersSubindicesValue
+      tags:
+        - devices
+      summary: >-
+        Write the parameter with the given index/subindex or parametername/sub-parameter name.
+      description: Write the parameter with the given index/subindex or parametername/sub-parameter name. If there are no restrictions parameter will be updated. Otherwise an error will be returned.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/parameterIdent"
+        - $ref: "#/components/parameters/subParameterIdent"
+      requestBody:
+        description: The parameter value to write, specified by index/subindex or parametername/sub-parameter name.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/deviceParameterSubindexValueGetPost"
+            examples:
+              format=byteArray:
+                value: { "value": [0, 156, 125, 25] }
+              format=iodd:
+                value:
+                  value: 15.2
+                  unit: "cm"
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_309"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_312"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/blockparameterization":
+    post:
+      operationId: PostDevicesDeviceAliasBlockparameterization
+      tags:
+        - devices
+      summary: >-
+        Write or read one or more parameters using the block parameterization method.
+      description: Write or read one or more parameters using the block parameterization method. If there are no restrictions for writing, the objects will be modified. Otherwise an error will be returned.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/format"
+      requestBody:
+        description: The block parameterization request object specifying the direction and parameters to read or write.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas.yaml#/schemas/deviceBlockParameterizationPost"
+            examples:
+              "read, format=byteArray":
+                value:
+                  direction: read
+                  parameters:
+                    - identifier:
+                        index: 15
+                    - identifier:
+                        index: 65
+                        subIndex: 2
+              "read, format=iodd":
+                value:
+                  direction: read
+                  parameters:
+                    - identifier:
+                        parameterName: Application_tag
+                    - identifier:
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
+              "write, format=byteArray":
+                value:
+                  direction: write
+                  parameters:
+                    - identifier:
+                        index: 123
+                      content:
+                        value:
+                          - 15
+                          - 232
+                          - 22
+                    - identifier:
+                        index: 233
+                        subIndex: 2
+                      content:
+                        value:
+                          - 23
+                          - 149
+                          - 206
+              "write, format=iodd":
+                value:
+                  direction: write
+                  parameters:
+                    - identifier:
+                        parameterName: Application_tag
+                      content:
+                        value: "Level 2, row 3"
+                    - identifier:
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
+                      content:
+                        value: 123
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceBlockParameterizationPostParametersAnswer"
+              examples:
+                "read, format=byteArray":
+                  value:
+                    - identifier:
+                        index: 123
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value:
+                            - 15
+                            - 232
+                            - 22
+                    - identifier:
+                        index: 233
+                        subIndex: 2
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value:
+                            - 23
+                            - 149
+                            - 206
+                "read, format=iodd":
+                  value:
+                    - identifier:
+                        parameterName: Application_tag
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value: "Level 2, row 3"
+                    - identifier:
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
+                      result:
+                        parameterExchangeResult: READ_SUCCESS
+                        content:
+                          value: 123
+                "read, format=byteArray with error":
+                  value:
+                    - identifier:
+                        index: 123
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32802
+                          message: Service temporarily not available – Device control
+                    - identifier:
+                        index: 233
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32803
+                          message: Access denied
+                "write, format=byteArray":
+                  value:
+                    - identifier:
+                        index: 123
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                    - identifier:
+                        index: 233
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                "write, format=iodd":
+                  value:
+                    - identifier:
+                        parameterName: Application_tag
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                    - identifier:
+                        parameterName: Hysteresis
+                        subParameterName: Channel_B
+                      result:
+                        parameterExchangeResult: WRITE_SUCCESS
+                "write, format=byteArray, with error":
+                  value:
+                    - identifier:
+                        index: 123
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32816
+                          message: Parameter value out of range
+                    - identifier:
+                        index: 233
+                      result:
+                        parameterExchangeResult: ERROR
+                        iolinkError:
+                          code: 32817
+                          message: Parameter value above limit
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_104"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_202"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_203"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_204"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_205"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_206"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_208"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_307"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_311"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_601"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_310"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_105"
+
+  "/devices/{deviceAlias}/events":
+    get:
+      operationId: GetDevicesDeviceAliasEvents
+      tags:
+        - devices
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+        - $ref: "#/components/parameters/eventTop"
+        - $ref: "#/components/parameters/eventBottom"
+      summary: Read the eventlog for a specific device.
+      description: Read the eventlog for a specific device. This is similar to the reading of the eventlog but filtered for this specific device (origin is device). Logged events are not cleared or changed.
+      responses:
+        "200":
+          description: >-
+            Successful operation. In case of empty event log, an empty array is
+            returned.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./schemas.yaml#/schemas/deviceEventGet"
+              example:
+                - $ref: "./examples.yaml#/examples/deviceEvent"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_305"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_306"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_304"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+
+  "/devices/{deviceAlias}/fwupdate":
+    get:
+      operationId: GetDevicesDeviceAliasFirmwareUpdateStatus
+      tags:
+        - devices
+      description: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Device FW Update support is required.
+      summary: Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress. Device FW Update support is required.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+      responses:
+        "200":
+          description: >-
+            Gives the stage and progress of a running firmware update. The active property shows if an update is currently in progress.
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/deviceFirmwareUpdateStatusGet"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_307"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+    post:
+      operationId: PostDevicesDeviceAliasFirmwareUpdate
+      tags:
+        - devices
+      summary: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
+      description: Perform a firmware update for a specific Device with an iolfw-file according to specification IOL-Profile_Firmware-Update_V11_10082_Sep19. Device FW Update support is required.
+      parameters:
+        - $ref: "#/components/parameters/deviceAlias"
+      responses:
+        "204":
+          description: >-
+            Successful operation. Device firmware has been updated.
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_107"
+        "401":
+          $ref: "#/components/responses/HTTP_401"
+        "403":
+          $ref: "#/components/responses/HTTP_403"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_304"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_308"
+        "413":
+          description: Content Too Large
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas.yaml#/schemas/errorObject_704"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_101"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_102"
+      requestBody:
+        required: true
+        description: The firmware update file in iolfw format. The file must be provided as a multipart/form-data request including the `filename` as header parameter (see RFC7578).
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "./schemas.yaml#/schemas/deviceFirmwareUpdatePost"
+components:
+  securitySchemes:
+    basicAuth:
+      description: Basic authentication mechanism with user and password provided in the HTTP header.
+      type: http
+      scheme: basic
+    bearerAuth:
+      description: Provide bearer token which is used in the HTTP header.
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    oauth2:
+      description: Standard OAUTH2 mechanism, tokenUrl and authorizationUrl need to be adjusted to the designated security infrastructure. The scopes are just used as examples and can be vendor specific.
+      type: oauth2
+      flows:
+        authorizationCode:
+          tokenUrl: https://io-link-vendor.com/protocol/openid-connect/token
+          authorizationUrl: https://io-link-vendor.com/protocol/openid-connect/auth
+          scopes:
+            Maintenance: priviledged access for reading and writing all endpoints
+            Specialist: more priviledged access for advanced features like firmware update
+  parameters:
+    apiId:
+      name: apiId
+      description: API identifier of an OpenAPI or AsyncAPI specification.
+      required: true
+      in: path
+      schema:
+        $ref: "./schemas.yaml#/schemas/apiId"
+    artifact:
+      name: artifact
+      description: IO-Link IODD Artifacts
+      required: false
+      in: query
+      schema:
+        $ref: "./schemas.yaml#/schemas/artifact"
+    vendorId:
+      name: vendorId
+      in: query
+      description: IO-Link VendorID
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 65535
+    deviceId:
+      name: deviceId
+      in: query
+      description: IO-Link DeviceID
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 16777215
+    revision:
+      name: revision
+      in: query
+      description: schemaVersion of the IODD
+      required: false
+      schema:
+        type: string
+        enum:
+          - "1.0"
+          - "1.1"
+          - "1.0.1"
+    mqttTopicId:
+      name: topicId
+      in: path
+      description: >-
+        Id of a configured MQTT topic. The management of the topic ids is done by the gateway.
+      required: true
+      schema:
+        $ref: "./schemas.yaml#/schemas/mqttTopicId"
+    masterNumber:
+      name: masterNumber
+      in: path
+      description: Master identification number starting with 1
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    portNumber:
+      name: portNumber
+      in: path
+      description: Port identification number starting with 1
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    deviceAlias:
+      name: deviceAlias
+      in: path
+      description: >-
+        Device name configured with the port/configuration URL. Default device
+        name is 'masterNportM' where 'N' means the masterNumber and 'M' means
+        the portNumber. Even if a new device alias has been assigned, the device
+        can always be addressed via the default name.
+      required: true
+      schema:
+        $ref: "./schemas.yaml#/schemas/deviceAlias"
+
+    eventOrigin:
+      name: origin
+      in: query
+      description: The event source to filter
+      schema:
+        $ref: "./schemas.yaml#/schemas/eventOrigin"
+    eventMasterNumber:
+      name: masterNumber
+      in: query
+      description: masterNumber is not applicable with origin=GATEWAY
+      schema:
+        $ref: "./schemas.yaml#/schemas/masterNumber"
+    eventPortNumber:
+      name: portNumber
+      in: query
+      description: portnumber is not applicable with origin=GATEWAY or origin=MASTERS
+      schema:
+        $ref: "./schemas.yaml#/schemas/portNumber"
+    eventdeviceAlias:
+      name: deviceAlias
+      in: query
+      description: deviceAlias is only applicable with origin=DEVICES
+      schema:
+        $ref: "./schemas.yaml#/schemas/deviceAlias"
+    eventTop:
+      name: top
+      in: query
+      description: >-
+        Parameter to select the oldest x events of the event buffer. top is mutually
+        exclusive to bottom.
+      schema:
+        $ref: "./schemas.yaml#/schemas/eventTop"
+    eventBottom:
+      name: bottom
+      in: query
+      description: >-
+        Parameter to select the youngest x events of the event buffer. bottom is mutually
+        exclusive to top.
+      schema:
+        $ref: "./schemas.yaml#/schemas/eventBottom"
+    format:
+      name: format
+      in: query
+      description: Value format in response document
+      schema:
+        $ref: "./schemas.yaml#/schemas/format"
+    parameterIdent:
+      name: parameterIdent
+      in: path
+      description: |
+        Parameter identifier. Can be either the parameter index (integer) or the parameter name (string). \
+        Access via parameter names requires IODD support. \
+        Parameter names come from the IODD but are reformatted according to the **Parameter naming rules** described in the general remarks section above. \
+        The index is an integer in the range of 0 to 65535.
+      required: true
+      schema:
+        $ref: "./schemas.yaml#/schemas/parameterIdent"
+    subParameterIdent:
+      name: subParameterIdent
+      in: path
+      description: |
+        Sub-Parameter identifier. Can be either the sub parameter index (integer) or the sub parameter name (string). \        
+        Access via subparametername requires IODD support. \
+        Parameter names come from the IODD but are reformatted according to the **Parameter naming rules** described in the general remarks section above.
+      required: true
+      schema:
+        $ref: "./schemas.yaml#/schemas/subParameterIdent"
+  responses:
+    HTTP_401:
+      description: Authentication information is missing or invalid
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas.yaml#/schemas/errorObject_151"
+    HTTP_403:
+      description: Authentication information is not sufficient to access the resource
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas.yaml#/schemas/errorObject_150"
+
+  examples: # reusable examples
+    exampleWirelessMasterConfiguration:
+      summary: Wireless IO-Link Master
+      description: Example configuration for a wireless IO-Link master device.
+      value:
+        masterId: 5
+        advancedConnectivity:
+          "ahtEnable": false
+        pairingTimeout:
+          value: 25
+          unit: s
+        serviceTrackNumber: 1
+        serviceTrackMode: CYCLIC
+        trackTxPower:
+          "track_1": 31
+          "track_2": 31
+          "track_3": 31
+          "track_4": 0
+          "track_5": 0
+        blockList:
+          - 2404
+          - 2405
+          - 2478

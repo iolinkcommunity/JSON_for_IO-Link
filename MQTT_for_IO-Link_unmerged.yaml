@@ -1,0 +1,426 @@
+asyncapi: 3.0.0
+info:
+  title: MQTT for IO-Link Gateways
+  version: 2.0.0
+  description: >-
+
+    # Description
+
+    This is an [AsyncAPI specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0) for IO-Link gateways, masters and devices. 
+    You can find out more about IO-Link at [http://www.io-link.com](http://www.io-link.com)    
+
+    # Specifications    
+
+    * **JSON Integration for IO-Link V1.0.0 - Order No: 10.222**
+
+    * **IO-Link Interface and System Specification V1.1.4 - Order No: 10.002**
+
+    * **IO-Link Wireless System Extensions V1.1.3 - Order No: 10.112**
+
+    * **IO-Link Profile BLOBs & FW-Update Version 1.2 - Order No: 10.082**
+
+    * **IO Device Description Specification Version 1.1.4 - Order No: 10.012**
+
+
+    # Disclaimer
+
+    The attention of adopters is directed to the possibility that compliance with or adoption of IO-Link Community specifications may require use of an invention covered by patent rights. The IO-Link Community shall not be responsible for identifying patents for which a license may be required by any IO-Link Community specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. IO-Link Community specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents. 
+
+
+    The information contained in this document is subject to change without notice. The material in this document details an IO-Link Community specification in accordance with the license and notices set forth on this page. This document does not represent a commitment to implement any portion of this specification in any company's products. 
+
+
+    WHILE  THE  INFORMATION  IN  THIS  PUBLICATION   IS  BELIEVED  TO  BE ACCURATE, THE IO-LINK COMMUNITY MAKES NO WARRANTY OF ANY KIND, EXPRESS OR  IMPLIED,  WITH REGARD TO  THIS MATERIAL INCLUDING, BUT  NOT LIMITED  TO  ANY  WARRANTY  OF  TITLE  OR  OWNERSHIP,  IMPLIED  WARRANTY  OF MERCHANTABILITY OR  WARRANTY OF FITNESS FOR  PARTICULAR PURPOSE OR USE.  
+
+
+    In  no  event  shall  the IO-Link Community be liable  for  errors  contained  herein  or  for  indirect, incidental,  special,  consequential,  reliance  or  cover  damages,  including  loss  of profits, revenue, data or use, incurred by any user or any third party.   Compliance  with  this  specification  does  not  absolve  manufacturers  of IO-Link equipment,  from  the  requirements  of  safety  and regulatory agencies (TÜV, BIA, UL, CSA, etc.). 
+
+
+    IO-Link is a registered trademark. It may be used only by the members of the IO-Link Community and non-members who had acquired the corresponding license. For more detailed information on its use, refer to the rules of the IO-Link Community at www.io-link.com.
+
+
+    # General remarks
+
+    ## Data type conversion 
+
+    The following conversion rules shall be applied for the data type mapping between IO-Link and JSON.
+
+      | IO-Link data type | JSON data type |
+      |-------------------|----------------|
+      | BooleanT | Boolean |
+      | StringT | String |
+      | ArrayT | Array |      
+      | IntegerT, UintegerT | Number |
+      | Float32T | Number |
+      | RecordT | Object |
+      | TimeSpanT | String |
+      | TimeT | String |
+      | OctetStringT | Bit sequences that are not interpretable without using information out of the IODD are represented as JSON arrays of decimal numbers. One array item is representing one byte. If the value of the bit sequence is not a multiple of 8, the value is padded with zeros from the left to the next byte border. Byte order is big-endian. See table below. |
+
+      **OctetStringT examples:**
+
+      | Value (bin) | Bit length | Value (hex) | Byte array (dec) |
+      |-------------|------------|-------------|------------------|
+      | 10 0111 | 6 | 0x27 | [39] |
+      | 100 0000 1111 0000 | 15 | 0x40F0 | [64, 240] |
+
+    ## Parameter naming rules
+
+    Parameter and sub-parameter names come from the IODD but are reformatted for JSON/URL compatibility according to these rules:
+      - **Rule 1:** Names are based on the IODD XML Element Name inside variables or process data, resolving the text in primary language.
+      - **Rule 2:** Only alphanumeric characters and underscores are allowed. All other characters are replaced by "**_**".
+      - **Rule 3:** Leading numbers shall be prefixed with "**_**".
+      - **Rule 4:** If there are duplicate IO-Link names, the IO-Link index or subindex has to be accessed by appending the index number or subindex number behind the name according to the scheme: **{name}_{index}** or **{name}_{subindex}**.
+      - **Rule 5:** Naming according to the scheme **{name}_{index}** or **{name}_{subindex}** is always allowed even if names are not duplicated.
+      - **Rule 6:** The naming of ArrayT elements is **element_{subindex}**.
+
+      **Examples:**
+      | IODD text Name | Index/subindex | Parameter name | Unique name (with index) |
+      |----------------|----------------|------|--------------------------|
+      | 0815 variable | 3452 | **_0815_variable** | **_0815_variable_3452** |
+      | Switchpoint (Q1) | 345 | **Switchpoint__Q1_** | **Switchpoint__Q1__345** |
+      | External temperature | 311 | **External_temperature_1** | **External_temperature_311** |
+      | External temperature | 1423 | **External_temperature_1** | **External_temperature_1423** |
+
+    ## Time formats
+
+      Any time values shall be represented either as an absolute time or a relative time in the format as specified in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html). 
+      
+      **NOTE:** Each italic letter in the following format definitions is to be replaced by one digit. The square brackets indicate that an element is optional. 
+
+      The format for absolute time is *YYYY-MM-DDThh:mm:ss.fZ* \
+      Time format for relative time is *P[YY][MM][WW][DD][T[hH][mM][s[.f]S]]* \
+      Relative time is starting at re-initialization of the system. 
+      
+      **Examples:** \
+      Absolute time:   **2018-05-18T07:31:54.123Z** \
+      Relative time:   **P3Y6M4DT12H30M17.123S**
+
+  contact:
+    name: IO-Link Community
+    email: info@io-link.com
+    url: "http://www.io-link.com"
+  license:
+    name: Legal Information
+    url: "https://io-link.com/legal-information"
+defaultContentType: application/json
+servers:
+  iol-master:
+    host: "{iolm-ip}:{port}"
+    protocol: mqtt
+    protocolVersion: 3.1.1
+    description: IO-Link gateway as MQTT client
+    variables:
+      iolm-ip:
+        default: 192.168.0.1
+      port:
+        enum:
+          - "1883"
+          - "8883"
+        default: "1883"
+
+channels:
+  "{originatorId}/gateway/identification":
+    address: "{originatorId}/gateway/identification"
+    description: Publishes gateway nameplate information, send at connection startup/on change
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+    messages:
+      publish.message:
+        name: gatewayIdentificationMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/gatewayIdentificationGet"
+
+  "{originatorId}/gateway/event":
+    address: "{originatorId}/gateway/event"
+    description: Publishes port gateway event when it occurs
+
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+    messages:
+      publish.message:
+        name: gatewayEventMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/gatewayEventGet"
+
+  "{originatorId}/masters/{masterNumber}/identification":
+    address: "{originatorId}/masters/{masterNumber}/identification"
+    description: Publishes master identification data, send at connection startup/on change
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
+    messages:
+      publish.message:
+        name: masterIdentificationMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/masterIdentificationGet"
+
+  "{originatorId}/masters/{masterNumber}/event":
+    address: "{originatorId}/masters/{masterNumber}/event"
+    description: Publishes master event when is occurs
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
+    messages:
+      publish.message:
+        name: masterEventMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/masterEventGet"
+
+  "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status":
+    address: "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status"
+    description: Publishes the port status, send at connection startup/on change
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
+      portNumber:
+        $ref: "./schemas.yaml#/schemas/portNumberMqtt"
+    messages:
+      publish.message:
+        name: portStatusMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/mastersPortsStatusGet"
+
+  "{originatorId}/masters/{masterNumber}/ports/{portNumber}/event":
+    address: "{originatorId}/masters/{masterNumber}/ports/{portNumber}/event"
+    description: Publishes port event when is occurs
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      masterNumber:
+        $ref: "./schemas.yaml#/schemas/masterNumberMqtt"
+      portNumber:
+        $ref: "./schemas.yaml#/schemas/portNumberMqtt"
+    messages:
+      publish.message:
+        name: portEventMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/portEventGet"
+
+  "{originatorId}/devices/{deviceAlias}/identification":
+    address: "{originatorId}/devices/{deviceAlias}/identification"
+    description: Publishes device identification, send at connection startup/on change
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+    messages:
+      publish.message:
+        name: deviceIdentificationMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceIdentificationGet"
+
+  "{originatorId}/devices/{deviceAlias}/event":
+    address: "{originatorId}/devices/{deviceAlias}/event"
+    description: Publishes device event when it occurs
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+    messages:
+      publish.message:
+        name: deviceEventMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceEventGet"
+
+  "{originatorId}/devices/{deviceAlias}/processdata/value":
+    address: "{originatorId}/devices/{deviceAlias}/processdata/value"
+    description: Publishes device process data, cyclically or on change
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+    messages:
+      publish.message:
+        name: deviceProcessDataMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/processDataValue"
+
+  "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/value":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/value"
+    description: Publishes device parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+      parameterIdent:
+        $ref: "./schemas.yaml#/schemas/parameterIdentMqtt"
+    messages:
+      publish.message:
+        name: deviceParameterMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
+
+  "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/{parameterIdent}/{subParameterIdent}/value"
+    description: Publishes device sub-parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+      parameterIdent:
+        $ref: "./schemas.yaml#/schemas/parameterIdentMqtt"
+      subParameterIdent:
+        $ref: "./schemas.yaml#/schemas/subParameterIdentMqtt"
+    messages:
+      publish.message:
+        name: deviceSubParameterMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceParameterValueGetPost"
+
+  "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}"
+    description: Listening to device parameter requests
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+      transactionId:
+        $ref: "./schemas.yaml#/schemas/transactionId"
+    messages:
+      publish.message:
+        name: deviceRequestMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceBlockParameterizationPost"
+
+  "{originatorId}/devices/{deviceAlias}/parameter/response/{transactionId}":
+    address: "{originatorId}/devices/{deviceAlias}/parameter/response/{transactionId}"
+    description: Publishes device parameter response depending on the request {originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}
+    parameters:
+      originatorId:
+        $ref: "./schemas.yaml#/schemas/originatorId"
+      deviceAlias:
+        $ref: "./schemas.yaml#/schemas/deviceAliasMqtt"
+      transactionId:
+        $ref: "./schemas.yaml#/schemas/transactionId"
+    messages:
+      publish.message:
+        name: deviceResponseMessage
+        payload:
+          $ref: "./schemas.yaml#/schemas/deviceBlockParameterizationPostParametersAnswer"
+
+operations:
+  "{originatorId}/gateway/identification.publish":
+    description: Publishes gateway nameplate information, send at connection startup/on change
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1gateway~1identification"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1gateway~1identification/messages/publish.message
+
+  "{originatorId}/gateway/event.publish":
+    description: Publishes port gateway event when is occurs
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1gateway~1event"
+    messages:
+      - $ref: "#/channels/{originatorId}~1gateway~1event/messages/publish.message"
+
+  "{originatorId}/masters/{masterNumber}/identification.publish":
+    description: Publishes master identification data, send at connection startup/on change
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1identification"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1masters~1{masterNumber}~1identification/messages/publish.message
+
+  "{originatorId}/masters/{masterNumber}/event.publish":
+    description: Publishes master event when is occurs
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1event"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1masters~1{masterNumber}~1event/messages/publish.message
+
+  "{originatorId}/masters/{masterNumber}/ports/{portNumber}/status.publish":
+    description: Publishes the port status, send at connection startup/on change
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1status/messages/publish.message
+
+  "{originatorId}/masters/{masterNumber}/ports/{portNumber}/event.publish":
+    description: Publishes port event when is occurs
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1event"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1masters~1{masterNumber}~1ports~1{portNumber}~1event/messages/publish.message
+
+  "{originatorId}/devices/{deviceAlias}/identification.publish":
+    description: Publishes device identification, send at connection startup/on change
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1identification"
+    bindings:
+      mqtt:
+        qos: 1
+        retain: true
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1identification/messages/publish.message
+
+  "{originatorId}/{deviceAlias}/event.publish":
+    description: Publishes device event when it occurs
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1event"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1event/messages/publish.message
+
+  "{originatorId}/{deviceAlias}/processData.publish":
+    description: Publishes device process data, cyclically or on change
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1processdata~1value/messages/publish.message
+
+  "{originatorId}/{deviceAlias}/parameter/parameterIdent.publish":
+    description: Publishes device parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
+
+  "{originatorId}/devices/{deviceAlias}/parameter/parameterIdent/subParameterIdent.publish":
+    description: Publishes device sub-parameter data, depending on the configuration via REST (POST /mqtt/topics), cyclically or on change
+    action: send
+    channel:
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1{subParameterIdent}~1value"
+    messages:
+      - $ref: >-
+          #/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1{parameterIdent}~1value/messages/publish.message
+
+  "{originatorId}/devices/{deviceAlias}/parameter/request/{transactionId}.subscribe":
+    description: Listening to device parameter requests
+    action: receive
+    channel:
+      $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1request~1{transactionId}"
+    reply:
+      channel:
+        $ref: "#/channels/{originatorId}~1devices~1{deviceAlias}~1parameter~1response~1{transactionId}"
