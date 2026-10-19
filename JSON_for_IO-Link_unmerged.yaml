@@ -953,8 +953,6 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_206"
                   - $ref: "./schemas.yaml#/schemas/errorObject_208"
                   - $ref: "./schemas.yaml#/schemas/errorObject_701"
-                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
-                  - $ref: "./schemas.yaml#/schemas/errorObject_703"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -1142,7 +1140,6 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_206"
                   - $ref: "./schemas.yaml#/schemas/errorObject_208"
                   - $ref: "./schemas.yaml#/schemas/errorObject_701"
-                  - $ref: "./schemas.yaml#/schemas/errorObject_702"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
