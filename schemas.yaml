@@ -2679,7 +2679,10 @@ schemas:
   errorObject_701:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The provided data set is incomplete.
+      - description: >-
+          The provided data set is incomplete: the request body lacks a member that the request schema marks
+          as required, or it is an empty object where the request schema requires at least one member
+          (minProperties). Applies to every operation whose request schema has required members.
       - type: object
         properties:
           code:

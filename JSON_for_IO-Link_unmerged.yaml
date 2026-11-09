@@ -2812,6 +2812,7 @@ paths:
                   - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
