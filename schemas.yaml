@@ -1918,6 +1918,7 @@ schemas:
   deviceByteArrayTypeValue:
     type: array
     description: The value in byteArray format.
+    maxItems: 232
     items:
       type: integer
       minimum: 0
@@ -2415,6 +2416,7 @@ schemas:
       - $ref: "#/schemas/errorObject"
       - description: A value in the JSON payload exceeds the allowed length or size bounds (e.g. string or array length).
       - type: object
+        description: "For example, when the JSON data value contains more than the maximum (232 bytes) number of allowed bytes."
         properties:
           code:
             enum: [206]
