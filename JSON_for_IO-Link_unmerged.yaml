@@ -112,6 +112,9 @@ info:
       **d)** Errors 305 and 306 (see A.2) can be returned to requests when there are query parameters added to the URL. \
       **e)** If REST API commands are not available, error 103 (see A.2) shall be responded.
 
+    ## Parameter persistence
+
+    If not otherwise stated, parameter values written via this API shall be stored permanently, i.e. they shall persist across a power cycle or reboot of the Gateway, Master or Device.
   contact:
     email: info@io-link.com
   license:
