@@ -356,6 +356,7 @@ schemas:
       - ioddSupported
       - mqttSupported
       - deviceFwUpdateSupported
+      - blockParameterizationSupported
     type: object
     properties:
       ioddSupported:
@@ -364,10 +365,15 @@ schemas:
         type: boolean
       deviceFwUpdateSupported:
         type: boolean
+      blockParameterizationSupported:
+        type: boolean
+        description: >-
+          true if the Gateway supports POST /devices/{deviceAlias}/blockparameterization (optional feature).
     example:
       ioddSupported: true
       mqttSupported: true
       deviceFwUpdateSupported: true
+      blockParameterizationSupported: true
   masterCapabilitiesGet:
     required:
       - numberOfPorts

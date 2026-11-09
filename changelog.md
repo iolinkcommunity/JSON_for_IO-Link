@@ -4,6 +4,16 @@
 
 - M/O/C - Mandatory/Optional/Conditional
 
+## Version 2.1.0
+
+### Modifications
+
+#### OpenAPI 3 document
+
+| Endpoint | Description | M/O/C |
+|---|---|---|
+| *[POST] /devices/{deviceAlias}/blockparameterization* | Write or read one or more parameters using the block parameterization method. Optional since 2.1.0 (issue #240); support is indicated by `blockParameterizationSupported` in GET /gateway/capabilities. | O |
+
 ## Version 2.0.0
 
 ### Introduced features
