@@ -356,6 +356,7 @@ schemas:
       - ioddSupported
       - mqttSupported
       - deviceFwUpdateSupported
+      - blockParameterizationSupported
     type: object
     properties:
       ioddSupported:
@@ -364,10 +365,15 @@ schemas:
         type: boolean
       deviceFwUpdateSupported:
         type: boolean
+      blockParameterizationSupported:
+        type: boolean
+        description: >-
+          true if the Gateway supports POST /devices/{deviceAlias}/blockparameterization (optional feature).
     example:
       ioddSupported: true
       mqttSupported: true
       deviceFwUpdateSupported: true
+      blockParameterizationSupported: true
   masterCapabilitiesGet:
     required:
       - numberOfPorts
@@ -1914,7 +1920,9 @@ schemas:
       setData:
         $ref: "#/schemas/processDataValue"
   deviceProcessDataValuePost:
-    $ref: "#/schemas/processDataValue"
+    allOf:
+      - $ref: "#/schemas/processDataValue"
+      - minProperties: 1
   deviceByteArrayTypeValue:
     type: array
     description: The value in byteArray format.
@@ -1974,6 +1982,7 @@ schemas:
         subParameterName: Minimum_cycle_time
   deviceParameterValueGetPost:
     type: object
+    minProperties: 1
     properties:
       value:
         oneOf:
@@ -1984,6 +1993,7 @@ schemas:
         $ref: "#/schemas/deviceSimpleTypeValueUnit"
   deviceParameterSubindexValueGetPost:
     type: object
+    minProperties: 1
     properties:
       value:
         oneOf:
@@ -2525,7 +2535,11 @@ schemas:
   errorObject_309:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The requested IO-Link parameter does not exist on the device.
+      - description: >-
+          The requested IO-Link parameter does not exist on the device: the Device answered the ISDU access
+          with ErrorType 0x8011 (IDX_NOTAVAIL) or 0x8012 (SUBIDX_NOTAVAIL), see IO-Link Interface and System
+          Specification V1.1.4, Table C.1. Every other ErrorType is reported as error 311. The error object
+          of 309 carries no iolinkError.
       - type: object
         properties:
           code:
@@ -2545,7 +2559,12 @@ schemas:
   errorObject_311:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The IO-Link Device returned an error while accessing the parameter. See iolinkError for details.
+      - description: >-
+          The IO-Link Device returned an error while accessing the parameter. Every ISDU ErrorType other than
+          0x8011 (IDX_NOTAVAIL) and 0x8012 (SUBIDX_NOTAVAIL), which are reported as error 309, is reported as
+          error 311 with the ErrorType in iolinkError.code: for example 0x8000, 0x8020 to 0x8023 (including
+          0x8023 IDX_NOT_ACCESSIBLE), 0x8030 to 0x8036, 0x8040, 0x8041, 0x8082, 0x8100 and the vendor specific
+          ErrorTypes of IO-Link Interface and System Specification V1.1.4, Table C.1. See iolinkError for details.
       - type: object
         properties:
           code:
