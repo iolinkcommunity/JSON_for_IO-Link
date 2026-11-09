@@ -2294,7 +2294,7 @@ schemas:
   errorObject_103:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The requested operation is not supported by the gateway/master.
+      - description: The requested operation is not supported by the gateway/master. Responded with HTTP status 404 (Not Found).
       - type: object
         properties:
           code:
