@@ -356,6 +356,7 @@ schemas:
       - ioddSupported
       - mqttSupported
       - deviceFwUpdateSupported
+      - blockParameterizationSupported
     type: object
     properties:
       ioddSupported:
@@ -364,10 +365,15 @@ schemas:
         type: boolean
       deviceFwUpdateSupported:
         type: boolean
+      blockParameterizationSupported:
+        type: boolean
+        description: >-
+          true if the Gateway supports POST /devices/{deviceAlias}/blockparameterization (optional feature).
     example:
       ioddSupported: true
       mqttSupported: true
       deviceFwUpdateSupported: true
+      blockParameterizationSupported: true
   masterCapabilitiesGet:
     required:
       - numberOfPorts
@@ -1878,7 +1884,7 @@ schemas:
             properties:
               value:
                 oneOf:
-                  - $ref: "#/schemas/deviceByteArrayTypeValue"
+                  - $ref: "#/schemas/processDataByteArrayTypeValue"
                   - $ref: "#/schemas/deviceSimpleTypeValue"
                   - $ref: "#/schemas/deviceComplexTypeValue"
               unit:
@@ -1914,11 +1920,23 @@ schemas:
       setData:
         $ref: "#/schemas/processDataValue"
   deviceProcessDataValuePost:
-    $ref: "#/schemas/processDataValue"
+    allOf:
+      - $ref: "#/schemas/processDataValue"
+      - minProperties: 1
   deviceByteArrayTypeValue:
     type: array
     description: The value in byteArray format.
     maxItems: 232
+    items:
+      type: integer
+      minimum: 0
+      maximum: 255
+  processDataByteArrayTypeValue:
+    type: array
+    description: >-
+      The process data value in byteArray format, limited to the maximum process data length of IO-Link
+      (32 octets). A value longer than the output process data length of the Device is answered with error 206.
+    maxItems: 32
     items:
       type: integer
       minimum: 0
@@ -1974,6 +1992,7 @@ schemas:
         subParameterName: Minimum_cycle_time
   deviceParameterValueGetPost:
     type: object
+    minProperties: 1
     properties:
       value:
         oneOf:
@@ -1984,6 +2003,7 @@ schemas:
         $ref: "#/schemas/deviceSimpleTypeValueUnit"
   deviceParameterSubindexValueGetPost:
     type: object
+    minProperties: 1
     properties:
       value:
         oneOf:
@@ -2294,7 +2314,7 @@ schemas:
   errorObject_103:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The requested operation is not supported by the gateway/master.
+      - description: The requested operation is not supported by the gateway/master. Responded with HTTP status 404 (Not Found).
       - type: object
         properties:
           code:
@@ -2416,7 +2436,10 @@ schemas:
       - $ref: "#/schemas/errorObject"
       - description: A value in the JSON payload exceeds the allowed length or size bounds (e.g. string or array length).
       - type: object
-        description: "For example, when the JSON data value contains more than the maximum (232 bytes) number of allowed bytes."
+        description: >-
+          For example, when a parameter value in byteArray format contains more than the maximum number of
+          allowed bytes (232), or a process data value in byteArray format is longer than the output process
+          data length of the Device (at most 32 bytes).
         properties:
           code:
             enum: [206]
@@ -2525,7 +2548,11 @@ schemas:
   errorObject_309:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The requested IO-Link parameter does not exist on the device.
+      - description: >-
+          The requested IO-Link parameter does not exist on the device: the Device answered the ISDU access
+          with ErrorType 0x8011 (IDX_NOTAVAIL) or 0x8012 (SUBIDX_NOTAVAIL), see IO-Link Interface and System
+          Specification V1.1.4, Table C.1. Every other ErrorType is reported as error 311. The error object
+          of 309 carries no iolinkError.
       - type: object
         properties:
           code:
@@ -2545,7 +2572,12 @@ schemas:
   errorObject_311:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The IO-Link Device returned an error while accessing the parameter. See iolinkError for details.
+      - description: >-
+          The IO-Link Device returned an error while accessing the parameter. Every ISDU ErrorType other than
+          0x8011 (IDX_NOTAVAIL) and 0x8012 (SUBIDX_NOTAVAIL), which are reported as error 309, is reported as
+          error 311 with the ErrorType in iolinkError.code: for example 0x8000, 0x8020 to 0x8023 (including
+          0x8023 IDX_NOT_ACCESSIBLE), 0x8030 to 0x8036, 0x8040, 0x8041, 0x8082, 0x8100 and the vendor specific
+          ErrorTypes of IO-Link Interface and System Specification V1.1.4, Table C.1. See iolinkError for details.
       - type: object
         properties:
           code:
@@ -2660,7 +2692,10 @@ schemas:
   errorObject_701:
     allOf:
       - $ref: "#/schemas/errorObject"
-      - description: The provided data set is incomplete.
+      - description: >-
+          The provided data set is incomplete: the request body lacks a member that the request schema marks
+          as required, or it is an empty object where the request schema requires at least one member
+          (minProperties). Applies to every operation whose request schema has required members.
       - type: object
         properties:
           code:

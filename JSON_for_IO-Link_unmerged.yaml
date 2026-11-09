@@ -110,7 +110,11 @@ info:
       **b)** If parts of POST requests are not applicable, the HTTP response has a different HTTP status code than 2xx. The body of this HTTP response shall contain the Error object. \
       **c)** If multiple errors occur while processing the request only the first detected error shall be responded. \
       **d)** Errors 305 and 306 (see A.2) can be returned to requests when there are query parameters added to the URL. \
-      **e)** If REST API commands are not available, error 103 (see A.2) shall be responded.
+      **e)** If REST API commands are not available, error 103 (see A.2) shall be responded with HTTP status 404 (Not Found).
+
+    ## Parameter persistence
+
+    Unless stated otherwise at an endpoint, configuration written through this API shall be stored permanently by the Gateway and shall survive a power cycle or a reboot. This applies in particular to the configuration that exists only at the level of this API: the Master/Gateway configuration, the deviceAlias of a port, the identification tags of a Master/Gateway, and the MQTT configuration and topics. The persistence of data written into an IO-Link Device (parameters, Device identification) is governed by the Device and the IO-Link Interface and System Specification.
 
   contact:
     email: info@io-link.com
@@ -507,7 +511,8 @@ paths:
       summary: Read the EventLog containing all events from Gateway, Masters, Ports and Devices.
       description:
         Each Gateway shall have an Event Log object containing the events of the devices, ports and
-        the masters. The content of the Event Log can be read by getting the object "Gateway Event Log"
+        the masters. The content of the Event Log can be read by getting the object "Gateway Event Log".
+        The events array shall be ordered chronologically ascending by the time member, the oldest event first, with and without the top and bottom filters.
       parameters:
         - $ref: "#/components/parameters/eventOrigin"
         - $ref: "#/components/parameters/eventMasterNumber"
@@ -1575,9 +1580,9 @@ paths:
       operationId: PostIoddsFile
       tags:
         - iodds
-      summary: Store or update an IODD (representation) on the Gateway.
+      summary: Permanent store or update an IODD (representation) on the Gateway.
       description: >
-        Store or update an IODD (representation) on the Gateway. This endpoint is mandatory, if IODD feature is supported.
+        Permanent store or update an IODD (representation) on the Gateway. This endpoint is mandatory, if the IODD feature is supported.
           
         **Note:** The assignment of an IODD to a device shall be done automatically by matching vendor, device id and iolink revision. Only one IODD per vendor, device id and iolink revision is allowed. In case IODD with vendor, device id and iolink revision is already present on the gateway, this file should be replaced by the new one.
       requestBody:
@@ -2804,9 +2809,9 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
+                  - $ref: "./schemas.yaml#/schemas/errorObject_701"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2817,6 +2822,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -3499,7 +3505,6 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
                   - $ref: "./schemas.yaml#/schemas/errorObject_202"
@@ -3706,7 +3711,6 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
                   - $ref: "./schemas.yaml#/schemas/errorObject_202"
@@ -3755,7 +3759,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write or read one or more parameters using the block parameterization method.
+        Write or read one or more parameters using the block parameterization method. Optional.
       description: Write or read one or more parameters using the block parameterization method. If there are no restrictions for writing, the objects will be modified. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
@@ -3916,7 +3920,12 @@ paths:
                           code: 32817
                           message: Parameter value above limit
         "400":
-          description: Bad Request
+          description: >-
+            Bad Request. A block write that the Device rejects as a whole at ParamDownloadEnd or
+            ParamDownloadStore (ErrorType 0x8041, inconsistent parameter set; IO-Link Interface and System
+            Specification V1.1.4, 10.3.5) is answered with error 311 and iolinkError.code 0x8041 for the
+            request as a whole. No per-parameter results are returned in this case, since no parameter of
+            the block has been applied.
           content:
             application/json:
               schema:
@@ -3976,7 +3985,9 @@ paths:
         - $ref: "#/components/parameters/eventTop"
         - $ref: "#/components/parameters/eventBottom"
       summary: Read the eventlog for a specific device.
-      description: Read the eventlog for a specific device. This is similar to the reading of the eventlog but filtered for this specific device (origin is device). Logged events are not cleared or changed.
+      description: >
+        Read the eventlog for a specific device. This is similar to the reading of the eventlog but filtered for this specific device (origin is device). 
+        Logged events are not cleared or changed. The events array shall be ordered chronologically ascending by the time member, the oldest event first, with and without the top and bottom filters.
       responses:
         "200":
           description: >-
