@@ -1130,8 +1130,8 @@ schemas:
               - DIGITAL_OUTPUT
           cycleTime:
             description: >-
-              required if portMode is IOLINK_MANUAL or
-              IOLINK_AUTOSTART. Default value is 0 ms which means as fast as possible. 
+              Optional. Can only be used with mode IOLINK_MANUAL or
+              IOLINK_AUTOSTART. Returns 0 ms if no cycle time was configured, which means as fast as possible. 
               Note: If the applied value for cycle time cannot exactly be mapped,
               the port shall use the next possible higher value. If the cycle time is greater 
               than 132.8 ms the error 702 shall be returned.
@@ -1639,8 +1639,8 @@ schemas:
           - TYPE_COMPATIBLE_DEVICE_V1.1_RESTORE
       cycleTime:
         description: >-
-          If no cycleTime configured with mode IOLINK_MANUAL or
-          IOLINK_AUTOSTART, the possible fastest cycle time is used by the
+          Optional. Can only be used with mode IOLINK_MANUAL or IOLINK_AUTOSTART.
+          If no cycleTime is configured, the possible fastest cycle time is used by the
           IO-Link Master. If the applied value for cycle time cannot exactly be
           mapped, the port shall use the next possible higher value.
           If the cycle time is greater than 132.8 ms the error 702 shall 
