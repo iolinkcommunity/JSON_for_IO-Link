@@ -254,6 +254,7 @@ schemas:
     type: string
     minLength: 16 # 12 octets encoded in Base64 (empty DS)
     maxLength: 2748 # 2048 + 12 octets encoded in Base64
+    pattern: '^[A-Za-z0-9+/]*={0,2}$' # Base64 alphabet with optional padding; a content that is not decodable Base64 is rejected with error 202
   identificationMasters:
     type: array
     items:

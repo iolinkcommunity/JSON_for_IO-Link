@@ -2515,8 +2515,7 @@ paths:
                       vendorId: 646
                       deviceId: 1234
                       functionId: 0
-                    content: >-
-                      "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
+                    content: "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
                 Empty Data Storage:
                   value:
                     header:
@@ -2524,8 +2523,7 @@ paths:
                       vendorId: 0
                       deviceId: 0
                       functionId: 0
-                    content: >-
-                      "AAAAAAAAAAAAAAAA"
+                    content: "AAAAAAAAAAAAAAAA"
         "401":
           $ref: "#/components/responses/HTTP_401"
         "403":
@@ -2565,8 +2563,7 @@ paths:
             examples:
               Data Storage with valid content:
                 value:
-                  content: >-
-                    "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
+                  content: "RxEIFQKGAAAE0gAAABgAAyoqKgAZAAMqKioAGgADKioq"
               Empty Data Storage:
                 value:
                   content: "AAAAAAAAAAAAAAAA"
