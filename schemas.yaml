@@ -1878,7 +1878,7 @@ schemas:
             properties:
               value:
                 oneOf:
-                  - $ref: "#/schemas/deviceByteArrayTypeValue"
+                  - $ref: "#/schemas/processDataByteArrayTypeValue"
                   - $ref: "#/schemas/deviceSimpleTypeValue"
                   - $ref: "#/schemas/deviceComplexTypeValue"
               unit:
@@ -1919,6 +1919,16 @@ schemas:
     type: array
     description: The value in byteArray format.
     maxItems: 232
+    items:
+      type: integer
+      minimum: 0
+      maximum: 255
+  processDataByteArrayTypeValue:
+    type: array
+    description: >-
+      The process data value in byteArray format, limited to the maximum process data length of IO-Link
+      (32 octets). A value longer than the output process data length of the Device is answered with error 206.
+    maxItems: 32
     items:
       type: integer
       minimum: 0
@@ -2416,7 +2426,10 @@ schemas:
       - $ref: "#/schemas/errorObject"
       - description: A value in the JSON payload exceeds the allowed length or size bounds (e.g. string or array length).
       - type: object
-        description: "For example, when the JSON data value contains more than the maximum (232 bytes) number of allowed bytes."
+        description: >-
+          For example, when a parameter value in byteArray format contains more than the maximum number of
+          allowed bytes (232), or a process data value in byteArray format is longer than the output process
+          data length of the Device (at most 32 bytes).
         properties:
           code:
             enum: [206]
