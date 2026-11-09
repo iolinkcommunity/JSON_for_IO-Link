@@ -110,7 +110,7 @@ info:
       **b)** If parts of POST requests are not applicable, the HTTP response has a different HTTP status code than 2xx. The body of this HTTP response shall contain the Error object. \
       **c)** If multiple errors occur while processing the request only the first detected error shall be responded. \
       **d)** Errors 305 and 306 (see A.2) can be returned to requests when there are query parameters added to the URL. \
-      **e)** If REST API commands are not available, error 103 (see A.2) shall be responded.
+      **e)** If REST API commands are not available, error 103 (see A.2) shall be responded with HTTP status 404 (Not Found).
 
     ## Parameter persistence
 
@@ -2809,7 +2809,6 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
                   - $ref: "./schemas.yaml#/schemas/errorObject_701"
@@ -2823,6 +2822,7 @@ paths:
             application/json:
               schema:
                 oneOf:
+                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_302"
                   - $ref: "./schemas.yaml#/schemas/errorObject_303"
         "500":
@@ -3505,7 +3505,6 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
                   - $ref: "./schemas.yaml#/schemas/errorObject_202"
@@ -3712,7 +3711,6 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "./schemas.yaml#/schemas/errorObject_103"
                   - $ref: "./schemas.yaml#/schemas/errorObject_104"
                   - $ref: "./schemas.yaml#/schemas/errorObject_201"
                   - $ref: "./schemas.yaml#/schemas/errorObject_202"
