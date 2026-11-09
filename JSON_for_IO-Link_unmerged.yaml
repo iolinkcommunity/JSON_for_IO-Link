@@ -3760,7 +3760,7 @@ paths:
       tags:
         - devices
       summary: >-
-        Write or read one or more parameters using the block parameterization method.
+        Write or read one or more parameters using the block parameterization method. Optional.
       description: Write or read one or more parameters using the block parameterization method. If there are no restrictions for writing, the objects will be modified. Otherwise an error will be returned.
       parameters:
         - $ref: "#/components/parameters/deviceAlias"
