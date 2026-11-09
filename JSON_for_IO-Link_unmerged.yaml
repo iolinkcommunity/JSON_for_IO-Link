@@ -3921,7 +3921,12 @@ paths:
                           code: 32817
                           message: Parameter value above limit
         "400":
-          description: Bad Request
+          description: >-
+            Bad Request. A block write that the Device rejects as a whole at ParamDownloadEnd or
+            ParamDownloadStore (ErrorType 0x8041, inconsistent parameter set; IO-Link Interface and System
+            Specification V1.1.4, 10.3.5) is answered with error 311 and iolinkError.code 0x8041 for the
+            request as a whole. No per-parameter results are returned in this case, since no parameter of
+            the block has been applied.
           content:
             application/json:
               schema:
