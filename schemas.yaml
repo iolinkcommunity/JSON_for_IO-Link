@@ -2274,6 +2274,7 @@ schemas:
   errorObject_101:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: An unexpected internal error occurred on the gateway/master.
       - type: object
         properties:
           code:
@@ -2283,6 +2284,7 @@ schemas:
   errorObject_102:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: An error occurred during internal communication between gateway/master components.
       - type: object
         properties:
           code:
@@ -2292,6 +2294,7 @@ schemas:
   errorObject_103:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The requested operation is not supported by the gateway/master.
       - type: object
         properties:
           code:
@@ -2301,6 +2304,7 @@ schemas:
   errorObject_104:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The requested action cannot be performed because it is currently locked by another client.
       - type: object
         properties:
           code:
@@ -2310,6 +2314,7 @@ schemas:
   errorObject_105:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The requested IODD related feature is not supported by the gateway/master.
       - type: object
         properties:
           code:
@@ -2319,6 +2324,7 @@ schemas:
   errorObject_106:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The requested MQTT related feature is not supported by the gateway/master.
       - type: object
         properties:
           code:
@@ -2328,6 +2334,7 @@ schemas:
   errorObject_107:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: An error occurred while performing the device firmware update.
       - type: object
         properties:
           code:
@@ -2337,6 +2344,7 @@ schemas:
   errorObject_150:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The client does not have the permission to perform the requested operation.
       - type: object
         properties:
           code:
@@ -2346,6 +2354,7 @@ schemas:
   errorObject_151:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The request does not contain valid authentication information.
       - type: object
         properties:
           code:
@@ -2355,6 +2364,7 @@ schemas:
   errorObject_201:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The request body could not be parsed as valid JSON.
       - type: object
         properties:
           code:
@@ -2364,6 +2374,7 @@ schemas:
   errorObject_202:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: This occurs when a value in the JSON payload does not meet the expected criteria (e.g. invalid UTF-8 characters)
       - type: object
         properties:
           code:
@@ -2373,6 +2384,7 @@ schemas:
   errorObject_203:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: A value in the JSON payload does not match the expected data type. This could occur, for example, if a string is provided where a number is expected.
       - type: object
         properties:
           code:
@@ -2382,6 +2394,7 @@ schemas:
   errorObject_204:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: A value in the JSON payload does not match any of the allowed enumeration values.
       - type: object
         properties:
           code:
@@ -2391,6 +2404,7 @@ schemas:
   errorObject_205:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: A numeric value in the JSON payload is outside the allowed minimum/maximum range.
       - type: object
         properties:
           code:
@@ -2400,6 +2414,7 @@ schemas:
   errorObject_206:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: A value in the JSON payload exceeds the allowed length or size bounds (e.g. string or array length).
       - type: object
         description: "For example, when the JSON data value contains more than the maximum (232 bytes) number of allowed bytes."
         properties:
@@ -2410,6 +2425,7 @@ schemas:
   errorObject_207:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The given deviceAlias is already assigned to another device.
       - type: object
         properties:
           code:
@@ -2419,6 +2435,7 @@ schemas:
   errorObject_208:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The POST request requires a body, but none was provided.
       - type: object
         properties:
           code:
@@ -2428,6 +2445,7 @@ schemas:
   errorObject_301:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The requested resource could not be found (e.g. the specified URL does not exist).
       - type: object
         properties:
           code:
@@ -2437,6 +2455,7 @@ schemas:
   errorObject_302:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The given masterNumber does not exist on the gateway.
       - type: object
         properties:
           code:
@@ -2446,6 +2465,7 @@ schemas:
   errorObject_303:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The given portNumber does not exist on the addressed master.
       - type: object
         properties:
           code:
@@ -2455,6 +2475,7 @@ schemas:
   errorObject_304:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The given deviceAlias does not exist on the gateway.
       - type: object
         properties:
           code:
@@ -2464,6 +2485,7 @@ schemas:
   errorObject_305:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The request contains an unknown or unsupported query parameter name.
       - type: object
         properties:
           code:
@@ -2473,6 +2495,7 @@ schemas:
   errorObject_306:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The value provided for a query parameter is invalid.
       - type: object
         properties:
           code:
@@ -2482,6 +2505,7 @@ schemas:
   errorObject_307:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The addressed port is not configured for IO-Link mode.
       - type: object
         properties:
           code:
@@ -2491,6 +2515,7 @@ schemas:
   errorObject_308:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The IO-Link Device cannot currently be reached, e.g. because communication is lost.
       - type: object
         properties:
           code:
@@ -2500,6 +2525,7 @@ schemas:
   errorObject_309:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The requested IO-Link parameter does not exist on the device.
       - type: object
         properties:
           code:
@@ -2509,6 +2535,7 @@ schemas:
   errorObject_310:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The device does not support accessing the requested IO-Link parameter in the requested way.
       - type: object
         properties:
           code:
@@ -2518,6 +2545,7 @@ schemas:
   errorObject_311:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The IO-Link Device returned an error while accessing the parameter. See iolinkError for details.
       - type: object
         properties:
           code:
@@ -2531,6 +2559,7 @@ schemas:
   errorObject_312:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The given parameterName is ambiguous and matches more than one parameter on the device.
       - type: object
         properties:
           code:
@@ -2540,6 +2569,7 @@ schemas:
   errorObject_401:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The Data Storage content does not match between the master and the device.
       - type: object
         properties:
           code:
@@ -2549,6 +2579,7 @@ schemas:
   errorObject_501:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The I/Q pin (pin2) of the port is not configured as DIGITAL_OUTPUT.
       - type: object
         properties:
           code:
@@ -2558,6 +2589,7 @@ schemas:
   errorObject_502:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The C/Q pin (pin4) of the port is not configured as DIGITAL_OUTPUT.
       - type: object
         properties:
           code:
@@ -2567,6 +2599,7 @@ schemas:
   errorObject_503:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The IO-Link Device does not provide output process data, so setData cannot be used.
       - type: object
         properties:
           code:
@@ -2576,6 +2609,7 @@ schemas:
   errorObject_601:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: No IODD (representation) is available for this IO-Link device on the gateway.
       - type: object
         properties:
           code:
@@ -2586,6 +2620,7 @@ schemas:
   errorObject_602:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The IODD upload failed because there is not enough memory available on the gateway.
       - type: object
         properties:
           code:
@@ -2595,6 +2630,7 @@ schemas:
   errorObject_603:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The IODD upload failed because the IODD XML file is invalid.
       - type: object
         properties:
           code:
@@ -2604,6 +2640,7 @@ schemas:
   errorObject_604:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The IODD upload failed because the CRC check of the uploaded archive failed.
       - type: object
         properties:
           code:
@@ -2613,6 +2650,7 @@ schemas:
   errorObject_605:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The IODD upload failed because the IODD could not be parsed.
       - type: object
         properties:
           code:
@@ -2622,6 +2660,7 @@ schemas:
   errorObject_701:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The provided data set is incomplete.
       - type: object
         properties:
           code:
@@ -2631,6 +2670,7 @@ schemas:
   errorObject_702:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The provided data set does not apply to the addressed port or device.
       - type: object
         properties:
           code:
@@ -2640,6 +2680,7 @@ schemas:
   errorObject_703:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The combination of provided data set values is incompatible.
       - type: object
         properties:
           code:
@@ -2649,6 +2690,7 @@ schemas:
   errorObject_704:
     allOf:
       - $ref: "#/schemas/errorObject"
+      - description: The provided file exceeds the maximum size that can be processed.
       - type: object
         properties:
           code:
