@@ -1914,8 +1914,9 @@ schemas:
       setData:
         $ref: "#/schemas/processDataValue"
   deviceProcessDataValuePost:
-    minProperties: 1
-    $ref: "#/schemas/processDataValue"
+    allOf:
+      - $ref: "#/schemas/processDataValue"
+      - minProperties: 1
   deviceByteArrayTypeValue:
     type: array
     description: The value in byteArray format.
